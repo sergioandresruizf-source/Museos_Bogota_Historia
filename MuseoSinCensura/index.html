@@ -1,1 +1,357 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Museo Sin Censura - Fragmentos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Custom Font Definitions */
+        .font-teko { font-family: 'Teko', sans-serif; }
+        .font-mono { font-family: 'Space Mono', monospace; }
 
+        /* Hero Background Grid */
+        .bg-grid-pattern {
+            background-color: #111111;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            background-position: center center;
+            position: relative;
+        }
+        
+        /* Subtle radial gradient to focus center */
+        .bg-grid-pattern::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, transparent 0%, #111111 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Vertical Text Styling */
+        .vertical-text {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            letter-spacing: 0.15em;
+        }
+
+        /* Red Highlight Effect for Text */
+        .highlight-red {
+            background-color: #f1254e;
+            color: #ffffff;
+            padding: 0.1em 0.3em;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+            display: inline;
+            line-height: 1.6;
+        }
+
+        /* Brutalist Button */
+        .btn-brutalist {
+            border: 2px solid white;
+            background: transparent;
+            color: white;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .btn-brutalist::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: white;
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+        .btn-brutalist:hover {
+            color: #111;
+        }
+        .btn-brutalist:hover::before {
+            left: 0;
+        }
+
+        /* Isometric CSS Voxel Art representing "Fragmentos" */
+        .isometric-scene {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            transform: rotateX(60deg) rotateZ(-45deg);
+            transform-style: preserve-3d;
+            margin: 0 auto;
+        }
+        
+        @media (min-width: 768px) {
+            .isometric-scene {
+                width: 300px;
+                height: 300px;
+            }
+        }
+
+        .voxel {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-color: #e5e7eb; /* Top face (light) */
+            transition: transform 0.3s ease;
+        }
+        
+        /* Left face */
+        .voxel::before {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 40px;
+            height: 20px; /* Depth */
+            background-color: #9ca3af; 
+            transform-origin: top;
+            transform: rotateX(-90deg);
+        }
+        
+        /* Right face */
+        .voxel::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 100%;
+            width: 20px; /* Depth */
+            height: 40px;
+            background-color: #d1d5db; 
+            transform-origin: left;
+            transform: rotateY(90deg);
+        }
+
+        /* Hover effect to symbolize the "martillado" (hammering) */
+        .voxel:hover {
+            transform: translateZ(-10px);
+        }
+
+        /* Dotted background for light sections */
+        .bg-dots-light {
+            background-color: #f8f9fa;
+            background-image: radial-gradient(#d1d5db 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+</head>
+<body class="font-mono text-[#111] antialiased overflow-x-hidden selection:bg-[#f1254e] selection:text-white">
+
+    <!-- Navbar Overlay -->
+    <nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center p-6 mix-blend-difference text-white">
+        <div class="flex items-center gap-6">
+            <!-- Hamburger Icon -->
+            <button class="flex flex-col justify-between w-6 h-5 group">
+                <span class="w-full h-[2px] bg-white group-hover:bg-[#f1254e] transition-colors"></span>
+                <span class="w-full h-[2px] bg-white group-hover:bg-[#f1254e] transition-colors"></span>
+                <span class="w-full h-[2px] bg-white group-hover:bg-[#f1254e] transition-colors"></span>
+            </button>
+            <span class="text-sm font-bold tracking-widest hidden xl:block">
+                <a href="#hero" class="hover:text-[#f1254e] transition-colors mr-6">01 INICIO</a>
+                <a href="#about" class="hover:text-[#f1254e] transition-colors mr-6">02 EL PROYECTO</a>
+                <a href="#demo" class="hover:text-[#f1254e] transition-colors mr-6">03 DEMOSTRACIÓN</a>
+                <a href="#download" class="hover:text-[#f1254e] transition-colors">04 DESCARGA</a>
+            </span>
+        </div>
+        
+        <!-- Logo Text (Visible on scroll, simulated here for layout) -->
+        <div class="absolute left-1/2 transform -translate-x-1/2 font-teko text-2xl tracking-wide hidden md:block">
+            MUSEO SIN <span class="text-[#f1254e] line-through decoration-2">CENSURA</span>
+        </div>
+
+        <!-- Share Icon -->
+        <button aria-label="Compartir">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" class="hover:stroke-[#f1254e] transition-colors">
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                <polyline points="16 6 12 2 8 6"></polyline>
+                <line x1="12" y1="2" x2="12" y2="15"></line>
+            </svg>
+        </button>
+    </nav>
+
+    <!-- SECTION 1: HERO -->
+    <header class="bg-grid-pattern min-h-screen relative flex items-center justify-center text-white overflow-hidden" id="hero">
+        
+        <!-- Vertical Text Indicator -->
+        <div class="absolute left-4 md:left-8 top-1/2 transform -translate-y-1/2 z-20">
+            <p class="vertical-text text-xs md:text-sm font-bold opacity-80">
+                #LAMEMORIAVIVE
+            </p>
+        </div>
+
+        <!-- Main Content -->
+        <div class="z-10 text-center px-4 max-w-5xl w-full flex flex-col items-center mt-12 md:mt-0">
+            
+            <!-- Giant Blocky Title -->
+            <h1 class="font-teko text-[5rem] sm:text-[8rem] md:text-[11rem] leading-[0.8] uppercase font-bold tracking-tight mb-8">
+                <div class="transform hover:scale-105 transition-transform duration-500">Museo</div>
+                <div class="transform hover:scale-105 transition-transform duration-500">Sin</div>
+                
+                <!-- The "CENSURA" part with the red block/strikethrough -->
+                <div class="relative inline-block mt-2 md:mt-4 transform hover:scale-105 transition-transform duration-500">
+                    <span class="relative z-10 text-white line-through decoration-[#f1254e] decoration-[10px] sm:decoration-[16px] md:decoration-[24px]">Censura</span>
+                </div>
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="text-base md:text-xl lg:text-2xl font-mono mb-12 max-w-2xl mx-auto opacity-90">
+                Recreando Fragmentos en Minecraft.
+            </p>
+
+            <!-- Brutalist Button -->
+            <a href="#about" class="btn-brutalist inline-flex items-center gap-4 px-8 py-4 text-sm md:text-base font-bold z-10">
+                Explorar Obra
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </a>
+        </div>
+
+        <!-- Scroll Down Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 animate-bounce">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="square">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+    </header>
+
+    <!-- SECTION 2: ABOUT EL PROYECTO -->
+    <section id="about" class="bg-dots-light min-h-screen py-24 px-6 md:px-16 flex flex-col justify-center relative border-t-8 border-black">
+        
+        <!-- Section Header -->
+        <div class="w-full max-w-7xl mx-auto mb-16 md:mb-24 flex justify-between items-end border-b-4 border-black pb-4">
+            <h2 class="font-teko text-5xl md:text-7xl font-bold uppercase leading-none">02 El Proyecto</h2>
+            <span class="font-teko text-2xl md:text-4xl hidden sm:block">EL MUSEO EN MINECRAFT</span>
+        </div>
+
+        <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+            
+            <!-- Typography Block with Highlights -->
+            <div class="text-xl md:text-2xl lg:text-3xl leading-[1.6] font-bold font-mono order-2 lg:order-1 flex flex-col gap-8">
+                <p>
+                    El proyecto consiste en recrear el museo físico en un <span class="highlight-red">servidor interactivo de Minecraft</span> para que jóvenes de todo el mundo puedan acceder a él, eludiendo cualquier bloqueo o <span class="highlight-red">censura gubernamental</span>.
+                </p>
+                <p>
+                    El espacio original, <em>Fragmentos, Espacio de Arte y Memoria</em>, es un contramonumento creado por Doris Salcedo y operado por el Museo Nacional de Colombia. Su suelo está construido con <span class="highlight-red">37 toneladas de armas fundidas</span>, las cuales fueron <span class="highlight-red">martilladas por mujeres víctimas de violencia sexual</span> durante el conflicto armado.
+                </p>
+                <p>
+                    Este mundo virtual albergará la exposición que dialoga entre los crudos grabados de <span class="highlight-red">Los desastres de la guerra de Goya</span> y poesía contemporánea sobre el sufrimiento, permitiendo a los jugadores caminar sobre la <span class="highlight-red">memoria viva y resistir al olvido</span>.
+                </p>
+            </div>
+
+            <!-- Voxel Art Graphic (Minecraft Style) -->
+            <div class="order-1 lg:order-2 flex justify-center items-center h-[300px] md:h-[500px]">
+                <div class="isometric-scene group transform scale-125 md:scale-150">
+                    <!-- Base layer (simulating the floor tiles of weapons) -->
+                    <div class="voxel" style="bottom: 0; left: 0; transform: translateZ(0px); background-color: #4b5563;"></div>
+                    <div class="voxel" style="bottom: 0; left: 40px; transform: translateZ(0px); background-color: #374151;"></div>
+                    <div class="voxel" style="bottom: 0; left: 80px; transform: translateZ(0px); background-color: #4b5563;"></div>
+                    <div class="voxel" style="bottom: 40px; left: 0; transform: translateZ(0px); background-color: #374151;"></div>
+                    <div class="voxel" style="bottom: 40px; left: 40px; transform: translateZ(0px); background-color: #4b5563;"></div>
+                    <div class="voxel" style="bottom: 40px; left: 80px; transform: translateZ(0px); background-color: #111827;"></div>
+                    <div class="voxel" style="bottom: 80px; left: 0; transform: translateZ(0px); background-color: #4b5563;"></div>
+                    <div class="voxel" style="bottom: 80px; left: 40px; transform: translateZ(0px); background-color: #111827;"></div>
+                    <div class="voxel" style="bottom: 80px; left: 80px; transform: translateZ(0px); background-color: #374151;"></div>
+                    
+                    <!-- Broken/Uneven pieces simulating the hammered metal & Minecraft blocks -->
+                    <div class="voxel" style="bottom: 40px; left: 40px; transform: translateZ(40px); background-color: #6b7280;"></div>
+                    <div class="voxel" style="bottom: 80px; left: 0px; transform: translateZ(40px); background-color: #4b5563;"></div>
+                    
+                    <!-- Highlight Red Block representing resistance/memory -->
+                    <div class="voxel bg-[#f1254e]" style="bottom: 40px; left: 40px; transform: translateZ(80px); background-color: #f1254e;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: DEMOSTRACIÓN -->
+    <section id="demo" class="bg-white min-h-screen py-24 px-6 md:px-16 flex flex-col justify-center relative border-t-8 border-black">
+        
+        <!-- Section Header -->
+        <div class="w-full max-w-7xl mx-auto mb-12 flex justify-between items-end border-b-4 border-black pb-4">
+            <h2 class="font-teko text-5xl md:text-7xl font-bold uppercase leading-none">03 Demostración</h2>
+            <span class="font-teko text-2xl md:text-4xl hidden sm:block">RECORRIDO VIRTUAL</span>
+        </div>
+
+        <div class="max-w-7xl mx-auto w-full flex flex-col gap-12 items-center">
+            <p class="font-mono text-xl md:text-2xl lg:text-3xl text-center max-w-4xl font-bold">
+                Demostración del recorrido para <span class="highlight-red">quienes no cuentan con el juego</span>.
+            </p>
+            
+            <!-- Brutalist Video Container -->
+            <div class="w-full max-w-5xl aspect-video border-8 border-black shadow-[16px_16px_0px_0px_#f1254e] bg-black relative flex items-center justify-center overflow-hidden group">
+                <!-- Placeholder Graphics (In case video doesn't load immediately) -->
+                <div class="absolute inset-0 flex flex-col items-center justify-center gap-4 z-0">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#f1254e" stroke-width="2" stroke-linecap="square" class="animate-pulse">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    <span class="font-mono text-white text-sm tracking-widest uppercase">Cargando Recorrido...</span>
+                </div>
+                
+                <!-- YouTube iframe (Placeholder URL, replace with actual video) -->
+                <iframe class="w-full h-full relative z-10 opacity-70 group-hover:opacity-100 transition-opacity duration-500" 
+                    src="https://www.youtube.com/embed/dQw4w9WgXcQ?controls=1&showinfo=0&rel=0" 
+                    title="Demostración Museo Sin Censura" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: DESCARGA -->
+    <section id="download" class="bg-grid-pattern py-32 px-6 md:px-16 flex flex-col items-center justify-center relative border-t-8 border-black overflow-hidden">
+        
+        <!-- Large Background Typography -->
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5">
+            <h2 class="font-teko text-[15rem] leading-none uppercase font-bold text-white whitespace-nowrap">
+                Descarga Descarga
+            </h2>
+        </div>
+
+        <div class="z-10 w-full max-w-5xl flex flex-col items-center text-center gap-8">
+            <h2 class="font-teko text-5xl md:text-7xl font-bold uppercase text-white leading-none">04 Acceso al Mundo</h2>
+            
+            <p class="font-mono text-lg md:text-xl text-white mb-8 max-w-2xl">
+                Descarga los archivos del mapa y experimenta la exposición completa interactiva directamente en tu cliente de Minecraft.
+            </p>
+            
+            <!-- Massive Brutalist Button -->
+            <a href="#" class="group relative inline-flex flex-col md:flex-row items-center justify-center gap-6 border-8 border-white bg-[#f1254e] p-8 md:p-12 hover:bg-white hover:border-[#f1254e] transition-colors duration-300 shadow-[16px_16px_0px_0px_#ffffff] hover:shadow-[16px_16px_0px_0px_#111] max-w-full">
+                <span class="font-teko text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold uppercase text-white group-hover:text-black transition-colors duration-300 leading-none text-left">
+                    Descargar<br>Mundo de<br>Minecraft
+                </span>
+                
+                <!-- Arrow Icon -->
+                <div class="p-4 border-4 border-white group-hover:border-black rounded-full bg-transparent group-hover:bg-black group-hover:text-white transition-all duration-300">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <polyline points="19 12 12 19 5 12"></polyline>
+                    </svg>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#111] text-white py-12 px-6 border-t-8 border-[#f1254e]">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <h3 class="font-teko text-3xl font-bold">MUSEO SIN <span class="line-through decoration-[#f1254e] decoration-4">CENSURA</span></h3>
+            <p class="font-mono text-sm opacity-70">Proyecto Fragmentos: Minecraft Edition</p>
+        </div>
+    </footer>
+
+</body>
+</html>
