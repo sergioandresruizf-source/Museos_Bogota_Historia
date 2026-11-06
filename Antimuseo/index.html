@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ANTIMUSEO</title>
+<style>
+  :root { --n: #0a0a0a; --b: #f2f2f2; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body, a {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28'><path d='M3 3L25 25M25 3L3 25' stroke='white' stroke-width='7'/><path d='M3 3L25 25M25 3L3 25' stroke='black' stroke-width='3'/></svg>") 14 14, crosshair;
+  }
+  body {
+    background: var(--b); color: var(--n);
+    font-family: "Courier New", Courier, monospace;
+    line-height: 1.55; overflow-x: hidden;
+  }
+  /* ruido sucio sobre todo */
+  body::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: .17;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+  ::selection { background: var(--n); color: var(--b); }
+
+  .negro  { --fg: var(--b); --bgsec: var(--n); background: var(--n); color: var(--b); }
+  .blanco { --fg: var(--n); --bgsec: var(--b); background: var(--b); color: var(--n); }
+  section, footer, header { position: relative; }
+
+  /* chorreado hacia la siguiente seccion */
+  .drip {
+    position: absolute; left: 0; bottom: -89px; width: 100%; height: 90px;
+    color: var(--bgsec); z-index: 5; display: block;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: .8rem 1.4rem; color: #fff; mix-blend-mode: difference; font-size: .85rem;
+    text-transform: uppercase; letter-spacing: .15em;
+  }
+  nav a { color: inherit; text-decoration: none; margin-left: 1rem; }
+  nav a:hover { text-decoration: line-through; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+    padding: 6rem 5vw 11rem; overflow: hidden;
+  }
+  .hero::before, .eje::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .09;
+    background:
+      radial-gradient(circle at 12% 22%, var(--fg) 0 5%, transparent 5.4%),
+      radial-gradient(circle at 78% 12%, var(--fg) 0 3%, transparent 3.3%),
+      radial-gradient(circle at 88% 70%, var(--fg) 0 7%, transparent 7.5%),
+      radial-gradient(circle at 30% 85%, var(--fg) 0 2.5%, transparent 2.8%),
+      radial-gradient(circle at 55% 45%, var(--fg) 0 1.5%, transparent 1.8%);
+  }
+  .hero .anti, .hero .museo {
+    font-family: Impact, "Arial Black", sans-serif; text-transform: uppercase;
+    line-height: .82; letter-spacing: -.04em; font-size: clamp(4.5rem, 21vw, 19rem); position: relative;
+  }
+  .hero .anti { text-decoration: line-through; text-decoration-thickness: .07em; opacity: .55; transform: rotate(-4deg); transform-origin: left; }
+  .hero .museo { margin-left: 4vw; }
+  .hero .lema { margin-top: 2.5rem; max-width: 36rem; font-size: 1.05rem; border-left: 5px solid var(--fg); padding-left: 1rem; position: relative; }
+  .hero .bajar { margin-top: 1.6rem; font-size: .8rem; opacity: .7; animation: parpadeo 1.2s steps(2) infinite; position: relative; }
+  @keyframes parpadeo { 50% { opacity: 0; } }
+
+  /* cinta de precaucion */
+  .cinta {
+    position: absolute; left: -5%; width: 110%; bottom: 120px; transform: rotate(-2.5deg);
+    background: var(--b); color: var(--n); padding: .55rem 0; overflow: hidden; white-space: nowrap; z-index: 6;
+    font-family: Impact, "Arial Black", sans-serif; text-transform: uppercase; letter-spacing: .1em; font-size: 1.3rem;
+    border-top: 4px solid var(--n); border-bottom: 4px solid var(--n); box-shadow: 0 0 0 3px var(--b);
+  }
+  .cinta div { display: inline-block; animation: marquee 16s linear infinite; }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+
+  /* MANIFIESTO */
+  .manifiesto { padding: 8rem 5vw 10rem; display: grid; grid-template-columns: 1.3fr 1fr; gap: 4rem; }
+  .manifiesto h2 {
+    font-family: Impact, "Arial Black", sans-serif; text-transform: uppercase;
+    font-size: clamp(2.2rem, 7vw, 6rem); line-height: .92;
+  }
+  .manifiesto p { font-family: Georgia, "Times New Roman", serif; font-size: 1.25rem; margin-top: 1.5rem; }
+  .manifiesto p b { background: var(--n); color: var(--b); padding: 0 .25em; }
+  .reglas { border: 4px solid var(--fg); padding: 1.4rem; transform: rotate(2.5deg); align-self: start; box-shadow: 10px 10px 0 var(--fg); }
+  .reglas h3 { text-transform: uppercase; letter-spacing: .2em; font-size: .85rem; margin-bottom: .8rem; border-bottom: 4px solid var(--fg); padding-bottom: .5rem; }
+  .reglas li { list-style: none; margin: .55rem 0; }
+  .reglas li::before { content: "☠  "; }
+
+  /* EJES */
+  .eje { padding: 9rem 5vw 11rem; }
+  .eje > * { position: relative; }
+  .eje-cab { margin-bottom: 4.5rem; }
+  .eje-num {
+    font-family: Impact, "Arial Black", sans-serif; font-size: clamp(6rem, 20vw, 18rem);
+    line-height: .8; opacity: .13; position: absolute; top: -2rem; right: 0; user-select: none;
+  }
+  .eje-label { text-transform: uppercase; letter-spacing: .3em; font-size: .8rem; margin-bottom: .6rem; }
+  .eje h2 {
+    font-family: Impact, "Arial Black", sans-serif; text-transform: uppercase;
+    font-size: clamp(2rem, 5.6vw, 4.8rem); line-height: .95; max-width: 15ch; position: relative;
+  }
+  .eje .sub { margin-top: 1.2rem; font-style: italic; font-family: Georgia, serif; font-size: 1.2rem; max-width: 34rem; border-bottom: 3px dashed var(--fg); padding-bottom: .6rem; }
+
+  /* glitch violento */
+  .glitch { position: relative; }
+  .glitch::before, .glitch::after {
+    content: attr(data-text); position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+    overflow: hidden; pointer-events: none;
+  }
+  .glitch::before { left: 5px; text-shadow: -3px 0 #888; animation: gl1 2.2s infinite linear alternate-reverse; }
+  .glitch::after  { left: -5px; text-shadow: 3px 0 #bbb; animation: gl2 1.7s infinite linear alternate-reverse; }
+  @keyframes gl1 { 0%{clip-path:inset(10% 0 80% 0)} 20%{clip-path:inset(60% 0 10% 0)} 40%{clip-path:inset(30% 0 40% 0)} 60%{clip-path:inset(80% 0 5% 0)} 80%{clip-path:inset(5% 0 70% 0)} 100%{clip-path:inset(45% 0 30% 0)} }
+  @keyframes gl2 { 0%{clip-path:inset(70% 0 5% 0)} 25%{clip-path:inset(15% 0 60% 0)} 50%{clip-path:inset(50% 0 25% 0)} 75%{clip-path:inset(2% 0 85% 0)} 100%{clip-path:inset(35% 0 45% 0)} }
+
+  /* OBRAS */
+  .obras { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6rem 4rem; }
+  .obra:nth-child(even) { margin-top: 7rem; }
+  .obra:nth-child(3n) { margin-left: 4vw; }
+  .obra:nth-child(3n+1) { margin-right: 3vw; }
+  .obra {
+    position: relative; opacity: 0; transform: translateY(60px) skewY(4deg);
+    transition: opacity .8s, transform .8s;
+  }
+  .obra.vis { opacity: 1; transform: rotate(var(--r, 0deg)); }
+  .obra.vis:hover { transform: rotate(0deg) scale(1.02); }
+  .obra.tiembla { animation: tiembla .5s steps(6); }
+  @keyframes tiembla {
+    0% { transform: translate(0,0) rotate(var(--r)); } 20% { transform: translate(-6px,3px) rotate(-3deg); }
+    40% { transform: translate(5px,-4px) rotate(3deg); } 60% { transform: translate(-4px,-2px) rotate(-2deg); }
+    80% { transform: translate(3px,4px) rotate(2deg); } 100% { transform: translate(0,0) rotate(var(--r)); }
+  }
+  /* cinta adhesiva */
+  .obra::before {
+    content: ""; position: absolute; top: -16px; left: 50%; width: 120px; height: 32px; z-index: 4;
+    transform: translateX(-50%) rotate(var(--tr, -4deg)); background: rgba(150,150,150,.6);
+    box-shadow: 0 0 6px rgba(0,0,0,.4);
+  }
+  .frame-wrap { filter: drop-shadow(9px 9px 0 rgba(128,128,128,.6)); }
+  .frame {
+    position: relative; aspect-ratio: 4 / 5; border: 7px solid var(--fg); overflow: hidden;
+    background: repeating-linear-gradient(45deg, transparent 0 12px, var(--fg) 12px 13px);
+    clip-path: polygon(0 2%, 4% 0, 12% 1.5%, 25% 0, 40% 1%, 55% 0, 70% 1.8%, 85% 0, 100% 2%, 99% 20%, 100% 35%, 98.5% 55%, 100% 75%, 99% 100%, 85% 98.5%, 65% 100%, 50% 98%, 30% 100%, 15% 98.5%, 0 100%, 1.5% 80%, 0 60%, 1.5% 40%, 0 20%);
+  }
+  .obra:nth-child(even) .frame {
+    clip-path: polygon(1% 0, 20% 1.5%, 38% 0, 60% 1.5%, 80% 0, 100% 1%, 98.5% 25%, 100% 45%, 99% 70%, 100% 100%, 78% 98.5%, 55% 100%, 33% 98%, 12% 100%, 0 99%, 1.5% 72%, 0 50%, 1.5% 28%);
+  }
+  .frame::before {
+    content: attr(data-ruta); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: var(--bgsec); border: 1px solid var(--fg); padding: .5rem .9rem;
+    font-size: .8rem; text-align: center; white-space: nowrap;
+  }
+  .frame img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1;
+    filter: saturate(1.25) contrast(1.12) sepia(.12); transition: filter .35s, transform .6s;
+  }
+  .frame.con-img { aspect-ratio: auto; }
+  .frame.con-img::before { display: none; }
+  .frame.con-img img { position: relative; inset: auto; height: auto; display: block; }
+  .frame:hover img { filter: saturate(1.7) contrast(1.25); transform: scale(1.05); }
+  /* sello */
+  .sello {
+    position: absolute; z-index: 3; top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(var(--sr, -12deg));
+    font-family: Impact, "Arial Black", sans-serif; text-transform: uppercase; letter-spacing: .08em;
+    font-size: clamp(1.4rem, 3.4vw, 2.6rem); padding: .2rem 1rem; max-width: 88%; text-align: center; line-height: 1.05;
+    background: var(--n); color: var(--b); border: 5px solid var(--b); outline: 4px solid var(--n);
+    transition: opacity .3s, transform .4s;
+  }
+  .frame:hover .sello { opacity: 0; transform: translate(-50%, -150%) rotate(30deg); }
+
+  .meta { margin-top: 1.4rem; }
+  .n-obra { font-family: Impact, "Arial Black", sans-serif; font-size: 3.6rem; line-height: .8; opacity: .3; }
+  .meta h3 { font-family: Impact, "Arial Black", sans-serif; text-transform: uppercase; font-size: 1.9rem; line-height: 1; margin: .3rem 0; }
+  .autor { font-size: .85rem; text-transform: uppercase; letter-spacing: .12em; margin-bottom: .8rem; }
+  .autor::before { content: "— "; }
+  .placa { font-size: .78rem; text-decoration: line-through; opacity: .55; margin-bottom: .6rem; }
+  .placa::before { content: "PLACA OFICIAL: "; font-weight: bold; }
+  .critica { font-family: Georgia, "Times New Roman", serif; font-size: 1.08rem; border-left: 5px solid var(--fg); padding-left: 1rem; }
+  .redact { background: var(--fg); color: var(--fg); transition: background .25s; padding: 0 .15em; }
+  .redact:hover { background: transparent; }
+
+  /* FOOTER */
+  footer { padding: 9rem 5vw 4rem; text-align: center; min-height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+  footer h2 { font-family: Impact, "Arial Black", sans-serif; text-transform: uppercase; font-size: clamp(2.5rem, 10vw, 9rem); line-height: .88; }
+  footer p { margin-top: 1.5rem; max-width: 38rem; }
+  footer .cont { margin-top: 2.5rem; border: 3px solid var(--fg); padding: .6rem 1.2rem; text-transform: uppercase; letter-spacing: .1em; transform: rotate(-2deg); }
+  footer small { display: block; margin-top: 3rem; opacity: .6; }
+
+  .sub.grito {
+    font-family: Impact, "Arial Black", sans-serif; font-style: normal; text-transform: uppercase;
+    font-size: clamp(1.9rem, 5.4vw, 4.4rem); line-height: 1; max-width: 20ch;
+    border-bottom: 7px solid var(--fg); transform: rotate(-1.5deg); padding-bottom: .8rem;
+  }
+  #ahora { opacity: .7; margin-left: .6rem; text-transform: none; letter-spacing: .05em; }
+  #mute { margin-left: 1.2rem; border: 1px solid #fff; padding: .1rem .5rem; text-transform: none; letter-spacing: .05em; }
+  body.bloqueado { overflow: hidden; }
+  .gate {
+    position: fixed; inset: 0; z-index: 200; background: #0a0a0a; color: #f2f2f2;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem;
+  }
+  .gate.fuera { display: none; }
+  .gate h1 { font-family: Impact, "Arial Black", sans-serif; font-size: clamp(3.5rem, 16vw, 13rem); line-height: .85; letter-spacing: -.03em; text-transform: uppercase; }
+  .gate p { margin: 1.5rem 0 2rem; max-width: 34rem; font-size: 1.05rem; }
+  .gate button {
+    font-family: Impact, "Arial Black", sans-serif; text-transform: uppercase; background: #f2f2f2; color: #0a0a0a;
+    border: 3px solid #f2f2f2; padding: .8rem 2rem; font-size: 1.5rem; margin: .5rem; cursor: inherit;
+  }
+  .gate button:hover { background: #0a0a0a; color: #f2f2f2; }
+  .gate button.suave { background: transparent; color: #f2f2f2; font-size: 1rem; }
+  .gate button.suave:hover { background: #f2f2f2; color: #0a0a0a; }
+
+  /*  manchas y vandalismo sobre las obras */
+  .frame { cursor: crosshair; }
+  .mancha { position: absolute; z-index: 2; pointer-events: none; }
+  /* anotaciones a marcador rojo, como un visitante que rayó el folleto */
+  .mancha.circulo   { filter: url(#rugoso); background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60' preserveAspectRatio='none'><path d='M12 32 C6 10 58 3 92 17 C101 36 72 57 36 55 C9 52 5 26 42 11' fill='none' stroke='%23d4141c' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round' vector-effect='non-scaling-stroke'/></svg>") center / 100% 100% no-repeat; }
+  .mancha.flecha    { filter: url(#rugoso); background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60' preserveAspectRatio='none'><path d='M4 52 C30 46 56 30 90 10 M90 10 L70 12 M90 10 L85 30' fill='none' stroke='%23d4141c' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round' vector-effect='non-scaling-stroke'/></svg>") center / 100% 100% no-repeat; }
+  .mancha.subrayado { filter: url(#rugoso); background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60' preserveAspectRatio='none'><path d='M2 22 C30 14 62 26 98 12 M5 40 C40 32 70 42 95 30' fill='none' stroke='%23d4141c' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round' vector-effect='non-scaling-stroke'/></svg>") center / 100% 100% no-repeat; }
+  .mancha.equis     { filter: url(#rugoso); background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60' preserveAspectRatio='none'><path d='M10 8 L90 52 M88 8 L12 54' fill='none' stroke='%23d4141c' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round' vector-effect='non-scaling-stroke'/></svg>") center / 100% 100% no-repeat; }
+  /* pegatinas de papel */
+  .mancha.sticker {
+    font-family: Impact, "Arial Black", sans-serif; text-transform: uppercase; letter-spacing: .06em; font-size: 1.05rem;
+    white-space: nowrap; background: #f2f2f2; color: #0a0a0a; border: 2px solid #0a0a0a; padding: .15rem .6rem;
+    box-shadow: 3px 3px 0 rgba(0,0,0,.45);
+  }
+  .mancha.sellito {
+    font-family: Impact, "Arial Black", sans-serif; letter-spacing: .12em; font-size: 1.2rem; white-space: nowrap;
+    color: #d4141c; border: 3px solid #d4141c; padding: .05rem .6rem; background: rgba(242,242,242,.88); opacity: .95;
+  }
+  .mancha.tachon { background: #0a0a0a; box-shadow: 0 0 0 1px rgba(255,255,255,.25); }
+  .mancha.cinta-x {
+    height: 26px; background: rgba(205,205,195,.7); box-shadow: 0 0 5px rgba(0,0,0,.45);
+    clip-path: polygon(0 12%, 3% 0, 97% 8%, 100% 0, 98% 100%, 94% 88%, 4% 100%, 1% 85%);
+  }
+  .mancha.rasgon { height: 3px; background: rgba(0,0,0,.85); box-shadow: 0 0 0 1px rgba(255,255,255,.55); }
+  @keyframes chorrea { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+
+  /* rastro de tinta del cursor */
+  .gota-cursor {
+    position: fixed; z-index: 150; border-radius: 50%; background: #fff; mix-blend-mode: difference;
+    pointer-events: none; transform: translate(-50%, -50%); animation: gota .9s ease-in forwards;
+  }
+  @keyframes gota { to { transform: translate(-50%, 40px) scale(.3); opacity: 0; } }
+
+  /* audioguia robot */
+  .guia {
+    margin-top: .9rem; font-family: "Courier New", monospace; font-size: .75rem; text-transform: uppercase;
+    letter-spacing: .08em; background: transparent; color: var(--fg); border: 2px solid var(--fg);
+    padding: .35rem .7rem; cursor: inherit;
+  }
+  .guia:hover, .guia.on { background: var(--fg); color: var(--bgsec); }
+
+  /* boleto de entrada */
+  .boleto {
+    margin: 0 0 1.8rem; border: 3px dashed #f2f2f2; padding: .6rem 1.2rem; transform: rotate(-3deg);
+    text-transform: uppercase; letter-spacing: .12em; font-size: .85rem;
+  }
+  .boleto b { font-family: Impact, "Arial Black", sans-serif; font-size: 1.4rem; letter-spacing: .05em; }
+
+  @media (max-width: 800px) {
+    .manifiesto { grid-template-columns: 1fr; }
+    .obras { grid-template-columns: 1fr; gap: 5rem; }
+    .obra:nth-child(even), .obra:nth-child(3n), .obra:nth-child(3n+1) { margin: 0; }
+    nav a { margin-left: .6rem; }
+    .cinta { bottom: 100px; font-size: 1rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .obra { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body class="bloqueado">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="rugoso"><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="3"/></filter></svg>
+
+<div class="gate" id="gate">
+  <h1>ANTIMUSEO</h1>
+  <p>Esta página tiene sonido. Cada sala suena distinto.<br>Súbale al volumen y entre a ver lo que estos cacorros no quiso que viera.</p>
+  <div class="boleto">Boleto N° <b id="nboleto">0000</b> · válido para nada · no reembolsable</div>
+  <div>
+    <button id="conSonido">Entrar con sonido</button>
+    <button class="suave" id="sinSonido">Entrar en silencio</button>
+  </div>
+</div>
+
+<nav>
+  <span>Antimuseo ✕ <span id="ahora"></span> <span id="prog"></span></span>
+  <span>
+    <a href="#eje1" title="Desnudo, cuerpo y moral">I</a>
+    <a href="#eje2" title="Critica politica y violencia de Estado">II</a>
+    <a href="#eje3" title="Retiro de piezas">III</a>
+    <a href="#eje4" title="Satira y pop arte">IV</a>
+    <a href="#eje5" title="Instalaciones y espacio publico">V</a>
+    <a href="#eje6" title="Fotografia y medios grabados">VI</a>
+    <a href="#" id="mute" title="Prender o apagar el sonido">sonido: off</a>
+  </span>
+</nav>
+
+<!-- HERO -->
+<header class="hero negro" data-musica="portada">
+  <div class="anti">Anti</div>
+  <div class="museo glitch" data-text="Museo">Museo</div>
+  <p class="lema">Entrada libre. Vayase donde quiera.<br>Aquí cuelga lo que esta patria descolgó, tapó o mandó a callar.</p>
+  <p class="bajar">↓ (no hay nada bonito que ver, pero baje igual)<br>(haga clic sobre las obras: para eso están)</p>
+  <div class="cinta"><div>
+    Entrada gratis ✕ Salida no garantizada ✕ Prohibido pensar ✕ Patria milagro ✕ Obras retiradas por su propia seguridad ✕
+    Entrada gratis ✕ Salida no garantizada ✕ Prohibido pensar ✕ Patria milagro ✕ Obras retiradas por su propia seguridad ✕
+  </div></div>
+  <svg class="drip" viewBox="0 0 100 24" preserveAspectRatio="none" aria-hidden="true">
+    <path fill="currentColor" d="M0,0 L100,0 L100,5 Q97,5 97,9 Q97,16 95,16 Q93,16 93,9 Q93,5 88,5 L70,5 Q67,5 67,12 Q67,21 65,21 Q63,21 63,12 Q63,5 58,5 L40,5 Q37,5 37,8 Q37,13 35,13 Q33,13 33,8 Q33,5 28,5 L12,5 Q9,5 9,14 Q9,23 7,23 Q5,23 5,14 Q5,5 0,5 Z"/>
+  </svg>
+</header>
+
+<!-- MANIFIESTO -->
+<section class="manifiesto blanco" data-musica="portada">
+  <div>
+    <h2>Un museo es un mausoleo con boletería.</h2>
+    <p>Aquí no venimos a admirar nada. Venimos a ver qué escondieron, qué hijueputa mandó esconderlo y cuánto les dolió. El arte incomoda; el museo lo enmarca, lo ilumina bonito y le cuelga una placa para que nadie se acuerde de por qué molestaba.</p>
+    <p>Esto lo hacemos estudiantes de la Distrital. Es una sátira: aquí no se decora la mierda, <b>se enseña</b>. Si se ofende, la obra funcionó. Si no le gusto, mejor, no vinimos a caerle bien.</p>
+  </div>
+  <aside class="reglas">
+    <h3>Reglamento del visitante</h3>
+    <ul>
+      <li>Toque lo que quiera.</li>
+      <li>Flashee todo.</li>
+      <li>Grite, hable, coma .</li>
+      <li>No se quede callado.</li>
+      <li>No crea nada, hacemos lo que nos da la gana.</li>
+      <li>Entre mas hable mierda de las obras mejor.</li>
+    </ul>
+  </aside>
+  <svg class="drip" viewBox="0 0 100 24" preserveAspectRatio="none" aria-hidden="true">
+    <path fill="currentColor" d="M0,0 L100,0 L100,5 Q92,5 92,12 Q92,22 90,22 Q88,22 88,12 Q88,5 80,5 L55,5 Q52,5 52,9 Q52,15 50,15 Q48,15 48,9 Q48,5 44,5 L25,5 Q22,5 22,13 Q22,23 20,23 Q18,23 18,13 Q18,5 14,5 L0,5 Z"/>
+  </svg>
+</section>
+
+<!-- LOS 6 EJES  -->
+<main id="ejes"></main>
+
+<!-- FOOTER -->
+<footer class="negro" data-musica="final">
+  <h2 class="glitch" data-text="Fin del recorrido">Fin del recorrido</h2>
+  <p>No hay tienda de souvenirs, parce. Tampoco hay a quién reclamarle: ya se fueron con la plata. Gracias por venir a incomodarse.</p>
+  <div class="cont">Visitantes que entendieron algo: 0</div>
+  <div class="cont" style="margin-top:1rem; transform:rotate(1.5deg)">Obras vandalizadas por usted: <span id="vand">0</span></div>
+  <small>Proyecto de Historia y Cultura Colombiana · Universidad Distrital Francisco José de Caldas</small>
+</footer>
+
+<script>
+  const vacia = (e, n, d = {}) => ({
+    titulo: "Título de la obra",
+    autor: "Autor, año",
+    critica: "guion lol xdddd",
+    img: "Imagenes/eje" + e + "-obra" + n + ".jpg",
+    ...d
+  });
+
+  const ejes = [
+    { t: "Desnudo, cuerpo y moral religiosa/social",
+      s: "Se ve una teta y de repente todo el mundo es cura xd",
+      obras: [
+        vacia(1,1,{ titulo: "La mística", autor: "Débora Arango, 1940" }),
+        vacia(1,2,{ titulo: "Adolescencia (también conocida como Clavel rojo)", autor: "Débora Arango, ca. 1943" }),
+        vacia(1,3,{ titulo: "La Anunciación", autor: "Carlos Correa, 1941" }),
+        vacia(1,4,{ titulo: "Dos mujeres", autor: "José Rodríguez Acevedo, 1951" })
+      ] },
+    { t: "Crítica política, violencia de Estado y conflicto armado",
+      s: "A los muertos no les cabe el nombre en la placa, pero al Estado sí le cabe la excusa.",
+      obras: [
+        vacia(2,1,{ titulo: "La cosecha de los violentos", autor: "Alfonso Quijano Acero, 1968" }),
+        vacia(2,2,{ titulo: "La muerte de un desconocido", autor: "Pedro Alcántara Herrán Martínez, 1973" }),
+        vacia(2,3,{ titulo: "Solo con su muerte", autor: "Carlos Granada Arango" }),
+        vacia(2,4,{ titulo: "El freddy", autor: "Miguel Ángel Rojas, 1979" })
+      ] },
+    { t: "Retiro de piezas por directivas e intervenciones curatoriales",
+      s: "Bienvenidos a su MALPARIDA patria milagro.",
+      obras: [
+        vacia(3,1,{ titulo: "Los amantes del Sisga", autor: "Beatriz González" }),
+        vacia(3,2,{ titulo: "Ideales feministas", autor: "Lucila Rubio de Laverde, 1950" }),
+        vacia(3,3,{ titulo: "Caja agraria", autor: "Bernardo Salcedo, 1970" }),
+        vacia(3,4,{ titulo: "Cartas desde la cárcel", autor: "Diana Navarro, 2002" })
+      ] },
+    { t: "Sátira social, pop arte e iconoclasia",
+      s: "Reírse del poder es lo único serio que nos queda.",
+      obras: [
+        vacia(4,1,{ titulo: "Vía crucis", autor: "Carlos Correa / Taller de grabado La Estampa, ca. 1953" }),
+        vacia(4,2,{ titulo: "Libertinaje y desorden", autor: "Carlos Correa / Taller de grabado La Estampa, ca. 1960" }),
+        vacia(4,3,{ titulo: "La nueva bandera colombiana y sus autores", autor: "Augusto Rendón Sierra, 1972" }),
+        vacia(4,4,{ titulo: "Gran Pisco No. 2", autor: "Luis Paz, 1978" })
+      ] },
+    { t: "Instalaciones, escultura contemporánea y espacio público",
+      s: "Si cabe en la sala es decoración; si no cabe, es problema. Y a esta patria todo le queda grande.",
+      obras: [
+        vacia(5,1,{ titulo: "Minería", autor: "Antonio Caro, 2015" }),
+        vacia(5,2,{ titulo: "Zapatos diseñados para mujer trans", autor: "Proyecto Lafarota: Diego Rubiano, Mayté Machado y Red Comunitaria Trans, 2016" })
+      ] },
+    { t: "Fotografía, serigrafía y medios grabados",
+      s: "Como dice los de arriba, todo es fake news",
+      obras: [
+        vacia(6,1,{ titulo: "Muerte a la muerte", autor: "Pedro Alcántara Herrán, 1977" }),
+        vacia(6,2,{ titulo: "Afiche de la jornada internacional: no a la violencia contra la mujer", autor: "Diana Castellanos Aranguren, 1989" })
+      ] }
+  ];
+  const MUSICA = {
+    portada: "",
+    eje1: "Audios/cosita-seria.mp3",
+    eje2: "Audios/quien-los-mato.mp3",
+    eje3: "Audios/el-salon-de-la-injusticia.mp3",
+    eje4: "Audios/la-caza-de-narino.mp3",
+    eje5: "Audios/de-esto-te-hablamos.mp3",
+    eje6: "Audios/tetranutra.mp3",
+    final: ""
+  };
+
+  const romanos = ["I", "II", "III", "IV", "V", "VI"];
+  const sellos = ["RETIRADO", "CENSURADO", "NO APTO", "POR ORDEN SUPERIOR", "ESTO NO EXISTE", "MOLESTÓ"];
+  const placas = [
+    "Obra de incalculable valor cultural. Gracias por no tocar.",
+    "Restaurada con el mismo cariño con que se olvida.",
+    "Pase, mire, calle y compre el catálogo.",
+    "Con el apoyo de quienes preferirían que usted no estuviera aquí.",
+    "Gracias por su silencio cómplice.",
+    "Patrimonio de todos, siempre que nadie pregunte."
+  ];
+  const gotas = [
+    "M0,0 L100,0 L100,5 Q96,5 96,11 Q96,20 94,20 Q92,20 92,11 Q92,5 85,5 L60,5 Q57,5 57,14 Q57,24 55,24 Q53,24 53,14 Q53,5 47,5 L30,5 Q27,5 27,9 Q27,14 25,14 Q23,14 23,9 Q23,5 17,5 L0,5 Z",
+    "M0,0 L100,0 L100,5 Q90,5 90,10 Q90,17 88,17 Q86,17 86,10 Q86,5 75,5 L50,5 Q46,5 46,13 Q46,23 44,23 Q42,23 42,13 Q42,5 36,5 L15,5 Q11,5 11,12 Q11,21 9,21 Q7,21 7,12 Q7,5 0,5 Z"
+  ];
+  const rnd = (a, b) => (Math.random() * (b - a) + a).toFixed(2);
+  const cont = document.getElementById("ejes");
+
+  ejes.forEach((eje, i) => {
+    const sec = document.createElement("section");
+    sec.id = "eje" + (i + 1);
+    sec.dataset.musica = "eje" + (i + 1);
+    sec.className = "eje " + (i % 2 === 0 ? "negro" : "blanco");
+
+    const obrasHTML = eje.obras.map((o, j) => {
+      const critica = o.critica.replace(/\[\[(.+?)\]\]/g, '<span class="redact">$1</span>');
+      const sello = o.sello || sellos[(i * 4 + j) % sellos.length];
+      const placa = placas[(i * 4 + j) % placas.length];
+      return `
+        <article class="obra" style="--r:${rnd(-4, 4)}deg; --tr:${rnd(-10, 10)}deg">
+          <div class="frame-wrap">
+            <div class="frame" data-ruta="${o.img}">
+              <img src="${o.img}" alt="${o.titulo}" onload="this.parentNode.classList.add('con-img')" onerror="this.remove()">
+              <div class="sello" style="--sr:${rnd(-18, 18)}deg">${sello}</div>
+            </div>
+          </div>
+          <div class="meta">
+            <div class="n-obra">${String(j + 1).padStart(2, "0")}</div>
+            <h3>${o.titulo}</h3>
+            <div class="autor">${o.autor}</div>
+            <p class="placa">${placa}</p>
+            <p class="critica">${critica}</p>
+            <button class="guia" type="button">▶ Audioguía oficial (voz robot)</button>
+          </div>
+        </article>`;
+    }).join("");
+
+    sec.innerHTML = `
+      <div class="eje-cab">
+        <div class="eje-num">${romanos[i]}</div>
+        <div class="eje-label">Eje temático ${i + 1}</div>
+        <h2 class="glitch" data-text="${eje.t}">${eje.t}</h2>
+        <p class="sub${eje.grito ? " grito" : ""}">${eje.s}</p>
+      </div>
+      <div class="obras">${obrasHTML}</div>
+      <svg class="drip" viewBox="0 0 100 24" preserveAspectRatio="none" aria-hidden="true">
+        <path fill="currentColor" d="${gotas[i % 2]}"/>
+      </svg>`;
+    cont.appendChild(sec);
+  });
+
+  /* aparicion al hacer scroll */
+  const io = new IntersectionObserver((entradas) => {
+    entradas.forEach(en => { if (en.isIntersecting) { en.target.classList.add("vis"); io.unobserve(en.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll(".obra").forEach(el => io.observe(el));
+
+  /* de vez en cuando una obra convulsiona */
+  setInterval(() => {
+    const vis = document.querySelectorAll(".obra.vis");
+    if (!vis.length) return;
+    const el = vis[Math.floor(Math.random() * vis.length)];
+    el.classList.add("tiembla");
+    setTimeout(() => el.classList.remove("tiembla"), 520);
+  }, 2600);
+
+  /* sonido: una pista por sala */
+  const VOL = 0.6;
+  const pistas = {};
+  Object.entries(MUSICA).forEach(([clave, ruta]) => {
+    if (!ruta) return;
+    const a = new Audio(ruta);
+    a.loop = true; a.volume = 0; a.preload = "auto";
+    a.addEventListener("error", () => { a.roto = true; console.warn("No se pudo cargar el audio:", ruta); });
+    pistas[clave] = a;
+  });
+  let sonido = false, actual = null, hablando = false, utActual = null;
+  const ahora = document.getElementById("ahora");
+  const muteBtn = document.getElementById("mute");
+
+  function fade(a, objetivo) {
+    clearInterval(a.f);
+    if (objetivo > 0 && a.paused && !a.roto) a.play().catch(() => {});
+    a.f = setInterval(() => {
+      const d = objetivo - a.volume;
+      if (Math.abs(d) < 0.04) {
+        a.volume = objetivo; clearInterval(a.f);
+        if (objetivo === 0) a.pause();
+      } else {
+        a.volume = Math.min(1, Math.max(0, a.volume + Math.sign(d) * 0.04));
+      }
+    }, 60);
+  }
+  function aplicar() {
+    Object.keys(pistas).forEach(k => fade(pistas[k], (sonido && k === actual) ? VOL * (hablando ? 0.25 : 1) : 0));
+    const p = pistas[actual];
+    ahora.textContent = (sonido && p && !p.roto) ? "♪ " + actual : "";
+    muteBtn.textContent = sonido ? "sonido: on" : "sonido: off";
+  }
+
+  /* la sala que cruza el centro de la pantalla es la que suena */
+  const salas = new IntersectionObserver((es) => {
+    es.forEach(e => { if (e.isIntersecting) { actual = e.target.dataset.musica; aplicar(); } });
+  }, { rootMargin: "-50% 0px -50% 0px", threshold: 0 });
+  document.querySelectorAll("[data-musica]").forEach(el => salas.observe(el));
+
+  /* pantalla de entrada: el clic permite que el navegador deje sonar el audio */
+  const gate = document.getElementById("gate");
+  function entrar(conSonido) {
+    sonido = conSonido;
+    gate.classList.add("fuera");
+    document.body.classList.remove("bloqueado");
+    aplicar();
+  }
+  document.getElementById("conSonido").onclick = () => entrar(true);
+  document.getElementById("sinSonido").onclick = () => entrar(false);
+  muteBtn.onclick = (e) => { e.preventDefault(); sonido = !sonido; aplicar(); };
+
+  /*  manchas  */
+  const tipos = ["circulo", "circulo", "flecha", "subrayado", "equis", "sticker", "sticker", "sticker", "tachon", "cinta-x", "sellito"];
+  const num = (a, b) => Number(rnd(a, b));
+  const pegatinas = ["¿Quién lo quitó?", "Ojo", "No se olvida", "Esto sí pasó", "Pregunte", "Retirado por miedo", "Se lo dijimos"];
+  const frases = ["ANULADO", "CENSURADO", "NO VIO NADA", "RETIRADO"];
+  const pick = (a) => a[Math.floor(Math.random() * a.length)];
+  function mancha(frame, x, y, tam, tipo) {
+    const m = document.createElement("span");
+    m.className = "mancha " + tipo;
+    let st = `left:${x}%; top:${y}%; transform:translate(-50%,-50%) rotate(${num(-14, 14)}deg);`;
+    if (tipo === "tachon") st += `width:${num(30, 60)}%; height:${Math.round(num(14, 24))}px;`;
+    else if (tipo === "cinta-x") st += `width:${num(30, 45)}%;`;
+    else if (tipo === "sticker") m.textContent = pick(pegatinas);
+    else if (tipo === "sellito") m.textContent = pick(frases);
+    else if (tipo === "circulo") st += `width:${Math.round(tam * 1.8)}px; height:${Math.round(tam * 1.3)}px;`;
+    else if (tipo === "subrayado") st += `width:${Math.round(tam * 2)}px; height:${Math.round(tam * .5)}px;`;
+    else st += `width:${Math.round(tam * 1.2)}px; height:${Math.round(tam * (tipo === "flecha" ? .9 : 1.2))}px;`;
+    m.style.cssText = st;
+    frame.appendChild(m);
+    const todas = frame.querySelectorAll(".mancha:not(.rasgon)");
+    if (todas.length > 40) todas[0].remove();
+  }
+  document.querySelectorAll(".frame").forEach(f => {
+    const k = 1 + Math.floor(Math.random() * 2);
+    for (let n = 0; n < k; n++) {
+      mancha(f, num(8, 92), num(8, 92), num(40, 110), tipos[Math.floor(Math.random() * tipos.length)], Math.random() < .5);
+    }
+    if (Math.random() < .5) mancha(f, num(15, 85), num(15, 85), 70, "cinta-x", false);
+  });
+  let vand = 0;
+  document.addEventListener("click", (e) => {
+    const f = e.target.closest(".frame");
+    if (!f) return;
+    const r = f.getBoundingClientRect();
+    mancha(f, (e.clientX - r.left) / r.width * 100, (e.clientY - r.top) / r.height * 100,
+      num(40, 120), tipos[Math.floor(Math.random() * tipos.length)], Math.random() < .7);
+    document.getElementById("vand").textContent = ++vand;
+  });
+
+  /* audioguia oficial */
+  const TXT_GUIA = "▶ Audioguía oficial (voz robot)";
+  function hablar(i, j, b) {
+    const sy = window.speechSynthesis;
+    const eraEste = b.classList.contains("on");
+    utActual = null;
+    sy.cancel();
+    document.querySelectorAll(".guia.on").forEach(x => { x.classList.remove("on"); x.textContent = TXT_GUIA; });
+    hablando = false; aplicar();
+    if (eraEste) return;
+    const o = ejes[i].obras[j];
+    const placa = placas[(i * 4 + j) % placas.length];
+    const texto = `${o.titulo}. ${o.autor}. Placa oficial: ${placa} Traducción: ${o.critica.replace(/\[\[|\]\]/g, "")}`;
+    const u = new SpeechSynthesisUtterance(texto);
+    u.lang = "es-CO"; u.rate = 0.92; u.pitch = 0.55;
+    const fin = () => {
+      if (utActual !== u) return;
+      hablando = false; b.classList.remove("on"); b.textContent = TXT_GUIA; aplicar();
+    };
+    u.onstart = () => { if (utActual === u) { hablando = true; aplicar(); } };
+    u.onend = fin; u.onerror = fin;
+    utActual = u;
+    b.classList.add("on"); b.textContent = "■ Callar al robot";
+    sy.speak(u);
+  }
+  document.querySelectorAll(".eje").forEach((sec, i) => {
+    sec.querySelectorAll(".guia").forEach((b, j) => {
+      if (!("speechSynthesis" in window)) { b.remove(); return; }
+      b.onclick = () => hablar(i, j, b);
+    });
+  });
+
+  /*  boleto, progreso y rastro de tinta  */
+  document.getElementById("nboleto").textContent = String(Math.floor(Math.random() * 9000) + 1000);
+  const prog = document.getElementById("prog");
+  function actualizaProg() {
+    const h = document.documentElement.scrollHeight - innerHeight;
+    prog.textContent = "· recorrido " + Math.round(scrollY / Math.max(h, 1) * 100) + "%";
+  }
+  addEventListener("scroll", actualizaProg, { passive: true });
+  actualizaProg();
+
+  if (matchMedia("(hover: hover)").matches && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    let ult = 0;
+    addEventListener("mousemove", (e) => {
+      const t = performance.now();
+      if (t - ult < 45) return;
+      ult = t;
+      const g = document.createElement("i");
+      g.className = "gota-cursor";
+      const d = 4 + Math.random() * 9;
+      g.style.cssText = `left:${e.clientX}px; top:${e.clientY}px; width:${d}px; height:${d}px`;
+      document.body.appendChild(g);
+      setTimeout(() => g.remove(), 900);
+    });
+  }
+</script>
+</body>
+</html>
