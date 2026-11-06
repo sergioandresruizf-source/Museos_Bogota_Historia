@@ -10,7 +10,7 @@ const M=[
 {id:'moneda',n:'Museo Casa de Moneda',la:4.5965,lo:-74.0729,a:'Calle 11 #4-93',c:'#e9ff6d',t:'Historia del dinero y de la acuñación de monedas en Colombia.'},
 ];
 /* ENLACES: cada grupo pega aquí la URL de su museo (https://...). Si queda vacío, el mapa avisa que falta. */
-const L={oro:'',botero:'',florero:'',nacional:'https://sergioandresruizf-source.github.io/museo_Nacional_Colombia/',mambo:'',quinta:'',moneda:''};
+const L={oro:'',botero:'https://kevin-caro.github.io/Museo-De-Botero/',florero:'',nacional:'https://sergioandresruizf-source.github.io/museo_Nacional_Colombia/',mambo:'',quinta:'',moneda:''};
 const go=i=>{const u=L[M[i].id],s=document.getElementById('st');if(u){s.textContent='';   location.href=u}else s.textContent=M[i].n.split(' – ')[0]+': su grupo aún no ha agregado el enlace.'};
 const P=(a,o)=>[322+(o+74.055)*1630,45+(4.82-a)*1630];
 const app=document.getElementById('app');let svg,vb,raf;
