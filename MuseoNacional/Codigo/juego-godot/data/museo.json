@@ -1,0 +1,195 @@
+{
+  "titulo": "ISLAS DE LA CONTRARREVOLUCIÓN",
+  "subtitulo": "Recorre el Museo Nacional y recupera lo que fue removido",
+  "config": {
+	"exigirVerTodas": true,
+	"exigirVerTodasEnCalavera": true,
+	"velocidadBarco": 110,
+	"atajos": false
+  },
+  "textos": {
+	"nieblaBloqueada": "Una espesa niebla bloquea el paso a la Isla Calavera…",
+	"nieblaSeDisipa": "¡La niebla se disipa! La Isla Calavera ya es accesible.",
+	"cineInicio": "Las obras removidas vuelven a casa…",
+	"finalTitulo": "¡La contrarrevolución está completa!",
+	"finalTexto": "Cada obra removida regresó a su sala y la bandera de la revolución ondea en todas las islas. El museo es de quienes lo habitan."
+  },
+  "calavera": {
+	"nombre": "Isla Calavera",
+	"descripcion": "Aquí se guardan todas las obras que fueron removidas."
+  },
+  "islas": [
+	{
+	  "nombre": "Sala 1 · La historia del museo",
+	  "obras": [
+		{
+		  "titulo": "Obra 1 (presente)",
+		  "descripcion": "Escribe aquí la descripción de esta obra: autor, año, técnica y por qué importa.",
+		  "imagen": "obras/isla1_obra1.jpg",
+		  "removida": false
+		},
+		{
+		  "titulo": "Obra 2 (presente)",
+		  "descripcion": "Descripción de la segunda obra que sí se exhibe actualmente.",
+		  "imagen": "obras/isla1_obra2.jpg",
+		  "removida": false
+		},
+		{
+		  "titulo": "Obra 3 (removida)",
+		  "descripcion": "Esta obra fue removida. Explica cuándo y por qué razón social, política o cultural dejó de exhibirse.",
+		  "removida": true
+		}
+	  ]
+	},
+	{
+	  "nombre": "Sala 2 · Tierra de historias",
+	  "obras": [
+		{
+		  "titulo": "Obra 1 (presente)",
+		  "descripcion": "Descripción de la obra.",
+		  "imagen": "obras/isla2_obra1.jpg",
+		  "removida": false
+		},
+		{
+		  "titulo": "Obra 2 (removida)",
+		  "descripcion": "Descripción de la obra removida.",
+		  "removida": true
+		}
+	  ]
+	},
+	{
+	  "nombre": "Sala 3 · Memoria en movimiento",
+	  "obras": [
+		{
+		  "titulo": "Obra 1 (presente)",
+		  "descripcion": "Descripción de la obra.",
+		  "imagen": "obras/isla3_obra1.jpg",
+		  "removida": false
+		},
+		{
+		  "titulo": "Obra 2 (presente)",
+		  "descripcion": "Descripción de la obra.",
+		  "imagen": "obras/isla3_obra2.jpg",
+		  "removida": false
+		},
+		{
+		  "titulo": "Obra 3 (removida)",
+		  "descripcion": "Descripción de la obra removida.",
+		  "removida": true
+		}
+	  ]
+	},
+	{
+	  "nombre": "Sala 4 · Memoria y nación",
+	  "obras": [
+		{
+		  "titulo": "Obra 1 (presente)",
+		  "descripcion": "Descripción de la obra.",
+		  "imagen": "obras/isla4_obra1.jpg",
+		  "removida": false
+		},
+		{
+		  "titulo": "Obra 2 (removida)",
+		  "descripcion": "Descripción de la obra removida.",
+		  "removida": true
+		}
+	  ]
+	},
+	{
+	  "nombre": "Sala 5 · Ser territorio",
+	  "obras": [
+		{
+		  "titulo": "Obra 1 (presente)",
+		  "descripcion": "Descripción de la obra.",
+		  "imagen": "obras/isla5_obra1.jpg",
+		  "removida": false
+		},
+		{
+		  "titulo": "Obra 2 (removida)",
+		  "descripcion": "Descripción de la obra removida.",
+		  "removida": true
+		}
+	  ]
+	},
+	{
+	  "nombre": "Sala 6 · Hacer sociedad",
+	  "obras": [
+		{
+		  "titulo": "Obra 1 (presente)",
+		  "descripcion": "Descripción de la obra.",
+		  "imagen": "obras/isla6_obra1.jpg",
+		  "removida": false
+		},
+		{
+		  "titulo": "Obra 2 (removida)",
+		  "descripcion": "Descripción de la obra removida.",
+		  "removida": true
+		}
+	  ]
+	},
+	{
+	  "nombre": "Sala 7 · Conexiones",
+	  "obras": [
+		{
+		  "titulo": "Obra 1 (presente)",
+		  "descripcion": "Descripción de la obra.",
+		  "imagen": "obras/isla7_obra1.jpg",
+		  "removida": false
+		},
+		{
+		  "titulo": "Obra 2 (removida)",
+		  "descripcion": "Descripción de la obra removida.",
+		  "removida": true
+		}
+	  ]
+	},
+	{
+	  "nombre": "Sala 8 · Tierra como recurso",
+	  "obras": [
+		{
+		  "titulo": "Obra 1 (presente)",
+		  "descripcion": "Descripción de la obra.",
+		  "imagen": "obras/isla8_obra1.jpg",
+		  "removida": false
+		},
+		{
+		  "titulo": "Obra 2 (removida)",
+		  "descripcion": "Descripción de la obra removida.",
+		  "removida": true
+		}
+	  ]
+	},
+	{
+	  "nombre": "Sala 9 · Ser y hacer",
+	  "obras": [
+		{
+		  "titulo": "Obra 1 (presente)",
+		  "descripcion": "Descripción de la obra.",
+		  "imagen": "obras/isla9_obra1.jpg",
+		  "removida": false
+		},
+		{
+		  "titulo": "Obra 2 (removida)",
+		  "descripcion": "Descripción de la obra removida.",
+		  "removida": true
+		}
+	  ]
+	},
+	{
+	  "nombre": "Sala 10 · Fuerza,Fe y Sustancia",
+	  "obras": [
+		{
+		  "titulo": "Obra 1 (presente)",
+		  "descripcion": "Descripción de la obra.",
+		  "imagen": "obras/isla10_obra1.jpg",
+		  "removida": false
+		},
+		{
+		  "titulo": "Obra 2 (removida)",
+		  "descripcion": "Descripción de la obra removida.",
+		  "removida": true
+		}
+	  ]
+	}
+  ]
+}
