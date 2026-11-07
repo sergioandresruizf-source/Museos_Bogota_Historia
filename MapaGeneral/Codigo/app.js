@@ -6,12 +6,19 @@ const M=[
 {id:'florero',n:'Museo de la Independencia – Casa del Florero',la:4.5977,lo:-74.0757,a:'Calle 11 #6-94',c:'#c9573f',t:'Donde se cuenta lo ocurrido el 20 de julio de 1810.'},
 {id:'nacional',n:'Museo Nacional de Colombia',la:4.6155,lo:-74.0678,a:'Cra. 7 #28-66',c:'#7fb3d5',t:'Fundado en 1823, el museo más antiguo del país.'},
 {id:'mambo',n:'Museo de Arte Moderno de Bogotá',la:4.6124,lo:-74.0683,a:'Calle 24 #6-00',c:'#e0838f',t:'Arte moderno y contemporáneo en un edificio de ladrillo.'},
-{id:'quinta',n:'Quinta de Bolívar',la:4.6024,lo:-74.0641,a:'Calle 20 #2-91 Este',c:'#8fbf7a',t:'La casa que Bogotá regaló a Simón Bolívar en 1820.'},
+{id:'minecraft',n:'Minecraft',la:4.6024,lo:-74.0641,a:'Museo en Minecraft',c:'#8fbf7a',t:'Servidor con museo construido bloque a bloque.'},
 {id:'moneda',n:'Museo Casa de Moneda',la:4.5965,lo:-74.0729,a:'Calle 11 #4-93',c:'#e9ff6d',t:'Historia del dinero y de la acuñación de monedas en Colombia.',e:'moneda'},
 {id:'antimuseo',n:'Antimuseo',la:4.6070,lo:-74.0720,a:'Ubicación por definir',c:'#b36bff',t:'Lo que los museos no quisieron mostrar. Cruza el portal.',e:'portal'},
 ];
-/* ENLACES: cada grupo pega aquí la URL de su museo (https://...). Si queda vacío, el mapa avisa que falta. */
-const L={oro:'',botero:'../../MuseoDeBotero/index.html',florero:'',nacional:'../../MuseoNacional/Codigo/index.html',mambo:'',quinta:'',moneda:'../../MuseoCasaDeMoneda/museo-de-la-moneda.html',antimuseo:'../../Antimuseo/index.html'};
+
+const L={nacional:'../../MuseoNacional/Codigo/index.html',
+        oro:'',
+        mambo:'../../MuseoDeArteModerno/museo/index.html',
+        florero:'',
+        moneda:'../../MuseoCasaDeMoneda/museo-de-la-moneda.html',
+        botero:'../../MuseoDeBotero/index.html',
+        antimuseo:'../../Antimuseo/index.html',
+        minecraft:'../../MuseoMinecraft/index.html'};
 const go=i=>{const u=L[M[i].id],s=document.getElementById('st');if(u){s.textContent='';abrir(i)}else s.textContent=M[i].n.split(' – ')[0]+': su grupo aún no ha agregado el enlace.'};
 /* ===== VISTA DE CONEXIONES: 'pin' | 'portal' | 'moneda'. Cada museo trae su estilo en M (campo e); el selector del mapa puede forzar uno para todos ===== */
 let modo='auto';try{modo=localStorage.getItem('museos.vista')||'auto'}catch(e){}
