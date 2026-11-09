@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Museo de la Buena Educación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Permanent+Marker&family=Archivo+Black&family=Space+Mono:wght@400;700&family=Special+Elite&family=Rock+Salt&family=Syne:wght@800&family=Staatliches&display=swap" rel="stylesheet">
+<style>
+
+  :root { --n: #0a0a0a; --b: #f2f2f2; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body, a {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28'><path d='M3 3L25 25M25 3L3 25' stroke='white' stroke-width='7'/><path d='M3 3L25 25M25 3L3 25' stroke='black' stroke-width='3'/></svg>") 14 14, crosshair;
+  }
+  body {
+    background: var(--b); color: var(--n);
+    font-family: "Courier Prime", "Courier New", Courier, monospace;
+    line-height: 1.55; overflow-x: hidden;
+  }
+  /* ruido */
+  body::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: .17;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+  ::selection { background: var(--n); color: var(--b); }
+
+  section, footer, header { position: relative; }
+
+  /* nav */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .2rem .8rem;
+    padding: .7rem 1.4rem; background: #0a0a0a; color: #f2f2f2; border-bottom: 3px solid #f2f2f2;
+    font-size: .85rem; text-transform: uppercase; letter-spacing: .15em;
+  }
+  nav a { color: inherit; text-decoration: none; margin-left: 1rem; }
+  nav a:hover { text-decoration: line-through; }
+
+  /* portada */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+    padding: 6rem 5vw 11rem; overflow: hidden;
+  }
+  .hero::before, .eje::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .09;
+    background:
+      radial-gradient(circle at 12% 22%, var(--fg) 0 5%, transparent 5.4%),
+      radial-gradient(circle at 78% 12%, var(--fg) 0 3%, transparent 3.3%),
+      radial-gradient(circle at 88% 70%, var(--fg) 0 7%, transparent 7.5%),
+      radial-gradient(circle at 30% 85%, var(--fg) 0 2.5%, transparent 2.8%),
+      radial-gradient(circle at 55% 45%, var(--fg) 0 1.5%, transparent 1.8%);
+  }
+  .hero .anti, .hero .museo {
+    font-family: "Anton", Impact, "Arial Black", sans-serif; text-transform: uppercase;
+    line-height: .82; letter-spacing: -.04em; font-size: clamp(4.5rem, 21vw, 19rem); position: relative;
+  }
+  .hero .anti { text-decoration: line-through; text-decoration-thickness: .07em; opacity: .55; transform: rotate(-4deg); transform-origin: left; }
+  .hero .museo { margin-left: 4vw; }
+  .hero .lema { margin-top: 2.5rem; max-width: 36rem; font-size: 1.05rem; border-left: 5px solid var(--fg); padding-left: 1rem; position: relative; }
+  .hero .bajar { margin-top: 1.6rem; font-size: .8rem; opacity: .7; animation: parpadeo 1.2s steps(2) infinite; position: relative; }
+  @keyframes parpadeo { 50% { opacity: 0; } }
+
+  /* cinta */
+  .cinta {
+    position: absolute; left: -5%; width: 110%; bottom: 120px; transform: rotate(-2.5deg);
+    background: var(--b); color: var(--n); padding: .55rem 0; overflow: hidden; white-space: nowrap; z-index: 6;
+    font-family: "Anton", Impact, "Arial Black", sans-serif; text-transform: uppercase; letter-spacing: .1em; font-size: 1.3rem;
+    border-top: 4px solid var(--n); border-bottom: 4px solid var(--n); box-shadow: 0 0 0 3px var(--b);
+  }
+  .cinta div { display: inline-block; animation: marquee 16s linear infinite; }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+
+  /* manifiesto */
+  .manifiesto { padding: 8rem 5vw 10rem; display: grid; grid-template-columns: 1.3fr 1fr; gap: 4rem; }
+  .manifiesto h2 {
+    font-family: "Anton", Impact, "Arial Black", sans-serif; text-transform: uppercase;
+    font-size: clamp(2.2rem, 7vw, 6rem); line-height: .92;
+  }
+  .manifiesto p { font-family: Georgia, "Times New Roman", serif; font-size: 1.25rem; margin-top: 1.5rem; }
+  .manifiesto p b { background: var(--n); color: var(--b); padding: 0 .25em; }
+  .reglas { border: 4px solid var(--fg); padding: 1.4rem; transform: rotate(2.5deg); align-self: start; box-shadow: 10px 10px 0 var(--fg); }
+  .reglas h3 { text-transform: uppercase; letter-spacing: .2em; font-size: .85rem; margin-bottom: .8rem; border-bottom: 4px solid var(--fg); padding-bottom: .5rem; }
+  .reglas li { list-style: none; margin: .55rem 0; }
+  .reglas li::before { content: "☠  "; }
+
+  /* ejes */
+  .eje { padding: 9rem 5vw 11rem; }
+  .eje > * { position: relative; }
+  .eje-cab { margin-bottom: 4.5rem; }
+  .eje-num {
+    font-family: "Anton", Impact, "Arial Black", sans-serif; font-size: clamp(6rem, 20vw, 18rem);
+    line-height: .8; opacity: .13; position: absolute; top: -2rem; right: 0; user-select: none;
+  }
+  .eje-label { text-transform: uppercase; letter-spacing: .3em; font-size: .8rem; margin-bottom: .6rem; }
+  .eje h2 {
+    font-family: "Anton", Impact, "Arial Black", sans-serif; text-transform: uppercase;
+    font-size: clamp(2rem, 5.6vw, 4.8rem); line-height: .95; max-width: 15ch; position: relative;
+  }
+  .eje .sub { margin-top: 1.2rem; font-style: italic; font-family: Georgia, serif; font-size: 1.2rem; max-width: 34rem; border-bottom: 3px dashed var(--fg); padding-bottom: .6rem; }
+
+  /* glitch */
+  .glitch { position: relative; }
+  .glitch::before, .glitch::after {
+    content: attr(data-text); position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+    overflow: hidden; pointer-events: none;
+  }
+  .glitch::before { left: 5px; text-shadow: -3px 0 #888; animation: gl1 2.2s infinite linear alternate-reverse; }
+  .glitch::after  { left: -5px; text-shadow: 3px 0 #bbb; animation: gl2 1.7s infinite linear alternate-reverse; }
+  @keyframes gl1 { 0%{clip-path:inset(10% 0 80% 0)} 20%{clip-path:inset(60% 0 10% 0)} 40%{clip-path:inset(30% 0 40% 0)} 60%{clip-path:inset(80% 0 5% 0)} 80%{clip-path:inset(5% 0 70% 0)} 100%{clip-path:inset(45% 0 30% 0)} }
+  @keyframes gl2 { 0%{clip-path:inset(70% 0 5% 0)} 25%{clip-path:inset(15% 0 60% 0)} 50%{clip-path:inset(50% 0 25% 0)} 75%{clip-path:inset(2% 0 85% 0)} 100%{clip-path:inset(35% 0 45% 0)} }
+
+  /* obras */
+  .obras { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6rem 4rem; }
+  .obra:nth-child(even) { margin-top: 7rem; }
+  .obra:nth-child(3n) { margin-left: 4vw; }
+  .obra:nth-child(3n+1) { margin-right: 3vw; }
+  .obra {
+    position: relative; opacity: 0; transform: translateY(60px) skewY(4deg);
+    transition: opacity .8s, transform .8s;
+  }
+  .obra.vis { opacity: 1; transform: rotate(var(--r, 0deg)); }
+  .obra.vis:hover { transform: rotate(0deg) scale(1.02); }
+  /* cinta adhesiva */
+  .obra::before {
+    content: ""; position: absolute; top: -16px; left: 50%; width: 120px; height: 32px; z-index: 4;
+    transform: translateX(-50%) rotate(var(--tr, -4deg)); background: rgba(150,150,150,.6);
+    box-shadow: 0 0 6px rgba(0,0,0,.4);
+  }
+  .frame-wrap { filter: drop-shadow(9px 9px 0 rgba(128,128,128,.6)); }
+  .frame {
+    position: relative; aspect-ratio: 4 / 5; border: 7px solid var(--fg); overflow: hidden;
+    background: repeating-linear-gradient(45deg, transparent 0 12px, var(--fg) 12px 13px);
+    clip-path: polygon(0 2%, 4% 0, 12% 1.5%, 25% 0, 40% 1%, 55% 0, 70% 1.8%, 85% 0, 100% 2%, 99% 20%, 100% 35%, 98.5% 55%, 100% 75%, 99% 100%, 85% 98.5%, 65% 100%, 50% 98%, 30% 100%, 15% 98.5%, 0 100%, 1.5% 80%, 0 60%, 1.5% 40%, 0 20%);
+  }
+  .obra:nth-child(even) .frame {
+    clip-path: polygon(1% 0, 20% 1.5%, 38% 0, 60% 1.5%, 80% 0, 100% 1%, 98.5% 25%, 100% 45%, 99% 70%, 100% 100%, 78% 98.5%, 55% 100%, 33% 98%, 12% 100%, 0 99%, 1.5% 72%, 0 50%, 1.5% 28%);
+  }
+  .frame::before {
+    content: attr(data-ruta); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: var(--bgsec); border: 1px solid var(--fg); padding: .5rem .9rem;
+    font-size: .8rem; text-align: center; white-space: nowrap;
+  }
+  .frame img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1;
+    filter: saturate(1.25) contrast(1.12); transition: filter .35s, transform .6s;
+  }
+  .frame.con-img { aspect-ratio: auto; }
+  .frame.con-img::before { display: none; }
+  .frame.con-img img { position: relative; inset: auto; height: auto; display: block; }
+  .frame:hover img { filter: saturate(1.7) contrast(1.25); transform: scale(1.05); }
+  .meta { margin-top: 1.4rem; }
+  .n-obra { font-family: "Anton", Impact, "Arial Black", sans-serif; font-size: 3.6rem; line-height: .8; opacity: .3; }
+  .meta h3 { font-family: "Anton", Impact, "Arial Black", sans-serif; text-transform: uppercase; font-size: 1.9rem; line-height: 1; margin: .3rem 0; }
+  .autor { font-size: .85rem; text-transform: uppercase; letter-spacing: .12em; margin-bottom: .8rem; }
+  .autor::before { content: "— "; }
+  .placa { font-size: .78rem; text-decoration: line-through; opacity: .55; margin-bottom: .6rem; }
+  .placa::before { content: "PLACA OFICIAL: "; font-weight: bold; }
+
+  /* footer */
+  footer { padding: 9rem 5vw 4rem; text-align: center; min-height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+  footer h2 { font-family: "Anton", Impact, "Arial Black", sans-serif; text-transform: uppercase; font-size: clamp(2.5rem, 10vw, 9rem); line-height: .88; }
+  footer p { margin-top: 1.5rem; max-width: 38rem; }
+  footer .cont { margin-top: 2.5rem; border: 3px solid var(--fg); padding: .6rem 1.2rem; text-transform: uppercase; letter-spacing: .1em; transform: rotate(-2deg); }
+  footer small { display: block; margin-top: 3rem; opacity: .6; }
+
+  #ahora { opacity: .7; margin-left: .6rem; text-transform: none; letter-spacing: .05em; }
+  #mute { margin-left: 1.2rem; border: 1px solid #fff; padding: .1rem .5rem; text-transform: none; letter-spacing: .05em; }
+  body.bloqueado { overflow: hidden; }
+  .gate {
+    position: fixed; inset: 0; z-index: 200; background: #0a0a0a; color: #f2f2f2;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem;
+  }
+  .gate.fuera { display: none; }
+  .gate h1 { font-family: "Anton", Impact, "Arial Black", sans-serif; font-size: clamp(3.5rem, 16vw, 13rem); line-height: .85; letter-spacing: -.03em; text-transform: uppercase; }
+  .gate p { margin: 1.5rem 0 2rem; max-width: 34rem; font-size: 1.05rem; }
+  .gate button {
+    font-family: "Anton", Impact, "Arial Black", sans-serif; text-transform: uppercase; background: #f2f2f2; color: #0a0a0a;
+    border: 3px solid #f2f2f2; padding: .8rem 2rem; font-size: 1.5rem; margin: .5rem; cursor: inherit;
+  }
+  .gate button:hover { background: #0a0a0a; color: #f2f2f2; }
+  .gate button.suave { background: transparent; color: #f2f2f2; font-size: 1rem; }
+  .gate button.suave:hover { background: #f2f2f2; color: #0a0a0a; }
+
+  /* rastro del cursor */
+  .gota-cursor {
+    position: fixed; z-index: 150; border-radius: 50%; background: #fff; mix-blend-mode: difference;
+    pointer-events: none; transform: translate(-50%, -50%); animation: gota .9s ease-in forwards;
+  }
+  @keyframes gota { to { transform: translate(-50%, 40px) scale(.3); opacity: 0; } }
+
+  /* audioguia */
+  .guia {
+    margin-top: .9rem; font-family: "Courier Prime", "Courier New", monospace; font-size: .75rem; text-transform: uppercase;
+    letter-spacing: .08em; background: transparent; color: var(--fg); border: 2px solid var(--fg);
+    padding: .35rem .7rem; cursor: inherit;
+  }
+  .guia:hover, .guia.on { background: var(--fg); color: var(--bgsec); }
+
+  @media (max-width: 800px) {
+    .manifiesto { grid-template-columns: 1fr; }
+    .obras { grid-template-columns: 1fr; gap: 5rem; }
+    .obra:nth-child(even), .obra:nth-child(3n), .obra:nth-child(3n+1) { margin: 0; }
+    nav a { margin-left: .6rem; }
+    .cinta { bottom: 100px; font-size: 1rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .obra { opacity: 1; transform: none; }
+  }
+  html { scroll-padding-top: 3.4rem; }
+  @media (max-width: 800px) {
+    nav { padding: .5rem .8rem; font-size: .7rem; letter-spacing: .06em; }
+    nav a { margin-left: .5rem; }
+    #mute { margin-left: .6rem; }
+    .hero { padding-top: 7rem; }
+  }
+
+  :root { --bg: #f2f2f2; --fg: #0a0a0a; --n: var(--fg); --b: var(--bg); --bgsec: var(--bg); }
+  body { background: var(--bg); color: var(--fg); transition: background-color 1.2s, color 1.2s; }
+  .hero, .manifiesto, .eje, .fin, .pie { position: relative; z-index: 1; }
+  nav { background: var(--bg); color: var(--fg); border-bottom-color: var(--fg); transition: background-color 1.2s, color 1.2s, border-color 1.2s; }
+  #mute { border-color: var(--fg); }
+  .grietas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0; transition: opacity 1.4s; }
+  .grietas path { fill: none; stroke: var(--fg); stroke-width: 1.3; vector-effect: non-scaling-stroke; stroke-linejoin: bevel; opacity: .7; }
+  .cinta { background: var(--fg); color: var(--bg); border-color: var(--bg); box-shadow: 0 0 0 3px var(--fg); }
+  .hero { padding-bottom: 12rem; }
+  .hero .anti { display: none; }
+  body.verdad .hero .anti { display: block; animation: entra 1s ease both; }
+  .hero .de { font: 400 clamp(1.4rem, 4.2vw, 3.2rem)/1 "Anton", Impact, sans-serif; text-transform: uppercase; margin: 1rem 0 0 4vw; letter-spacing: .02em; }
+  body.verdad .hero .de { display: none; }
+  @keyframes entra { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .cambia { animation: cambia .55s steps(5); }
+  @keyframes cambia { 0% { opacity: 1; } 20% { opacity: .1; transform: translateX(-8px) skewX(8deg); } 40% { opacity: 1; transform: translateX(6px); } 60% { opacity: .2; transform: translateX(-3px); } 100% { opacity: 1; transform: none; } }
+  .mcont { display: contents; }
+  .reglas li::before { content: "·  "; }
+  body.verdad .reglas li::before { content: "☠  "; }
+  .eje { padding-bottom: 6rem; }
+  .eje .sub { transition: color .5s; }
+  .eje-cab.real .sub { font-family: "Permanent Marker", cursive; font-style: normal; transform: rotate(-1deg); }
+  /* puerta */
+  .gate { background: #f2f2f2; color: #0a0a0a; }
+  .gate h1 { font-size: clamp(2.2rem, 9vw, 7rem); }
+  .gate button { background: #0a0a0a; color: #f2f2f2; border-color: #0a0a0a; }
+  .gate button:hover { background: #f2f2f2; color: #0a0a0a; }
+  .gate button.suave { background: transparent; color: #0a0a0a; }
+  .gate button.suave:hover { background: #0a0a0a; color: #f2f2f2; }
+  /* obras */
+  .frame { min-height: 300px; }
+  .frame.con-img { min-height: 0; }
+  .frame, .frame canvas.cub { cursor: grab; }
+  .frame img, .frame:hover img { transform: none; }
+  .obra .real, .obra.libre .of { display: none; }
+  .obra.libre .real { display: block; animation: entra .9s ease both; }
+  .of .placa { text-decoration: none; opacity: 1; }
+  .ctl { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin-top: 1rem; }
+  .obra.libre .ctl { display: none; }
+  .btn { background: transparent; color: var(--fg); border: 3px solid var(--fg); padding: .7rem 1.2rem; font: 1.2rem "Anton", Impact, sans-serif; text-transform: uppercase; letter-spacing: .06em; user-select: none; -webkit-user-select: none; touch-action: manipulation; cursor: inherit; }
+  .btn:hover, .btn.on { background: var(--fg); color: var(--bg); }
+  .btn.rudo { border-style: dashed; }
+  .respuesta { flex-basis: 100%; font-size: .85rem; min-height: 2.6em; opacity: .8; }
+  .frame canvas.cub { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 4; touch-action: none; }
+  .frame.linterna { touch-action: none; cursor: crosshair; }
+  .oscuro { position: absolute; inset: 0; z-index: 3; pointer-events: none; transition: opacity 1s; background-color: rgba(0,0,0,0);
+    background-image: radial-gradient(circle var(--r, 80px) at var(--x, -999px) var(--y, -999px), rgba(0,0,0,0) 0, rgba(0,0,0,0) 30%, rgba(0,0,0,.985) 100%); }
+  .oscuro.todo { background-color: rgba(0,0,0,.985); }
+  .flash { position: absolute; inset: 0; z-index: 3; background: #fff; opacity: 0; pointer-events: none; }
+  .flash.on { animation: fl .45s ease-out; }
+  @keyframes fl { 0% { opacity: .95; } 100% { opacity: 0; } }
+  .onoma { position: absolute; inset: 0; z-index: 3; display: flex; align-items: center; justify-content: center; pointer-events: none; opacity: 0; text-align: center; line-height: 1;
+    font-family: "Anton", Impact, sans-serif; color: #fff; text-shadow: 0 0 12px #000, 3px 3px 0 #000; letter-spacing: .04em; }
+  .frame.cortina img { filter: blur(28px) grayscale(.85) brightness(.9); transform: scale(1.12); transition: filter 1.4s, transform 1.4s; }
+  .frame.cortina.fuera img { filter: none; transform: none; }
+  .cartel { position: absolute; inset: 0; z-index: 3; display: flex; align-items: center; justify-content: center; text-align: center; padding: 1.4rem; font-size: .85rem; letter-spacing: .16em; text-transform: uppercase; color: #0a0a0a; transition: opacity .8s; }
+  .cartel span { background: #f2f2f2; border: 2px solid #0a0a0a; padding: .8rem 1rem; }
+  .frame.cortina.fuera .cartel { opacity: 0; }
+  .nam { position: absolute; z-index: 5; pointer-events: none; font: 1.4rem "Anton", Impact, sans-serif; color: #0a0a0a; background: #f2f2f2; padding: 0 .3rem; animation: nam .8s ease-out forwards; }
+  @keyframes nam { to { transform: translateY(-46px) rotate(8deg); opacity: 0; } }
+  .vidrio { position: absolute; inset: 0; z-index: 3; cursor: crosshair; background: linear-gradient(120deg, rgba(255,255,255,.2), transparent 35%, transparent 65%, rgba(255,255,255,.1)); }
+  .vidrio::after { content: "NO ROMPER"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-8deg); font: 1.4rem "Anton", Impact, sans-serif; letter-spacing: .15em; color: #0a0a0a; background: #f2f2f2; border: 3px solid #0a0a0a; padding: .2rem .8rem; white-space: nowrap; }
+  .libre .vidrio { display: none; }
+  .grieta { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; animation: rompe .3s ease-out; }
+  @keyframes rompe { from { opacity: 0; transform: scale(1.04); } to { opacity: 1; transform: none; } }
+  .tinta { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 6; pointer-events: none; touch-action: none; }
+  .libre .tinta { pointer-events: auto; cursor: crosshair; }
+  #herr { position: fixed; bottom: .8rem; left: 50%; transform: translateX(-50%); z-index: 90; display: none; gap: .45rem; }
+  #herr.ver { display: flex; }
+  #herr button { font: 1.1rem "Anton", Impact, sans-serif; text-transform: uppercase; letter-spacing: .08em; background: var(--bg); color: var(--fg); border: 3px solid var(--fg); padding: .3rem 1rem; cursor: inherit; transition: transform .15s; }
+  #herr button:hover { transform: translateY(-3px); }
+  #herr button.on { background: var(--fg); color: var(--bg); }
+  /* final */
+  #cierre { display: none; } #cierre.visible { display: block; }
+  .fin { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6rem 5vw 8rem; overflow: hidden; }
+  .fin h2 { font: 400 clamp(2.4rem, 8vw, 6.5rem)/.95 "Anton", Impact, sans-serif; text-transform: uppercase; position: relative; z-index: 2; margin-bottom: 2.5rem; }
+  .cono { position: absolute; left: 50%; top: 0; width: min(80vw, 680px); height: 92%; transform: translateX(-50%); pointer-events: none; animation: parpadea 6s infinite;
+    background: linear-gradient(rgba(255,255,255,.32), rgba(255,255,255,.07) 70%, rgba(255,255,255,.02)); clip-path: polygon(43% 0, 57% 0, 88% 100%, 12% 100%); }
+  @keyframes parpadea { 0%, 100% { opacity: 1; } 47% { opacity: .92; } 50% { opacity: .65; } 52% { opacity: 1; } }
+  .piso-luz { position: absolute; left: 50%; bottom: 7%; width: min(60vw, 520px); height: 7vh; transform: translateX(-50%); pointer-events: none; background: radial-gradient(ellipse, rgba(255,255,255,.3), transparent 70%); }
+  .vitrina { position: relative; z-index: 2; }
+  .vmarco { position: relative; width: clamp(210px, 28vw, 330px); aspect-ratio: 3 / 4; border: 10px solid #050505; outline: 1px solid #555; background: #151515; box-shadow: 0 18px 40px rgba(0,0,0,.8); }
+  .vmarco img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .vitrina.abierta.enlace .vmarco { cursor: pointer; }
+  .pista { position: relative; z-index: 2; margin-top: 2rem; font-size: .8rem; opacity: .7; animation: parpadeo 1.2s steps(2) infinite; }
+  .cortinaF { position: absolute; inset: -16px -16px -6px; --o: 0; --k: 0deg; cursor: grab; touch-action: pan-y; z-index: 3; }
+  .cortinaF::before { content: ""; position: absolute; left: -12px; right: -12px; top: -12px; height: 14px; z-index: 4; border-radius: 7px; background: linear-gradient(#a5a5a5, #222); box-shadow: 0 4px 8px rgba(0,0,0,.6); }
+  .cpf { position: absolute; top: 0; bottom: 0; width: 50.6%; will-change: transform; transform: skewX(var(--k)) scaleX(calc(1 - var(--o) * .9));
+    background: linear-gradient(rgba(255,255,255,.14), transparent 22%, rgba(0,0,0,.5)), repeating-linear-gradient(90deg, #1c1c1c 0 6px, #4a4a4a 14px, #222 22px); background-position: 0 0, calc(var(--o) * 70px) 0; }
+  .cpf.i { left: 0; transform-origin: left top; box-shadow: 5px 0 12px rgba(0,0,0,.55); }
+  .cpf.d { right: 0; transform-origin: right top; transform: skewX(calc(var(--k) * -1)) scaleX(calc(1 - var(--o) * .9)); box-shadow: -5px 0 12px rgba(0,0,0,.55); }
+  @media (max-width: 800px) { .manifiesto { grid-template-columns: 1fr; } }
+  /* dinamicas nuevas */
+  .cintas, .trit, .mos { position: absolute; inset: 0; z-index: 4; }
+  .cintas { overflow: hidden; touch-action: manipulation; }
+  .tira-c { position: absolute; left: -10%; width: 120%; padding: .35rem 0; background: #0a0a0a; color: #f2f2f2; white-space: nowrap; overflow: hidden; font: 1.1rem "Anton", Impact, sans-serif; letter-spacing: .2em; border-top: 2px dashed #f2f2f2; border-bottom: 2px dashed #f2f2f2; box-shadow: 0 3px 8px rgba(0,0,0,.6); cursor: pointer; }
+  .tira-c:hover { filter: invert(1); }
+  .trit { background: #0a0a0a; overflow: hidden; transition: opacity .7s; }
+  .trit b { position: absolute; top: 0; bottom: 0; border-left: 2px solid #f2f2f2; box-sizing: border-box; cursor: pointer; box-shadow: 0 0 14px rgba(0,0,0,.7); }
+  .mos { display: grid; touch-action: none; perspective: 700px; transition: opacity .8s; }
+  .mos i { background: #0a0a0a; border: 1px solid #f2f2f2; transition: transform .6s var(--d), opacity .6s var(--d); display: flex; align-items: center; justify-content: center; color: #f2f2f2; font: 1.1rem Anton, Impact, sans-serif; }
+  .mos i::after { content: "✕"; opacity: .5; }
+  .mos i.v { transform: rotateY(180deg) scale(.5); opacity: 0; pointer-events: none; }
+  .pers, .tablas { position: absolute; inset: 0; z-index: 4; }
+  .pers { background: repeating-linear-gradient(180deg, #3a3a3a 0, #1b1b1b 12px, #050505 13px, #050505 15px); will-change: transform; }
+  .pers::before { content: "CERRADO POR REFORMAS"; position: absolute; top: 40%; left: 0; right: 0; text-align: center; font: clamp(1.2rem, 3vw, 2rem) Anton, Impact, sans-serif; letter-spacing: .15em; color: #f2f2f2; opacity: .85; }
+  .asa { position: absolute; bottom: 8px; left: 27%; width: 46%; height: 28px; background: #f2f2f2; border: 3px solid #0a0a0a; touch-action: none; cursor: grab; display: flex; align-items: center; justify-content: center; font: .9rem Anton, Impact, sans-serif; font-style: normal; }
+  .asa::after { content: "▲ SUBIR ▲"; color: #0a0a0a; }
+  .tablas { overflow: hidden; }
+  .tabla { position: absolute; left: -5%; width: 110%; height: 21%; background: repeating-linear-gradient(90deg, #cfcfcf 0 40px, #b3b3b3 40px 43px); border: 3px solid #0a0a0a; box-shadow: 4px 6px 0 rgba(0,0,0,.5); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .tabla::after { content: "CLAUSURADO"; font: 1.3rem Anton, Impact, sans-serif; letter-spacing: .25em; color: #0a0a0a; }
+  .tabla u { position: absolute; top: 50%; width: 10px; height: 10px; margin-top: -5px; border-radius: 50%; background: #111; }
+  .tabla u:first-child { left: 5%; } .tabla u:last-child { right: 5%; }
+  /* obras mas chicas */
+  @media (min-width: 801px) {
+    .obras { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 4rem 2.5rem; }
+    .obra:nth-child(even) { margin-top: 3.5rem; } .obra:nth-child(3n), .obra:nth-child(3n+1) { margin-left: 0; margin-right: 0; }
+    .obra:nth-child(3n+2) { margin-top: 2rem; } .obra:nth-child(4n) { margin-top: 5rem; }
+    .meta h3 { font-size: 1.4rem; } .n-obra { font-size: 2.6rem; } .btn { font-size: 1rem; padding: .5rem .8rem; }
+  }
+  /* ===== rediseno: institucion en descomposicion ===== */
+  :root { --rojo: #D92332; }
+  .gate .gcab { font: .7rem "Courier Prime", monospace; letter-spacing: .18em; text-transform: uppercase; border-top: 3px solid #111; border-bottom: 3px solid #111; padding: .4rem .8rem; margin-bottom: 1.2rem; }
+  .gate .aprob { border: 4px solid var(--rojo); color: var(--rojo); font: 1.5rem Anton, Impact, sans-serif; text-transform: uppercase; letter-spacing: .1em; transform: rotate(-5deg); padding: .1rem .9rem; margin-top: 1rem; }
+  .gate .avisos { list-style: none; font: .85rem "Courier Prime", monospace; margin-bottom: 1.6rem; } .gate .avisos li::before { content: "§ "; color: var(--rojo); }
+  .gate p { margin: 1rem 0 1rem; }
+  .not, .intruso, .marca, .sello-c, .resto { font-family: Anton, Impact, sans-serif; text-transform: uppercase; }
+  #depto { position: fixed; right: .8rem; bottom: 4.4rem; z-index: 95; display: flex; flex-direction: column; gap: .4rem; max-width: min(300px, 78vw); pointer-events: none; }
+  .not { font: .72rem "Courier Prime", monospace; text-transform: none; background: #d0d0d0; color: #111; border-left: 6px solid var(--rojo); padding: .5rem .7rem; animation: entra .5s both; box-shadow: 4px 4px 0 rgba(0,0,0,.4); }
+  .intruso { position: fixed; z-index: 120; pointer-events: none; background: var(--rojo); color: #e8e8e8; padding: .2rem .9rem; font-size: clamp(1.2rem, 4vw, 2.4rem); transform: rotate(var(--sr)); animation: entra .3s both; box-shadow: 5px 5px 0 #111; }
+  #revision { position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,.55); display: none; align-items: center; justify-content: center; padding: 1.2rem; } #revision.ver { display: flex; }
+  .rbox { background: #e8e8e8; color: #111; border: 5px solid var(--rojo); padding: 1.4rem; max-width: 30rem; text-align: center; box-shadow: 10px 10px 0 #111; transform: rotate(-1.2deg); }
+  .rbox b { font: .75rem "Courier Prime", monospace; letter-spacing: .2em; text-transform: uppercase; color: var(--rojo); }
+  .rbox h3 { font: 1.7rem/1.05 Anton, Impact, sans-serif; text-transform: uppercase; margin: .6rem 0 1.2rem; } .rbox button { font: 1.3rem Anton, Impact, sans-serif; text-transform: uppercase; background: #111; color: #e8e8e8; border: 0; padding: .6rem 1.8rem; cursor: inherit; }
+  .sello-c { position: absolute; z-index: 5; pointer-events: none; font-size: clamp(.9rem, 2vw, 1.5rem); color: var(--rojo); border: 3px solid var(--rojo); background: rgba(232,232,232,.82); padding: 0 .5rem; letter-spacing: .08em; transform: rotate(var(--sr)); animation: sellar .35s cubic-bezier(.2,1.6,.5,1) both; }
+  @keyframes sellar { from { transform: rotate(var(--sr)) scale(2.4); opacity: 0; } }
+  .marca { position: absolute; z-index: 7; pointer-events: none; transform: translate(-50%, -50%) rotate(var(--sr)); color: var(--rojo); font-size: 1.5rem; text-shadow: 1px 1px 0 #e8e8e8; animation: sellar .3s both; }
+  .decl { font: clamp(1.8rem, 5vw, 4rem)/1 Anton, Impact, sans-serif; text-transform: uppercase; margin-bottom: 2rem; } .decl s { color: var(--rojo); }
+  .pregunta { font: 1.6rem Anton, Impact, sans-serif; text-transform: uppercase; color: var(--rojo); }
+  .fin h2 { font-size: clamp(1.6rem, 5vw, 4.2rem); max-width: 22ch; }
+  .resto { position: absolute; z-index: 1; pointer-events: none; font-size: clamp(.9rem, 2.4vw, 1.8rem); padding: 0 .5rem; border: 2px solid #e8e8e8; opacity: .55; transform: rotate(var(--sr)); text-decoration: line-through; } .resto.roja { color: var(--rojo); border-color: var(--rojo); opacity: .9; text-decoration: none; }
+  /* etapas */
+  body[data-e="1"] .reglas li:nth-child(odd), body[data-e="2"] .reglas li, body[data-e="3"] .reglas li { text-decoration: line-through; text-decoration-color: var(--rojo); text-decoration-thickness: 3px; }
+  body[data-e="1"] .eje h2 { transform: translateX(1.5vw) rotate(-.6deg); }
+  body[data-e="2"] .obra .meta { transform: translate(-12px, 8px) rotate(-1deg); } body[data-e="2"] .frame-wrap { outline: 3px solid var(--rojo); outline-offset: 5px; }
+  body[data-e="2"] .eje-cab { transform: rotate(-1.5deg); } body[data-e="2"] .eje .sub { text-decoration: line-through; text-decoration-color: var(--rojo); }
+  body[data-e="3"] .eje-cab { transform: rotate(-2.5deg) skewX(-3deg); } body[data-e="3"] .eje h2 { color: var(--rojo); }
+  body[data-e="3"] .obra:nth-child(odd) .frame-wrap { transform: rotate(1.2deg); } body[data-e="3"] nav { border-bottom-color: var(--rojo); }
+  body[data-e="3"] .obra .meta { background: #e8e8e8; color: #111; padding: .6rem; transform: translate(-16px, -10px) rotate(1.5deg); }
+  /* identidad por sala */
+  #eje1 .meta { background: #d0d0d0; color: #111; padding: .8rem; border: 2px solid #111; font-family: "Courier Prime", monospace; }
+  #eje2 .meta h3 { background: var(--fg); color: var(--bg); display: inline; padding: 0 .3rem; }
+  #eje3 .meta { border: 6px double var(--fg); padding: .8rem; text-align: center; }
+  #eje4 .frame-wrap { filter: grayscale(.6) drop-shadow(9px 9px 0 var(--rojo)); }
+  #eje5 .frame { border-width: 2px; } #eje5 .meta h3 { font-weight: 400; letter-spacing: .1em; }
+  #eje6 .frame-wrap { filter: contrast(1.4) grayscale(1) drop-shadow(9px 9px 0 #777); } #eje6 .meta h3 { font: 1.1rem "Courier Prime", monospace; text-transform: none; }
+  /* ===== fase 2 ===== */
+  .t-act { overflow-wrap: anywhere; } .t-act .tach { text-decoration: line-through; text-decoration-color: var(--rojo); text-decoration-thickness: .12em; opacity: .65; }
+  .t-act .muta { display: inline-block; font-style: normal; color: var(--rojo); transform: rotate(-3deg); animation: sellar .4s both; }
+  body[data-e] .obra .meta { transform: none !important; }
+  .frame.dano0 img, .frame.dano0:hover img { filter: grayscale(1) contrast(1.4); } .frame.dano0::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: linear-gradient(115deg, transparent 47%, var(--rojo) 47.5% 49%, transparent 49.5%); }
+  .frame.dano1 img, .frame.dano1:hover img { filter: grayscale(1) contrast(1.5); } .frame.dano1::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: rgba(217,35,50,.25); mix-blend-mode: multiply; }
+  .frame.dano2 img, .frame.dano2:hover img { filter: blur(1.2px) contrast(1.3) grayscale(.8); } .frame.dano2::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: repeating-linear-gradient(0deg, transparent 0 9px, rgba(217,35,50,.35) 9px 11px); }
+  .frame.dano3 img, .frame.dano3:hover img { filter: grayscale(1) brightness(.85); } .frame.dano3::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; box-shadow: inset 0 0 0 10px rgba(217,35,50,.55); }
+  body[data-e="3"] .eje h2 { letter-spacing: -.03em; }
+  @media (min-width: 801px) {
+    .obras { grid-template-columns: repeat(12, 1fr); gap: 5rem 2rem; align-items: start; } .obras .obra { margin: 0; }
+  }
+  /* ===== fase 3: obras chicas, sin papeleo ===== */
+  .not { background: #111; color: #e8e8e8; border-left: 6px solid var(--rojo); font: .8rem "Courier Prime", monospace; }
+  .vent { position: fixed; z-index: 121; width: min(260px, 70vw); background: #e8e8e8; color: #111; border: 3px solid #111; box-shadow: 6px 6px 0 var(--rojo); font: .8rem "Courier Prime", monospace; pointer-events: none; animation: entra .3s both; }
+  .vent b { display: block; background: #111; color: #e8e8e8; padding: .15rem .5rem; font-size: .7rem; letter-spacing: .1em; } .vent p { padding: .5rem .6rem; }
+  .gigante { position: fixed; left: 0; right: 0; top: 38vh; z-index: 110; text-align: center; pointer-events: none; font: clamp(2rem, 8vw, 6rem)/.95 Anton, Impact, sans-serif; text-transform: uppercase; color: var(--rojo); text-shadow: 3px 3px 0 #111; padding: 0 5vw; animation: entra .4s both; }
+  .t-act .tag { font: .6em "Courier Prime", monospace; color: var(--rojo); text-transform: uppercase; letter-spacing: .05em; }
+  .t-act .frag { display: inline-block; transform: translateY(.1em) rotate(-4deg); letter-spacing: .15em; text-decoration: underline wavy var(--rojo); }
+  .t-act .muta.chico { font-size: .6em; }
+  .autor { margin-bottom: .4rem; }
+  @media (max-width: 800px) { .obras { max-width: 420px; margin: 0 auto; } }
+  @media (min-width: 801px) {
+    .obras { gap: 4.5rem 2rem; } .obra .meta h3 { font-size: 1.25rem; }
+    #eje1 .obra:nth-child(1) { grid-column: 1 / span 4; } #eje1 .obra:nth-child(2) { grid-column: 5 / span 4; margin-top: 3rem; } #eje1 .obra:nth-child(3) { grid-column: 9 / span 4; } #eje1 .obra:nth-child(4) { grid-column: 3 / span 4; }
+    #eje2 .obra:nth-child(1) { grid-column: 1 / span 3; } #eje2 .obra:nth-child(2) { grid-column: 5 / span 4; margin-top: 4rem; } #eje2 .obra:nth-child(3) { grid-column: 10 / span 3; } #eje2 .obra:nth-child(4) { grid-column: 7 / span 3; }
+    #eje3 .obra:nth-child(1) { grid-column: 2 / span 4; } #eje3 .obra:nth-child(2) { grid-column: 7 / span 3; margin-top: 3rem; } #eje3 .obra:nth-child(3) { grid-column: 3 / span 3; } #eje3 .obra:nth-child(4) { grid-column: 8 / span 4; }
+    #eje4 .obra { grid-column: span 3; } #eje4 .obra:nth-child(2n) { margin-top: 2.5rem; }
+    #eje5 .obra:nth-child(1) { grid-column: 2 / span 4; } #eje5 .obra:nth-child(2) { grid-column: 8 / span 3; margin-top: 6rem; } #eje5 .obra:nth-child(3) { grid-column: 1 / span 4; margin-top: 2rem; } #eje5 .obra:nth-child(4) { grid-column: 7 / span 5; margin-top: 5rem; }
+    #eje6 .obra:nth-child(1) { grid-column: 4 / span 3; } #eje6 .obra:nth-child(2) { grid-column: 9 / span 3; margin-top: 4rem; } #eje6 .obra:nth-child(3) { grid-column: 1 / span 4; } #eje6 .obra:nth-child(4) { grid-column: 7 / span 4; margin-top: 3rem; }
+    #eje7 .obra:nth-child(1) { grid-column: 1 / span 5; } #eje7 .obra:nth-child(2) { grid-column: 8 / span 3; margin-top: 5rem; } #eje7 .obra:nth-child(3) { grid-column: 2 / span 3; margin-top: 1rem; } #eje7 .obra:nth-child(4) { grid-column: 6 / span 5; margin-top: 6rem; }
+  }
+  /* ===== fase 4: direccion de arte por sala ===== */
+  .eje { overflow-x: clip; } .eje > * { z-index: 1; } .eje::before, .eje::after { z-index: 0; }
+  .eje h2.glitch::before, .eje h2.glitch::after { display: none; }
+  .eje h2 { translate: calc(var(--mx, 0) * 8px) 0; text-shadow: none; } .eje-num { translate: calc(var(--mx, 0) * -18px) 0; }
+  .eje h2.glitchea { animation: var(--g) .9s steps(5) 1; }
+  @keyframes g1 { 20% { clip-path: inset(0 0 60% 0); transform: translateX(-10px); } 40% { clip-path: inset(40% 0 0 0); transform: translateX(12px); } 70% { clip-path: inset(0); transform: translateX(-4px); } }
+  @keyframes g2 { 30% { transform: translateX(5vw); } 60% { transform: translateX(-2vw); letter-spacing: .04em; } }
+  @keyframes g3 { 25% { clip-path: inset(30% 0 40% 0); transform: translateX(16px); } 50% { clip-path: inset(0 0 70% 0); transform: translateX(-16px); } 75% { clip-path: inset(60% 0 0 0); } }
+  @keyframes g4 { 40% { letter-spacing: .1em; transform: rotate(1.5deg); } 70% { transform: rotate(-1deg) skewX(8deg); } }
+  @keyframes g5 { 50% { transform: skewX(-14deg) translateX(3vw); } }
+  @keyframes g7 { 25% { clip-path: inset(0 0 55% 0); transform: translate(-8px, 2px); } 55% { clip-path: inset(48% 0 0 0); transform: translate(10px, -3px); } 80% { clip-path: inset(0); transform: translateX(-3px) rotate(-.6deg); } }
+  @keyframes g6 { 30% { text-shadow: 10px 0 #777; } 60% { text-shadow: -10px 0 #777; transform: translateX(6px); } }
+  #eje1 h2 { --g: g1; } #eje2 h2 { --g: g2; } #eje3 h2 { --g: g3; } #eje4 h2 { --g: g4; } #eje5 h2 { --g: g5; } #eje6 h2 { --g: g6; } #eje7 h2 { --g: g7; }
+  .eje::after { content: ""; position: absolute; pointer-events: none; }
+  body[data-e="3"] #eje2 h2, body[data-e="3"] #eje4 h2, body[data-e="3"] #eje6 h2, body[data-e="3"] #eje7 h2 { color: var(--rojo); }
+
+  /* 1 · fanzine fotocopiado */
+  #eje1::before { background: radial-gradient(var(--fg) 1.3px, transparent 1.9px) 0 0 / 9px 9px; opacity: .1; -webkit-mask-image: linear-gradient(#000, transparent 75%); mask-image: linear-gradient(#000, transparent 75%); }
+  #eje1::after { right: -90px; top: 24%; width: 300px; height: 300px; border: 16px solid var(--rojo); border-left-color: transparent; border-bottom-color: transparent; border-radius: 50%; transform: rotate(18deg); }
+  #eje1 h2 { font: 400 clamp(1.9rem, 5vw, 4rem)/1.4 "Special Elite", monospace; background: var(--fg); color: var(--bg); display: inline; padding: .1em .35em; box-decoration-break: clone; -webkit-box-decoration-break: clone; max-width: none; }
+  #eje1 .sub { font: .95rem/1.6 "Rock Salt", cursive; border-bottom: 3px solid var(--rojo); }
+  #eje1 .meta h3 { font: 1.1rem "Special Elite", monospace; text-transform: none; } #eje1 .obra:nth-child(odd) .autor::after { content: "  ← mírela bien"; font: .7rem "Rock Salt", cursive; color: var(--rojo); text-transform: none; letter-spacing: 0; }
+  /* 2 · brutalismo tipografico */
+  #eje2::before { background: none; } #eje2::after { right: -4vw; top: 5rem; width: 30vw; height: 15vw; background: var(--rojo); box-shadow: -2.5vw 2vw 0 #111; }
+  #eje2 h2 { font: 400 clamp(2.8rem, 11vw, 9rem)/.84 "Archivo Black", Impact, sans-serif; letter-spacing: -.045em; max-width: 11ch; border-bottom: 12px solid var(--fg); padding-bottom: .1em; }
+  #eje2 .sub { font: .85rem "Space Mono", monospace; border-bottom: 0; border-left: 8px solid var(--fg); padding-left: .8rem; }
+  #eje2 .meta h3 { font: 1.15rem/1.05 "Archivo Black", Impact, sans-serif; } #eje2 .frame { border-width: 10px; }
+  /* 3 · archivo digital corrupto */
+  #eje3::before { background: repeating-linear-gradient(0deg, transparent 0 3px, var(--fg) 3px 4px); opacity: .07; }
+  #eje3::after { right: 4vw; top: 9rem; width: 300px; height: 100px; background: linear-gradient(var(--rojo), var(--rojo)) 0 0 / 90px 14px no-repeat, linear-gradient(#777, #777) 120px 22px / 140px 10px no-repeat, linear-gradient(var(--fg), var(--fg)) 40px 40px / 60px 30px no-repeat, linear-gradient(var(--rojo), var(--rojo)) 200px 60px / 50px 8px no-repeat; }
+  #eje3 h2 { font: 700 clamp(1.7rem, 4.6vw, 3.6rem)/1 "Space Mono", monospace; text-transform: uppercase; letter-spacing: -.04em; max-width: 18ch; } #eje3 .eje-label::before { content: "▌▌ ERR_"; color: var(--rojo); }
+  #eje3 .sub { font: .85rem "Space Mono", monospace; border-bottom: 2px dotted var(--fg); } #eje3 .meta h3 { font: 700 1rem "Space Mono", monospace; } #eje3 .frame { border-style: dashed; }
+  /* 4 · collage de periodico pop */
+  #eje4::before { background: repeating-linear-gradient(90deg, transparent 0 calc(25% - 1px), var(--fg) calc(25% - 1px) 25%); opacity: .08; }
+  #eje4::after { right: -120px; top: 30%; width: 420px; height: 420px; border-radius: 50%; background: radial-gradient(var(--rojo) 38%, transparent 41%) 0 0 / 14px 14px; opacity: .4; }
+  #eje4 h2 { font: 800 clamp(2rem, 6vw, 5rem)/.95 Syne, "Archivo Black", sans-serif; text-transform: uppercase; } #eje4 h2::first-letter { font-size: 1.7em; color: var(--rojo); }
+  #eje4 .sub { font: italic 1.1rem Georgia, serif; border: 2px solid var(--fg); border-bottom-width: 6px; padding: .5rem .8rem; } #eje4 .meta h3 { font: 800 1.15rem Syne, sans-serif; } #eje4 .obra:nth-child(2) .autor::after { content: " (sic)"; color: var(--rojo); }
+  /* 5 · abstraccion y vacio */
+  #eje5::before { background: none; left: 8vw; top: 12rem; width: 220px; height: 220px; inset: auto; right: auto; bottom: auto; border: 3px solid var(--fg); border-radius: 50%; border-top-color: transparent; opacity: .7; }
+  #eje5::after { left: -5vw; right: -5vw; top: 46%; height: 2px; background: var(--fg); transform: rotate(-7deg); }
+  #eje5 { padding-top: 12rem; } #eje5 h2 { font: 800 clamp(1.4rem, 3vw, 2.4rem)/1.1 Syne, sans-serif; text-transform: lowercase; letter-spacing: .08em; } #eje5 .sub { font: .75rem "Space Mono", monospace; border: 0; } #eje5 .meta h3 { font: 800 1rem Syne, sans-serif; text-transform: lowercase; }
+  /* 6 · fotocopia deteriorada */
+  #eje6::before { background: repeating-linear-gradient(90deg, var(--fg) 0 1px, transparent 1px 38px), repeating-linear-gradient(90deg, #777 0 1px, transparent 1px 41px); opacity: .08; }
+  #eje6::after { content: "6"; left: -4vw; bottom: -8vw; font: 40vw/1 Anton, Impact, sans-serif; color: transparent; -webkit-text-stroke: 2px var(--fg); opacity: .22; }
+  #eje6 h2 { font: 400 clamp(2.6rem, 9vw, 7rem)/.88 Staatliches, Anton, sans-serif; text-shadow: 4px 4px 0 #777; max-width: 12ch; } #eje6 .sub { font: .85rem "Courier Prime", monospace; } #eje6 .meta h3 { font: 1.3rem Staatliches, Anton, sans-serif; }
+  /* 7 · denuncia: plantilla, tachones y goteo */
+  #eje7::before { background: repeating-linear-gradient(180deg, transparent 0 58px, var(--fg) 58px 60px); opacity: .07; }
+  #eje7::after { content: "VII"; right: -3vw; top: 5rem; font: 38vw/1 Anton, Impact, sans-serif; color: transparent; -webkit-text-stroke: 2px var(--rojo); opacity: .22; }
+  #eje7 .eje-label::before { content: "✕ "; color: var(--rojo); }
+  #eje7 h2 { font: 400 clamp(2.3rem, 8vw, 6.6rem)/.92 "Permanent Marker", cursive; text-transform: uppercase; max-width: 13ch; border-bottom: 10px solid var(--rojo); padding-bottom: .12em; transform: rotate(-1.5deg); }
+  #eje7 .sub { font: .88rem/1.55 "Courier Prime", monospace; border-bottom: 0; border-left: 8px solid var(--rojo); padding-left: .8rem; }
+  #eje7 .meta h3 { font: 1.2rem/1.1 "Permanent Marker", cursive; text-transform: none; }
+  #eje7 .frame-wrap { filter: grayscale(1) contrast(1.25) drop-shadow(-9px 9px 0 var(--rojo)); }
+  /* ===== botones legibles en cualquier etapa del oscurecimiento ===== */
+  .btn, .btn.rudo { background: #111; color: #e8e8e8; border-color: #e8e8e8; box-shadow: 4px 4px 0 var(--rojo); text-shadow: none; }
+  .btn:hover, .btn.on, .btn:focus-visible { background: var(--rojo); color: #fff; border-color: #fff; }
+  .respuesta { color: inherit; opacity: 1; }
+  /* ===== con todas las obras liberadas: a color y sin nada encima ===== */
+  body.todas .frame, body.todas .frame-wrap { filter: none !important; outline: none !important; }
+  body.todas .frame-wrap { filter: drop-shadow(8px 8px 0 rgba(128,128,128,.45)) !important; }
+  body.todas .frame img, body.todas .frame:hover img { filter: none !important; }
+  body.todas .frame::before, body.todas .frame::after { content: none !important; display: none !important; }
+  body.todas .sello-c, body.todas .marca, body.todas .tinta, body.todas .grieta, body.todas .onoma, body.todas .nam, body.todas .frame > svg, body.todas #herr { display: none !important; }
+  /* ===== instalacion final ===== */
+  #inst { position: relative; height: max(115vh, 760px); background: #111; color: #e8e8e8; overflow: hidden; --px: 0; --py: 0; touch-action: pan-y; border-top: 6px solid var(--rojo); z-index: 2; outline-offset: -6px; }
+  #inst .capa { position: absolute; inset: -6%; pointer-events: none; transform: translate(calc(var(--px) * var(--d) * 1px), calc(var(--py) * var(--d) * .7px)); transition: transform .5s ease-out; }
+  #inst .fm, #inst .tt, #inst .is, #inst .im, #inst .fr { position: absolute; }
+  .fr { border: 0; padding: 0; cursor: inherit; pointer-events: auto; background-color: #292929; background-repeat: no-repeat; filter: grayscale(1) contrast(1.7); transition: all .5s; }
+  .fr:hover, .fr:focus-visible, .fr.rev { background-size: cover !important; background-position: center !important; filter: grayscale(.15); clip-path: none !important; z-index: 9; scale: 1.18; rotate: 0deg !important; outline: 3px solid var(--rojo); }
+  .fr::after { content: attr(data-t); position: absolute; left: 0; bottom: 0; max-width: 100%; background: #111; color: #e8e8e8; font: .6rem "Space Mono", monospace; padding: .1rem .3rem; text-align: left; opacity: 0; transition: opacity .4s; } .fr:hover::after, .fr:focus-visible::after, .fr.rev::after { opacity: 1; }
+  .tipo { position: absolute; left: 3%; top: 14%; }
+  .tipo > div { font: 400 clamp(3.2rem, 14vw, 12rem)/.8 Anton, Impact, sans-serif; text-transform: uppercase; letter-spacing: -.03em; white-space: nowrap; }
+  .tipo > div:nth-child(1) { -webkit-text-stroke: 2px #e8e8e8; color: transparent; margin-left: -3%; } .tipo > div:nth-child(2) { margin-left: 7%; } .tipo > div:nth-child(3) { color: var(--rojo); clip-path: inset(0 0 36% 0); margin-left: -1%; }
+  .l { display: inline-block; transform: translateY(var(--dy, 0)) rotate(var(--rot, 0deg)); translate: var(--sx, 0px) var(--sy, 0px); transition: translate .35s; }
+  .tt { font: .8rem/1.2 "Space Mono", monospace; max-width: 18ch; opacity: .85; } .tt.g { font: clamp(4rem, 18vw, 15rem)/.8 Anton, Impact, sans-serif; text-transform: uppercase; color: transparent; -webkit-text-stroke: 2px #777; max-width: none; white-space: nowrap; }
+  .tt .tach { color: var(--rojo); } .tt .muta { color: var(--rojo); font-style: normal; }
+  .is { font: 1.4rem Anton, Impact, sans-serif; text-transform: uppercase; color: var(--rojo); border: 3px solid var(--rojo); padding: 0 .5rem; transform: rotate(var(--sr)); } .im { font: 1.2rem "Rock Salt", cursive; color: var(--rojo); transform: rotate(var(--sr)); }
+  #inst .grano { position: absolute; inset: 0; pointer-events: none; z-index: 5; background: radial-gradient(#e8e8e8 1.2px, transparent 1.8px) 0 0 / 8px 8px; opacity: .07; -webkit-mask-image: linear-gradient(90deg, #000, transparent 55%); mask-image: linear-gradient(90deg, #000, transparent 55%); }
+  #inst .grano::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent 0 3px, #e8e8e8 3px 4px); -webkit-mask-image: linear-gradient(135deg, transparent 45%, #000); mask-image: linear-gradient(135deg, transparent 45%, #000); }
+  .corta { animation: corta .7s steps(4); } @keyframes corta { 30% { transform: translateX(24px); } 70% { transform: translateX(-16px); } }
+
+  /* ===== 17 · colapso total tras abrir la cortina =====
+     Todo esto solo actua cuando window.colapsar() corre (ver js al final).
+     La obra final (#vmarco) nunca recibe filtros, transformaciones ni capas encima:
+     las capas del efecto tienen un "agujero" exacto donde esta la obra. */
+  html.col-lock { overflow: hidden; overscroll-behavior: none; scroll-behavior: auto; scrollbar-gutter: stable; }
+  body.col-on, body.col-on nav { transition: none !important; }
+  body.col-on { touch-action: none; }
+  body.col-on::after { opacity: var(--col-g, .17); }
+  body.col-on .fin { z-index: 9000; }
+  body.col-on .vitrina { z-index: 9999; }
+  #col-fx, #col-deb, #col-vel { position: fixed; left: 0; top: 0; width: 100%; height: 100%; }
+  #col-fx { z-index: 9500; pointer-events: auto; mix-blend-mode: difference; image-rendering: pixelated; }
+  #col-vel { z-index: 9500; pointer-events: auto; background: #0a0a0a; opacity: 0; }
+  #col-deb { z-index: 9400; pointer-events: none; overflow: hidden; }
+  body.col-sinhueco #col-fx, body.col-sinhueco #col-vel { z-index: 8000; }
+  body.col-sinhueco #col-deb { z-index: 7900; }
+  .col-p { position: absolute; left: 0; top: 0; pointer-events: none; transform-origin: 50% 50%; backface-visibility: hidden; }
+  .col-p.img { background-repeat: no-repeat; }
+  .col-p.tira i { position: absolute; left: 0; width: 100%; background-repeat: no-repeat; }
+  .col-p.txt { white-space: nowrap; line-height: .92; font-family: Anton, Impact, sans-serif; text-shadow: 2px 2px 0 #0a0a0a; }
+  .col-p.txt span { display: inline-block; }
+  /* estado final: solo queda la vitrina con la obra */
+  body.col-fin { visibility: hidden; background: #0a0a0a; }
+  body.col-fin .vitrina, body.col-fin .vitrina * { visibility: visible; }
+  body.col-fin .cortinaF { display: none; }
+</style>
+</head>
+<body class="bloqueado">
+<svg class="grietas" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0 18 L9 22 L14 17 L26 30 L31 27 L45 46 L43 52 L58 63 L55 70 L72 82 L70 100"/>
+  <path d="M100 8 L88 14 L84 11 L71 27 L74 31 L60 40 L62 47 L48 55"/>
+  <path d="M0 78 L12 74 L18 80 L33 71 L38 78 L52 70"/>
+  <path d="M100 66 L90 69 L87 64 L76 72 L79 78 L66 86"/>
+  <path d="M26 0 L30 10 L24 16 L33 28"/>
+</svg>
+
+<div class="gate" id="gate">
+  <div class="gcab">Ministerio de lo Apropiado · Expediente 0001-B · Sello de calidad: dudoso</div>
+  <h1>¡Bienvenidos al Museo de la Buena Educación!</h1>
+  <div class="aprob">Aprobado por nadie</div>
+  <p>Esta página tiene sonido, pero todo a su tiempo. Súbale al volumen y pórtese bien.</p>
+  <ul class="avisos"><li>La administración se reserva el derecho de ofenderse.</li><li>Su opinión será archivada y posteriormente ignorada.</li><li>Gracias por no pensar demasiado.</li></ul>
+  <div><button id="conSonido">Acceso oficial con sonido</button><button class="suave" id="sinSonido">Acceso oficial en silencio</button></div>
+</div>
+<div id="revision"><div class="rbox"><b>Aviso del departamento</b><h3>Esta página está siendo revisada por el Departamento de Buenas Costumbres</h3><button id="mevale">Me vale</button></div></div>
+<div id="depto"></div>
+
+<nav>
+  <span><span id="nombre">Museo de la Buena Educación</span> ✕ <span id="cuenta">0/0</span><span id="ahora"></span></span>
+  <span id="links"></span>
+</nav>
+
+<header class="hero" id="inicio">
+  <div class="anti">Anti</div>
+  <div class="museo glitch" data-text="Museo">Museo</div>
+  <div class="de">de la Buena Educación</div>
+  <p class="lema" id="lema">¡Bienvenidos! Entrada libre.<br>Aquí cuelga lo más bello que esta patria ha sabido conservar.</p>
+  <p class="bajar" id="bajar">↓ (por favor, sígase por la derecha y hable bajito)</p>
+  <div class="cinta"><div id="tick">Bienvenidos ✕ Entrada libre ✕ Silencio, por favor ✕ Sea siempre educado ✕ Gracias por su visita ✕ Bienvenidos ✕ Entrada libre ✕ Silencio, por favor ✕ Sea siempre educado ✕ Gracias por su visita ✕</div></div>
+</header>
+
+<section class="manifiesto" id="manif"><div class="mcont" id="mcont">
+  <div>
+    <h2>Un museo es un lugar para respetar.</h2>
+    <p>Aquí venimos a admirar con calma. Cada obra está protegida para que usted disfrute sin sobresaltos.</p>
+    <p>Esta exhibición la presentan, con mucho cariño, estudiantes de la Distrital. Si algo le incomoda, no se preocupe: lo guardamos.</p>
+  </div>
+  <aside class="reglas">
+    <h3>Reglamento del visitante</h3>
+    <ul><li>No toque las obras.</li><li>Prohibido el flash.</li><li>Guarde silencio.</li><li>Sea siempre educado.</li><li>Prohibido comer.</li><li>No rompa nada.</li></ul>
+  </aside>
+</div></section>
+
+<main id="ejes"></main>
+
+<div id="cierre" data-musica="final">
+  <section class="fin">
+    <div class="cono"></div><div class="piso-luz"></div>
+    <h2 class="glitch" data-text="Esto es lo que queda cuando se acaba la exposición">Esto es lo que queda cuando se acaba la exposición</h2>
+    <div class="vitrina" id="vitrina"><div class="vmarco" id="vmarco"><div class="cortinaF" id="cortinaF"><div class="cpf i"></div><div class="cpf d"></div></div></div></div>
+    <p class="pista">(corra la cortina)</p>
+  </section>
+  <section id="inst" hidden tabindex="0" aria-label="Instalación: Lo que no pudieron archivar"><div class="grano"></div></section>
+  <footer class="pie">
+  <h2 class="glitch" data-text="La censura terminó. La administración continúa.">La censura terminó. La administración continúa.</h2>
+  <p>Gracias por participar. Ahora vuelva a comportarse. No hay a quién reclamarle: la administración abandonó el edificio.</p><p class="pregunta">Usted también decidió qué merecía ser destruido. ¿Quién autorizó que saliera?</p>
+  <div class="cont">Visitantes que entendieron algo: 0</div>
+  <div class="cont" style="margin-top:1rem; transform:rotate(1.5deg)">Obras vandalizadas por usted: <span id="vand">0</span></div>
+
+  <small>Proyecto de Historia y Cultura Colombiana · Universidad Distrital Francisco José de Caldas</small>
+</footer>
+</div>
+
+<div id="herr"></div>
+
+<script>
+const SIGUIENTE = { url: "", img: "" };
+
+  const vacia = (e, n, d = {}) => ({
+    titulo: "Título de la obra",
+    autor: "Autor, año",
+    img: "Imagenes/eje" + e + "-obra" + n + ".jpg",
+    ...d
+  });
+
+  const ejes = [
+    { t: "Desnudo, cuerpo y moral religiosa/social",
+      s: "Se ve una teta y de repente todo el mundo es cura xd",
+      obras: [
+        vacia(1,1,{ titulo: "La mística", autor: "Débora Arango, 1940" }),
+        vacia(1,2,{ titulo: "Adolescencia (también conocida como Clavel rojo)", autor: "Débora Arango, ca. 1943" }),
+        vacia(1,3,{ titulo: "La Anunciación", autor: "Carlos Correa, 1941" }),
+        vacia(1,4,{ titulo: "Dos mujeres", autor: "José Rodríguez Acevedo, 1951" })
+      ] },
+    { t: "Crítica política, violencia de Estado y conflicto armado",
+      s: "A los muertos no les cabe el nombre en la placa, pero al Estado sí le cabe la excusa.",
+      obras: [
+        vacia(2,1,{ titulo: "La cosecha de los violentos", autor: "Alfonso Quijano Acero, 1968" }),
+        vacia(2,2,{ titulo: "La muerte de un desconocido", autor: "Pedro Alcántara Herrán Martínez, 1973" }),
+        vacia(2,3,{ titulo: "Solo con su muerte", autor: "Carlos Granada Arango" }),
+        vacia(2,4,{ titulo: "El freddy", autor: "Miguel Ángel Rojas, 1979" })
+      ] },
+    { t: "Retiro de piezas por directivas e intervenciones curatoriales",
+      s: "Bienvenidos a su MALPARIDA patria milagro.",
+      obras: [
+        vacia(3,1,{ titulo: "Los amantes del Sisga", autor: "Beatriz González" }),
+        vacia(3,2,{ titulo: "Ideales feministas", autor: "Lucila Rubio de Laverde, 1950" }),
+        vacia(3,3,{ titulo: "Caja agraria", autor: "Bernardo Salcedo, 1970" }),
+        vacia(3,4,{ titulo: "Vía Crucis", autor: "Carlos Correa, 1953" })
+      ] },
+    { t: "Sátira social, pop arte e iconoclasia",
+      s: "Reírse del poder es lo único serio que nos queda.",
+      obras: [
+        vacia(4,1,{ titulo: "La iglesia está en peligro", autor: "Beatriz González, 1976" }),
+        vacia(4,2,{ titulo: "Los desterrados", autor: "Oscar Muñoz, 1974" }),
+        vacia(4,3,{ titulo: "Unité industrielle", autor: "Grupo Utopía, 1981" }),
+        vacia(4,4,{ titulo: "Decoración de interiores", autor: "Beatriz González, 1981" })
+      ] },
+    { t: "Instalaciones, escultura contemporánea y espacio público",
+      s: "Si cabe en la sala es decoración; si no cabe, es problema. Y a esta patria todo le queda grande.",
+      obras: [
+        vacia(5,1,{ titulo: "Prometeo de la Libertad", autor: "Rodrigo Arenas Betancourt, 1978" }),
+        vacia(5,2,{ titulo: "Ídolo con calavera", autor: "Nadín Ospina, 1994" }),
+        vacia(5,3,{ titulo: "Monumento a los héroes", autor: "Varios Autores, 1978" }),
+        vacia(5,4,{ titulo: "12 de marzo de 1982", autor: "Rosemberg Sandoval" })
+      ] },
+    { t: "Fotografía, serigrafía y medios grabados",
+      s: "Como dice los de arriba, todo es fake news",
+      obras: [
+        vacia(6,1,{ titulo: "Machetes", autor: "Sady González, 1948" }),
+        vacia(6,2,{ titulo: "Serie Teatros: El Faenza", autor: "Miguel Ángel Rojas, 1979" }),
+        vacia(6,3,{ titulo: "Los enterradores", autor: "Leo Matiz, 1948" }),
+        vacia(6,4,{ titulo: "Operación Orión", autor: "Jesús Abad Colorado" })
+      ] },
+    { t: "Pinturas de denuncia hacia la violencia",
+      s: "Pintaron la violencia para que no se olvidara. El museo la descolgó para que no incomodara. Los desplazados, esos siguen sin sala.",
+      obras: [
+        vacia(7,1,{ titulo: "Masacre 10 de abril", autor: "Alejandro Obregón, 1948" }),
+        vacia(7,2,{ titulo: "Serie Abu Ghraib: “65”", autor: "Fernando Botero, 2005" }),
+        vacia(7,3,{ titulo: "El tren de la muerte", autor: "Débora Arango, 1948" }),
+        vacia(7,4,{ titulo: "Homenaje al campesino colombiano", autor: "Alipio Jaramillo, 1948" })
+      ] }
+  ];
+
+  /* musica: una cancion por sala */
+  const MUSICA = {
+    eje1: "Audios/cosita-seria.mp3", eje2: "Audios/quien-los-mato.mp3", eje3: "Audios/el-salon-de-la-injusticia.mp3",
+    eje4: "Audios/la-caza-de-narino.mp3", eje5: "Audios/de-esto-te-hablamos.mp3", eje6: "Audios/tetranutra.mp3", eje7: "Audios/desplazados.mp3"
+  };
+
+  const $ = (s, r) => (r || document).querySelector(s);
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const R = Math.random, rr = (a, b) => a + R() * (b - a), pick = (a) => a[Math.floor(R() * a.length)], rnd = (a, b) => rr(a, b).toFixed(2);
+  const romanos = ["I", "II", "III", "IV", "V", "VI", "VII"];
+  const ORDEN = ["tablas","flash","gritar","mosaico", "educado","vidrio","tiras","persiana", "tablas","comer","cinta","gritar", "mosaico","persiana","educado","tiras", "vidrio","tablas","tocar","mosaico", "cinta","flash","gritar","persiana", "educado","vidrio","cinta","comer"];
+  const falsos = ["Escena decorativa", "Composición edificante", "Paisaje con figuras", "Retrato de sociedad", "Naturaleza amable", "Pieza de salón"];
+  const placas = ["Obra de incalculable valor cultural. Gracias por no tocar.", "Restaurada con el mismo cariño con que se olvida.", "Pase, mire, calle y compre el catálogo.",
+    "Con el apoyo de quienes preferirían que usted no estuviera aquí.", "Gracias por su silencio cómplice.", "Patrimonio de todos, siempre que nadie pregunte."];
+  const AMABLE = [["Sala de las Bellas Formas", "Aquí solo se exhibe lo bello. Todo lo demás se guarda, por su bien."], ["Sala de la Historia Patria", "Un relato sereno de nuestro pasado, sin sobresaltos."],
+    ["Sala de la Conservación", "Piezas que descansan, con todo cuidado, lejos de las miradas."], ["Sala del Buen Humor", "Arte alegre y de buen gusto para toda la familia."],
+    ["Sala de Plazas y Esculturas", "Obras grandes para espacios amables."], ["Sala de Fotografía Documental", "Imágenes que hablan por sí solas. Mejor que no hablen."],
+    ["Sala de Paisajes y Escenas Campestres", "Cuadros serenos para descansar la vista. Lo que pasó detrás del paisaje queda fuera del recorrido."]];
+  const VERDAD = { lema: "Entrada libre. Vayase donde quiera.<br>Aquí cuelga lo que esta patria descolgó, tapó o mandó a callar.", bajar: "↓ (no hay nada bonito que ver, pero baje igual)<br>(haga clic sobre las obras: para eso están)", tick: "Entrada gratis ✕ Salida no garantizada ✕ Prohibido pensar ✕ Patria milagro ✕ Obras retiradas por su propia seguridad ✕\n    Entrada gratis ✕ Salida no garantizada ✕ Prohibido pensar ✕ Patria milagro ✕ Obras retiradas por su propia seguridad ✕", manif: "<div>\n    <div class=\"decl\"><s>NO TOQUE.</s> TOQUE TODO.<br><s>NO HABLE.</s> GRITE, HIJUEPUTA.</div><h2>Un museo es un mausoleo con boletería.</h2>\n    <p>Aquí no venimos a admirar nada. Venimos a ver qué escondieron, qué hijueputa mandó esconderlo y cuánto les dolió. El arte incomoda; el museo lo enmarca, lo ilumina bonito y le cuelga una placa para que nadie se acuerde de por qué molestaba.</p>\n    <p>Esto lo hacemos estudiantes de la Distrital. Es una sátira: aquí no se decora la mierda, <b>se enseña</b>. Si se ofende, la obra funcionó. Si no le gusto, mejor, no vinimos a caerle bien.</p>\n  </div>\n  <aside class=\"reglas\">\n    <h3>Reglamento del visitante</h3>\n    <ul>\n      <li>Toque lo que quiera.</li>\n      <li>Flashee todo.</li>\n      <li>Grite, hable, coma .</li>\n      <li>No se quede callado.</li>\n      <li>No crea nada, hacemos lo que nos da la gana.</li>\n      <li>Entre mas hable mierda de las obras mejor.</li>\n    </ul>\n  </aside>" };
+  const total = ejes.reduce((n, e) => n + e.obras.length, 0), rest = ejes.map((e) => e.obras.length);
+  let nAb = 0, iniciada = false, tool = "rayar", vand = 0;
+  $("#cuenta").textContent = "0/" + total;
+
+  function cambiar(el, html) { el.classList.remove("cambia"); void el.offsetWidth; el.classList.add("cambia"); el.innerHTML = html; }
+  const ETAPAS = [["#e8e8e8", "#111111"], ["#d0d0d0", "#111111"], ["#777777", "#111111"], ["#111111", "#e8e8e8"]];
+  const SELLOS = ["DAÑADO", "NO APROBADO", "IRRECUPERABLE", "RESPONSABLE: EL VISITANTE", "RETIRADO", "NO APTO", "ARCHÍVESE", "PROHIBIDO", "¿QUIÉN AUTORIZÓ ESTO?", "CONTENIDO INDESEABLE"];
+  const FRASES = ["MENTIRA", "ME VALE", "QUÉ ASCO", "NO LES CREA", "AQUÍ ESTUVE", "¿Y LA PLATA?"];
+  function pintar(p) {
+    const et = p < .25 ? 0 : p < .5 ? 1 : p < .75 ? 2 : 3, r = document.documentElement.style;
+    r.setProperty("--bg", ETAPAS[et][0]); r.setProperty("--fg", ETAPAS[et][1]); document.body.dataset.e = et; $(".grietas").style.opacity = (p * .8).toFixed(2);
+  }
+  function aviso(txt, cls) { const d = document.createElement("div"); d.className = cls; d.textContent = txt; return d; }
+  function notif() { const t = Date.now(); recientes = recientes.filter((x) => t - x < 80000); recientes.push(t); if (recientes.length >= 3) dice("varias", true); else if (R() < .75) dice("reac", true); }
+  function sellos(ob) {
+    const f = $(".frame", ob); for (let k = 0; k < 1 + (R() > .55); k++) { const e = aviso(pick(SELLOS), "sello-c"); e.style.cssText = `${R() > .5 ? "top" : "bottom"}:${rr(3, 14)}%;${R() > .5 ? "left" : "right"}:${rr(3, 18)}%;--sr:${rr(-22, 22)}deg`; f.appendChild(e); }
+  }
+  const TIPOV = { tocar: ["manoseada", "advertencia borrada a mano"], flash: ["expuesta", "luz no autorizada"], gritar: ["gritada", "ruido no autorizado"], educado: ["mal educada", "permiso retirado"], comer: ["devorada", "obra consumida"], vidrio: ["rota", "vidrio quebrado"], cinta: ["destapada", "censura arrancada"], mosaico: ["descubierta", "mosaico volteado"], tiras: ["desordenada", "tiras recolocadas por el visitante"], persiana: ["levantada", "persiana forzada"], tablas: ["desclausurada", "tablas arrancadas"] };
+  const sg = (h) => { if (reduce || !h) return; h.classList.remove("glitchea"); void h.offsetWidth; h.classList.add("glitchea"); setTimeout(() => h.classList.remove("glitchea"), 950); };
+  let mxr = 0; addEventListener("pointermove", (ev) => { if (mxr || reduce) return; mxr = requestAnimationFrame(() => { mxr = 0; document.documentElement.style.setProperty("--mx", ((ev.clientX / innerWidth - .5) * 2).toFixed(2)); }); }, { passive: true });
+  function reaccion(n, ob, tipo) {
+    const pal = TIPOV[tipo][0], h = $(".t-act", ob), t = h.textContent, ws = t.split(" "); let k = 0; ws.forEach((w, i) => { if (w.length > ws[k].length) k = i; });
+    const W = ws[k], al = (x) => ws.map((w, i) => i === k ? x : w).join(" ");
+    h.innerHTML = [al(`<s class="tach">${W}</s> <em class="muta">${pal}</em>`), `${t} <sup class="tag">[${pal}]</sup>`, al(`<span class="frag">${W}</span>`), `<s class="tach">${t}</s> <em class="muta chico">${pal}</em>`, `<em class="muta">anti</em>-${t}`][n % 5];
+    $(".frame", ob).classList.add("dano" + (n % 4));
+  }
+  /* mensajes espontaneos */
+  const MSG = {
+    prov: ["¿Y quién decidió que esto era arte?", "Puede tocar. Nadie está mirando.", "No todo necesita gustarle.", "¿Le parece ofensivo? Excelente.", "La contemplación también puede ser una forma de violencia.", "Deje de mirar como si entendiera.", "El buen gusto es un reglamento con corbata.", "Callarse también es una forma de aplaudir.", "Si no le incomoda, no estaba mirando.", "Alguien cobró por decirle qué era bello."],
+    abs: ["Por favor, no alimente las obras.", "La obra se encuentra emocionalmente indispuesta.", "Se recomienda no establecer contacto visual.", "Esta exposición no cuenta con los permisos necesarios para existir.", "El museo niega cualquier relación con este objeto.", "No tenemos presupuesto para otra controversia.", "Oficina de pensamientos incómodos: cerrada por vacaciones.", "Las goteras de esta sala son parte de la obra. O no.", "El cuadro pidió su día libre.", "Esta frase fue aprobada por un comité que no existe."],
+    cuarta: ["¿Todavía está ahí?", "¿Qué esperaba encontrar?", "Usted también está mirando.", "No hay nada más que explicar.", "Esta página no sabe qué hacer con usted.", "¿Quién está observando a quién?", "Esto lo está leyendo usted. Qué raro.", "Hay una persona detrás de esta pantalla. Lo sabemos.", "¿Y si cierra la pestaña? Nadie se entera.", "Siga bajando. Es lo único que sabe hacer."],
+    cens: ["CONTENIDO NO AUTORIZADO", "ESTA OBRA NO DEBERÍA ESTAR AQUÍ", "RETIRE LA MIRADA", "NO APTO PARA VISITANTES SENSIBLES", "SE HA INTENTADO ELIMINAR ESTE CONTENIDO", "ESTE ESPACIO NO RECONOCE SU EXISTENCIA", "CIRCULE", "NO HAY NADA QUE VER"],
+    reac: ["¿ERA NECESARIO?", "La obra solicita permanecer intacta.", "Se ha perdido el respeto por la propiedad institucional.", "Bueno, ahora es su problema.", "La exposición no se hace responsable de sus decisiones.", "No estaba previsto que hiciera eso.", "Eso no estaba en el recorrido.", "Ahora sí se ve mejor. Nadie dijo eso."],
+    mirar: ["¿Piensa llevársela a casa?", "Puede dejar de mirarla. No va a cambiar.", "La obra también está incómoda.", "¿Ya la entendió? Cuéntenos.", "Lleva rato ahí. ¿Todo bien?", "A esta obra no le gusta que la miren tanto."],
+    varias: ["Tenemos que hablar.", "Esto se está saliendo de control.", "¿PUEDE DEJAR DE HACER ESO?", "Ya van varias. Estamos contando.", "Por favor. Se lo pedimos amablemente. Por última vez.", "Nadie va a venir a limpiar esto.", "Se acabó la paciencia de la sala."],
+    nada: ["Qué visitante tan obediente.", "Gracias por no cuestionar nada.", "¿Se durmió? Las obras también.", "Quieto, calladito y sin tocar nada. Un modelo.", "La inacción también queda registrada."]
+  };
+  const GUIA = ["Advertencia: usted acaba de observar algo que la institución preferiría que no hubiera visto.", "Error de comunicación. Se solicita al visitante no desarrollar interpretaciones innecesarias.", "Esta audioguía no está autorizada para tener opiniones.", "Si algo de esto le incomoda, felicitaciones."];
+  const cola = {}; let ultimo = 0, recientes = [];
+  const dame = (c) => { if (!cola[c] || !cola[c].length) cola[c] = [...MSG[c]].sort(() => R() - .5); return cola[c].pop(); };
+  const quitar = (e, ms) => setTimeout(() => e.remove(), ms);
+  const FORMAS = [
+    (t) => { const d = aviso(t, "not"); $("#depto").appendChild(d); quitar(d, 5500); },
+    (t) => { const d = aviso(t, "intruso"); d.style.cssText = `left:${rr(4, 55)}vw;top:${rr(15, 80)}vh;--sr:${rr(-7, 7)}deg`; document.body.appendChild(d); quitar(d, 3600); },
+    (t) => { const d = document.createElement("div"); d.className = "vent"; d.style.cssText = `left:${rr(5, 60)}vw;top:${rr(15, 70)}vh`; d.innerHTML = `<b>ERROR ${Math.floor(rr(100, 999))}</b><p></p>`; $("p", d).textContent = t; document.body.appendChild(d); quitar(d, 5000); },
+    (t) => { const d = aviso(t, "gigante"); document.body.appendChild(d); quitar(d, 2800); }
+  ];
+  function dice(c, fuerza) {
+    const t = Date.now(); if (!$("#gate").classList.contains("fuera") || document.hidden || t - ultimo < (fuerza ? 4000 : 9000)) return;
+    ultimo = t; (c === "cens" && R() < .6 ? FORMAS[3] : pick(FORMAS))(dame(c));
+  }
+  (function sig() { setTimeout(() => { dice(pick(["prov", "abs", "cuarta", "cens"])); sig(); }, rr(16000, 38000)); })();
+  let ocio = 0; ["pointermove", "scroll", "keydown", "pointerdown"].forEach((ev) => addEventListener(ev, () => { clearTimeout(ocio); ocio = setTimeout(() => dice("nada", true), 22000); }, { passive: true }));
+  const miro = new IntersectionObserver((es) => es.forEach((en) => { const ob = en.target; clearTimeout(ob._t); if (en.isIntersecting && !ob._dicho) ob._t = setTimeout(() => { ob._dicho = 1; dice("mirar", true); }, 11000); }), { threshold: .5 });
+  const entra = new IntersectionObserver((es) => es.forEach((en) => { if (en.isIntersecting) { entra.unobserve(en.target); sg($("h2", en.target)); if (R() < .6) dice(pick(["prov", "abs", "cens", "cuarta"]), true); } }), { threshold: .3 });
+  setTimeout(() => { document.querySelectorAll(".obra").forEach((o) => miro.observe(o)); document.querySelectorAll(".eje").forEach((o) => entra.observe(o)); }, 0);
+  setInterval(() => { if (document.hidden || !nAb) return; const h = pick([...document.querySelectorAll(".eje h2")]); sg(h); }, 17000);
+  function revisar() { $("#revision").classList.add("ver"); }
+  $("#mevale").onclick = () => $("#revision").classList.remove("ver");
+  function pos(cv, e) { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * cv.width / r.width, (e.clientY - r.top) * cv.height / r.height]; }
+  /* efectos de sonido reales: vidrio que se rompe y cinta que se arranca */
+  const SFX = { vidrio: ["Audios/vidrio-roto.mp3", .9], cinta: ["Audios/cinta-arrancada.mp3", 1] }, sfxBase = {};
+  let callado = false;   /* true = silencio total (despues del colapso final) */
+  Object.entries(SFX).forEach(([k, v]) => { const a = new Audio(v[0]); a.preload = "auto"; sfxBase[k] = a; });
+  function sfx(k) {
+    if (!sonido || callado || !sfxBase[k]) return;
+    try { const a = sfxBase[k].cloneNode(); a.volume = SFX[k][1]; a.play().catch(() => {}); } catch (e) {}
+  }
+  /* el grito (mientras se mantiene el boton, no tan fuerte) */
+  const GRITO = new Audio("Audios/grito.mp3"); GRITO.preload = "auto"; const VOL_GRITO = .3; GRITO.volume = VOL_GRITO; let gfade;
+  function gritoOn() {
+    if (!sonido || callado) return; clearInterval(gfade); GRITO.volume = VOL_GRITO;
+    try { if (GRITO.ended || (GRITO.duration && GRITO.currentTime >= GRITO.duration - .05)) GRITO.currentTime = 0; GRITO.play().catch(() => {}); } catch (e) {}
+  }
+  function gritoOff(suave) {
+    clearInterval(gfade); if (!suave) { GRITO.pause(); return; }
+    gfade = setInterval(() => { if (GRITO.volume > .03) GRITO.volume = Math.max(0, GRITO.volume - .03); else { GRITO.pause(); GRITO.volume = VOL_GRITO; clearInterval(gfade); } }, 50);
+  }
+  /* estatica del colapso final: arranca con el glitch de la obra final y todo termina en silencio */
+  const ESTATICA = new Audio("Audios/estatica.mp3"); ESTATICA.preload = "auto"; ESTATICA.volume = .6; let efade;
+  window.colapsoSonido = (fase) => {
+    if (fase === "inicio") { if (!sonido || callado) return; clearInterval(efade); ESTATICA.volume = .6; try { ESTATICA.currentTime = 0; ESTATICA.play().catch(() => {}); } catch (e) {} return; }
+    callado = true; gritoOff(); try { speechSynthesis.cancel(); } catch (e) {} hablando = false; aplicar();
+    clearInterval(efade); efade = setInterval(() => { if (ESTATICA.volume > .05) ESTATICA.volume = Math.max(0, ESTATICA.volume - .05); else { ESTATICA.pause(); ESTATICA.volume = 0; clearInterval(efade); } }, 60);
+  };
+  let ac;
+  function crujido() {
+    if (!sonido) return;
+    try {
+      ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+      const n = ac.sampleRate * .25, b = ac.createBuffer(1, n, ac.sampleRate), d = b.getChannelData(0);
+      for (let i = 0; i < n; i++) d[i] = (R() * 2 - 1) * Math.pow(1 - i / n, 3);
+      const s = ac.createBufferSource(), g = ac.createGain(); s.buffer = b; g.gain.value = .35; s.connect(g); g.connect(ac.destination); s.start();
+    } catch (e) {}
+  }
+
+  /* liberar una obra: el museo se va oscureciendo */
+  function liberar(n, e, ob) {
+    if (ob.classList.contains("libre")) return;
+    ob.classList.add("libre"); $(".frame", ob).classList.add("libre"); nAb++;
+    if (!iniciada) { iniciada = true; aplicar(); }
+    $("#cuenta").textContent = nAb + "/" + total; pintar(nAb / total); $("#herr").classList.add("ver");
+    if (!reduce && document.body.animate) document.body.animate([{ transform: "translate(0,0)" }, { transform: "translate(-9px,5px) rotate(-.3deg)" }, { transform: "translate(8px,-6px) rotate(.3deg)" }, { transform: "translate(0,0)" }], { duration: 420 });
+    herramienta(ob); sellos(ob); reaccion(n, ob, ORDEN[n]); if (R() < .4) sg($("#eje" + (e + 1) + " h2"));  notif(); if (nAb === 4 || nAb === 13) setTimeout(revisar, 900);
+    if (--rest[e] === 0) { const cab = $("#eje" + (e + 1) + " .eje-cab"), h = $("h2", cab); cab.classList.add("real"); cambiar(h, ejes[e].t); h.dataset.text = ejes[e].t; cambiar($(".sub", cab), ejes[e].s); }
+    if (nAb === total) verdad();
+  }
+  function verdad(quieto) {
+    document.body.classList.add("verdad", "todas"); document.title = "ANTIMUSEO"; $("#nombre").textContent = "ANTI-MUSEO";
+    cambiar($("#lema"), VERDAD.lema); $("#bajar").innerHTML = VERDAD.bajar; $("#tick").innerHTML = VERDAD.tick; cambiar($("#mcont"), VERDAD.manif);
+    $("#cierre").classList.add("visible"); $("#estrella").hidden = false;
+    if (!quieto) setTimeout(() => scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" }), 1800);
+  }
+
+  /* las seis formas de liberar una obra */
+  const M = {
+    tocar(f, ctl, fin) {
+      const cv = document.createElement("canvas"); cv.className = "cub"; f.appendChild(cv); const ctx = cv.getContext("2d"), img = $("img", f);
+      let listo = false, last = null, moves = 0, down = false;
+      function dibuja() {
+        const w = f.clientWidth, h = f.clientHeight; if (!w || !h || listo) return;
+        cv.width = w; cv.height = h; ctx.globalCompositeOperation = "source-over"; ctx.fillStyle = "#cfcfcf"; ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = "rgba(0,0,0,.1)"; ctx.lineWidth = 15;
+        for (let i = -h; i < w + h; i += 36) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i + h, h); ctx.stroke(); }
+        ctx.save(); ctx.translate(w / 2, h / 2); ctx.rotate(-.35); ctx.fillStyle = "#111"; ctx.textAlign = "center";
+        ctx.font = "bold " + Math.round(w * .2) + "px Anton, Impact, sans-serif"; ctx.fillText("NO TOCAR", 0, 0);
+        ctx.font = "bold 13px 'Courier New', monospace"; ctx.fillText("OBRA PROTEGIDA · GRACIAS POR SU COMPRENSION", 0, 30); ctx.restore();
+        ctx.strokeStyle = "#111"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(0, h * .12); ctx.lineTo(w, h * .12); ctx.moveTo(0, h * .88); ctx.lineTo(w, h * .88); ctx.stroke();
+      }
+      if (window.ResizeObserver) new ResizeObserver(dibuja).observe(f);
+      img.addEventListener("load", dibuja); dibuja();
+      function medir() {
+        const d = ctx.getImageData(0, 0, cv.width, cv.height).data; let n = 0, t = 0;
+        for (let i = 3; i < d.length; i += 116) { t++; if (d[i] < 40) n++; }
+        if (n / t > .55) { listo = true; cv.style.transition = "opacity .7s"; cv.style.opacity = 0; cv.style.pointerEvents = "none"; fin(); }
+      }
+      cv.addEventListener("pointerdown", (e) => { if (listo) return; down = true; last = pos(cv, e); try { cv.setPointerCapture(e.pointerId); } catch (x) {} });
+      cv.addEventListener("pointermove", (e) => {
+        if (!down || listo) return; const p = pos(cv, e);
+        ctx.globalCompositeOperation = "destination-out"; ctx.lineWidth = Math.max(34, cv.width * .09); ctx.lineCap = "round";
+        ctx.beginPath(); ctx.moveTo(last[0], last[1]); ctx.lineTo(p[0], p[1]); ctx.stroke(); last = p; if (++moves % 6 === 0) medir();
+      });
+      const suelta = () => { down = false; if (!listo) medir(); };
+      cv.addEventListener("pointerup", suelta); cv.addEventListener("pointercancel", suelta);
+    },
+    flash(f, ctl, fin) {
+      f.classList.add("linterna"); f.insertAdjacentHTML("beforeend", '<div class="oscuro todo"></div><div class="flash"></div>');
+      const os = $(".oscuro", f), fl = $(".flash", f), COLS = 8, ROWS = 10, celdas = {}; let cuenta = 0, listo = false;
+      const radio = () => Math.max(70, f.clientWidth * .2), xy = (e) => { const r = f.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+      function marca(x, y, Rr) {
+        const w = f.clientWidth, h = f.clientHeight;
+        for (let i = 0; i < COLS; i++) for (let j = 0; j < ROWS; j++) {
+          if (Math.hypot((i + .5) * w / COLS - x, (j + .5) * h / ROWS - y) < Rr && !celdas[i + "," + j]) { celdas[i + "," + j] = 1; cuenta++; }
+        }
+        if (cuenta / (COLS * ROWS) >= .72 && !listo) { listo = true; os.style.opacity = 0; f.style.cursor = "default"; fin(); }
+      }
+      f.addEventListener("pointermove", (e) => { if (listo) return; const p = xy(e); os.classList.remove("todo"); os.style.setProperty("--x", p[0] + "px"); os.style.setProperty("--y", p[1] + "px"); os.style.setProperty("--r", radio() + "px"); marca(p[0], p[1], radio() * .8); });
+      f.addEventListener("pointerleave", () => { if (!listo) os.style.setProperty("--x", "-999px"); });
+      f.addEventListener("pointerdown", (e) => {
+        if (listo) return; const p = xy(e); fl.classList.remove("on"); void fl.offsetWidth; fl.classList.add("on");
+        os.style.setProperty("--x", p[0] + "px"); os.style.setProperty("--y", p[1] + "px"); os.style.setProperty("--r", radio() * 2.4 + "px");
+        setTimeout(() => os.style.setProperty("--r", radio() + "px"), 260); marca(p[0], p[1], radio() * 2.2);
+      });
+    },
+    gritar(f, ctl, fin) {
+      const im = $("img", f); f.insertAdjacentHTML("beforeend", `<div class="onoma">${pick(["¡¡AAAAAH!!", "¡¡BASTA!!", "¡¡NO!!"])}</div>`);
+      ctl.innerHTML = '<button class="btn">Mantener para gritar</button>'; const btn = $(".btn", ctl), on = $(".onoma", f);
+      let p = 0, sost = false, listo = false, t0 = 0; im.style.filter = "blur(28px) saturate(.3)";
+      const arriba = () => { sost = true; btn.classList.add("on"); gritoOn(); }, abajo = () => { sost = false; btn.classList.remove("on"); if (!listo) gritoOff(); };
+      btn.addEventListener("pointerdown", (e) => { e.preventDefault(); arriba(); try { btn.setPointerCapture(e.pointerId); } catch (x) {} });
+      ["pointerup", "pointercancel", "lostpointercapture"].forEach((ev) => btn.addEventListener(ev, abajo));
+      btn.addEventListener("keydown", (e) => { if ((e.key === " " || e.key === "Enter") && !e.repeat) { e.preventDefault(); arriba(); } }); btn.addEventListener("keyup", abajo);
+      function tick(t) {
+        const dt = Math.min(.05, (t - (t0 || t)) / 1000); t0 = t;
+        if (!listo && (sost || p > 0)) {
+          p = Math.max(0, Math.min(1, p + dt * (sost ? .42 : -.22)));
+          im.style.filter = "blur(" + ((1 - p) * 28).toFixed(1) + "px) saturate(" + (.3 + .7 * p).toFixed(2) + ")";
+          const sh = reduce ? 0 : p * 7; f.style.transform = "translate(" + ((R() - .5) * sh).toFixed(1) + "px," + ((R() - .5) * sh).toFixed(1) + "px)";
+          on.style.opacity = Math.min(1, p * 1.4).toFixed(2); on.style.fontSize = (1.6 + p * 4.2).toFixed(2) + "rem";
+          if (p >= 1) { listo = true; gritoOff(true); btn.classList.remove("on"); im.style.filter = "none"; f.style.transform = "none"; on.style.transition = "opacity 1s"; on.style.opacity = 0; fin(); }
+        }
+        if (!listo) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    },
+    educado(f, ctl, fin) {
+      f.classList.add("cortina"); f.insertAdjacentHTML("beforeend", '<div class="cartel"><span>Contenido no apto<br>para visitantes educados</span></div>');
+      ctl.innerHTML = '<button class="btn">Por favor, ¿podría mostrarme la obra?</button><button class="btn rudo" hidden>Dejar de pedir permiso</button><div class="respuesta"></div>';
+      const a = $(".btn", ctl), b = $(".rudo", ctl), rs = $(".respuesta", ctl); let n = 0;
+      const NO = ["Lamentamos informarle que la obra se encuentra en restauración. Gracias por su amabilidad.", "Su solicitud ha sido recibida. Tiempo estimado de respuesta: de seis a ocho años.",
+        "Para ver esta obra, diligencie el formulario 27-B en la oficina de curaduría (cerrada por reformas).", "Agradecemos su paciencia. Su paciencia es lo único que le pedimos."];
+      a.onclick = () => { rs.textContent = NO[Math.min(n, NO.length - 1)]; n++; if (n >= 2) b.hidden = false; a.textContent = n < 2 ? "Perdón, ¿y ahora sí?" : "Muy amable, ¿y ahora?"; };
+      b.onclick = () => { f.classList.add("fuera"); a.hidden = true; b.hidden = true; fin(); };
+    },
+    comer(f, ctl, fin) {
+      const cv = document.createElement("canvas"); cv.className = "cub"; f.appendChild(cv); const ctx = cv.getContext("2d"), img = $("img", f);
+      let listo = false, down = false, last = null, n = 0;
+      function dibuja() {
+        const w = f.clientWidth, h = f.clientHeight; if (!w || !h || listo) return;
+        cv.width = w; cv.height = h; ctx.globalCompositeOperation = "source-over"; ctx.fillStyle = "#d8d8d8"; ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = "#fffdf6"; for (let x = 0; x < w + 30; x += 34) { ctx.beginPath(); ctx.arc(x, h * .08 + (x % 3) * 4, 24, 0, 7); ctx.fill(); }
+        for (let i = 0; i < 90; i++) { ctx.save(); ctx.translate(R() * w, R() * h); ctx.rotate(R() * 3); ctx.fillStyle = pick(["#111", "#777", "#bbb", "#333"]); ctx.fillRect(0, 0, 10, 3); ctx.restore(); }
+        ctx.save(); ctx.translate(w / 2, h / 2); ctx.rotate(.12); ctx.fillStyle = "#111"; ctx.textAlign = "center";
+        ctx.font = "bold " + Math.round(w * .14) + "px Anton, Impact, sans-serif"; ctx.fillText("PROHIBIDO", 0, -8); ctx.fillText("COMER", 0, w * .14); ctx.restore();
+      }
+      if (window.ResizeObserver) new ResizeObserver(dibuja).observe(f);
+      img.addEventListener("load", dibuja); dibuja();
+      function medir() {
+        const d = ctx.getImageData(0, 0, cv.width, cv.height).data; let k = 0, t = 0;
+        for (let i = 3; i < d.length; i += 116) { t++; if (d[i] < 40) k++; }
+        if (k / t > .55) { listo = true; cv.style.transition = "opacity .7s"; cv.style.opacity = 0; cv.style.pointerEvents = "none"; fin(); }
+      }
+      function mordida(p) {
+        ctx.globalCompositeOperation = "destination-out"; const rad = Math.max(24, cv.width * .07);
+        for (let i = 0; i < 4; i++) { ctx.beginPath(); ctx.arc(p[0] + (R() - .5) * rad, p[1] + (R() - .5) * rad, rad * rr(.6, 1), 0, 7); ctx.fill(); }
+        if (++n % 5 === 0) medir();
+      }
+      cv.addEventListener("pointerdown", (e) => {
+        if (listo) return; down = true; last = pos(cv, e); mordida(last); try { cv.setPointerCapture(e.pointerId); } catch (x) {}
+        const r = f.getBoundingClientRect(), s = document.createElement("span"); s.className = "nam"; s.textContent = pick(["ÑAM", "ÑAM ÑAM", "MUNCH"]);
+        s.style.cssText = `left:${e.clientX - r.left}px;top:${e.clientY - r.top}px`; f.appendChild(s); setTimeout(() => s.remove(), 800);
+      });
+      cv.addEventListener("pointermove", (e) => { if (!down || listo) return; const p = pos(cv, e); if (Math.hypot(p[0] - last[0], p[1] - last[1]) > cv.width * .04) { last = p; mordida(p); } });
+      cv.addEventListener("pointerup", () => down = false); cv.addEventListener("pointercancel", () => down = false);
+    },
+    cinta(f, ctl, fin) {
+      const w = document.createElement("div"); w.className = "cintas"; f.appendChild(w); let n = 5;
+      for (let i = 0; i < 5; i++) {
+        const t = document.createElement("div"), a = rr(-14, 14), s = i % 2 ? -1 : 1; t.className = "tira-c"; t.textContent = "CENSURADO ✕ ".repeat(9); t.style.cssText = `top:${6 + i * 19}%;transform:rotate(${a}deg)`;
+        t.onclick = () => {
+          t.style.pointerEvents = "none";
+          t.animate([{ transform: `rotate(${a}deg)` }, { transform: `translateX(${-s * 18}px) rotate(${a - s * 2}deg)`, offset: .25 }, { transform: `translate(${s * 130}%,-50px) rotate(${a + s * 40}deg) scaleY(.4)`, opacity: 0 }], { duration: 800, easing: "ease-in", fill: "forwards" }).onfinish = () => t.remove();
+          sfx("cinta"); if (--n === 0) setTimeout(() => { w.remove(); fin(); }, 500);
+        };
+        w.appendChild(t);
+      }
+    },
+    mosaico(f, ctl, fin) {
+      const C = 6, Rw = 8, t = C * Rw, g = document.createElement("div"); let k = 0; g.className = "mos"; g.style.gridTemplate = `repeat(${Rw},1fr)/repeat(${C},1fr)`; f.appendChild(g);
+      for (let i = 0; i < t; i++) { const c = document.createElement("i"); c.style.setProperty("--d", rnd(0, .15) + "s"); g.appendChild(c); }
+      const voltea = (e) => { const c = document.elementFromPoint(e.clientX, e.clientY); if (c && c.parentNode === g && !c.classList.contains("v")) { c.classList.add("v"); if (++k >= t * .8) { g.style.pointerEvents = "none"; g.style.opacity = 0; setTimeout(() => g.remove(), 900); fin(); } } };
+      g.addEventListener("pointermove", voltea); g.addEventListener("pointerdown", voltea);
+    },
+    tiras(f, ctl, fin) {
+      const N = 7, w = document.createElement("div"), src = $("img", f).getAttribute("src"); let k = N; w.className = "trit"; f.appendChild(w);
+      for (let i = 0; i < N; i++) {
+        const s = document.createElement("b"), o = (i % 2 ? 1 : -1) * rr(22, 45);
+        s.style.cssText = `left:${i * 100 / N}%;width:${100 / N}%;background-image:url("${src}");background-size:${N * 100}% 100%;background-position:${i * 100 / (N - 1)}% 0;transform:translateY(${o}%)`;
+        s.onclick = () => {
+          s.style.pointerEvents = "none"; s.animate([{ transform: `translateY(${o}%)` }, { transform: "translateY(0)" }], { duration: 700, easing: "cubic-bezier(.3,1.6,.5,1)", fill: "forwards" }); crujido();
+          if (--k === 0) setTimeout(() => { w.style.opacity = 0; setTimeout(() => w.remove(), 700); fin(); }, 800);
+        };
+        w.appendChild(s);
+      }
+    },
+    persiana(f, ctl, fin) {
+      const w = document.createElement("div"), asa = document.createElement("i"); w.className = "pers"; asa.className = "asa"; w.appendChild(asa); f.appendChild(w);
+      let o = 0, drag = false, y0 = 0, h0 = 0, hecho = false;
+      const poner = (v, t) => { o = v; w.style.transition = t || "none"; w.style.transform = `translateY(${-v * 100}%)`; };
+      asa.addEventListener("pointerdown", (e) => { if (hecho) return; drag = true; y0 = e.clientY; h0 = o; w.style.transition = "none"; asa.setPointerCapture(e.pointerId); });
+      asa.addEventListener("pointermove", (e) => { if (drag) poner(Math.max(0, Math.min(1, h0 + (y0 - e.clientY) / f.clientHeight))); });
+      const suelta = (e) => {
+        if (!drag) return; drag = false;
+        if (o > .4 || Math.abs(y0 - e.clientY) < 6) { hecho = true; crujido(); poner(1.03, "transform 1s cubic-bezier(.5,0,.3,1)"); setTimeout(() => { w.remove(); fin(); }, 1050); }
+        else poner(0, "transform .7s cubic-bezier(.3,1.6,.5,1)");
+      };
+      asa.addEventListener("pointerup", suelta); asa.addEventListener("pointercancel", suelta);
+    },
+    tablas(f, ctl, fin) {
+      const w = document.createElement("div"); w.className = "tablas"; f.appendChild(w); let n = 4;
+      for (let i = 0; i < 4; i++) {
+        const t = document.createElement("div"), a = rr(-9, 9), s = i % 2 ? -1 : 1; t.className = "tabla"; t.style.cssText = `top:${4 + i * 24}%;transform:rotate(${a}deg);transform-origin:${s > 0 ? "0" : "100%"} 50%`; t.innerHTML = "<u></u><u></u>";
+        t.onclick = () => {
+          t.style.pointerEvents = "none"; crujido();
+          t.animate([{ transform: `rotate(${a}deg)` }, { transform: `rotate(${a + s * 4}deg)`, offset: .12 }, { transform: `rotate(${a - s * 4}deg)`, offset: .24 }, { transform: `rotate(${a + s * 95}deg) translateY(280px)`, opacity: 0 }], { duration: 1200, easing: "ease-in", fill: "forwards" }).onfinish = () => t.remove();
+          if (--n === 0) setTimeout(() => { w.remove(); fin(); }, 800);
+        };
+        w.appendChild(t);
+      }
+    },
+    vidrio(f, ctl, fin) {
+      f.insertAdjacentHTML("beforeend", '<div class="vidrio"></div>');
+      $(".vidrio", f).addEventListener("click", (e) => { const r = f.getBoundingClientRect(); romper(f, (e.clientX - r.left) / r.width * 100, (e.clientY - r.top) / r.height * 100); sfx("vidrio"); fin(); });
+    }
+  };
+
+  /* vidrio roto: piedra al centro, caen los pedazos y quedan las esquinas */
+  function romper(f, cx, cy) {
+    const n = 18, hueco = []; cx = Math.min(54, Math.max(46, cx)); cy = Math.min(54, Math.max(46, cy));
+    for (let k = 0; k < n; k++) { const a = k / n * Math.PI * 2 + (R() - .5) * .2, r = (k % 2 ? 37 : 43) + R() * 5; hueco.push([cx + Math.cos(a) * r, cy + Math.sin(a) * r]); }
+    const borde = ([x, y]) => { const dx = x - cx, dy = y - cy, t = Math.min(dx ? (dx > 0 ? 100 - cx : -cx) / dx : 1e9, dy ? (dy > 0 ? 100 - cy : -cy) / dy : 1e9); return [cx + dx * t, cy + dy * t]; };
+    const lado = (p) => p[0] < .1 ? "L" : p[0] > 99.9 ? "R" : p[1] < .1 ? "T" : "B";
+    const esq = (a, b) => { const av = "LR".includes(lado(a)), bv = "LR".includes(lado(b)); if (av === bv) return []; return av ? [[a[0], b[1]]] : [[b[0], a[1]]]; };
+    const fm = (pts) => pts.map((p) => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ");
+    let s = "";
+    for (let k = 0; k < n; k++) {
+      const a = hueco[k], b = hueco[(k + 1) % n], oa = borde(a), ob = borde(b);
+      s += `<polygon points="${fm([a, b, ob, ...esq(ob, oa), oa])}" fill="rgba(255,255,255,${(.04 + R() * .1).toFixed(2)})" stroke="rgba(255,255,255,.6)" stroke-width="1" vector-effect="non-scaling-stroke"/>`;
+    }
+    s += `<polygon points="${fm(hueco)}" fill="none" stroke="rgba(255,255,255,.95)" stroke-width="1.4" vector-effect="non-scaling-stroke"/>`;
+    f.insertAdjacentHTML("beforeend", `<svg class="grieta" viewBox="0 0 100 100" preserveAspectRatio="none">${s}</svg>`);
+    f.dataset.hueco = "polygon(" + hueco.map((p) => p[0] + "% " + p[1] + "%").join(",") + ")";
+    for (let k = 0; k < 16; k++) {
+      const p = document.createElement("div"), w = 9 + R() * 10;
+      p.style.cssText = `position:absolute;z-index:6;pointer-events:none;left:${cx + (R() - .5) * 60}%;top:${cy + (R() - .5) * 60}%;width:${w}%;height:${w * .8}%;background:linear-gradient(135deg,rgba(255,255,255,.6),rgba(255,255,255,.08));clip-path:polygon(${R() * 40}% 0,100% ${R() * 60}%,0 100%)`;
+      f.appendChild(p);
+      p.animate([{ transform: "translate(0,0) rotate(0)", opacity: 1 }, { transform: `translate(${(R() - .5) * 120}px,${230 + R() * 160}px) rotate(${(R() - .5) * 540}deg)`, opacity: 0 }],
+        { duration: 900 + R() * 800, delay: R() * 120, easing: "cubic-bezier(.5,0,.9,.6)", fill: "forwards" }).onfinish = () => p.remove();
+    }
+  }
+
+  /* vandalizar: rayar y cortar */
+  function herramienta(ob) {
+    const f = $(".frame", ob); if ($(".tinta", f)) return;
+    const cv = document.createElement("canvas"); cv.className = "tinta"; f.appendChild(cv); if (f.dataset.hueco) cv.style.clipPath = f.dataset.hueco;
+    const c = cv.getContext("2d"); let p0 = null;
+    cv.addEventListener("pointerdown", (e) => { if (tool === "estampar") { const r = f.getBoundingClientRect(), m = aviso(pick(FRASES), "marca"); m.style.cssText = `left:${(e.clientX - r.left) / r.width * 100}%;top:${(e.clientY - r.top) / r.height * 100}%;--sr:${rr(-18, 18)}deg`; f.appendChild(m); $("#vand").textContent = ++vand; if (vand % 9 === 0) dice("varias", true); return; } if (cv.width !== cv.clientWidth) { cv.width = cv.clientWidth; cv.height = cv.clientHeight; } p0 = pos(cv, e); cv.setPointerCapture(e.pointerId); $("#vand").textContent = ++vand; });
+    cv.addEventListener("pointermove", (e) => {
+      if (!p0 || tool !== "rayar") return; const p = pos(cv, e);
+      c.strokeStyle = "rgba(240,240,240,.92)"; c.lineWidth = 1.5; c.lineCap = "round"; c.shadowColor = "#000"; c.shadowBlur = 2;
+      c.beginPath(); c.moveTo(p0[0], p0[1]); c.lineTo(p[0] + R() - .5, p[1] + R() - .5); c.stroke(); p0 = p;
+    });
+    cv.addEventListener("pointerup", (e) => {
+      if (p0 && tool === "cortar") {
+        const p = pos(cv, e); c.lineCap = "round"; c.shadowBlur = 0;
+        c.strokeStyle = "rgba(255,255,255,.55)"; c.lineWidth = 4.5; c.beginPath(); c.moveTo(p0[0], p0[1]); c.lineTo(p[0], p[1]); c.stroke();
+        c.strokeStyle = "#000"; c.lineWidth = 2; c.beginPath(); c.moveTo(p0[0], p0[1]); c.lineTo(p[0], p[1]); c.stroke();
+      }
+      p0 = null;
+    });
+    cv.addEventListener("pointercancel", () => p0 = null);
+  }
+  [["rayar", "rayar"], ["estampar", "estampar"], ["cortar", "cortar"]].forEach(([k, t]) => {
+    const b = document.createElement("button"); b.textContent = t; b.className = k === tool ? "on" : "";
+    b.onclick = () => { tool = k; [...$("#herr").children].forEach((x) => x.classList.toggle("on", x === b)); };
+    $("#herr").appendChild(b);
+  });
+
+  /* armar las salas */
+  let g = 0; const pend = [];
+  ejes.forEach((e, i) => {
+    const bl = document.createElement("section"); bl.className = "eje"; bl.id = "eje" + (i + 1); bl.dataset.musica = "eje" + (i + 1);
+    bl.innerHTML = `<div class="eje-cab"><div class="eje-num">${romanos[i]}</div><div class="eje-label">Eje temático ${i + 1}</div><h2 class="glitch" data-text="${AMABLE[i][0]}">${AMABLE[i][0]}</h2><p class="sub">${AMABLE[i][1]}</p></div><div class="obras"></div>`;
+    e.obras.forEach((o, j) => {
+      const tipo = ORDEN[g], n = g;
+      const ob = document.createElement("article"); ob.className = "obra"; ob.style.cssText = `--r:${rnd(-4, 4)}deg; --tr:${rnd(-10, 10)}deg`;
+      ob.innerHTML = `<div class="frame-wrap"><div class="frame" data-ruta="${o.img}"><img src="${o.img}" alt="${o.titulo}" onload="this.parentNode.classList.add('con-img')" onerror="this.style.visibility='hidden'"></div></div>
+        <div class="meta"><div class="n-obra">${String(j + 1).padStart(2, "0")}</div>
+          <div class="of"><h3>${falsos[n % falsos.length]}</h3><div class="autor">Autor: no consta</div><p class="placa">${placas[n % placas.length]}</p></div>
+          <div class="real"><h3 class="t-act">${o.titulo}</h3><div class="autor">${o.autor}</div><button class="guia" type="button">▶ Audioguía oficial (voz robot)</button></div>
+          <div class="ctl"></div></div>`;
+      $(".obras", bl).appendChild(ob); pend.push([n, i, ob, o, tipo]); g++;
+    });
+    $("#ejes").appendChild(bl);
+  });
+  pend.forEach(([n, e, ob, o, tipo]) => M[tipo]($(".frame", ob), $(".ctl", ob), () => liberar(n, e, ob)));
+
+  const io = new IntersectionObserver((es) => es.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("vis"); io.unobserve(en.target); } }), { threshold: .12 });
+  document.querySelectorAll(".obra").forEach((el) => io.observe(el));
+
+  /* sonido: solo arranca cuando se libera la primera obra */
+  const VOL = .6, pistas = {};
+  Object.entries(MUSICA).forEach(([k, ruta]) => {
+    if (!ruta) return; const a = new Audio(ruta); a.loop = true; a.volume = 0; a.preload = "metadata";
+    a.addEventListener("error", () => { a.roto = true; console.warn("No se pudo cargar el audio:", ruta); }); pistas[k] = a;
+  });
+  let sonido = false, actual = null, hablando = false, utActual = null;
+  function fade(a, v) {
+    clearInterval(a.f); if (v > 0 && a.paused && !a.roto) a.play().catch(() => {});
+    a.f = setInterval(() => { const d = v - a.volume; if (Math.abs(d) < .04) { a.volume = v; clearInterval(a.f); if (v === 0) a.pause(); } else a.volume = Math.min(1, Math.max(0, a.volume + Math.sign(d) * .04)); }, 60);
+  }
+  function aplicar() {
+    const on = sonido && iniciada && !callado;
+    Object.keys(pistas).forEach((k) => fade(pistas[k], (on && k === actual) ? VOL * (hablando ? .25 : 1) : 0));
+    $("#ahora").textContent = (on && pistas[actual] && !pistas[actual].roto) ? " ♪ " + actual : ""; $("#mute").textContent = sonido ? "sonido: on" : "sonido: off";
+  }
+  const salas = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { actual = e.target.dataset.musica; aplicar(); } }), { rootMargin: "-50% 0px -50% 0px", threshold: 0 });
+  document.querySelectorAll("[data-musica]").forEach((el) => salas.observe(el));
+
+  /* barra de navegacion */
+  romanos.forEach((r, i) => $("#links").insertAdjacentHTML("beforeend", `<a href="#eje${i + 1}" title="${AMABLE[i][0]}">${r}</a>`));
+  $("#links").insertAdjacentHTML("beforeend", '<a href="#cierre" id="estrella" title="Sala final" hidden>★</a><a href="#" id="mute">sonido: off</a>');
+  $("#mute").onclick = (e) => { e.preventDefault(); sonido = !sonido; aplicar(); };
+  function entrar(con) { sonido = con; $("#gate").classList.add("fuera"); document.body.classList.remove("bloqueado"); aplicar(); }
+  $("#conSonido").onclick = () => entrar(true); $("#sinSonido").onclick = () => entrar(false);
+
+  /* audioguia */
+  const TXT = "▶ Audioguía oficial (voz robot)";
+  pend.forEach(([n, e, ob, o]) => {
+    const b = $(".guia", ob); if (!("speechSynthesis" in window)) { b.remove(); return; }
+    b.onclick = () => {
+      const sy = speechSynthesis, era = b.classList.contains("on"); utActual = null; sy.cancel();
+      document.querySelectorAll(".guia.on").forEach((x) => { x.classList.remove("on"); x.textContent = TXT; }); hablando = false; aplicar(); if (era) return;
+      const u = new SpeechSynthesisUtterance(`${o.titulo}. ${o.autor}. ${pick(GUIA)}`);
+      u.lang = "es-CO"; u.rate = .92; u.pitch = .55;
+      const fin = () => { if (utActual !== u) return; hablando = false; b.classList.remove("on"); b.textContent = TXT; aplicar(); };
+      u.onstart = () => { if (utActual === u) { hablando = true; aplicar(); } }; u.onend = fin; u.onerror = fin; utActual = u;
+      b.classList.add("on"); b.textContent = "■ Callar al robot"; sy.speak(u);
+    };
+  });
+
+  /* rastro del cursor */
+  if (matchMedia("(hover: hover)").matches && !reduce) {
+    let ult = 0;
+    addEventListener("mousemove", (e) => {
+      const t = performance.now(); if (t - ult < 45) return; ult = t;
+      const gt = document.createElement("i"), d = 4 + R() * 9; gt.className = "gota-cursor"; gt.style.cssText = `left:${e.clientX}px; top:${e.clientY}px; width:${d}px; height:${d}px`;
+      document.body.appendChild(gt); setTimeout(() => gt.remove(), 900);
+    });
+  }
+
+  /* sala final: la cortina se abre suave */
+  (function () {
+    const el = $("#cortinaF"), vit = $("#vitrina"), marco = $("#vmarco");
+    if (SIGUIENTE.img) marco.insertAdjacentHTML("afterbegin", `<img src="${SIGUIENTE.img}" alt="">`);
+    let o = 0, raf = 0, drag = false, x0 = 0, d0 = 0;
+    const poner = (v) => { o = v; el.style.setProperty("--o", v.toFixed(4)); };
+    const suave = (t) => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    function ir(a, ms, fin) {
+      cancelAnimationFrame(raf); const b = o, t0 = performance.now();
+      const paso = (t) => {
+        const p = Math.min(1, (t - t0) / ms); el.style.setProperty("--k", (Math.sin(p * Math.PI) * 4 * Math.sign(a - b)).toFixed(2) + "deg"); poner(b + (a - b) * suave(p));
+        if (p < 1) raf = requestAnimationFrame(paso); else { el.style.setProperty("--k", "0deg"); if (fin) fin(); }
+      };
+      raf = requestAnimationFrame(paso);
+    }
+    const abrirC = () => ir(1, 2400, () => { vit.classList.add("abierta"); if (SIGUIENTE.url) vit.classList.add("enlace"); el.style.pointerEvents = "none"; if (window.colapsar) window.colapsar(); else if (window.instalar) window.instalar(); });
+    el.addEventListener("pointerdown", (e) => { drag = true; x0 = e.clientX; d0 = 0; el.setPointerCapture(e.pointerId); cancelAnimationFrame(raf); });
+    el.addEventListener("pointermove", (e) => { if (!drag) return; d0 = Math.abs(e.clientX - x0); poner(Math.min(1, d0 / (el.clientWidth * .45))); });
+    const suelta = () => { if (!drag) return; drag = false; if (d0 < 6 || o > .35) abrirC(); else ir(0, 900); };
+    el.addEventListener("pointerup", suelta); el.addEventListener("pointercancel", suelta);
+    marco.addEventListener("click", () => { if (vit.classList.contains("abierta") && SIGUIENTE.url) location.href = SIGUIENTE.url; });
+  })();
+
+  const RESTOS = ["REGLA N°3 · NO TOQUE", "RETIRADO", "ARCHÍVESE", "Prohibido el flash", "EXP. 0001-B", "Silencio, por favor", "APROBACIÓN DENEGADA", "CIRCULE", "PLACA OFICIAL: ", "NO APTO", "Sea siempre educado", "¿QUIÉN AUTORIZÓ ESTO?"];
+  RESTOS.forEach((t, i) => { const e = aviso(t, "resto" + (i % 3 ? "" : " roja")); e.style.cssText = `left:${rr(2, 78)}%;top:${rr(4, 90)}%;--sr:${rr(-25, 25)}deg`; $(".fin").appendChild(e); });
+  /* instalacion final: LO QUE NO PUDIERON ARCHIVAR */
+  window.instalar = function () {
+    const I = $("#inst"); if (I.dataset.ok) return; I.dataset.ok = 1; I.hidden = false;
+    const datos = [...document.querySelectorAll(".obra")].map((o) => ({ src: $("img", o).getAttribute("src"), t: $(".t-act", o).textContent, h: $(".t-act", o).innerHTML })).sort(() => R() - .5);
+    const capa = (d) => { const c = document.createElement("div"); c.className = "capa"; c.style.setProperty("--d", d); I.insertBefore(c, $(".grano", I)); return c; };
+    const poly = (n) => "polygon(" + Array.from({ length: n }, (x, i) => { const a = i / n * 6.283; return (50 + Math.cos(a) * rr(28, 54)).toFixed(0) + "% " + (50 + Math.sin(a) * rr(28, 54)).toFixed(0) + "%"; }).join(",") + ")";
+    const at = (e) => { e.style.left = (R() < .68 ? rr(-6, 44) : rr(44, 96)) + "%"; e.style.top = rr(-3, 92) + "%"; return e; };
+    const mk = (tag, cls, css, html) => { const e = document.createElement(tag); e.className = cls; if (html) e.innerHTML = html; e.style.cssText = css || ""; return at(e); };
+    const fondo = capa(-16), medio = capa(30), tipo = capa(48), frente = capa(78);
+    for (let k = 0; k < 9; k++) {
+      const w = rr(60, 300), t = k % 4;
+      fondo.appendChild(mk("div", "fm", [`width:${w}px;height:${rr(20, 110)}px;background:var(--rojo);clip-path:${poly(6)}`, `width:${w}px;height:${w}px;border:${rr(6, 16)}px solid #e8e8e8;border-radius:50%;border-color:#e8e8e8 transparent ${R() < .5 ? "#e8e8e8" : "transparent"} transparent;transform:rotate(${rr(0, 360)}deg)`, `width:${rr(40, 90)}vw;height:3px;background:#777;transform:rotate(${rr(-30, 30)}deg)`, `width:${w}px;height:${w * .8}px;background:#292929;border-radius:${rr(30, 70)}% ${rr(30, 70)}% ${rr(30, 70)}% ${rr(30, 70)}%`][t]));
+    }
+    datos.slice(0, 9).forEach((d) => {
+      const b = mk("button", "fr", `width:${rr(110, 230)}px;aspect-ratio:${pick(["3/4", "1/1", "4/5"])};background-image:url("${d.src}");background-size:${rr(260, 430)}%;background-position:${rr(0, 100)}% ${rr(0, 100)}%;clip-path:${poly(6)};rotate:${rr(-9, 9)}deg`);
+      b.type = "button"; b.dataset.t = d.t; b.setAttribute("aria-label", d.t); b.onclick = () => b.classList.add("rev"); medio.appendChild(b);
+    });
+    const [g1, g2] = datos.slice(9, 11); [g1, g2].forEach((d, i) => medio.appendChild(mk("div", "tt g", `left:${i ? 38 : -8}%;top:${i ? 62 : 8}%`, d.t.split(" ").sort((a, b) => b.length - a.length)[0])));
+    datos.slice(11, 17).forEach((d) => frente.appendChild(mk("div", "tt", `transform:rotate(${rr(-12, 12)}deg)`, d.h)));
+    const sl = [...document.querySelectorAll(".sello-c")].map((e) => e.textContent).slice(0, 7), ms = [...document.querySelectorAll(".marca")].map((e) => e.textContent).slice(0, 5);
+    (sl.length ? sl : SELLOS.slice(0, 4)).forEach((t) => frente.appendChild(mk("div", "is", `--sr:${rr(-20, 20)}deg`, t)));
+    ms.forEach((t) => frente.appendChild(mk("div", "im", `--sr:${rr(-15, 15)}deg`, t)));
+    tipo.innerHTML = '<div class="tipo" aria-hidden="false">' + ["LO QUE", "NO PUDIERON", "ARCHIVAR"].map((l) => "<div>" + [...l].map((c) => c === " " ? " " : `<span class="l" style="--dy:${rr(-.12, .12).toFixed(2)}em;--rot:${rr(-7, 7).toFixed(1)}deg">${c}</span>`).join("") + "</div>").join("") + "</div>";
+    const L = [...I.querySelectorAll(".l")], poner = (l, x, y) => { l.style.setProperty("--sx", x + "px"); l.style.setProperty("--sy", y + "px"); };
+    function mueve(x, y) {
+      if (reduce) return; const r = I.getBoundingClientRect(); I.style.setProperty("--px", (((x - r.left) / r.width - .5) * 2).toFixed(3)); I.style.setProperty("--py", (((y - r.top) / r.height - .5) * 2).toFixed(3));
+      L.forEach((l) => { const b = l.getBoundingClientRect(), dx = b.left + b.width / 2 - x, dy = b.top + b.height / 2 - y, d = Math.hypot(dx, dy); if (d < 150) { const f = (1 - d / 150) * 70 / (d || 1); poner(l, dx * f, dy * f); } else poner(l, 0, 0); });
+    }
+    let q = 0; ["pointermove", "pointerdown"].forEach((ev) => I.addEventListener(ev, (e) => { if (q) return; q = requestAnimationFrame(() => { q = 0; mueve(e.clientX, e.clientY); }); }));
+    I.addEventListener("pointerleave", () => L.forEach((l) => poner(l, 0, 0)));
+    let kx = 0, ky = 0; I.addEventListener("keydown", (e) => {
+      const m = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key]; if (!m || reduce) return; e.preventDefault();
+      kx = Math.max(-1, Math.min(1, kx + m[0] * .25)); ky = Math.max(-1, Math.min(1, ky + m[1] * .25)); I.style.setProperty("--px", kx); I.style.setProperty("--py", ky); L.forEach((l) => poner(l, rr(-40, 40), rr(-30, 30)));
+    });
+    if (!reduce) setInterval(() => { const r = I.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return; const e = pick([...I.querySelectorAll(".tipo > div, .fr")]); e.classList.remove("corta"); void e.offsetWidth; e.classList.add("corta"); setTimeout(() => e.classList.remove("corta"), 750); }, 9000);
+    setTimeout(() => I.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" }), 500);
+  };
+  /* atajo para ver el final: agregar #final al link */
+  if (location.hash === "#final") { pintar(1); verdad(true); }
+</script>
+<script id="colapso-js">
+/* ===== 17 · COLAPSO TOTAL DE LA EXPOSICION =====
+   Se dispara cuando la cortina termina de abrirse (window.colapsar, llamado desde abrirC).
+   - La obra final (#vmarco) no se toca: ni filtros, ni transforms, ni capas encima.
+   - Todo lo demas (interfaz, textos, imagenes, fondos, marcos) se distorsiona y desaparece.
+   - Con prefers-reduced-motion: sin glitch ni movimiento, solo un desvanecido lento a negro. */
+(function () {
+  "use strict";
+  const D = document, B = D.body, H = D.documentElement;
+  const $ = (s, r) => (r || D).querySelector(s);
+  const R = Math.random, rr = (a, b) => a + R() * (b - a), pick = (a) => a[Math.floor(R() * a.length)];
+  const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const sm = (x) => { x = cl(x); return x * x * (3 - 2 * x); };
+  const hash = (n) => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
+  const vnoise = (x) => { const i = Math.floor(x), f = x - i; return hash(i) * (1 - sm(f)) + hash(i + 1) * sm(f); };
+  const ROJO = "#D92332", CIAN = "#2de2e6", CLARO = "#e8e8e8", OSCURO = "#0a0a0a";
+  const HOLD = 1.9;       /* s con la obra limpia antes de que empiece a caerse todo */
+  const T_MURIO = 9.4;    /* s: lo real ya murio */
+  const T_BARRIDO = 9.6;  /* s: empieza el barrido negro */
+  const T_FIN = 11.8;     /* s: pantalla cubierta, queda solo la obra */
+  let corrio = false;
+
+  window.colapsar = function () {
+    if (corrio) return; corrio = true;
+    const vit = $("#vitrina"), marco = $("#vmarco"), fin = $(".fin"), cort = $("#cortinaF"), cierre = $("#cierre");
+    if (!vit || !marco || !fin || !cierre) { if (window.instalar) window.instalar(); return; }
+    const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const tier = quieto ? 0 : (matchMedia("(pointer: coarse)").matches || Math.min(innerWidth, innerHeight) < 600) ? 1 : 2;
+
+    /* ---------- 1. escenario ---------- */
+    B.classList.add("col-on");
+    const cadena = new Set(); for (let n = marco; n && n !== D; n = n.parentElement) cadena.add(n);
+    const sellar = (el) => { if (!cadena.has(el)) el.setAttribute("inert", ""); };   /* la exposicion vieja ya no recibe interaccion */
+    [...B.children].forEach(sellar); [...cierre.children].forEach(sellar); [...fin.children].forEach(sellar);
+    const soporta = !!(window.CSS && CSS.supports && CSS.supports("clip-path", "path(evenodd, 'M0 0H1V1Z')"));
+    if (!soporta) B.classList.add("col-sinhueco");
+
+    /* la obra queda centrada en pantalla y el scroll se bloquea (sin mover ni un pixel el layout) */
+    let bloqueado = false;
+    const centrar = (suave) => {
+      const r = marco.getBoundingClientRect();
+      const y = Math.max(0, Math.round(scrollY + r.top + r.height / 2 - innerHeight / 2));
+      try { scrollTo({ top: y, behavior: suave && !quieto ? "smooth" : "instant" }); } catch (e) { scrollTo(0, y); }
+      return y;
+    };
+    const bloquear = () => {
+      if (bloqueado) return; bloqueado = true;
+      const w0 = H.clientWidth; H.classList.add("col-lock");
+      const dw = H.clientWidth - w0; if (dw > 0) B.style.paddingRight = dw + "px";   /* si el navegador no reserva la barra de scroll */
+      const stop = (e) => e.preventDefault();
+      addEventListener("wheel", stop, { passive: false }); addEventListener("touchmove", stop, { passive: false });
+      addEventListener("keydown", (e) => { if ([" ", "ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End"].includes(e.key)) e.preventDefault(); });
+    };
+
+    /* capas del efecto: cada una lleva un agujero exacto sobre la obra */
+    const capas = [];
+    const agujero = () => {
+      if (!soporta) return;
+      const r = marco.getBoundingClientRect(), m = 3;
+      const x0 = Math.floor(r.left - m), y0 = Math.floor(r.top - m), x1 = Math.ceil(r.right + m), y1 = Math.ceil(r.bottom + m);
+      const p = `path(evenodd, 'M-100 -100H30000V30000H-100Z M${x0} ${y0}H${x1}V${y1}H${x0}Z')`;
+      capas.forEach((c) => { c.style.clipPath = p; c.style.webkitClipPath = p; });
+    };
+    const crear = (tag, id) => { const e = D.createElement(tag); e.id = id; B.appendChild(e); capas.push(e); return e; };
+    let ajustarFx = () => {};
+    addEventListener("resize", () => { if (bloqueado) centrar(false); agujero(); ajustarFx(); });
+
+    const yObj = centrar(true), t00 = performance.now();
+    (function esperar() {
+      if (quieto || Math.abs(scrollY - yObj) < 1.5 || performance.now() - t00 > 1500) { bloquear(); centrar(false); agujero(); }
+      else requestAnimationFrame(esperar);
+    })();
+
+    let termino = false, vel = null, fx = null, deb = null;
+    function terminar() {
+      if (termino) return; termino = true;
+      try { window.colapsoSonido && window.colapsoSonido("fin"); } catch (e) {}
+      H.style.setProperty("--bg", OSCURO); H.style.setProperty("--fg", CLARO); B.style.removeProperty("--col-g");
+      if (cort) cort.style.visibility = "hidden";
+      B.classList.add("col-fin");                 /* todo oculto salvo la vitrina; el layout no cambia */
+      requestAnimationFrame(() => { [fx, deb, vel].forEach((x) => x && x.remove()); });
+      D.dispatchEvent(new CustomEvent("antimuseo:colapso-terminado"));
+    }
+    setTimeout(terminar, (HOLD + T_FIN + 7) * 1000);   /* red de seguridad (pestana en segundo plano, errores) */
+
+    /* ---------- movimiento reducido: solo un desvanecido a negro, sin glitch ---------- */
+    if (quieto) {
+      setTimeout(() => {
+        try { window.colapsoSonido && window.colapsoSonido("inicio"); } catch (e) {}
+        vel = crear("div", "col-vel"); agujero();
+        const a = performance.now();
+        (function p(n) { const k = cl((n - a) / 3600); vel.style.opacity = k.toFixed(3); if (k < 1) requestAnimationFrame(p); else terminar(); })(a);
+      }, HOLD * 1000);
+      return;
+    }
+
+    /* ---------- 2. el colapso ---------- */
+    setTimeout(() => { try { window.colapsoSonido && window.colapsoSonido("inicio"); } catch (e) {} try { iniciar(); } catch (e) { terminar(); } }, HOLD * 1000);
+
+    function iniciar() {
+      const vw = () => innerWidth, vh = () => innerHeight;
+      const root = H.style;
+      const pal = { bg: root.getPropertyValue("--bg").trim() || "#111111", fg: root.getPropertyValue("--fg").trim() || CLARO };
+      let invertida = false;
+      const ponerPal = (inv) => { invertida = inv; root.setProperty("--bg", inv ? pal.fg : pal.bg); root.setProperty("--fg", inv ? pal.bg : pal.fg); };
+
+      /* --- 2a. elementos reales que estan a la vista --- */
+      function recolectar() {
+        const W = vw(), Hh = vh(), out = [];
+        const NO = /^(SCRIPT|STYLE|LINK|META|TITLE|HEAD|NOSCRIPT|BR|WBR|SOURCE|TRACK)$/;
+        B.querySelectorAll("*").forEach((n) => {
+          if (NO.test(n.tagName) || cadena.has(n) || marco.contains(n)) return;
+          if (n.closest("svg") !== null && n.tagName.toLowerCase() !== "svg") return;
+          const r = n.getBoundingClientRect();
+          if (r.width < 3 || r.height < 3 || r.bottom < -30 || r.top > Hh + 30 || r.right < -30 || r.left > W + 30) return;
+          const cs = getComputedStyle(n);
+          if (cs.visibility === "hidden" || cs.display === "none" || parseFloat(cs.opacity) < .03) return;
+          const txt = [...n.childNodes].some((c) => c.nodeType === 3 && c.nodeValue.trim().length > 0);
+          const med = /^(img|canvas|svg|video|iframe)$/i.test(n.tagName);
+          const fondo = cs.backgroundImage !== "none" || !/rgba\(0, 0, 0, 0\)|transparent/.test(cs.backgroundColor);
+          const borde = parseFloat(cs.borderTopWidth) > 0 && cs.borderTopStyle !== "none";
+          const estr = /^(NAV|HEADER|SECTION|FOOTER|MAIN|ASIDE)$/.test(n.tagName);
+          if (!(txt || med || fondo || borde || estr)) return;
+          out.push({ el: n, r, cs, txt, med, estr, grande: r.width * r.height > W * Hh * .22 });
+        });
+        const max = tier === 2 ? 84 : 46;
+        if (out.length <= max) return out;
+        const keep = out.filter((o) => o.estr || o.grande), resto = out.filter((o) => !(o.estr || o.grande)).sort(() => R() - .5);
+        return keep.concat(resto).slice(0, max);
+      }
+      const W0 = vw(), H0 = vh(), diag = Math.hypot(W0, H0);
+      const semillas = [[rr(0, W0), rr(0, H0)], [rr(0, W0), rr(0, H0)], [rr(0, W0), rr(0, H0)]];
+      const POOL_T = ["shift", "stretch", "slice", "chroma", "invert", "flicker", "drift", "skew", "persp", "squash"];
+      const POOL_M = ["shift", "slice", "invert", "hue", "drift", "persp", "flicker", "blur", "stretch", "chroma"];
+      const POOL_B = ["shift", "slice", "invert", "drift", "flicker", "squash", "skew"];
+      function personalidad(o, t0) {
+        const cx = o.r.left + o.r.width / 2, cy = o.r.top + o.r.height / 2;
+        const dist = Math.min(...semillas.map((s) => Math.hypot(cx - s[0], cy - s[1]))) / diag;   /* el colapso se expande desde varios focos */
+        let onset = t0 + rr(.1, .5) + dist * 5.4 + rr(0, .9);
+        onset = Math.min(onset, T_MURIO - 1.4 - rr(0, .6));
+        const death = Math.min(T_MURIO - rr(0, 1.2), onset + (o.grande ? rr(3.5, 7) : rr(2.2, 6)));
+        let pool = (o.txt ? POOL_T : o.med ? POOL_M : POOL_B).filter((k) => !(o.grande && /^(blur|invert|hue|chroma)$/.test(k)) && !(tier === 1 && k === "blur"));
+        const K = {}; pool = pool.slice().sort(() => R() - .5).slice(0, 3 + (R() < .4 ? 1 : 0)); pool.forEach((k) => (K[k] = 1));
+        const dx = (R() < .75 ? (cx < W0 / 2 ? -1 : 1) : -(cx < W0 / 2 ? -1 : 1)), vert = R() < .3, f = o.grande ? .45 : 1;
+        return {
+          el: o.el, med: o.med, k: K, onset, death: Math.max(death, onset + 1.1), sd: R() * 100, rate: rr(7, 16),
+          ex: (vert ? rr(-.3, .3) * W0 : dx * (W0 * .55 + rr(0, W0 * .5))) * f, ey: (vert ? (R() < .5 ? -1 : 1) * H0 * rr(.8, 1.3) : rr(-.4, .4) * H0) * f,
+          base: o.cs.transform !== "none" ? o.cs.transform : "", tf: !!(K.skew || K.persp), c: {}, vivo: false, muerto: false
+        };
+      }
+      let targets = recolectar().map((o) => personalidad(o, 0));
+      const dar = (T, p, v) => { if (T.c[p] !== v) { T.c[p] = v; T.el.style[p] = v; } };
+      function actualizar(T, t, I) {
+        if (T.muerto || t < T.onset) return;
+        const el = T.el;
+        if (!T.vivo) { T.vivo = true; el.style.animation = "none"; el.style.transition = "none"; }
+        if (t >= T.death) { el.style.visibility = "hidden"; T.muerto = true; return; }
+        const u = (t - T.onset) / (T.death - T.onset), amp = (.2 + .8 * Math.pow(u, 1.2)) * (.55 + .6 * I), K = T.k;
+        const gs = Math.floor(t * T.rate) + Math.floor(T.sd * 97);
+        const a = hash(gs * 1.31 + T.sd), b = hash(gs * 2.17 + T.sd * 3.1), c = hash(gs * 3.73 + T.sd * 7.7), d = hash(gs * 5.19 + T.sd * 1.9);
+        const rafaga = a < .1 + .55 * amp;
+        let tx = 0, ty = 0, sx = 1, sy = 1, rot = 0, sk = 0, py = 0, px = 0, op = 1, fl = "", cp = "", ts = "";
+        if (K.shift && rafaga) { tx += (b - .5) * 2 * amp * Math.min(vw() * .4, 380); ty += (c - .5) * amp * 50; }
+        if (K.drift) { const e = Math.pow(sm(u), 2.2); tx += T.ex * e; ty += T.ey * e; }
+        if (K.stretch) { if (rafaga) { if (b > .5) sx *= 1 + amp * 3.4 * c; else sy *= 1 + amp * 2.6 * c; } else sx *= 1 + amp * .12 * Math.sin(t * 5 + T.sd * 9); }
+        if (K.squash && u > .55) { const k = sm((u - .55) / .45); sy *= 1 - .97 * k; sx *= 1 + .5 * k; }
+        if (K.skew) sk = rafaga ? (c - .5) * 2 * amp * 55 : Math.sin(t * 2.3 + T.sd * 6) * amp * 7;
+        if (K.persp) { py = (b - .5) * 2 * amp * 70; px = (c - .5) * 2 * amp * 55; }
+        if (rafaga && Math.abs(d - .5) > .3) rot = (d - .5) * amp * 26;
+        if (K.slice && (rafaga || u > .8)) { const top = Math.floor(b * 78), bot = Math.floor(c * (100 - top) * .9); cp = `inset(${top}% 0 ${bot}% 0)`; }
+        if (K.chroma) { const dd = (2 + 11 * b) * amp; ts = `${dd.toFixed(1)}px 0 ${ROJO}, ${(-dd).toFixed(1)}px 0 ${CIAN}`; if (T.med) fl += `drop-shadow(${dd.toFixed(1)}px 0 ${ROJO}) `; }
+        if (K.invert && rafaga && d > .35) fl += "invert(1) contrast(1.4) ";
+        if (K.hue && (rafaga || u > .5)) fl += `hue-rotate(${Math.floor(a * 360)}deg) saturate(${(1 + 3 * amp).toFixed(1)}) `;
+        if (K.blur) fl += `blur(${(amp * (rafaga ? 7 : 1.5) * b).toFixed(1)}px) `;
+        if (K.flicker && hash(gs * 7.9 + T.sd) < .44 * amp) op = .12;
+        if (u > .86 && hash(gs * 11.3 + T.sd) > .55) op = 0;                      /* se corta antes de morir */
+        dar(T, "translate", tx || ty ? `${tx.toFixed(1)}px ${ty.toFixed(1)}px` : "");
+        dar(T, "scale", sx !== 1 || sy !== 1 ? `${sx.toFixed(3)} ${sy.toFixed(3)}` : "");
+        dar(T, "rotate", rot ? rot.toFixed(2) + "deg" : "");
+        if (T.tf) dar(T, "transform", py || px || sk ? `${T.base} ${py || px ? `perspective(520px) rotateY(${py.toFixed(1)}deg) rotateX(${px.toFixed(1)}deg)` : ""} ${sk ? `skewX(${sk.toFixed(1)}deg)` : ""}`.trim() : "");
+        dar(T, "clipPath", cp); dar(T, "filter", fl.trim()); dar(T, "textShadow", ts); dar(T, "opacity", op < 1 ? String(op) : "");
+      }
+      /* mensajes espontaneos que aparezcan en pleno colapso tambien se descomponen */
+      function recien(t) {
+        D.querySelectorAll(".intruso, .vent, .gigante, #depto .not").forEach((el) => {
+          if (el._col) return; el._col = 1;
+          const r = el.getBoundingClientRect(), cs = getComputedStyle(el);
+          const T = personalidad({ el, r, cs, txt: true, med: false, estr: false, grande: false }, t);
+          T.onset = t; T.death = t + rr(1.2, 2.6); targets.push(T);
+        });
+      }
+
+      /* --- 2b. residuos: fragmentos de toda la exposicion que se desprenden y cruzan la pantalla --- */
+      const imgs = [...new Set([...D.querySelectorAll(".obra img")].map((i) => i.getAttribute("src")).filter(Boolean))];
+      const textos = new Map();
+      D.querySelectorAll("h1,h2,h3,.eje-label,.sub,.hero .museo,.hero .anti,.de,.decl,.reglas li,.reglas h3,.sello-c,.marca,.resto,.t-act,#links a,#nombre,.btn,.gcab,.pregunta,.cont,.placa,.lema").forEach((el) => {
+        const t = (el.textContent || "").replace(/\s+/g, " ").trim();
+        if (t.length < 2 || t.length > 64 || textos.has(t)) return;
+        const cs = getComputedStyle(el); textos.set(t, { ff: cs.fontFamily, fw: cs.fontWeight, tt: cs.textTransform });
+      });
+      if (!textos.size) ["ANTIMUSEO", "CIRCULE", "NO APTO", "ARCHIVESE"].forEach((t) => textos.set(t, { ff: "Anton, Impact, sans-serif", fw: "400", tt: "uppercase" }));
+      const listaT = [...textos.entries()];
+      const poly = () => { const n = 5 + Math.floor(R() * 3); return "polygon(" + Array.from({ length: n }, (x, i) => { const a = i / n * 6.283; return (50 + Math.cos(a) * rr(30, 56)).toFixed(0) + "% " + (50 + Math.sin(a) * rr(30, 56)).toFixed(0) + "%"; }).join(",") + ")"; };
+      const piezas = []; let maxDeb = tier === 2 ? 30 : 14;
+
+      function nuevaPieza(t) {
+        const W = vw(), Hh = vh(), base = Math.min(W, Hh * 1.3), r = R();
+        const el = D.createElement("div"); el.className = "col-p"; let P = { el, born: t, life: rr(1.7, 4.8), sd: R() * 100, rate: rr(6, 13), gs: -1, gx: 0, gy: 0, sx: 1, sy: 1, sk: 0, r: rr(-25, 25), vr: rr(-18, 18) };
+        if (imgs.length && r < .34) {
+          const w = rr(.1, .3) * base, h = w * rr(.45, 1.5); P.kind = "img";
+          el.className += " img"; el.style.cssText = `width:${w}px;height:${h}px;background-image:url("${pick(imgs)}");background-size:${rr(220, 650)}%;background-position:${rr(0, 100)}% ${rr(0, 100)}%;clip-path:${poly()};filter:${pick(["grayscale(1) contrast(1.6)", "contrast(1.5) saturate(1.8)", "grayscale(1)", "none"])}`;
+        } else if (imgs.length && r < .5 && piezas.filter((q) => q.kind === "tira").length < (tier === 2 ? 4 : 2)) {
+          const w = rr(.16, .34) * base, h = w * rr(.9, 1.35), n = 6 + Math.floor(R() * 6), src = pick(imgs); P.kind = "tira"; P.tiras = [];
+          el.className += " tira"; el.style.cssText = `width:${w}px;height:${h}px`;
+          let y = 0; for (let i = 0; i < n; i++) { const hh = i === n - 1 ? h - y : Math.max(4, h / n * rr(.5, 1.5)); if (hh <= 0) break; const s = D.createElement("i"); s.style.cssText = `top:${y.toFixed(1)}px;height:${hh.toFixed(1)}px;background-image:url("${src}");background-size:${w}px ${h}px;background-position:0 -${y.toFixed(1)}px`; el.appendChild(s); P.tiras.push(s); y += hh; }
+        } else {
+          const [tx, st] = pick(listaT); P.kind = "txt"; P.fs = Math.round(cl(base * rr(.035, .13), 16, 150)); el.className += " txt";
+          const modo = R(), col = modo < .5 ? CLARO : modo < .75 ? ROJO : "transparent";
+          el.style.cssText = `font-family:${st.ff};font-weight:${st.fw};font-size:${P.fs}px;color:${col};${col === "transparent" ? `-webkit-text-stroke:2px ${CLARO};text-shadow:none;` : ""}${R() < .2 ? `border:3px solid ${ROJO};padding:0 .3em;` : ""}`;
+          P.ls = [...(st.tt === "uppercase" ? tx.toUpperCase() : tx)].slice(0, 26).map((ch) => { const s = D.createElement("span"); s.textContent = ch === " " ? " " : ch; el.appendChild(s); return s; });
+        }
+        deb.appendChild(el); P.w = el.offsetWidth; P.h = el.offsetHeight;
+        P.x = rr(-.15, .95) * W; P.y = rr(-.12, .95) * Hh;
+        const ang = Math.atan2(P.y - Hh / 2, P.x - W / 2) + rr(-.9, .9), sp = rr(12, 130); P.vx = Math.cos(ang) * sp; P.vy = Math.sin(ang) * sp;
+        piezas.push(P);
+      }
+      function pasoPieza(P, amp) {
+        const W = vw();
+        P.gx = (hash(P.gs * 1.7 + P.sd) - .5) * 2 * amp * W * .22 * (hash(P.gs * 2.9 + P.sd) < .45 ? 1 : 0);
+        P.gy = (hash(P.gs * 3.3 + P.sd) - .5) * amp * 60 * (hash(P.gs * 4.1 + P.sd) < .3 ? 1 : 0);
+        const e = hash(P.gs * 5.3 + P.sd) < .3 * amp + .08;
+        P.sx = e ? 1 + amp * 2.6 * hash(P.gs * 6.1 + P.sd) : 1; P.sy = hash(P.gs * 7.7 + P.sd) < .18 * amp ? Math.max(.06, 1 - amp) : (e && hash(P.gs * 8.3) > .6 ? 1 + amp * 1.5 : 1);
+        P.sk = hash(P.gs * 9.1 + P.sd) < .35 * amp ? (hash(P.gs * 10.7 + P.sd) - .5) * 70 * amp : 0;
+        if (P.kind === "txt") {
+          P.ls.forEach((s, i) => {
+            const h = hash(P.gs * 1.9 + i * 7.3 + P.sd), g = hash(P.gs * 3.1 + i * 2.7 + P.sd * 5), on = h < .1 + .6 * amp;
+            s.style.transform = on ? `translateY(${((g - .5) * 1.4 * amp * P.fs).toFixed(0)}px) rotate(${((h - .5) * 60 * amp).toFixed(0)}deg) scale(${(1 + (g > .6 ? amp * 2.2 * h : 0)).toFixed(2)},${(1 + (h > .7 ? amp * 3 * g : 0) - (g < .15 ? .85 * amp : 0)).toFixed(2)})` : "";
+            s.style.marginRight = on && g < .4 ? `-${(amp * .45 * P.fs * h).toFixed(0)}px` : ""; s.style.opacity = hash(P.gs * 4.4 + i * 1.3) < .2 * amp ? "0" : "";
+          });
+        } else if (P.kind === "tira") {
+          P.tiras.forEach((s, i) => { const h = hash(P.gs * 2.3 + i * 5.1 + P.sd); s.style.transform = h < .12 + .6 * amp ? `translateX(${((hash(P.gs * 1.1 + i * 3.7) - .5) * 2 * amp * P.w * .9).toFixed(0)}px)` : ""; });
+        }
+      }
+
+      /* --- 2c. capa de interferencia (invierte y altera lo que hay debajo) --- */
+      fx = crear("canvas", "col-fx"); deb = crear("div", "col-deb");
+      deb.style.opacity = "1"; agujero();
+      const esc = tier === 2 ? .5 : .34, ctx = fx.getContext("2d");
+      ajustarFx = () => { fx.width = Math.max(2, Math.ceil(vw() * esc)); fx.height = Math.max(2, Math.ceil(vh() * esc)); }; ajustarFx();
+      const lineas = (() => { const c = D.createElement("canvas"); c.width = 1; c.height = 3; const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, 1, 1); return ctx.createPattern(c, "repeat"); })();
+      let bandas = [], barrido = null;
+      function dibujarFx(t, I, raf) {
+        const cw = fx.width, ch = fx.height; ctx.globalAlpha = 1; ctx.clearRect(0, 0, cw, ch);
+        if (t >= T_BARRIDO) {
+          if (!barrido) {
+            fx.style.mixBlendMode = "normal"; barrido = []; let y = 0;
+            while (y < ch) { const hh = Math.max(3, Math.ceil(ch * rr(.015, .07))); barrido.push({ y, h: Math.min(hh, ch - y), t0: T_BARRIDO + rr(0, 1.5), d: rr(.14, .55), izq: R() < .5 }); y += hh; }
+          }
+          barrido.forEach((b) => {
+            const k = sm((t - b.t0) / b.d); if (k <= 0) return; const w = Math.ceil(cw * k), x = b.izq ? 0 : cw - w;
+            ctx.fillStyle = OSCURO; ctx.fillRect(x, b.y, w, b.h);
+            if (k < 1) { ctx.fillStyle = CLARO; ctx.fillRect(b.izq ? w : x - 2, b.y, 2, b.h); }
+          });
+          return;
+        }
+        if (I > .1) { ctx.globalAlpha = .05 + .16 * I; ctx.fillStyle = lineas; ctx.fillRect(0, 0, cw, ch); }
+        /* bandas de rasgado persistentes: invierten / tiñen lo que hay debajo */
+        const nuevas = Math.floor(I * (raf ? 7 : 2) * (tier === 2 ? 1 : .6) + R());
+        for (let i = 0; i < nuevas; i++) bandas.push({ y: R() * ch, h: 1 + R() * R() * ch * .07 * (.5 + I), x: R() < .25 ? R() * cw * .6 : 0, w: R() < .3 ? cw * rr(.2, .8) : cw, c: pick(["#fff", "#fff", "#fff", ROJO, CIAN, "#9a9a9a"]), a: rr(.55, 1), ttl: 2 + Math.floor(R() * 5) });
+        bandas = bandas.filter((b) => b.ttl-- > 0 && bandas.length < 40);
+        bandas.forEach((b) => { ctx.globalAlpha = b.a; ctx.fillStyle = b.c; ctx.fillRect(b.x, b.y, b.w, b.h); });
+        /* ruido digital */
+        const nn = Math.floor(I * (tier === 2 ? 40 : 20));
+        for (let i = 0; i < nn; i++) { const s = 1 + R() * R() * 14, g = Math.floor(R() * 255); ctx.globalAlpha = rr(.25, .8); ctx.fillStyle = `rgb(${g},${g},${g})`; ctx.fillRect(R() * cw, R() * ch, s * (R() < .2 ? 6 : 1), s); }
+        /* rayas verticales: impresion rota */
+        const nv = Math.floor(I * 7); ctx.fillStyle = "#fff";
+        for (let i = 0; i < nv; i++) { ctx.globalAlpha = rr(.15, .5); ctx.fillRect(Math.floor(R() * cw), 0, 1, ch * rr(.15, 1)); }
+        /* semitono roto + interferencia, solo en rafagas */
+        if (raf && I > .35) {
+          const bx = R() * cw * .7, by = R() * ch * .8, bw = cw * rr(.15, .4), bh = ch * rr(.04, .14); ctx.globalAlpha = .5; ctx.fillStyle = "#fff";
+          if (tier === 2) for (let y = by; y < by + bh; y += 3) for (let x = bx + ((y / 3 | 0) % 2) * 1.5; x < bx + bw; x += 3) ctx.fillRect(x, y, 1, 1);
+          const iy = R() * ch * .9, ih = ch * rr(.03, .1); ctx.globalAlpha = .35; for (let y = iy; y < iy + ih; y += 2) ctx.fillRect(0, y, cw, 1);
+        }
+      }
+
+      /* --- 2d. bucle principal --- */
+      const fase = (t) => t < 2.4 ? .08 + .17 * (t / 2.4) : t < 6 ? .25 + .35 * ((t - 2.4) / 3.6) : .6 + .4 * cl((t - 6) / 3.5);
+      let T0 = 0, ultimo = 0, ultFx = 0, fps = tier === 2 ? 30 : 20, lento = 0, proxR = .6, raf = { a: -1, b: -1 }, ultFlip = -9, flipHasta = -1, ultRecien = 0;
+      function bucle(now) {
+        if (termino) return;
+        requestAnimationFrame(bucle);
+        if (!T0) { T0 = now; ultimo = now - 40; }
+        if (now - ultimo < 1000 / fps - 3) return;
+        try {
+          const dt = Math.min(.1, (now - ultimo) / 1000); ultimo = now;
+          if (dt > 1 / 17) lento++; else lento = Math.max(0, lento - 1);
+          if (lento > 25) { lento = 0; if (fps > 16) fps -= 6; maxDeb = Math.max(6, Math.floor(maxDeb * .65)); }   /* se adapta a equipos lentos */
+          const t = (now - T0) / 1000;
+          if (t >= proxR) { raf = { a: t, b: t + rr(.12, .38) }; proxR = t + rr(.6, 1.9) * (1.5 - cl(fase(t))); }
+          const enR = t >= raf.a && t < raf.b;
+          const I = cl(fase(t) * (.62 + .75 * vnoise(t * 1.15 + 3.1)), 0, 1.15), Ie = enR ? Math.min(1.25, I + .3) : I;
+
+          /* la cortina que quedaba parpadea y se va: lo primero que cede */
+          if (cort) { if (t < .6) cort.style.opacity = hash(Math.floor(t * 30)) < .5 ? ".15" : "1"; else cort.style.visibility = "hidden"; }
+
+          /* paleta global: inversiones breves y espaciadas (max. ~1 por segundo) */
+          if (enR && I > .3 && t >= raf.a && t - ultFlip > 1 && t < T_BARRIDO && raf.a !== raf.f && R() < .6) { raf.f = raf.a; ultFlip = t; flipHasta = t + .1; }
+          const inv = t < flipHasta; if (inv !== invertida) ponerPal(inv);
+          B.style.setProperty("--col-g", (.17 + .4 * I * (.5 + .5 * R())).toFixed(2));
+
+          if (t - ultRecien > .5) { ultRecien = t; recien(t); }
+          for (let i = 0; i < targets.length; i++) actualizar(targets[i], t, Ie);
+
+          /* residuos */
+          if (t < 9.0 && t > .5) {
+            const objetivo = Math.round(maxDeb * Math.pow(cl(Ie), 1.1)); let n = 0;
+            while (piezas.length < objetivo && n++ < 2) nuevaPieza(t);
+          }
+          for (let i = piezas.length - 1; i >= 0; i--) {
+            const P = piezas[i], k = (t - P.born) / P.life, amp = .25 + .75 * cl(Ie);
+            P.x += P.vx * dt; P.y += P.vy * dt; P.r += P.vr * dt;
+            if (k >= 1 || t >= T_BARRIDO - .1 || P.x < -P.w * 2 || P.x > vw() + P.w || P.y < -P.h * 2 || P.y > vh() + P.h) { P.el.remove(); piezas.splice(i, 1); continue; }
+            const gs = Math.floor(t * P.rate + P.sd * 50); if (gs !== P.gs) { P.gs = gs; pasoPieza(P, amp); }
+            P.el.style.transform = `translate3d(${(P.x + P.gx).toFixed(1)}px,${(P.y + P.gy).toFixed(1)}px,0) rotate(${P.r.toFixed(1)}deg) skewX(${P.sk.toFixed(1)}deg) scale(${P.sx.toFixed(2)},${P.sy.toFixed(2)})`;
+            P.el.style.opacity = (k < .08 || k > .82) && hash(gs * 3.3 + P.sd) < .5 ? "0" : "1";
+          }
+
+          if (now - ultFx >= 45) { ultFx = now; dibujarFx(t, Ie, enR); }
+          if (t >= T_FIN) terminar();
+        } catch (e) { terminar(); }
+      }
+      requestAnimationFrame(bucle);
+    }
+  };
+})();
+</script>
+</body>
+</html>
