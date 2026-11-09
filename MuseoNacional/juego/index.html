@@ -164,6 +164,7 @@ body.touch #pad{display:block}
         <h2 id="finTitle"></h2>
         <p id="finText"></p>
         <button id="btnKeep" class="btn">SEGUIR NAVEGANDO</button>
+        <button id="btnMuseoCompleto" class="btn alt" type="button">MUSEO COMPLETO</button>
       </div>
 
       <div id="title">
@@ -1605,6 +1606,11 @@ function startFromTitle(fresh) {
 $('btnPlay').addEventListener('click', () => startFromTitle(false));
 $('btnNew').addEventListener('click', () => { if (window.confirm('¿Borrar tu progreso y empezar de nuevo?')) startFromTitle(true); });
 $('btnKeep').addEventListener('click', () => { audioInit(); $('finale').style.display = 'none'; ui.finale = false; go('sea', { from: SKULL_I }); });
+$('btnMuseoCompleto').addEventListener('click', () => {
+  if (window.parent !== window) {
+    parent.postMessage({ tipo: 'museo-completo', museo: 'nacional' }, '*');
+  }
+});
 
 /* ----------------------------- atajos de prueba (config.atajos) ----------------------------- */
 function cheatExploreAll() {
