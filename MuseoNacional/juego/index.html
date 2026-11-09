@@ -1531,6 +1531,13 @@ const cine = {
 };
 scenes.cine = cine;
 $('btnSkip').addEventListener('click', () => { audioInit(); if (cur === cine) cine.skip(); });
+function crearBotonTerminar(texto = 'Terminar museo ✓', museo = 'necional') {
+  const b = document.createElement('button');
+  b.textContent = texto;
+  b.style.cssText = 'position:fixed;right:16px;bottom:16px;z-index:9999;padding:10px 18px;border:0;border-radius:999px;background:#e3a82b;color:#3a2a12;font:700 16px sans-serif;cursor:pointer';
+  b.onclick = () => { if (window.parent !== window) parent.postMessage({ tipo: 'museo-completo', museo }, '*'); };
+  document.body.appendChild(b);
+}
 
 
 /* ----------------------------- AUTO-DESCUBRIMIENTO DE IMÁGENES -----------------------------
@@ -1639,6 +1646,7 @@ window.__juego = { openDialog, closeDialog, PZ, music, MUS, runPuzzle, PUZZLE_SE
 if (SHIP.length && SHIP.every((im) => im.complete)) boot();
 else { let n = 0; SHIP.forEach((im) => { const done = () => { if (++n === SHIP.length) boot(); }; if (im.complete) done(); else { im.onload = done; im.onerror = done; } }); }
 })();
+
 
 </script>
 </body>
