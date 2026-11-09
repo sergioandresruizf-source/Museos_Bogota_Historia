@@ -77,7 +77,7 @@ function siguiente(){
   if(j>=N)cofre=true;
   guardar();
  }
- aviso=saltados.length?saltados.join(', ')+': su grupo aún no ha agregado el enlace, la ruta sigue.':'';
+ aviso=saltados.length?saltados.join(', ')+': su grupo aún no ha agregado el enlace.':'';
  if(j>=N){
   aviso=avance>=N?'¡Llegaste al tesoro! Recorrido completo.':'Fin de la ruta (modo prueba: tu avance no cambió).';
   cerrar();return;
