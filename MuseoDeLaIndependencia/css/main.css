@@ -365,3 +365,281 @@ footer {
         font-size: 60px;
     }
 }
+/* ------------------------------------
+   PANTALLA DEL ROMPECABEZAS
+------------------------------------ */
+
+.puzzle-view {
+    width: 100%;
+    min-height: 80vh;
+    padding: 40px 20px 70px;
+}
+
+.puzzle-content {
+    width: min(100%, 850px);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+}
+
+.puzzle-heading {
+    text-align: center;
+    max-width: 650px;
+}
+
+.puzzle-heading h1 {
+    margin: 12px 0;
+}
+
+.puzzle-heading p {
+    line-height: 1.6;
+}
+
+/* TABLERO */
+
+.puzzle-board {
+    width: min(100%, 540px);
+    aspect-ratio: 1 / 1;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+
+    gap: 5px;
+    padding: 5px;
+
+    background: #cdbb9c;
+    border-radius: 5px;
+}
+
+/* PIEZAS */
+
+.puzzle-piece {
+    border: none;
+    border-radius: 2px;
+
+    background-repeat: no-repeat;
+    background-size: 300% 300%;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        outline 0.2s ease,
+        filter 0.2s ease;
+}
+
+.puzzle-piece:hover {
+    filter: brightness(1.08);
+}
+
+.puzzle-piece.selected {
+    outline: 4px solid #bd6247;
+    outline-offset: -4px;
+    transform: scale(0.94);
+}
+
+/* MENSAJE */
+
+#puzzle-message {
+    min-height: 30px;
+    text-align: center;
+    color: #796b5b;
+    line-height: 1.5;
+}
+
+/* ADAPTACIÓN A MÓVILES */
+
+@media (max-width: 600px) {
+    .puzzle-view {
+        padding: 25px 15px 45px;
+    }
+
+    .puzzle-board {
+        gap: 3px;
+        padding: 3px;
+    }
+}
+
+
+/* ------------------------------------
+   FICHAS DE LAS OBRAS
+------------------------------------ */
+
+#work-view {
+    width: 100%;
+    min-height: 85vh;
+    padding: 35px 6%;
+}
+
+.work-content {
+    width: min(100%, 1150px);
+    margin: 25px auto 50px;
+
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: center;
+    gap: 55px;
+}
+
+/* IMAGEN DE LA OBRA */
+
+.work-image-container {
+    padding: 15px;
+    background: #f5ecdc;
+    border: 1px solid #d8c5a8;
+    box-shadow: 0 12px 30px rgba(75, 55, 35, 0.12);
+}
+
+.work-image-container img {
+    display: block;
+    width: 100%;
+    max-height: 620px;
+    object-fit: contain;
+}
+
+/* INFORMACIÓN */
+
+.work-information {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 13px;
+}
+
+#work-type {
+    color: #bd6247;
+    font-size: 0.85rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+#work-title {
+    margin: 0;
+    color: #493b30;
+    font-family: Georgia, serif;
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    line-height: 1.12;
+}
+
+#work-author,
+#work-date {
+    margin: 0;
+    color: #806f5c;
+    font-size: 0.95rem;
+}
+
+#work-description {
+    margin-top: 12px;
+    color: #554a3e;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    text-align: justify;
+}
+
+/* BANDA SONORA */
+
+.work-audio {
+    width: 100%;
+    margin-top: 15px;
+}
+
+.work-audio h3 {
+    color: #493b30;
+    font-family: Georgia, serif;
+    font-size: 1.2rem;
+}
+
+.work-audio audio {
+    width: 100%;
+}
+
+/* ------------------------------------
+   BOTONES
+------------------------------------ */
+
+.back-button,
+#start-game {
+    padding: 13px 23px;
+    border-radius: 3px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+/* VOLVER AL MAPA / VOLVER A LA OBRA */
+
+.back-button {
+    color: #765d48;
+    background: #f5ecdc;
+    border: 1px solid #cdbb9c;
+}
+
+.back-button:hover {
+    color: #fffaf0;
+    background: #806b55;
+    border-color: #806b55;
+    transform: translateX(-3px);
+}
+
+/* COMENZAR ACTIVIDAD */
+
+#start-game {
+    margin-top: 15px;
+    color: #fffaf0;
+    background: #bd6247;
+    border: 1px solid #bd6247;
+    font-weight: bold;
+    letter-spacing: 0.4px;
+}
+
+#start-game:hover {
+    background: #9e4934;
+    border-color: #9e4934;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(100, 50, 30, 0.18);
+}
+
+/* ACCESIBILIDAD: FOCO DEL TECLADO */
+
+.back-button:focus-visible,
+#start-game:focus-visible {
+    outline: 3px solid #d99a65;
+    outline-offset: 4px;
+}
+
+/* ------------------------------------
+   ADAPTACIÓN A MÓVILES
+------------------------------------ */
+
+@media (max-width: 800px) {
+    #work-view {
+        padding: 25px 5%;
+    }
+
+    .work-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        margin-top: 20px;
+    }
+
+    .work-image-container {
+        width: 100%;
+    }
+
+    .work-image-container img {
+        max-height: 480px;
+    }
+
+    .work-information {
+        width: 100%;
+    }
+
+    #work-description {
+        text-align: left;
+    }
+}

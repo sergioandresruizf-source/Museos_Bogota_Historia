@@ -1,33 +1,56 @@
+export function initializeMap({
+    completedWorks = [],
+    unlockedWorks = [1, 2, 3]
+} = {}) {
 
-export function initializeMap() {
     const map = document.getElementById("museum-map");
 
-    const workNode = (id, x, y) => `
-        <g class="room ${id <= 3 ? "available" : "locked"}" data-room="${id}">
+    const workNode = (id, x, y) => {
 
-            <!-- Aro exterior -->
-            <circle class="outer-ring" cx="${x}" cy="${y}" r="32"/>
+        // Determinar el estado de la sala
+        let statusClass = "locked";
 
-            <!-- Aro interior -->
-            <circle class="inner-ring" cx="${x}" cy="${y}" r="25"/>
+        if (completedWorks.includes(id)) {
+            statusClass = "completed";
+        } else if (unlockedWorks.includes(id)) {
+            statusClass = "available";
+        }
 
-            <!-- Centro -->
-            <circle class="node-center" cx="${x}" cy="${y}" r="19"/>
-
-            <!-- Candado -->
+        // Mostrar el candado únicamente si está bloqueada
+        const lockIcon = statusClass === "locked" ? `
             <g class="lock-icon" transform="translate(${x}, ${y})">
                 <rect x="-6" y="-2" width="12" height="9" rx="2"/>
                 <path d="M-4 -2 V-5 A4 4 0 0 1 4 -5 V-2"/>
                 <circle cx="0" cy="2" r="1"/>
             </g>
+        ` : "";
 
-            <!-- Nombre -->
-            <text class="work-label" x="${x}" y="${y + 43}">
-                OBRA ${id}
+        // Mostrar una marca si está completada
+        const completedIcon = statusClass === "completed" ? `
+            <text class="completed-icon" x="${x}" y="${y + 7}">
+                ✓
             </text>
+        ` : "";
 
-        </g>
-    `;
+        return `
+            <g class="room ${statusClass}" data-room="${id}">
+
+                <circle class="outer-ring" cx="${x}" cy="${y}" r="32"/>
+
+                <circle class="inner-ring" cx="${x}" cy="${y}" r="25"/>
+
+                <circle class="node-center" cx="${x}" cy="${y}" r="19"/>
+
+                ${lockIcon}
+                ${completedIcon}
+
+                <text class="work-label" x="${x}" y="${y + 43}">
+                    OBRA ${id}
+                </text>
+
+            </g>
+        `;
+    };
 
     map.innerHTML = `
         <svg
@@ -36,7 +59,6 @@ export function initializeMap() {
             xmlns="http://www.w3.org/2000/svg"
         >
 
-            <!-- CONEXIONES -->
             <g class="paths">
 
                 <path d="M400 91 L200 168"/>
@@ -50,7 +72,6 @@ export function initializeMap() {
 
             </g>
 
-            <!-- ENTRADA -->
             <g class="entry-node">
 
                 <circle class="entry-outer" cx="400" cy="65" r="33"/>
@@ -64,11 +85,9 @@ export function initializeMap() {
 
             </g>
 
-            <!-- SALAS INTERMEDIAS -->
             ${workNode(1, 200, 200)}
             ${workNode(2, 600, 200)}
 
-            <!-- SALAS INFERIORES -->
             ${workNode(3, 100, 345)}
             ${workNode(4, 300, 345)}
             ${workNode(5, 500, 345)}
