@@ -7,7 +7,7 @@
    · El orden de la ruta lineal es el orden del arreglo M. Cada museo trae: id, n (nombre completo), s (nombre corto), x/y (posición en el mapa de 600×1100),
      a (dirección), c (color), t (frase del recuadro) y, opcional, logo: 'ruta/al/logo.png' para usar su propio logo en la medalla (si no, se dibuja un emblema).
    · Guardado en localStorage: 'museos.avance' (ruta lineal, 0…8), 'museos.logros' (medallas del recorrido libre) y 'museos.modo'.
-   · Un museo puede avisar que ya terminó con:  parent.postMessage('museo-completo','*')
+   · Un museo avisa que ya terminó con:  parent.postMessage({tipo:'museo-completo',museo:'<id>'},'*')
        en la ruta lineal pasa solo al siguiente; en el recorrido libre otorga su medalla y vuelve a la galería. */
 const PRUEBA=true;
 
@@ -23,7 +23,7 @@ const M=[
 ];
 
 const L={nacional:'../../MuseoNacional/juego/index.html',
-        oro:'MuseoDelOro/Banco de Imágenes - Proyecto Quimbaya.html',
+        oro:'',
         mambo:'../../MuseoDeArteModerno/museo/index.html',
         florero:'../../MuseoDeLaIndependencia/index.html',
         moneda:'../../MuseoCasaDeMoneda/museo-de-la-moneda.html',
@@ -35,7 +35,7 @@ const L={nacional:'../../MuseoNacional/juego/index.html',
 const N=M.length,CH={x:300,y:985},P=[...M.map(m=>[m.x,m.y]),[336,1001]];
 let avance=0;try{avance=Math.min(N,Math.max(0,parseInt(localStorage.getItem('museos.avance'),10)||0))}catch(e){}
 const guardar=()=>{try{localStorage.setItem('museos.avance',avance)}catch(e){}};
-const nuevos=new Set();let cofre=false,aviso='',act=-1,svg,dyn,modo=null,desdePanel=false,nueva='';
+const nuevos=new Set();let cofre=false,cumplido=false,aviso='',act=-1,svg,dyn,modo=null,desdePanel=false,nueva='';
 const logros=new Set();try{JSON.parse(localStorage.getItem('museos.logros')||'[]').forEach(id=>M.some(m=>m.id===id)&&logros.add(id))}catch(e){}
 const guardarLogros=()=>{try{localStorage.setItem('museos.logros',JSON.stringify([...logros]))}catch(e){}};
 const guardarModo=()=>{try{localStorage.setItem('museos.modo',modo)}catch(e){}};
@@ -69,7 +69,7 @@ function botones(i){
  }
 }
 function abrir(i,panel){
- act=i;desdePanel=!!panel;const m=M[i];
+ act=i;cumplido=false;desdePanel=!!panel;const m=M[i];
  ov.className='';void ov.offsetWidth;ov.className='on';   // reinicia la animación de entrada
  fr.src=L[m.id];document.body.style.overflow='hidden';botones(i);
  if(location.hash!=='#'+m.id)history.pushState(null,'','#'+m.id);
@@ -112,7 +112,15 @@ sig.onclick=hecho;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ov.className&&puedeVolver())cerrar()});
 /* un museo puede traer su propio enlace "Volver al mapa" (mapa.html): lo conectamos con el visor, respetando las reglas del modo */
 fr.onload=()=>{try{fr.contentDocument.querySelectorAll('a[href$="mapa.html"]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();if(puedeVolver())cerrar()}))}catch(e){}};
-addEventListener('message',e=>{if(e.source===fr.contentWindow&&(e.data==='museo-completo'||(e.data&&e.data.tipo==='museo-completo')))hecho()});
+/* aviso de "museo terminado" enviado por el propio museo:  parent.postMessage({tipo:'museo-completo',museo:'<id>'},'*')
+   · ruta lineal → pasa al siguiente museo · recorrido libre → otorga la medalla y vuelve a la galería
+   · se ignora si viene de otro museo (id distinto al abierto) o si se repite dentro del mismo museo */
+addEventListener('message',e=>{
+ if(e.source!==fr.contentWindow||act<0)return;
+ const d=e.data;if(!d||(d!=='museo-completo'&&d.tipo!=='museo-completo'))return;
+ if(d.museo&&d.museo!==M[act].id)return;
+ if(cumplido)return;cumplido=true;hecho();
+});
 const permitido=k=>k>=0&&L[M[k].id]&&(modo==='libre'||PRUEBA||k<=avance);
 addEventListener('popstate',()=>{
  if(ov.className&&!puedeVolver()){history.pushState(null,'','#'+M[act].id);return}   // en la ruta lineal el botón "atrás" del navegador no saca del museo
