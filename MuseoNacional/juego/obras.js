@@ -120,6 +120,8 @@ window.MUSEO = {
       nombre: "Sala 1 · La historia del museo",
       musica: "musica/isla1.mp3",
       obras: [
+        { tipo: "escultura", titulo: "Aerolito de Santa ROsa de Viterbo", descripcion: "Exhibición temporal", imagen: "obras/estatuaIsla1.jpg",
+     alto: 48, pixelado: false, removida: false },
         { titulo: "Obra 1 (presente)", descripcion: "Escribe aquí la descripción de esta obra: autor, año, técnica y por qué importa.", imagen: "obras/isla1_obra1.jpg", removida: false },
         { titulo: "Obra 2 (presente)", descripcion: "Descripción de la segunda obra que sí se exhibe actualmente.", imagen: "obras/isla1_obra2.jpg", removida: false },
         { titulo: "Obra 3 (removida)", descripcion: "Esta obra fue removida. Explica cuándo y por qué razón social, política o cultural dejó de exhibirse.", removida: true }
@@ -162,9 +164,13 @@ window.MUSEO = {
       nombre: "Sala 6 · Hacer sociedad",
       musica: "musica/isla6.mp3",
       obras: [
-        { titulo: "Obra 1 (presente)", descripcion: "Descripción de la obra.", imagen: "obras/isla6_obra1.jpg", removida: false },
+        { titulo: "Marcha de la ciudadanía plena LGBT: Por una Colombia incluyente", descripcion: "Descripción de la obra.", imagen: "obras/isla6_obra1.png", removida: true },
         { tipo: "escultura", titulo: "Espada de Bolívar", descripcion: "Exhibición temporal", imagen: "obras/estatuaIsla6.png",
-     alto: 48, pixelado: false, removida: false },
+     alto: 48, pixelado: false, removida: true },
+        { titulo: "La séptima papeleta", descripcion: "Descripción de la obra.", imagen: "obras/isla6_obra2.png", removida: true },
+        { titulo: "Afiche de homenaje a Carlos Pizarro", descripcion: "Descripción de la obra.", imagen: "obras/isla6_obra3.png", removida: true },
+        { titulo: "Ideales feministas", descripcion: "Descripción de la obra.", imagen: "obras/isla6_obra4.png", removida: true },
+        { titulo: " Bandera del orgullo gay de Elizabeth Castillo", descripcion: "Descripción de la obra.", imagen: "obras/isla6_obra5.png", removida: true },
         { titulo: "Obra 2 (removida)", descripcion: "Descripción de la obra removida.", removida: true }
       ]
     },
