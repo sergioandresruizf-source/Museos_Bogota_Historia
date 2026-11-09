@@ -132,6 +132,33 @@
     text-anchor: middle;
 }
 
+/* OBRAS COMPLETADAS */
+.room.completed {
+    cursor: pointer;
+}
+
+.room.completed .outer-ring {
+    stroke: #bd6247;
+    stroke-width: 2.5;
+}
+
+.room.completed .inner-ring {
+    fill: #ead3b5;
+    stroke: #bd6247;
+}
+
+.room.completed .node-center {
+    fill: #bd6247;
+    stroke: #9e4934;
+}
+
+.completed-icon {
+    fill: #f8f0e1;
+    font-size: 23px;
+    font-weight: bold;
+    text-anchor: middle;
+}
+
 /* ADAPTACIÓN */
 
 @media (max-width: 600px) {
@@ -143,3 +170,5 @@
         min-width: 580px;
     }
 }
+
+

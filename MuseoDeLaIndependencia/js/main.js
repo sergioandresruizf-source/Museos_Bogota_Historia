@@ -1,6 +1,7 @@
 
 import { initializeMap } from "./map/map.js";
 import { works } from "./data/work.js";
+import { initializePuzzle } from "./games/puzzle.js";
 
 console.log("Museo interactivo iniciado");
 
@@ -8,6 +9,13 @@ console.log("Museo interactivo iniciado");
 const map = document.getElementById("museum-map");
 const workView = document.getElementById("work-view");
 const backButton = document.getElementById("back-to-map");
+// Elementos del rompecabezas
+const puzzleView = document.getElementById("puzzle-view");
+const backToWorkButton = document.getElementById("back-to-work");
+const startGameButton = document.getElementById("start-game");
+
+// Obra actualmente seleccionada
+let currentWork = null;
 
 // Elementos de la ficha
 const workImage = document.getElementById("work-image");
@@ -19,30 +27,126 @@ const workDescription = document.getElementById("work-description");
 const workAudio = document.getElementById("work-audio");
 
 // Contador de monedas
-
-console.log("Museo interactivo iniciado");
-
 const coinCounter = document.getElementById("coin-counter");
 
-let coins = 0;
+// ------------------------------------
+// SISTEMA DE PROGRESO
+// ------------------------------------
 
-if (coinCounter) {
-    coinCounter.textContent = coins;
+// Recuperar progreso guardado
+const STORAGE_KEY = "independenciaMuseumProgress";
+const savedProgress = JSON.parse(
+    localStorage.getItem(STORAGE_KEY)
+) || {
+    completed: [],
+    unlocked: [1, 2, 3],
+    coins: 0
+};
+
+let completedWorks = savedProgress.completed;
+let unlockedWorks = savedProgress.unlocked;
+let coins = savedProgress.coins;
+let goalReached = savedProgress.goalReached ?? false;
+
+// Actualizar contador
+function updateCoinCounter() {
+    if (coinCounter) {
+        coinCounter.textContent = coins;
+    }
 }
 
-// Crear el mapa
-initializeMap();
+// Guardar progreso
+function saveProgress() {
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+            completed: completedWorks,
+            unlocked: unlockedWorks,
+            coins: coins,
+            goalReached: goalReached
+        })
+    );
+}
 
-// Mostrar una obra
-function openWork(workId) {
+updateCoinCounter();
+
+// ------------------------------------
+// COMPLETAR UNA OBRA Y ENTREGAR MONEDAS
+// ------------------------------------
+
+function completeWork(workId) {
+
+    // Comprobar que la obra existe
     const selectedWork = works.find(work => work.id === workId);
+
+    if (!selectedWork) {
+        console.warn("La obra no existe.");
+        return;
+    }
+
+    // Evitar recompensas repetidas
+    if (completedWorks.includes(workId)) {
+        console.log("Esta obra ya fue completada.");
+        return;
+    }
+
+    // Registrar obra completada
+    completedWorks.push(workId);
+
+    // Entregar recompensa
+    coins += 100;
+
+    // Comprobar si se alcanzó la meta
+    if (coins >= 300) {
+        goalReached = true;
+        console.log("¡Meta de monedas alcanzada!");
+    }
+
+    // Guardar y actualizar
+    saveProgress();
+    updateCoinCounter();
+
+    // Actualizar apariencia del mapa
+    initializeMap({
+        completedWorks,
+        unlockedWorks
+    });
+
+    console.log(`Obra ${workId} completada. Monedas: ${coins}`);
+}
+
+// Recibir avisos de los minijuegos
+document.addEventListener("workCompleted", (event) => {
+
+    const workId = Number(event.detail.workId);
+
+    completeWork(workId);
+
+});
+
+// ------------------------------------
+// CREAR MAPA
+// ------------------------------------
+
+initializeMap({
+    completedWorks,
+    unlockedWorks
+});
+
+// ------------------------------------
+// MOSTRAR UNA OBRA
+// ------------------------------------
+
+function openWork(workId) {
+
+    const selectedWork = works.find(work => work.id === workId);
+    currentWork = selectedWork;
 
     if (!selectedWork) {
         console.warn("Esta obra todavía no está disponible.");
         return;
     }
 
-    // Cargar información
     workImage.src = selectedWork.image;
     workImage.alt = selectedWork.title;
 
@@ -52,7 +156,6 @@ function openWork(workId) {
     workDate.textContent = `Fecha: ${selectedWork.date}`;
     workDescription.textContent = selectedWork.description;
 
-    // Cargar y reproducir música automáticamente
     workAudio.src = selectedWork.music;
     workAudio.load();
 
@@ -60,33 +163,82 @@ function openWork(workId) {
         console.log("El navegador requiere reproducción manual:", error);
     });
 
-    // Cambiar de vista
     map.hidden = true;
     workView.hidden = false;
 
     window.scrollTo(0, 0);
 }
 
-// Detectar selección de salas
+// ------------------------------------
+// SELECCIÓN DE SALAS
+// ------------------------------------
 
 map.addEventListener("click", (event) => {
+
     const room = event.target.closest(".room");
 
     if (!room) return;
 
-    // No permitir entrar a salas bloqueadas
-    if (!room.classList.contains("available")) return;
+    if (
+        !room.classList.contains("available") &&
+        !room.classList.contains("completed")
+    ) return;
 
     const roomId = Number(room.dataset.room);
 
     openWork(roomId);
 });
 
+// ------------------------------------
+// INICIAR ROMPECABEZAS
+// ------------------------------------
 
+startGameButton.addEventListener("click", () => {
 
+    if (!currentWork) return;
 
-// Regresar al mapa
+    // Ocultar ficha de la obra
+    workView.hidden = true;
+
+    // Mostrar rompecabezas
+    puzzleView.hidden = false;
+
+    // Iniciar actividad
+    initializePuzzle(currentWork.image, () => {
+
+        document.dispatchEvent(
+            new CustomEvent("workCompleted", {
+                detail: {
+                    workId: currentWork.id
+                }
+            })
+        );
+
+    });
+
+    window.scrollTo(0, 0);
+
+});
+
+// ------------------------------------
+// REGRESAR A LA OBRA
+// ------------------------------------
+
+backToWorkButton.addEventListener("click", () => {
+
+    puzzleView.hidden = true;
+    workView.hidden = false;
+
+    window.scrollTo(0, 0);
+
+});
+
+// ------------------------------------
+// REGRESAR AL MAPA
+// ------------------------------------
+
 backButton.addEventListener("click", () => {
+
     workAudio.pause();
     workAudio.removeAttribute("src");
     workAudio.load();
@@ -96,6 +248,3 @@ backButton.addEventListener("click", () => {
 
     window.scrollTo(0, 0);
 });
-coinCounter.textContent = coins;
-
-initializeMap();
