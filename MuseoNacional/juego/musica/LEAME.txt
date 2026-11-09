@@ -1,0 +1,10 @@
+sPon aqui tu musica (mp3, ogg o wav) con los nombres que indica obras.js:
+
+  navegacion.mp3   -> mientras navegas el barco
+  isla1.mp3 ... isla10.mp3 -> sala de cada isla (llegada + museo)
+  calavera.mp3     -> Isla Calavera
+  cinematica.mp3   -> embarque y puzzles finales
+  (titulo.mp3 opcional: ponlo en obras.js > musica > titulo)
+
+Puedes cambiar los nombres, solo actualiza la ruta en obras.js.
+Usa musica libre de derechos o con licencia. Archivos pequenos (1-3 MB) cargan mejor en celular.

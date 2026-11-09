@@ -1,0 +1,1 @@
+Pon aqui tus imagenes (.jpg .png .webp) y escribe su ruta en obras.js, por ejemplo: imagen: "obras/isla1_obra1.jpg"

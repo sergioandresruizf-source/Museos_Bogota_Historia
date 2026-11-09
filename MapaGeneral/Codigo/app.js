@@ -11,7 +11,7 @@ const M=[
 {id:'antimuseo',n:'Antimuseo',la:4.6070,lo:-74.0720,a:'Ubicación por definir',c:'#b36bff',t:'Lo que los museos no quisieron mostrar. Cruza el portal.',e:'portal'},
 ];
 
-const L={nacional:'../../MuseoNacional/Codigo/index.html',
+const L={nacional:'../../MuseoNacional/juego.godot/index.html',
         oro:'',
         mambo:'../../MuseoDeArteModerno/museo/index.html',
         florero:'../../MuseoDeLaIndependencia/index.html',
