@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<!-- saved from url=(0050)https://kaleidoscopic-seahorse-ab3de8.netlify.app/ -->
+<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=c0c6afe1-5834-4075-a79c-bb4db41afcbc
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banco de Imágenes - Proyecto Quimbaya</title>
+    <!-- Tailwind CSS -->
+    <script src="./Banco de Imágenes - Proyecto Quimbaya_files/saved_resource"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="./Banco de Imágenes - Proyecto Quimbaya_files/css2" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="./Banco de Imágenes - Proyecto Quimbaya_files/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        gold: {
+                            500: '#D4AF37',
+                            600: '#AA8C2C',
+                        },
+                        dark: '#1A1A1A'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar and animations */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #AA8C2C; }
+        
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-overlay {
+            backdrop-filter: blur(5px);
+            transition: opacity 0.3s ease;
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:Inter, sans-serif;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.right-4{right:1rem}.top-4{top:1rem}.right-2{right:0.5rem}.top-2{top:0.5rem}.z-20{z-index:20}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:0.25rem}.mb-12{margin-bottom:3rem}.mb-2{margin-bottom:0.5rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mr-1{margin-right:0.25rem}.mr-3{margin-right:0.75rem}.mt-24{margin-top:6rem}.mt-8{margin-top:2rem}.mt-auto{margin-top:auto}.mb-8{margin-bottom:2rem}.ml-2{margin-left:0.5rem}.line-clamp-2{overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}.block{display:block}.inline-block{display:inline-block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-12{height:3rem}.h-56{height:14rem}.max-h-\[45vh\]{max-height:45vh}.max-h-\[50vh\]{max-height:50vh}.max-h-\[95vh\]{max-height:95vh}.max-h-full{max-height:100%}.min-h-screen{min-height:100vh}.w-12{width:3rem}.w-6{width:1.5rem}.w-full{width:100%}.w-max{width:max-content}.max-w-3xl{max-width:48rem}.max-w-4xl{max-width:56rem}.max-w-6xl{max-width:72rem}.max-w-7xl{max-width:80rem}.max-w-full{max-width:100%}.flex-grow{flex-grow:1}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-pointer{cursor:pointer}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-center{justify-content:center}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.space-y-20 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(5rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.rounded{border-radius:0.25rem}.border{border-width:1px}.border-l-4{border-left-width:4px}.border-l-8{border-left-width:8px}.border-t{border-top-width:1px}.border-t-4{border-top-width:4px}.border-b-2{border-bottom-width:2px}.border-gold-500{--tw-border-opacity:1;border-color:rgb(212 175 55 / var(--tw-border-opacity, 1))}.border-gray-100{--tw-border-opacity:1;border-color:rgb(243 244 246 / var(--tw-border-opacity, 1))}.border-gray-200{--tw-border-opacity:1;border-color:rgb(229 231 235 / var(--tw-border-opacity, 1))}.border-blue-500{--tw-border-opacity:1;border-color:rgb(59 130 246 / var(--tw-border-opacity, 1))}.border-emerald-500{--tw-border-opacity:1;border-color:rgb(16 185 129 / var(--tw-border-opacity, 1))}.border-red-500{--tw-border-opacity:1;border-color:rgb(239 68 68 / var(--tw-border-opacity, 1))}.border-l-red-400{--tw-border-opacity:1;border-left-color:rgb(248 113 113 / var(--tw-border-opacity, 1))}.bg-black\/80{background-color:rgb(0 0 0 / 0.8)}.bg-dark{--tw-bg-opacity:1;background-color:rgb(26 26 26 / var(--tw-bg-opacity, 1))}.bg-gray-50{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1))}.bg-gray-800\/50{background-color:rgb(31 41 55 / 0.5)}.bg-gray-900{--tw-bg-opacity:1;background-color:rgb(17 24 39 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/90{background-color:rgb(255 255 255 / 0.9)}.bg-blue-500{--tw-bg-opacity:1;background-color:rgb(59 130 246 / var(--tw-bg-opacity, 1))}.bg-emerald-500{--tw-bg-opacity:1;background-color:rgb(16 185 129 / var(--tw-bg-opacity, 1))}.bg-gold-500{--tw-bg-opacity:1;background-color:rgb(212 175 55 / var(--tw-bg-opacity, 1))}.bg-red-500{--tw-bg-opacity:1;background-color:rgb(239 68 68 / var(--tw-bg-opacity, 1))}.object-contain{object-fit:contain}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-12{padding-top:3rem;padding-bottom:3rem}.py-8{padding-top:2rem;padding-bottom:2rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.pt-6{padding-top:1.5rem}.pb-4{padding-bottom:1rem}.text-center{text-align:center}.font-sans{font-family:Inter, sans-serif}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-light{font-weight:300}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.italic{font-style:italic}.leading-relaxed{line-height:1.625}.leading-tight{line-height:1.25}.leading-snug{line-height:1.375}.tracking-widest{letter-spacing:0.1em}.text-dark{--tw-text-opacity:1;color:rgb(26 26 26 / var(--tw-text-opacity, 1))}.text-gold-500{--tw-text-opacity:1;color:rgb(212 175 55 / var(--tw-text-opacity, 1))}.text-gray-300{--tw-text-opacity:1;color:rgb(209 213 219 / var(--tw-text-opacity, 1))}.text-gray-400{--tw-text-opacity:1;color:rgb(156 163 175 / var(--tw-text-opacity, 1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55 / var(--tw-text-opacity, 1))}.text-gray-900{--tw-text-opacity:1;color:rgb(17 24 39 / var(--tw-text-opacity, 1))}.text-red-400{--tw-text-opacity:1;color:rgb(248 113 113 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-emerald-600{--tw-text-opacity:1;color:rgb(5 150 105 / var(--tw-text-opacity, 1))}.text-gold-600{--tw-text-opacity:1;color:rgb(170 140 44 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.opacity-90{opacity:0.9}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow{--tw-shadow:0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.drop-shadow-2xl{--tw-drop-shadow:drop-shadow(0 25px 25px rgb(0 0 0 / 0.15));filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.drop-shadow-md{--tw-drop-shadow:drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.drop-shadow-sm{--tw-drop-shadow:drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur{--tw-backdrop-blur:blur(8px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-300{transition-duration:300ms}.duration-500{transition-duration:500ms}.hover\:-translate-y-1:hover{--tw-translate-y:-0.25rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:bg-red-50:hover{--tw-bg-opacity:1;background-color:rgb(254 242 242 / var(--tw-bg-opacity, 1))}.hover\:text-red-600:hover{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.hover\:shadow-xl:hover{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.group:hover .group-hover\:translate-x-1{--tw-translate-x:0.25rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:scale-105{--tw-scale-x:1.05;--tw-scale-y:1.05;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:scale-110{--tw-scale-x:1.1;--tw-scale-y:1.1;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:underline{-webkit-text-decoration-line:underline;text-decoration-line:underline}@media (min-width: 640px){.sm\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.sm\:p-6{padding:1.5rem}.sm\:p-8{padding:2rem}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}}@media (min-width: 768px){.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:text-2xl{font-size:1.5rem;line-height:2rem}.md\:text-5xl{font-size:3rem;line-height:1}.md\:text-3xl{font-size:1.875rem;line-height:2.25rem}}@media (min-width: 1024px){.lg\:max-h-\[85vh\]{max-height:85vh}.lg\:max-h-full{max-height:100%}.lg\:w-2\/5{width:40%}.lg\:w-3\/5{width:60%}.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.lg\:flex-row{flex-direction:row}.lg\:p-10{padding:2.5rem}.lg\:p-8{padding:2rem}.lg\:px-8{padding-left:2rem;padding-right:2rem}}@media (min-width: 1280px){.xl\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}}</style></head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Header Section -->
+    <header class="bg-dark text-white shadow-lg py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto text-center">
+            <h1 class="text-3xl md:text-5xl font-bold mb-4 text-gold-500 drop-shadow-md">
+                Patrimonio Exiliado: El Legado Precolombino
+            </h1>
+            <h2 class="text-xl md:text-2xl font-light text-gray-300 mb-6">
+                Proyecto Quimbaya: Memoria y Restitución
+            </h2>
+            <p class="max-w-3xl mx-auto text-gray-400 bg-gray-800/50 p-4 rounded-lg inline-block">
+                Fase 2 - Informe de avance del 25%. Banco preliminar de imágenes: mapas de origen y selección visual.
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+        
+        <!-- Descripción General -->
+        <div class="mb-12 text-center max-w-4xl mx-auto">
+            <p class="text-lg text-gray-600">
+                Explora el banco preliminar de imágenes separado por sus respectivos bloques temáticos. Haz clic en cualquier pieza para consultar su ficha técnica, enlaces exactos, usos y estado de licenciamiento.
+            </p>
+        </div>
+
+        <!-- Gallery Sections Container (Apartados Físicos) -->
+        <div id="gallery-container" class="space-y-20"><div class="fade-in bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="flex items-center gap-4 mb-8 pb-4 border-b-2 border-gold-500">
+                        <div class="bg-gold-500 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold shadow-md">
+                            A
+                        </div>
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
+                            Tesoro Quimbaya en Madrid (Museo de América)
+                        </h2>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 block-grid"><div class="bg-gray-50 rounded-xl overflow-hidden shadow hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer border border-gray-200 group transform hover:-translate-y-1">
+                        <div class="relative h-56 overflow-hidden bg-white flex items-center justify-center p-4">
+                            <img src="./Banco de Imágenes - Proyecto Quimbaya_files/ffffff" alt="Imagen 1. Estatuilla de cacique quimbaya" onerror="onImgError(this, 'Imagen 1. Estatuilla de cacique quimbaya', 'A')" class="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-sm">
+                            <div class="absolute top-2 right-2 bg-gold-500 text-white text-xs font-bold px-2 py-1 rounded shadow-sm opacity-90">
+                                1
+                            </div>
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col bg-white border-t border-gray-100">
+                            <h4 class="font-bold text-gray-900 mb-2 leading-snug">Imagen 1. Estatuilla de cacique quimbaya</h4>
+                            <p class="text-gray-500 text-sm mb-4 line-clamp-2">Figura de oro de un cacique quimbaya, una de las piezas más conocidas del Tesoro, expuesta en el Museo de América.</p>
+                            
+                            <div class="mt-auto">
+                                <span class="text-gold-600 font-semibold text-sm flex items-center group-hover:underline">
+                                    Ver detalles <i class="fas fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div><div class="bg-gray-50 rounded-xl overflow-hidden shadow hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer border border-gray-200 group transform hover:-translate-y-1">
+                        <div class="relative h-56 overflow-hidden bg-white flex items-center justify-center p-4">
+                            <img src="./Banco de Imágenes - Proyecto Quimbaya_files/Tesoro_Quimbaya_Madrid.jpg" alt="Imagen 2. Tocado para la cabeza" onerror="onImgError(this, 'Imagen 2. Tocado para la cabeza', 'A')" class="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-sm">
+                            <div class="absolute top-2 right-2 bg-gold-500 text-white text-xs font-bold px-2 py-1 rounded shadow-sm opacity-90">
+                                2
+                            </div>
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col bg-white border-t border-gray-100">
+                            <h4 class="font-bold text-gray-900 mb-2 leading-snug">Imagen 2. Tocado para la cabeza</h4>
+                            <p class="text-gray-500 text-sm mb-4 line-clamp-2">Casco o tocado de oro del Tesoro. Muestra el nivel técnico de la orfebrería quimbaya.</p>
+                            
+                            <div class="mt-auto">
+                                <span class="text-gold-600 font-semibold text-sm flex items-center group-hover:underline">
+                                    Ver detalles <i class="fas fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div><div class="bg-gray-50 rounded-xl overflow-hidden shadow hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer border border-gray-200 group transform hover:-translate-y-1">
+                        <div class="relative h-56 overflow-hidden bg-white flex items-center justify-center p-4">
+                            <img src="./Banco de Imágenes - Proyecto Quimbaya_files/ffffff(1)" alt="Imagen 3. Sala con objetos de la cultura Quimbaya" onerror="onImgError(this, 'Imagen 3. Sala con objetos de la cultura Quimbaya', 'A')" class="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-sm">
+                            <div class="absolute top-2 right-2 bg-gold-500 text-white text-xs font-bold px-2 py-1 rounded shadow-sm opacity-90">
+                                3
+                            </div>
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col bg-white border-t border-gray-100">
+                            <h4 class="font-bold text-gray-900 mb-2 leading-snug">Imagen 3. Sala con objetos de la cultura Quimbaya</h4>
+                            <p class="text-gray-500 text-sm mb-4 line-clamp-2">Vista de la sala donde se exhibe el Tesoro, en el área dedicada al mundo funerario.</p>
+                            
+                            <div class="mt-auto">
+                                <span class="text-gold-600 font-semibold text-sm flex items-center group-hover:underline">
+                                    Ver detalles <i class="fas fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div><div class="bg-gray-50 rounded-xl overflow-hidden shadow hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer border border-gray-200 group transform hover:-translate-y-1">
+                        <div class="relative h-56 overflow-hidden bg-white flex items-center justify-center p-4">
+                            <img src="./Banco de Imágenes - Proyecto Quimbaya_files/ffffff(2)" alt="Imagen 4. Figura antropomorfa" onerror="onImgError(this, 'Imagen 4. Figura antropomorfa', 'A')" class="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-sm">
+                            <div class="absolute top-2 right-2 bg-gold-500 text-white text-xs font-bold px-2 py-1 rounded shadow-sm opacity-90">
+                                4
+                            </div>
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col bg-white border-t border-gray-100">
+                            <h4 class="font-bold text-gray-900 mb-2 leading-snug">Imagen 4. Figura antropomorfa</h4>
+                            <p class="text-gray-500 text-sm mb-4 line-clamp-2">Figura humana de oro del Tesoro (poporo o pieza figurativa).</p>
+                            
+                            <div class="mt-auto">
+                                <span class="text-gold-600 font-semibold text-sm flex items-center group-hover:underline">
+                                    Ver detalles <i class="fas fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div><div class="bg-gray-50 rounded-xl overflow-hidden shadow hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer border border-gray-200 group transform hover:-translate-y-1">
+                        <div class="relative h-56 overflow-hidden bg-white flex items-center justify-center p-4">
+                            <img src="./Banco de Imágenes - Proyecto Quimbaya_files/ffffff(3)" alt="Imagen 5. Galería completa del Tesoro" onerror="onImgError(this, 'Imagen 5. Galería completa del Tesoro', 'A')" class="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-sm">
+                            <div class="absolute top-2 right-2 bg-gold-500 text-white text-xs font-bold px-2 py-1 rounded shadow-sm opacity-90">
+                                5
+                            </div>
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col bg-white border-t border-gray-100">
+                            <h4 class="font-bold text-gray-900 mb-2 leading-snug">Imagen 5. Galería completa del Tesoro</h4>
+                            <p class="text-gray-500 text-sm mb-4 line-clamp-2">Categoría de Wikimedia Commons con todas las fotos disponibles del Tesoro.</p>
+                            
+                            <div class="mt-auto">
+                                <span class="text-gold-600 font-semibold text-sm flex items-center group-hover:underline">
+                                    Ver detalles <i class="fas fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div></div>
+                </div><div class="fade-in bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="flex items-center gap-4 mb-8 pb-4 border-b-2 border-blue-500">
+                        <div class="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold shadow-md">
+                            B
+                        </div>
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
+                            Piezas quimbaya fuera de Colombia y de España
+                        </h2>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 block-grid"><div class="bg-gray-50 rounded-xl overflow-hidden shadow hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer border border-gray-200 group transform hover:-translate-y-1">
+                        <div class="relative h-56 overflow-hidden bg-white flex items-center justify-center p-4">
+                            <img src="./Banco de Imágenes - Proyecto Quimbaya_files/ffffff(4)" alt="Imagen 6. Figura sentada quimbaya, Met Museum" onerror="onImgError(this, 'Imagen 6. Figura sentada quimbaya, Met Museum', 'B')" class="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-sm">
+                            <div class="absolute top-2 right-2 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded shadow-sm opacity-90">
+                                6
+                            </div>
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col bg-white border-t border-gray-100">
+                            <h4 class="font-bold text-gray-900 mb-2 leading-snug">Imagen 6. Figura sentada quimbaya, Met Museum</h4>
+                            <p class="text-gray-500 text-sm mb-4 line-clamp-2">Figura sentada de cerámica atribuida a la cultura quimbaya (siglos XIII-XV según el Met), parte de la colección del museo neoyorquino.</p>
+                            
+                            <div class="mt-auto">
+                                <span class="text-blue-600 font-semibold text-sm flex items-center group-hover:underline">
+                                    Ver detalles <i class="fas fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div></div>
+                </div><div class="fade-in bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="flex items-center gap-4 mb-8 pb-4 border-b-2 border-emerald-500">
+                        <div class="bg-emerald-500 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold shadow-md">
+                            C
+                        </div>
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
+                            San Agustín (Huila)
+                        </h2>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 block-grid"><div class="bg-gray-50 rounded-xl overflow-hidden shadow hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer border border-gray-200 group transform hover:-translate-y-1">
+                        <div class="relative h-56 overflow-hidden bg-white flex items-center justify-center p-4">
+                            <img src="./Banco de Imágenes - Proyecto Quimbaya_files/ffffff(5)" alt="Imagen 7. Doble guardián, Mesita A" onerror="onImgError(this, 'Imagen 7. Doble guardián, Mesita A', 'C')" class="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-sm">
+                            <div class="absolute top-2 right-2 bg-emerald-500 text-white text-xs font-bold px-2 py-1 rounded shadow-sm opacity-90">
+                                7
+                            </div>
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col bg-white border-t border-gray-100">
+                            <h4 class="font-bold text-gray-900 mb-2 leading-snug">Imagen 7. Doble guardián, Mesita A</h4>
+                            <p class="text-gray-500 text-sm mb-4 line-clamp-2">Estatua de piedra con dos figuras superpuestas en el túmulo oriental del sitio Mesita A, Parque Arqueológico de San Agustín.</p>
+                            
+                            <div class="mt-auto">
+                                <span class="text-emerald-600 font-semibold text-sm flex items-center group-hover:underline">
+                                    Ver detalles <i class="fas fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div><div class="bg-gray-50 rounded-xl overflow-hidden shadow hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer border border-gray-200 group transform hover:-translate-y-1">
+                        <div class="relative h-56 overflow-hidden bg-white flex items-center justify-center p-4">
+                            <img src="./Banco de Imágenes - Proyecto Quimbaya_files/ffffff(6)" alt="Imagen 8. Figura que sostiene una serpiente, Mesita B" onerror="onImgError(this, 'Imagen 8. Figura que sostiene una serpiente, Mesita B', 'C')" class="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-sm">
+                            <div class="absolute top-2 right-2 bg-emerald-500 text-white text-xs font-bold px-2 py-1 rounded shadow-sm opacity-90">
+                                8
+                            </div>
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col bg-white border-t border-gray-100">
+                            <h4 class="font-bold text-gray-900 mb-2 leading-snug">Imagen 8. Figura que sostiene una serpiente, Mesita B</h4>
+                            <p class="text-gray-500 text-sm mb-4 line-clamp-2">Estatua pequeña de ojos grandes y colmillos, cerca del túmulo sur de Mesita B.</p>
+                            
+                            <div class="mt-auto">
+                                <span class="text-emerald-600 font-semibold text-sm flex items-center group-hover:underline">
+                                    Ver detalles <i class="fas fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div><div class="bg-gray-50 rounded-xl overflow-hidden shadow hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer border border-gray-200 group transform hover:-translate-y-1">
+                        <div class="relative h-56 overflow-hidden bg-white flex items-center justify-center p-4">
+                            <img src="./Banco de Imágenes - Proyecto Quimbaya_files/ffffff(7)" alt="Imagen 9. Águila sosteniendo una víbora, Mesita B" onerror="onImgError(this, 'Imagen 9. Águila sosteniendo una víbora, Mesita B', 'C')" class="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-sm">
+                            <div class="absolute top-2 right-2 bg-emerald-500 text-white text-xs font-bold px-2 py-1 rounded shadow-sm opacity-90">
+                                9
+                            </div>
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col bg-white border-t border-gray-100">
+                            <h4 class="font-bold text-gray-900 mb-2 leading-snug">Imagen 9. Águila sosteniendo una víbora, Mesita B</h4>
+                            <p class="text-gray-500 text-sm mb-4 line-clamp-2">Estatua de piedra de un águila con una serpiente, cerca del túmulo noroeste de Mesita B.</p>
+                            
+                            <div class="mt-auto">
+                                <span class="text-emerald-600 font-semibold text-sm flex items-center group-hover:underline">
+                                    Ver detalles <i class="fas fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div><div class="bg-gray-50 rounded-xl overflow-hidden shadow hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer border border-gray-200 group transform hover:-translate-y-1">
+                        <div class="relative h-56 overflow-hidden bg-white flex items-center justify-center p-4">
+                            <img src="./Banco de Imágenes - Proyecto Quimbaya_files/ffffff(8)" alt="Imagen 10. Mujer agachada, Alto de las Piedras" onerror="onImgError(this, 'Imagen 10. Mujer agachada, Alto de las Piedras', 'C')" class="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-sm">
+                            <div class="absolute top-2 right-2 bg-emerald-500 text-white text-xs font-bold px-2 py-1 rounded shadow-sm opacity-90">
+                                10
+                            </div>
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col bg-white border-t border-gray-100">
+                            <h4 class="font-bold text-gray-900 mb-2 leading-snug">Imagen 10. Mujer agachada, Alto de las Piedras</h4>
+                            <p class="text-gray-500 text-sm mb-4 line-clamp-2">Estatua de una mujer agachada en el sitio Alto de las Piedras, Parque Arqueológico de San Agustín.</p>
+                            
+                            <div class="mt-auto">
+                                <span class="text-emerald-600 font-semibold text-sm flex items-center group-hover:underline">
+                                    Ver detalles <i class="fas fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div><div class="bg-gray-50 rounded-xl overflow-hidden shadow hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer border border-gray-200 group transform hover:-translate-y-1">
+                        <div class="relative h-56 overflow-hidden bg-white flex items-center justify-center p-4">
+                            <img src="./Banco de Imágenes - Proyecto Quimbaya_files/ffffff(9)" alt="Imagen 11. Parque Arqueológico UNESCO" onerror="onImgError(this, 'Imagen 11. Parque Arqueológico UNESCO', 'C')" class="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-sm">
+                            <div class="absolute top-2 right-2 bg-emerald-500 text-white text-xs font-bold px-2 py-1 rounded shadow-sm opacity-90">
+                                11
+                            </div>
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col bg-white border-t border-gray-100">
+                            <h4 class="font-bold text-gray-900 mb-2 leading-snug">Imagen 11. Parque Arqueológico UNESCO</h4>
+                            <p class="text-gray-500 text-sm mb-4 line-clamp-2">Página oficial de UNESCO sobre el parque, declarado Patrimonio Mundial en 1995, con galería de fotos y mapa de ubicación.</p>
+                            
+                            <div class="mt-auto">
+                                <span class="text-emerald-600 font-semibold text-sm flex items-center group-hover:underline">
+                                    Ver detalles <i class="fas fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div></div>
+                </div><div class="fade-in bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="flex items-center gap-4 mb-8 pb-4 border-b-2 border-red-500">
+                        <div class="bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold shadow-md">
+                            D
+                        </div>
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
+                            Restitución y tráfico ilícito
+                        </h2>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 block-grid"><div class="bg-gray-50 rounded-xl overflow-hidden shadow hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer border border-gray-200 group transform hover:-translate-y-1">
+                        <div class="relative h-56 overflow-hidden bg-white flex items-center justify-center p-4">
+                            <img src="./Banco de Imágenes - Proyecto Quimbaya_files/ffffff(10)" alt="Imagen 12. Estatuas retenidas en Berlín" onerror="onImgError(this, 'Imagen 12. Estatuas retenidas en Berlín', 'D')" class="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-sm">
+                            <div class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded shadow-sm opacity-90">
+                                12
+                            </div>
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col bg-white border-t border-gray-100">
+                            <h4 class="font-bold text-gray-900 mb-2 leading-snug">Imagen 12. Estatuas retenidas en Berlín</h4>
+                            <p class="text-gray-500 text-sm mb-4 line-clamp-2">Reportaje de El Espectador sobre 34 estatuas de San Agustín que están en Berlín y cuya devolución se reclama.</p>
+                            
+                            <div class="mt-auto">
+                                <span class="text-red-600 font-semibold text-sm flex items-center group-hover:underline">
+                                    Ver detalles <i class="fas fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div></div>
+                </div></div>
+
+        <!-- Context Data Section -->
+        <div class="mt-24 bg-white rounded-2xl shadow-lg p-8 border-l-8 border-gold-500 transform transition duration-500 hover:-translate-y-1 hover:shadow-xl">
+            <h3 class="text-2xl font-bold mb-6 flex items-center text-dark">
+                <i class="fas fa-info-circle text-gold-500 mr-3 text-3xl"></i>
+                Datos de contexto útiles para los pies de foto
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gray-50 p-5 rounded-xl border border-gray-100">
+                    <i class="fas fa-map-marker-alt text-gold-500 mb-2 text-xl"></i>
+                    <p class="text-gray-700">El Tesoro fue hallado en 1890 cerca de Filandia (Quindío) por huaqueros y entregado por el presidente Carlos Holguín a la reina regente María Cristina de España; la entrega oficial fue el 4 de mayo de 1893.</p>
+                </div>
+                <div class="bg-gray-50 p-5 rounded-xl border border-gray-100">
+                    <i class="fas fa-university text-gold-500 mb-2 text-xl"></i>
+                    <p class="text-gray-700">El Museo de América conserva hoy 122 piezas según la mayoría de las fuentes (el museo registra 136 números de inventario porque algunos conjuntos agrupan varias piezas).</p>
+                </div>
+                <div class="bg-gray-50 p-5 rounded-xl border border-gray-100">
+                    <i class="fas fa-gavel text-gold-500 mb-2 text-xl"></i>
+                    <p class="text-gray-700">La Corte Constitucional de Colombia ordenó en 2017 (sentencia SU-649/17) gestionar la restitución; en mayo de 2024 el Gobierno colombiano la pidió formalmente a España.</p>
+                </div>
+                <div class="bg-gray-50 p-5 rounded-xl border border-gray-100 border-l-4 border-l-red-400">
+                    <i class="fas fa-exclamation-triangle text-red-400 mb-2 text-xl"></i>
+                    <p class="text-gray-700"><strong>Aviso de actualidad:</strong> el diario El Debate informó el 16 de junio de 2026 que Colombia habría paralizado la reclamación. Verificar el estado actual antes de escribirlo en el proyecto.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-gray-400 py-8 text-center mt-auto border-t-4 border-gold-500">
+        <p>© 2026 Proyecto Quimbaya. Diseño de Interfaz de Banco de Imágenes.</p>
+    </footer>
+
+    <!-- Modal Lightbox (Ficha Técnica) -->
+    <div id="image-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center modal-overlay bg-black/80 p-4 sm:p-6">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-6xl max-h-[95vh] flex flex-col lg:flex-row overflow-hidden relative fade-in">
+            
+            <!-- Close Button -->
+            <button onclick="closeModal()" class="absolute top-4 right-4 z-20 bg-white/90 backdrop-blur text-gray-800 w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-red-50 hover:text-red-600 transition-colors focus:outline-none border border-gray-200">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+
+            <!-- Modal Image Section -->
+            <div class="w-full lg:w-3/5 bg-gray-900 flex items-center justify-center p-4 lg:p-8 relative group">
+                <img id="modal-image" src="https://kaleidoscopic-seahorse-ab3de8.netlify.app/" alt="" class="max-w-full max-h-[45vh] lg:max-h-[85vh] object-contain drop-shadow-2xl rounded-lg transition-transform duration-300 group-hover:scale-105">
+            </div>
+
+            <!-- Modal Content Section -->
+            <div class="w-full lg:w-2/5 p-6 lg:p-10 overflow-y-auto max-h-[50vh] lg:max-h-full flex flex-col bg-gray-50">
+                <div class="uppercase tracking-widest text-xs text-white font-bold mb-3 inline-block px-3 py-1 rounded-full shadow-sm w-max" id="modal-block-badge"></div>
+                <h3 class="text-3xl font-bold text-gray-900 mb-6 leading-tight" id="modal-title"></h3>
+                
+                <div class="space-y-6 text-base text-gray-700 flex-grow">
+                    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                        <strong class="flex items-center text-gray-900 mb-2"><i class="fas fa-align-left text-gold-500 w-6"></i> Descripción</strong>
+                        <p id="modal-desc" class="leading-relaxed"></p>
+                    </div>
+                    
+                    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                        <strong class="flex items-center text-gray-900 mb-2"><i class="fas fa-project-diagram text-gold-500 w-6"></i> Uso en el proyecto</strong>
+                        <p id="modal-use" class="leading-relaxed"></p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                            <strong class="block text-gray-900 mb-1 text-sm"><i class="fas fa-landmark text-gray-400 mr-1"></i> Fuente</strong>
+                            <p id="modal-source" class="font-medium text-sm"></p>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                            <strong class="block text-gray-900 mb-1 text-sm"><i class="fas fa-copyright text-gray-400 mr-1"></i> Licencia</strong>
+                            <p id="modal-license" class="italic text-gray-600 text-sm"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex flex-col gap-3 pt-6 border-t border-gray-200" id="modal-links">
+                    <!-- Links injected dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Data and Logic -->
+    <script>
+        // Datos extraídos del informe Avance_25_Imagenes_Proyecto_Quimbaya.pdf
+        // Con URLs reales de fuentes de acceso abierto.
+        const imagesData = [
+            {
+                id: 1,
+                block: 'A',
+                blockName: 'Bloque A. Tesoro Quimbaya en Madrid (Museo de América)',
+                title: 'Imagen 1. Estatuilla de cacique quimbaya',
+                description: 'Figura de oro de un cacique quimbaya, una de las piezas más conocidas del Tesoro, expuesta en el Museo de América.',
+                use: 'Portada y ficha de objeto. Representa la pieza «exiliada».',
+                source: 'Wikimedia Commons',
+                license: 'Revisar en la ficha antes de usar y citar autor tal como lo indique.',
+                imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/0/09/Cacique_Quimbaya_de_oro%28M._Am%C3%A9rica%29_01.jpg',
+                directLink: 'https://upload.wikimedia.org/wikipedia/commons/0/09/Cacique_Quimbaya_de_oro%28M._Am%C3%A9rica%29_01.jpg',
+                recordLink: 'https://commons.wikimedia.org/wiki/File:Cacique_Quimbaya_de_oro_(M._Am%C3%A9rica,_Madrid)_01.jpg'
+            },
+            {
+                id: 2,
+                block: 'A',
+                blockName: 'Bloque A. Tesoro Quimbaya en Madrid (Museo de América)',
+                title: 'Imagen 2. Tocado para la cabeza',
+                description: 'Casco o tocado de oro del Tesoro. Muestra el nivel técnico de la orfebrería quimbaya.',
+                use: 'Sección de técnica y valor cultural; apoyo a la historia del hallazgo.',
+                source: 'Wikimedia Commons',
+                license: 'Revisar en la ficha.',
+                imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/6/63/Tesoro_Quimbaya_Madrid.jpg',
+                directLink: 'https://upload.wikimedia.org/wikipedia/commons/6/63/Tesoro_Quimbaya_Madrid.jpg',
+                recordLink: 'https://commons.wikimedia.org/wiki/File:Tesoro_Quimbaya_Madrid.jpg'
+            },
+            {
+                id: 3,
+                block: 'A',
+                blockName: 'Bloque A. Tesoro Quimbaya en Madrid (Museo de América)',
+                title: 'Imagen 3. Sala con objetos de la cultura Quimbaya',
+                description: 'Vista de la sala donde se exhibe el Tesoro, en el área dedicada al mundo funerario.',
+                use: 'Contexto: dónde está hoy el Tesoro y cómo se presenta al público.',
+                source: 'Wikimedia Commons',
+                license: 'Revisar en la ficha.',
+                imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/c/c8/Sala_con_objetos_de_la_cultura_Quimbaya%2C_Museo_de_Am%C3%A9rica.jpg',
+                directLink: 'https://upload.wikimedia.org/wikipedia/commons/c/c8/Sala_con_objetos_de_la_cultura_Quimbaya%2C_Museo_de_Am%C3%A9rica.jpg',
+                recordLink: 'https://commons.wikimedia.org/wiki/File:Sala_con_objetos_de_la_cultura_Quimbaya._Museo_de_Am%C3%A9rica.jpg'
+            },
+            {
+                id: 4,
+                block: 'A',
+                blockName: 'Bloque A. Tesoro Quimbaya en Madrid (Museo de América)',
+                title: 'Imagen 4. Figura antropomorfa',
+                description: 'Figura humana de oro del Tesoro (poporo o pieza figurativa).',
+                use: 'Ficha de objeto o galería de piezas.',
+                source: 'Wikimedia Commons',
+                license: 'Revisar en la ficha.',
+                imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Poporo_Quimbaya_01.jpg/800px-Poporo_Quimbaya_01.jpg',
+                recordLink: 'https://commons.wikimedia.org/wiki/File:Tesoro_Quimbaya_Colombia.jpg'
+            },
+            {
+                id: 5,
+                block: 'A',
+                blockName: 'Bloque A. Tesoro Quimbaya en Madrid (Museo de América)',
+                title: 'Imagen 5. Galería completa del Tesoro',
+                description: 'Categoría de Wikimedia Commons con todas las fotos disponibles del Tesoro.',
+                use: 'Cantera para elegir más piezas sin buscar fuera.',
+                source: 'Wikimedia Commons',
+                license: 'Varias.',
+                imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Museo_de_America_-_Tesoro_de_los_Quimbayas.jpg/800px-Museo_de_America_-_Tesoro_de_los_Quimbayas.jpg',
+                recordLink: 'https://commons.wikimedia.org/wiki/Category:Tesoro_de_los_Quimbayas'
+            },
+            {
+                id: 6,
+                block: 'B',
+                blockName: 'Bloque B. Piezas quimbaya fuera de Colombia y España',
+                title: 'Imagen 6. Figura sentada quimbaya, Met Museum',
+                description: 'Figura sentada de cerámica atribuida a la cultura quimbaya (siglos XIII-XV según el Met), parte de la colección del museo neoyorquino.',
+                use: 'Muestra que el patrimonio colombiano está disperso en varios países, no solo en Madrid.',
+                source: 'The Metropolitan Museum of Art',
+                license: 'Comprobar etiqueta «Open Access» (uso libre) en la ficha antes de descargar.',
+                imgSrc: 'https://images.metmuseum.org/CRDImages/ao/web-large/DP122485.jpg',
+                recordLink: 'https://www.metmuseum.org/art/collection/search/310244'
+            },
+            {
+                id: 7,
+                block: 'C',
+                blockName: 'Bloque C. San Agustín (Huila)',
+                title: 'Imagen 7. Doble guardián, Mesita A',
+                description: 'Estatua de piedra con dos figuras superpuestas en el túmulo oriental del sitio Mesita A, Parque Arqueológico de San Agustín.',
+                use: 'Segundo foco del proyecto: el patrimonio lítico de San Agustín.',
+                source: 'Colección digital Calisphere',
+                license: 'Ver los derechos indicados en la ficha.',
+                imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/San_Agustin_Archaeological_Park_-_02.jpg/800px-San_Agustin_Archaeological_Park_-_02.jpg',
+                recordLink: 'https://calisphere.org/item/6cc8630c05b312055d16849a26d618e4'
+            },
+            {
+                id: 8,
+                block: 'C',
+                blockName: 'Bloque C. San Agustín (Huila)',
+                title: 'Imagen 8. Figura que sostiene una serpiente, Mesita B',
+                description: 'Estatua pequeña de ojos grandes y colmillos, cerca del túmulo sur de Mesita B.',
+                use: 'Galería de estatuas y tema simbólico.',
+                source: 'Colección digital Calisphere',
+                license: 'Ver los derechos indicados en la ficha.',
+                imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/San_Agustin_Colombia_03.jpg/800px-San_Agustin_Colombia_03.jpg',
+                recordLink: 'https://calisphere.org/item/11cba6b45aad1c14189531411f4e1b2d'
+            },
+            {
+                id: 9,
+                block: 'C',
+                blockName: 'Bloque C. San Agustín (Huila)',
+                title: 'Imagen 9. Águila sosteniendo una víbora, Mesita B',
+                description: 'Estatua de piedra de un águila con una serpiente, cerca del túmulo noroeste de Mesita B.',
+                use: 'Galería de estatuas.',
+                source: 'Colección digital Calisphere',
+                license: 'Ver los derechos indicados en la ficha.',
+                imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/San_Agust%C3%ADn_Huila_Colombia_%2862%29.JPG/800px-San_Agust%C3%ADn_Huila_Colombia_%2862%29.JPG',
+                recordLink: 'https://calisphere.org/item/773eea06872a2be77141369ec6214267'
+            },
+            {
+                id: 10,
+                block: 'C',
+                blockName: 'Bloque C. San Agustín (Huila)',
+                title: 'Imagen 10. Mujer agachada, Alto de las Piedras',
+                description: 'Estatua de una mujer agachada en el sitio Alto de las Piedras, Parque Arqueológico de San Agustín.',
+                use: 'Galería de estatuas; variedad de figuras.',
+                source: 'Colección digital Calisphere',
+                license: 'Ver los derechos indicados en la ficha.',
+                imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Colombia_San_Agustin_13.jpg/800px-Colombia_San_Agustin_13.jpg',
+                recordLink: 'https://calisphere.org/item/6e1d3671fdef64e2e4a1596412900102'
+            },
+            {
+                id: 11,
+                block: 'C',
+                blockName: 'Bloque C. San Agustín (Huila)',
+                title: 'Imagen 11. Parque Arqueológico UNESCO',
+                description: 'Página oficial de UNESCO sobre el parque, declarado Patrimonio Mundial en 1995, con galería de fotos y mapa de ubicación.',
+                use: 'Respaldo oficial y mapa de origen de San Agustín.',
+                source: 'UNESCO World Heritage Centre',
+                license: 'CC BY-SA IGO 3.0; revisar la licencia de cada foto de la galería.',
+                imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Parque_Arqueol%C3%B3gico_de_San_Agust%C3%ADn%2C_Colombia.jpg/800px-Parque_Arqueol%C3%B3gico_de_San_Agust%C3%ADn%2C_Colombia.jpg',
+                recordLink: 'https://whc.unesco.org/en/list/744'
+            },
+            {
+                id: 12,
+                block: 'D',
+                blockName: 'Bloque D. Restitución y tráfico ilícito',
+                title: 'Imagen 12. Estatuas retenidas en Berlín',
+                description: 'Reportaje de El Espectador sobre 34 estatuas de San Agustín que están en Berlín y cuya devolución se reclama.',
+                use: 'Sección de restitución. La foto de prensa es de referencia: para usarla hay que pedir permiso o citar según medio.',
+                source: 'El Espectador',
+                license: 'Derechos de prensa.',
+                imgSrc: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/San_Agustin_Parque_Arqueologico.jpg/800px-San_Agustin_Parque_Arqueologico.jpg',
+                recordLink: 'https://www.elespectador.com/el-magazin-cultural/alemania-tiene-34-estatuas-colombianas-adquiridas-ilegalmente-pero-se-rehusa-a-devolverlas/',
+                extraLink: 'https://www.elespectador.com/el-magazin-cultural/esculpir-el-tiempo-el-documental-sobre-las-estatuas-de-san-agustin-retenidas-en-berlin/'
+            }
+        ];
+
+        const galleryContainer = document.getElementById('gallery-container');
+        
+        // Función para reemplazar imágenes rotas con marcadores de color
+        function onImgError(img, title, block) {
+            let color = '2a2a2a'; // Default
+            if(block === 'A') color = 'D4AF37'; // Gold
+            if(block === 'B') color = '3b82f6'; // Blue
+            if(block === 'C') color = '10b981'; // Green
+            if(block === 'D') color = 'ef4444'; // Red
+            
+            img.onerror = null; 
+            img.src = `https://placehold.co/600x400/${color}/ffffff?text=${encodeURIComponent(title.substring(0, 15))}...`;
+        }
+
+        // Renderizar los apartados por bloque (A, B, C, D)
+        function renderGallery() {
+            galleryContainer.innerHTML = '';
+            
+            const blocks = [
+                { id: 'A', name: 'Bloque A. Tesoro Quimbaya en Madrid (Museo de América)', color: 'bg-gold-500', borderColor: 'border-gold-500', textColor: 'text-gold-600' },
+                { id: 'B', name: 'Bloque B. Piezas quimbaya fuera de Colombia y de España', color: 'bg-blue-500', borderColor: 'border-blue-500', textColor: 'text-blue-600' },
+                { id: 'C', name: 'Bloque C. San Agustín (Huila)', color: 'bg-emerald-500', borderColor: 'border-emerald-500', textColor: 'text-emerald-600' },
+                { id: 'D', name: 'Bloque D. Restitución y tráfico ilícito', color: 'bg-red-500', borderColor: 'border-red-500', textColor: 'text-red-600' }
+            ];
+
+            blocks.forEach(blockInfo => {
+                const blockItems = imagesData.filter(item => item.block === blockInfo.id);
+                if (blockItems.length === 0) return;
+
+                const section = document.createElement('div');
+                section.className = 'fade-in bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100';
+                
+                section.innerHTML = `
+                    <div class="flex items-center gap-4 mb-8 pb-4 border-b-2 ${blockInfo.borderColor}">
+                        <div class="${blockInfo.color} text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold shadow-md">
+                            ${blockInfo.id}
+                        </div>
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
+                            ${blockInfo.name.substring(10)}
+                        </h2>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 block-grid"></div>
+                `;
+
+                const grid = section.querySelector('.block-grid');
+
+                blockItems.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-gray-50 rounded-xl overflow-hidden shadow hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer border border-gray-200 group transform hover:-translate-y-1';
+                    card.onclick = () => openModal(item.id);
+
+                    card.innerHTML = `
+                        <div class="relative h-56 overflow-hidden bg-white flex items-center justify-center p-4">
+                            <img src="${item.imgSrc}" alt="${item.title}" onerror="onImgError(this, '${item.title}', '${item.block}')" class="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-sm">
+                            <div class="absolute top-2 right-2 ${blockInfo.color} text-white text-xs font-bold px-2 py-1 rounded shadow-sm opacity-90">
+                                ${item.id}
+                            </div>
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col bg-white border-t border-gray-100">
+                            <h4 class="font-bold text-gray-900 mb-2 leading-snug">${item.title}</h4>
+                            <p class="text-gray-500 text-sm mb-4 line-clamp-2">${item.description}</p>
+                            
+                            <div class="mt-auto">
+                                <span class="${blockInfo.textColor} font-semibold text-sm flex items-center group-hover:underline">
+                                    Ver detalles <i class="fas fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+
+                galleryContainer.appendChild(section);
+            });
+        }
+
+        // Lógica del Modal (Lightbox)
+        function openModal(id) {
+            const item = imagesData.find(d => d.id === id);
+            if (!item) return;
+
+            // Determinar color de la placa del bloque
+            let badgeClass = 'bg-gray-500';
+            if(item.block === 'A') badgeClass = 'bg-gold-500';
+            if(item.block === 'B') badgeClass = 'bg-blue-500';
+            if(item.block === 'C') badgeClass = 'bg-emerald-500';
+            if(item.block === 'D') badgeClass = 'bg-red-500';
+
+            const badge = document.getElementById('modal-block-badge');
+            badge.textContent = item.blockName;
+            badge.className = `uppercase tracking-widest text-xs text-white font-bold mb-3 inline-block px-3 py-1 rounded shadow-sm w-max ${badgeClass}`;
+
+            document.getElementById('modal-title').textContent = item.title;
+            document.getElementById('modal-desc').textContent = item.description;
+            document.getElementById('modal-use').textContent = item.use;
+            document.getElementById('modal-source').textContent = item.source;
+            document.getElementById('modal-license').textContent = item.license;
+
+            const modalImg = document.getElementById('modal-image');
+            modalImg.src = item.imgSrc;
+            modalImg.onerror = () => onImgError(modalImg, item.title, item.block);
+
+            // Generar botones de enlace
+            const linksContainer = document.getElementById('modal-links');
+            linksContainer.innerHTML = '';
+
+            if (item.directLink) {
+                linksContainer.innerHTML += `
+                    <a href="${item.directLink}" target="_blank" class="flex items-center justify-center w-full bg-white hover:bg-gray-50 text-gray-800 font-semibold py-3 px-4 rounded-xl transition duration-200 border border-gray-300 shadow-sm">
+                        <i class="fas fa-image mr-2 text-gold-500 text-lg"></i> Enlace directo a la imagen original
+                    </a>
+                `;
+            }
+            if (item.recordLink) {
+                linksContainer.innerHTML += `
+                    <a href="${item.recordLink}" target="_blank" class="flex items-center justify-center w-full bg-dark hover:bg-black text-white font-semibold py-3 px-4 rounded-xl transition duration-200 shadow-md">
+                        <i class="fas fa-external-link-alt mr-2 text-lg"></i> Ver ficha técnica en origen
+                    </a>
+                `;
+            }
+            if (item.extraLink) {
+                linksContainer.innerHTML += `
+                    <a href="${item.extraLink}" target="_blank" class="flex items-center justify-center w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 shadow-md">
+                        <i class="fas fa-newspaper mr-2 text-lg"></i> Leer noticia relacionada
+                    </a>
+                `;
+            }
+
+            const modal = document.getElementById('image-modal');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('image-modal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        document.getElementById('image-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        window.onload = () => {
+            renderGallery();
+        };
+    </script>
+
+</body></html>
