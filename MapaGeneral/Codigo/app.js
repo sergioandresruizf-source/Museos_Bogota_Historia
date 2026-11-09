@@ -14,7 +14,7 @@ const M=[
 const L={nacional:'../../MuseoNacional/Codigo/index.html',
         oro:'',
         mambo:'../../MuseoDeArteModerno/museo/index.html',
-        florero:'',
+        florero:'../../MuseoDeLaIndependencia/index.html',
         moneda:'../../MuseoCasaDeMoneda/museo-de-la-moneda.html',
         botero:'../../MuseoDeBotero/index.html',
         antimuseo:'../../Antimuseo/index.html',
