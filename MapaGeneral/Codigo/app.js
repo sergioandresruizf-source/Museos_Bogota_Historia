@@ -23,10 +23,10 @@ const M=[
 ];
 
 const L={nacional:'../../MuseoNacional/juego/index.html',
-        oro:'../../MuseoDelOro/Banco de Imágenes - Proyecto Quimbaya.html',
+        oro:'../../MuseoDelOro/index.html',
         mambo:'../../MuseoDeArteModerno/museo/index.html',
         florero:'../../MuseoDeLaIndependencia/index.html',
-        moneda:'../../MuseoCasaDeMoneda/museo-de-la-moneda.html',
+        moneda:'../../MuseoCasaDeMoneda/index.html',
         botero:'../../MuseoDeBotero/index.html',
         antimuseo:'../../Antimuseo/index.html',
         minecraft:'../../MuseoMinecraft/index.html'};
