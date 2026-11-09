@@ -1531,7 +1531,7 @@ const cine = {
 };
 scenes.cine = cine;
 $('btnSkip').addEventListener('click', () => { audioInit(); if (cur === cine) cine.skip(); });
-function crearBotonTerminar(texto = 'Terminar museo ✓', museo = 'necional') {
+function crearBotonTerminar(texto = 'Terminar museo ✓', museo = 'nacional') {
   const b = document.createElement('button');
   b.textContent = texto;
   b.style.cssText = 'position:fixed;right:16px;bottom:16px;z-index:9999;padding:10px 18px;border:0;border-radius:999px;background:#e3a82b;color:#3a2a12;font:700 16px sans-serif;cursor:pointer';
