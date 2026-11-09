@@ -1,11 +1,14 @@
-/* ===== MAPA DEL TESORO: ruta de museos con candados =====
-   · PRUEBA = true muestra abajo el panel con acceso libre a cualquier museo. Pon false al terminar las pruebas:
-     se oculta el panel y los enlaces directos (#museo) también respetan los candados.
-   · El orden de la ruta es el orden del arreglo M (de arriba abajo en el mapa).
-   · Cada museo trae: id, n (nombre completo), s (nombre corto), x/y (posición en el mapa de 600×1100),
-     a (dirección), c (color), t (frase del recuadro) y e (estilo de conexión: 'portal' | 'moneda').
-   · El avance se guarda en localStorage ('museos.avance'): 0 = solo el Nacional abierto … 8 = recorrido completo.
-   · Un museo puede avisar que ya terminó con:  parent.postMessage('museo-completo','*')  y el mapa pasa solo al siguiente. */
+/* ===== RUTA DE LOS MUSEOS: dos formas de recorrerlos =====
+   · Pantalla de inicio: el visitante elige entre
+       "Seguir la historia" (lineal): mapa del tesoro con candados; cada museo abre el siguiente y NO se puede volver al mapa hasta terminar la ruta.
+       "Recorrido libre": cualquier museo, en cualquier orden; se puede volver cuando se quiera, pero la medalla solo se gana al TERMINAR el museo.
+   · PRUEBA = true muestra abajo el panel de pruebas (en la ruta lineal permite entrar a cualquier museo ignorando los candados y volver al mapa).
+     Pon false al terminar las pruebas: se oculta el panel y los enlaces directos (#museo) también respetan los candados.
+   · El orden de la ruta lineal es el orden del arreglo M. Cada museo trae: id, n (nombre completo), s (nombre corto), x/y (posición en el mapa de 600×1100),
+     a (dirección), c (color), t (frase del recuadro) y, opcional, logo: 'ruta/al/logo.png' para usar su propio logo en la medalla (si no, se dibuja un emblema).
+   · Guardado en localStorage: 'museos.avance' (ruta lineal, 0…8), 'museos.logros' (medallas del recorrido libre) y 'museos.modo'.
+   · Un museo puede avisar que ya terminó con:  parent.postMessage('museo-completo','*')
+       en la ruta lineal pasa solo al siguiente; en el recorrido libre otorga su medalla y vuelve a la galería. */
 const PRUEBA=true;
 
 const M=[
@@ -13,14 +16,14 @@ const M=[
 {id:'oro',n:'Museo del Oro',s:'Museo del Oro',x:455,y:215,a:'Cra. 6 #15-88',c:'#e8b64c',t:'Más de 30.000 piezas de orfebrería prehispánica.'},
 {id:'mambo',n:'Museo de Arte Moderno de Bogotá',s:'MAMBO',x:140,y:330,a:'Calle 24 #6-00',c:'#e0838f',t:'Arte moderno y contemporáneo en un edificio de ladrillo.'},
 {id:'florero',n:'Museo de la Independencia – Casa del Florero',s:'Museo de la Independencia',x:440,y:445,a:'Calle 11 #6-94',c:'#c9573f',t:'Donde se cuenta lo ocurrido el 20 de julio de 1810.'},
-{id:'moneda',n:'Museo Casa de Moneda',s:'Casa de Moneda',x:138,y:560,a:'Calle 11 #4-93',c:'#e9ff6d',t:'Historia del dinero y de la acuñación de monedas en Colombia.',e:'moneda'},
+{id:'moneda',n:'Museo Casa de Moneda',s:'Casa de Moneda',x:138,y:560,a:'Calle 11 #4-93',c:'#e9ff6d',t:'Historia del dinero y de la acuñación de monedas en Colombia.'},
 {id:'botero',n:'Museo Botero',s:'Museo Botero',x:455,y:675,a:'Calle 11 #4-41',c:'#d9693f',t:'La donación de Fernando Botero, en una casa colonial restaurada.'},
-{id:'antimuseo',n:'Antimuseo',s:'Antimuseo',x:140,y:790,a:'Ubicación por definir',c:'#b36bff',t:'Lo que los museos no quisieron mostrar. Cruza el portal.',e:'portal'},
+{id:'antimuseo',n:'Antimuseo',s:'Antimuseo',x:140,y:790,a:'Ubicación por definir',c:'#b36bff',t:'Lo que los museos no quisieron mostrar. Cruza el portal.'},
 {id:'minecraft',n:'Museo Minecraft',s:'Museo Minecraft',x:450,y:905,a:'Museo en Minecraft',c:'#8fbf7a',t:'Servidor con museo construido bloque a bloque.'},
 ];
 
 const L={nacional:'../../MuseoNacional/juego/index.html',
-        oro:'../../MuseoDelOro/Banco de Imágenes - Proyecto Quimbaya.html',
+        oro:'',
         mambo:'../../MuseoDeArteModerno/museo/index.html',
         florero:'../../MuseoDeLaIndependencia/index.html',
         moneda:'../../MuseoCasaDeMoneda/museo-de-la-moneda.html',
@@ -32,10 +35,10 @@ const L={nacional:'../../MuseoNacional/juego/index.html',
 const N=M.length,CH={x:300,y:985},P=[...M.map(m=>[m.x,m.y]),[336,1001]];
 let avance=0;try{avance=Math.min(N,Math.max(0,parseInt(localStorage.getItem('museos.avance'),10)||0))}catch(e){}
 const guardar=()=>{try{localStorage.setItem('museos.avance',avance)}catch(e){}};
-/* vista de conexiones: 'auto' (cada museo trae la suya) | 'pin' | 'portal' | 'moneda' */
-let modo='auto';try{modo=localStorage.getItem('museos.vista')||'auto'}catch(e){}
-const est=m=>modo==='auto'?(m.e||'pin'):modo;
-const nuevos=new Set();let cofre=false,aviso='',act=-1,svg,dyn;
+const nuevos=new Set();let cofre=false,aviso='',act=-1,svg,dyn,modo=null,desdePanel=false,nueva='';
+const logros=new Set();try{JSON.parse(localStorage.getItem('museos.logros')||'[]').forEach(id=>M.some(m=>m.id===id)&&logros.add(id))}catch(e){}
+const guardarLogros=()=>{try{localStorage.setItem('museos.logros',JSON.stringify([...logros]))}catch(e){}};
+const guardarModo=()=>{try{localStorage.setItem('museos.modo',modo)}catch(e){}};
 const rm=matchMedia('(prefers-reduced-motion:reduce)').matches;
 const st=t=>{const e=document.getElementById('st');if(e)e.textContent=t};
 const idx=h=>M.findIndex(m=>m.id===h.slice(1));
@@ -49,27 +52,40 @@ const dTramo=i=>{const[a,c1,c2,b]=tramo(i);return `M${a}C${c1} ${c2} ${b}`};
 const RIO=[[566,52,470,90,300,140,300,270],[300,270,300,380,330,400,300,520],[300,520,270,630,330,640,300,770],[300,770,270,880,470,930,556,1046]];
 const rnd=s=>()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
 
-/* ---------- visor: abre el museo dentro de la página, sin salir del mapa ---------- */
+/* ---------- visor: abre el museo dentro de la página ---------- */
 const ov=document.createElement('div');ov.id='mv';
-ov.innerHTML='<button id="mvx" type="button">← Volver al mapa</button><button id="mvs" type="button"></button><iframe title="Museo" allow="autoplay; fullscreen"></iframe>';
+ov.innerHTML='<button id="mvx" type="button">← Volver</button><button id="mvs" type="button"></button><iframe title="Museo" allow="autoplay; fullscreen"></iframe>';
 document.body.appendChild(ov);
-const fr=ov.querySelector('iframe'),sig=ov.querySelector('#mvs');
-function abrir(i){
- act=i;const m=M[i];
- ov.className='';void ov.offsetWidth;ov.className='on fx-'+est(m);   // reinicia la animación de entrada
- fr.src=L[m.id];document.body.style.overflow='hidden';
- const j=prox(i);sig.textContent=j<N?'Siguiente: '+M[j].s+' →':'Terminar recorrido ✓';
+const fr=ov.querySelector('iframe'),sig=ov.querySelector('#mvs'),atras=ov.querySelector('#mvx');
+/* en la ruta lineal no se vuelve al mapa hasta terminarla (o si se entró desde el panel de pruebas) */
+const puedeVolver=()=>modo==='libre'||desdePanel||avance>=N;
+function botones(i){
+ if(modo==='libre'){
+  atras.textContent='← Volver a los museos';atras.hidden=false;
+  sig.hidden=logros.has(M[i].id);sig.textContent='Terminé este museo ✓';
+ }else{
+  atras.textContent='← Volver al mapa';atras.hidden=!puedeVolver();
+  const j=prox(i);sig.hidden=false;sig.textContent=j<N?'Siguiente: '+M[j].s+' →':'Terminar recorrido ✓';
+ }
+}
+function abrir(i,panel){
+ act=i;desdePanel=!!panel;const m=M[i];
+ ov.className='';void ov.offsetWidth;ov.className='on';   // reinicia la animación de entrada
+ fr.src=L[m.id];document.body.style.overflow='hidden';botones(i);
  if(location.hash!=='#'+m.id)history.pushState(null,'','#'+m.id);
 }
+function refrescar(){if(modo==='lineal')render();else if(modo==='libre')galeria()}
 function cerrar(){
- ov.className='';fr.src='about:blank';document.body.style.overflow='';act=-1;
+ /* al llegar desde la página de Minecraft (última parada) se completa la ruta y todos los museos quedan abiertos */
+ if(modo==='lineal'&&act===N-1&&avance>=N-1&&avance<N){avance=N;cofre=true;guardar();aviso='¡Recorrido completo! Todos los museos están abiertos.'}
+ ov.className='';fr.src='about:blank';document.body.style.overflow='';act=-1;desdePanel=false;
  if(location.hash)history.pushState(null,'',location.pathname+location.search);
- render();if(aviso){st(aviso);aviso=''}
+ refrescar();if(aviso){st(aviso);aviso=''}
  setTimeout(enfocar,60);
 }
-/* pasa al museo siguiente sin volver al mapa; si estaba en la parada actual, desbloquea la que sigue */
+/* ruta lineal: pasa al museo siguiente sin volver al mapa; si estaba en la parada actual, desbloquea la que sigue */
 function siguiente(){
- if(act<0)return;
+ if(act<0||modo!=='lineal')return;
  const j=prox(act),viejo=avance,saltados=[];
  for(let k=act+1;k<j&&k<N;k++)saltados.push(M[k].s);
  if(act===avance){
@@ -77,24 +93,34 @@ function siguiente(){
   if(j>=N)cofre=true;
   guardar();
  }
- aviso=saltados.length?saltados.join(', ')+': su grupo aún no ha agregado el enlace.':'';
+ aviso=saltados.length?saltados.join(', ')+': su grupo aún no ha agregado el enlace, la ruta sigue.':'';
  if(j>=N){
   aviso=avance>=N?'¡Llegaste al tesoro! Recorrido completo.':'Fin de la ruta (modo prueba: tu avance no cambió).';
   cerrar();return;
  }
- abrir(j);
+ abrir(j,desdePanel);
 }
-ov.querySelector('#mvx').onclick=cerrar;
-sig.onclick=siguiente;
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ov.className)cerrar()});
-/* un museo puede traer su propio enlace "Volver al mapa" (mapa.html): lo conectamos con el visor */
-fr.onload=()=>{try{fr.contentDocument.querySelectorAll('a[href$="mapa.html"]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();cerrar()}))}catch(e){}};
-addEventListener('message',e=>{if(e.source===fr.contentWindow&&(e.data==='museo-completo'||(e.data&&e.data.tipo==='museo-completo')))siguiente()});
-const permitido=k=>k>=0&&L[M[k].id]&&(PRUEBA||k<=avance);
-addEventListener('popstate',()=>{const k=idx(location.hash);permitido(k)?abrir(k):cerrar()});
+/* recorrido libre: terminar el museo otorga su medalla y devuelve a la galería */
+function completar(){
+ if(act<0||modo!=='libre')return;const m=M[act];
+ if(!logros.has(m.id)){logros.add(m.id);guardarLogros();nueva=m.id;aviso=logros.size>=N?'¡Colección completa! Ganaste las 8 medallas.':'Medalla conseguida: '+m.s+'.'}
+ cerrar();
+}
+const hecho=()=>modo==='libre'?completar():siguiente();
+atras.onclick=()=>{if(puedeVolver())cerrar()};
+sig.onclick=hecho;
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ov.className&&puedeVolver())cerrar()});
+/* un museo puede traer su propio enlace "Volver al mapa" (mapa.html): lo conectamos con el visor, respetando las reglas del modo */
+fr.onload=()=>{try{fr.contentDocument.querySelectorAll('a[href$="mapa.html"]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();if(puedeVolver())cerrar()}))}catch(e){}};
+addEventListener('message',e=>{if(e.source===fr.contentWindow&&(e.data==='museo-completo'||(e.data&&e.data.tipo==='museo-completo')))hecho()});
+const permitido=k=>k>=0&&L[M[k].id]&&(modo==='libre'||PRUEBA||k<=avance);
+addEventListener('popstate',()=>{
+ if(ov.className&&!puedeVolver()){history.pushState(null,'','#'+M[act].id);return}   // en la ruta lineal el botón "atrás" del navegador no saca del museo
+ const k=idx(location.hash);permitido(k)?abrir(k,desdePanel):cerrar();
+});
 
 /* ---------- interacción con el mapa ---------- */
-function entrar(i){const m=M[i];if(L[m.id]){st('');abrir(i)}else st(m.s+': su grupo aún no ha agregado el enlace.')}
+function entrar(i,panel){const m=M[i];if(L[m.id]){st('');abrir(i,panel)}else st(m.s+': su grupo aún no ha agregado el enlace.')}
 function tocar(i){
  if(i>avance){
   st('Candado cerrado: primero recorre '+M[avance].s+'.');
@@ -109,11 +135,7 @@ function enfocar(){
 
 /* ---------- dibujo ---------- */
 const roca=`<circle class="roca" r="26"/><g><rect x="-9" y="-3" width="18" height="14" rx="3" fill="#3d3a30"/><path d="M-6 -3V-8a6 6 0 0 1 12 0V-3" fill="none" stroke="#3d3a30" stroke-width="3.5" stroke-linecap="round"/><circle cy="4" r="2" fill="#a9a592"/></g>`;
-const mk=(m,e)=>{
- if(e==='portal')return `<circle r="26" fill="#1b0b36"/><g transform="scale(2.1)"><circle class="pt2" r="12" fill="none" stroke="#b36bff" stroke-width="3" stroke-dasharray="16 9"/><circle class="pt1" r="8" fill="none" stroke="#00e5ff" stroke-width="2.5" stroke-dasharray="7 6"/><circle class="d pc" r="5.5" fill="#12002b"/></g>`;
- if(e==='moneda')return `<g transform="scale(2.7)"><g class="mo"><circle class="d mc" r="9" fill="#f2b705"/><text class="ms" y="4.5" text-anchor="middle">$</text></g></g>`;
- return `<circle class="d" r="25" fill="${m.c}"/><circle r="17" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2"/>`;
-};
+const mk=m=>`<circle class="d" r="25" fill="${m.c}"/><circle r="17" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2"/>`;
 const check=`<circle cx="19" cy="19" r="10" fill="#3f8a3f" stroke="#fff" stroke-width="2"/><path d="M14.5 19l3.5 3.5 6-7" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>`;
 const cofreSvg=(abierto,nuevo)=>`<g class="cofre${abierto?' abierto':''}${nuevo?' nuevo':''}" transform="translate(${CH.x} ${CH.y})"><title>${abierto?'Tesoro encontrado':'El tesoro'}</title>
 <path class="equis" d="M-17 42L17 68M17 42L-17 68"/>
@@ -147,15 +169,16 @@ function terreno(){
 
 /* pinta lo que cambia con el avance: tramos del camino, paradas, candados y cofre */
 function render(){
+ if(!dyn)return;
  const an=new Set(nuevos),cf=cofre;nuevos.clear();cofre=false;
  let s='';
  for(let i=0;i<N;i++)s+=`<path class="cam${i+1<=avance?' on':''}" d="${dTramo(i)}"/>`;
  s+=cofreSvg(avance>=N,cf);
  M.forEach((m,i)=>{
   const e=estado(i),ab=an.has(i),sts=e==='bloq'?', bloqueado':e==='hecho'?(L[m.id]?', visitado':', enlace pendiente'):', disponible';
-  s+=`<g class="mk ${e}${ab?' abre':''}" data-i="${i}" transform="translate(${m.x} ${m.y})" tabindex="0" role="button" aria-label="${m.s}, parada ${i+1} de ${N}${sts}"${e==='bloq'?' aria-disabled="true"':''}>
+  s+=`<g class="mk f-${m.id} ${e}${ab?' abre':''}" data-i="${i}" transform="translate(${m.x} ${m.y})" tabindex="0" role="button" aria-label="${m.s}, parada ${i+1} de ${N}${sts}"${e==='bloq'?' aria-disabled="true"':''}>
   <circle class="hit" r="36"/><circle class="foco" r="33"/>${e==='actual'?'<circle class="pulso" r="26"/>':''}
-  <g class="mkr">${e==='bloq'?roca:mk(m,est(m))}${ab?`<g class="cand">${roca}</g>`:''}</g>
+  <g class="mkr">${e==='bloq'?roca:mk(m)}${ab?`<g class="cand">${roca}</g>`:''}</g>
   <g class="nb"><circle cx="-22" cy="-22" r="11.5"/><text x="-22" y="-16.7" text-anchor="middle">${i+1}</text></g>
   ${e==='hecho'&&L[m.id]?check:''}
   <g class="pl" transform="translate(0 56)"><rect x="-70" y="-21" width="140" height="36" rx="7"/><text y="6" text-anchor="middle">${m.s}</text></g></g>`;
@@ -170,8 +193,62 @@ function ajustar(){   // el rótulo se ajusta al ancho real del texto
 
 /* ---------- página ---------- */
 const app=document.getElementById('app');
-function home(){
- app.innerHTML=`<header class="cartel"><h1>Ruta de los museos</h1><p>Ocho paradas, un solo recorrido. Cada candado se abre al terminar el museo anterior.</p><p id="prog" class="prog"></p><p id="st" role="status"></p></header>
+
+/* emblemas de las medallas (se pueden reemplazar con el logo real de cada museo usando el campo logo) */
+const T='stroke="#4a3418" stroke-width="2.5" stroke-linejoin="round"';
+const RAYOS=Array.from({length:12},(_,k)=>{const a=k*Math.PI/6,f=n=>n.toFixed(1);return `M${f(22*Math.cos(a))} ${f(22*Math.sin(a))}L${f(33*Math.cos(a))} ${f(33*Math.sin(a))}`}).join('');
+const EMB={
+ nacional:`<path d="M-34 -10L0 -32L34 -10Z" fill="#d9c9a0" ${T}/><rect x="-32" y="-10" width="64" height="6" fill="#b9a77a" ${T}/><g fill="#efe3c0" ${T}><rect x="-27" y="-4" width="9" height="28"/><rect x="-12" y="-4" width="9" height="28"/><rect x="3" y="-4" width="9" height="28"/><rect x="18" y="-4" width="9" height="28"/></g><rect x="-36" y="24" width="72" height="9" fill="#b9a77a" ${T}/>`,
+ oro:`<path d="${RAYOS}" stroke="#f2b705" stroke-width="5" stroke-linecap="round" fill="none"/><circle r="18" fill="#f2b705" ${T}/><circle r="9" fill="none" stroke="#b8860b" stroke-width="3"/>`,
+ mambo:`<circle cx="-8" cy="-8" r="19" fill="#e0838f" ${T}/><rect x="4" y="2" width="27" height="27" fill="#4b8fb8" ${T}/><path d="M-30 28L-10 -2L10 28Z" fill="#f2c94c" ${T}/>`,
+ florero:`<g transform="translate(0 4)"><path d="M-8 -22H8V-9C24 0 26 22 13 30H-13C-26 22 -24 0 -8 -9Z" fill="#6fa8c9" ${T}/><path d="M-18 8H18" stroke="#fff" stroke-width="3" stroke-opacity=".7"/><path d="M0 -22V-31" stroke="#3f6b2a" stroke-width="3" stroke-linecap="round"/><circle cy="-35" r="5.5" fill="#e0583f" ${T}/></g>`,
+ moneda:`<circle r="31" fill="#f2b705" ${T}/><circle r="23" fill="none" stroke="#b8860b" stroke-width="3"/><text y="12" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="34" fill="#7a5200">$</text>`,
+ botero:`<g transform="translate(0 6)"><ellipse cy="8" rx="25" ry="24" fill="#d9693f" ${T}/><circle cy="-22" r="11" fill="#e8b48a" ${T}/><ellipse cy="-31" rx="17" ry="4" fill="#4a3418"/><rect x="-9" y="-42" width="18" height="11" rx="3" fill="#4a3418"/><circle cx="-4" cy="-22" r="1.6" fill="#4a3418"/><circle cx="4" cy="-22" r="1.6" fill="#4a3418"/></g>`,
+ antimuseo:`<rect x="-30" y="-30" width="60" height="60" fill="#1b0b36" stroke="#b36bff" stroke-width="5"/><rect x="-22" y="-16" width="32" height="6" fill="#00e5ff"/><rect x="-6" y="-2" width="30" height="6" fill="#b36bff"/><rect x="-20" y="12" width="24" height="6" fill="#fff"/><path d="M-32 32L32 -32" stroke="#ff3d6e" stroke-width="5" stroke-linecap="round"/>`,
+ minecraft:`<path d="M0 -34L30 -18L0 -2L-30 -18Z" fill="#7bbf4a" ${T}/><path d="M-30 -18L0 -2V34L-30 18Z" fill="#8a5a2c" ${T}/><path d="M30 -18L0 -2V34L30 18Z" fill="#6f4620" ${T}/><path d="M-8 -22l8 4-8 4-8-4Z" fill="#5a9a34"/><path d="M-22 4l8 4v8l-8-4Z" fill="#6f4620"/><path d="M10 12l8-4v8l-8 4Z" fill="#583616"/>`
+};
+const medalla=(m)=>`<svg class="med" viewBox="-60 -60 120 120" aria-hidden="true"><defs><clipPath id="cl-${m.id}"><circle r="41"/></clipPath></defs><circle class="mr" r="56"/><circle class="md" r="47"/>${m.logo?`<image href="${m.logo}" x="-41" y="-41" width="82" height="82" clip-path="url(#cl-${m.id})" preserveAspectRatio="xMidYMid slice"/>`:`<g class="emb">${EMB[m.id]||''}</g>`}</svg>`;
+
+const iconoRuta='<svg class="ico" viewBox="0 0 80 80" aria-hidden="true"><path d="M14 14C62 14 18 44 62 44S30 68 56 66" fill="none" stroke="#a8321c" stroke-width="4" stroke-dasharray="1 8" stroke-linecap="round"/><circle cx="14" cy="14" r="8" fill="#e3a82b" stroke="#3a2a12" stroke-width="2.5"/><path d="M50 60l12 12M62 60L50 72" stroke="#a8321c" stroke-width="5" stroke-linecap="round"/></svg>';
+const iconoMedalla='<svg class="ico" viewBox="0 0 80 80" aria-hidden="true"><path d="M26 48L18 76L32 69Z" fill="#a8321c"/><path d="M54 48L62 76L48 69Z" fill="#7a1f10"/><circle cx="40" cy="34" r="26" fill="#e3a82b" stroke="#3a2a12" stroke-width="2.5"/><circle cx="40" cy="34" r="19" fill="#f6ead0" stroke="#7a5200" stroke-width="2"/><path d="M40 21l4.5 9.5 10.3 1.2-7.6 7 2.1 10.2L40 43.6 30.7 48.9l2.1-10.2-7.6-7 10.3-1.2Z" fill="#e3a82b" stroke="#3a2a12" stroke-width="2" stroke-linejoin="round"/></svg>';
+
+/* ----- pantalla de inicio: elegir cómo recorrer ----- */
+function inicio(){
+ modo=null;svg=dyn=null;window.scrollTo(0,0);
+ const pl=avance>=N?'Ruta completada':avance>0?`Vas en la parada ${avance+1} de ${N}`:'Sin empezar';
+ app.innerHTML=`<header class="cartel"><h1>Ruta de los museos</h1><p>Ocho museos por recorrer. ¿Cómo quieres hacerlo?</p></header>
+ <main class="opciones">
+  <button type="button" class="opcion" data-m="lineal">${iconoRuta}<span class="kick">Línea de tiempo</span><span class="t">Seguir la historia</span><span class="ds">Ocho paradas en un orden fijo sobre el mapa del tesoro. Cada museo abre el siguiente y no puedes volver al mapa hasta llegar al cofre.</span><span class="chip">${pl}</span></button>
+  <button type="button" class="opcion" data-m="libre">${iconoMedalla}<span class="kick">A tu ritmo</span><span class="t">Recorrido libre</span><span class="ds">Entra a cualquier museo, en el orden que quieras, y vuelve cuando quieras. Al terminar un museo ganas su medalla; si sales antes, no cuenta.</span><span class="chip">${logros.size} de ${N} medallas</span></button>
+ </main>`;
+ app.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>b.dataset.m==='lineal'?(guardarModo(modo='lineal'),lineal()):(guardarModo(modo='libre'),libre()));
+}
+
+/* ----- recorrido libre: galería de medallas ----- */
+function libre(){
+ modo='libre';svg=dyn=null;window.scrollTo(0,0);
+ app.innerHTML=`<header class="cartel"><h1>Recorrido libre</h1><p>Entra al museo que quieras y vuelve cuando quieras. La medalla solo se gana al terminar el museo.</p><p id="prog" class="prog"></p><p id="st" role="status"></p><button type="button" class="cambiar" id="cambiar">← Elegir otro recorrido</button></header>
+ <main class="tablero"><ul class="galeria" id="gal"></ul></main>
+ ${PRUEBA?`<details class="prueba" open><summary>Modo de prueba</summary><p>Herramientas para probar. Este panel se quita cuando termine la fase de pruebas.</p><div class="ctl"><button type="button" id="rsm">Reiniciar medallas</button></div></details>`:''}`;
+ galeria();
+ document.getElementById('cambiar').onclick=inicio;
+ if(PRUEBA)document.getElementById('rsm').onclick=()=>{logros.clear();guardarLogros();galeria();st('Medallas reiniciadas.')};
+}
+function galeria(){
+ const g=document.getElementById('gal');if(!g)return;
+ const nv=nueva;nueva='';
+ g.innerHTML=M.map((m,i)=>{const ok=logros.has(m.id);
+  return `<li><button type="button" class="slot f-${m.id} ${ok?'ok':'vacio'}${nv===m.id?' nueva':''}" data-i="${i}" aria-label="${m.n}: ${ok?'medalla obtenida':'medalla por conseguir'}">${medalla(m)}<span class="nm">${m.s}</span><span class="es">${ok?'✓ Completado':L[m.id]?'Por completar':'Enlace pendiente'}</span></button></li>`}).join('');
+ g.querySelectorAll('.slot').forEach(b=>b.onclick=()=>entrar(+b.dataset.i));
+ const pg=document.getElementById('prog');
+ if(pg)pg.textContent=logros.size>=N?'¡Colección completa!':`Medallas: ${logros.size} de ${N}`;
+ if(nv){const e=g.querySelector('.nueva');if(e)e.scrollIntoView({block:'center',behavior:rm?'auto':'smooth'})}
+}
+
+/* ----- ruta lineal: mapa del tesoro ----- */
+function lineal(){
+ modo='lineal';window.scrollTo(0,0);
+ app.innerHTML=`<header class="cartel"><h1>Ruta de los museos</h1><p>Ocho paradas, un solo recorrido. Cada candado se abre al terminar el museo anterior.</p><p id="prog" class="prog"></p><p id="st" role="status"></p><button type="button" class="cambiar" id="cambiar">← Elegir otro recorrido</button></header>
  <main class="mapw"><svg id="m" viewBox="0 0 600 1100" role="group" aria-label="Mapa del tesoro con la ruta de los ocho museos">
  <defs>
   <filter id="rough" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".02 .018" numOctaves="4" seed="5" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="26" result="d1"/><feTurbulence type="fractalNoise" baseFrequency=".12" numOctaves="2" seed="2" result="n2"/><feDisplacementMap in="d1" in2="n2" scale="9"/></filter>
@@ -186,7 +263,7 @@ function home(){
  <g id="ter"></g><g id="dyn"></g></svg><div id="tip" role="tooltip"></div></main>
  ${PRUEBA?`<details class="prueba" open><summary>Modo de prueba</summary><p>Entra a cualquier museo sin respetar los candados. Este panel se quita cuando termine la fase de pruebas.</p>
  <ul class="at">${M.map((m,i)=>`<li><button type="button" data-f="${i}"><b>${i+1}</b><span>${m.s}${L[m.id]?'':'<small>enlace pendiente</small>'}</span></button></li>`).join('')}</ul>
- <div class="ctl"><label>Conexiones <select id="vm"><option value="auto">Por museo</option><option value="pin">Pines</option><option value="portal">Portales</option><option value="moneda">Monedas</option></select></label><button type="button" id="rs">Reiniciar recorrido</button></div></details>`:''}`;
+ <div class="ctl"><button type="button" id="rs">Reiniciar recorrido</button></div></details>`:''}`;
  svg=document.getElementById('m');dyn=document.getElementById('dyn');
  document.getElementById('ter').innerHTML=terreno();
  render();
@@ -205,12 +282,12 @@ function home(){
  svg.addEventListener('focusin',e=>{const g=e.target.closest('.mk');if(g)showTip(g)});
  svg.addEventListener('focusout',()=>tip.style.display='none');
  if(PRUEBA){
-  document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>entrar(+b.dataset.f));
-  const vm=document.getElementById('vm');vm.value=modo;
-  vm.onchange=()=>{modo=vm.value;try{localStorage.setItem('museos.vista',modo)}catch(e){}render()};
+  document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>entrar(+b.dataset.f,true));
   document.getElementById('rs').onclick=()=>{avance=0;guardar();render();st('Recorrido reiniciado: solo el Museo Nacional está abierto.');enfocar()};
  }
+ document.getElementById('cambiar').onclick=inicio;
  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(ajustar);
+ if(avance>0&&avance<N)setTimeout(enfocar,350);
 }
 
 /* ---------- ambientación de selva ---------- */
@@ -260,5 +337,8 @@ function selva(){
 let tmr;addEventListener('resize',()=>{clearTimeout(tmr);tmr=setTimeout(()=>{if(Math.abs(innerWidth-dim[0])>60||Math.abs(innerHeight-dim[1])>160)selva()},250)});
 
 selva();
-home();
-{const k=idx(location.hash);if(permitido(k))abrir(k);else if(avance>0)setTimeout(enfocar,350)}
+{
+ const k=idx(location.hash);let guardado=null;try{guardado=localStorage.getItem('museos.modo')}catch(e){}
+ if(k>=0&&L[M[k].id]){modo=guardado==='lineal'?'lineal':'libre';modo==='lineal'?lineal():libre();if(permitido(k))abrir(k)}
+ else inicio();
+}

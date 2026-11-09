@@ -1,0 +1,145 @@
+/* ===== Ruta de los museos: selva + mapa del tesoro =====
+   Paleta: selva #0f3d22 / #082616 · pergamino #ead9a6 · tinta #4a3418 · oro #e3a82b · bermellón #a8321c · piedra #8b8776 */
+:root{color-scheme:dark;--honda:#082616;--selva:#0f3d22;--perg:#ead9a6;--perg2:#f6ead0;--tinta:#4a3418;--tinta2:#3a2a12;--oro:#e3a82b;--berme:#a8321c;--piedra:#8b8776;--m1:#7b5330;--m2:#5d3d20;--m3:#3b2410}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100vh;color:#f1e8c9;font:400 17px/1.5 "Alegreya Sans",system-ui,sans-serif;
+ background:radial-gradient(ellipse 110% 70% at 50% 0%,#1f6238 0%,var(--selva) 48%,var(--honda) 100%) fixed;
+ padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+a{color:inherit}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--oro);outline-offset:2px}
+
+/* ----- capas de ambiente ----- */
+#selva,#primer{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+#selva{z-index:0}
+#primer{z-index:1;filter:blur(1.2px)}
+#rayos{position:fixed;inset:0;z-index:1;pointer-events:none;
+ background:conic-gradient(from 150deg at 50% -12%,#0000 0 2%,#f1ffc41f 3% 5%,#0000 6% 8%,#f1ffc417 9% 10.5%,#0000 11.5% 13.5%,#f1ffc41a 14% 15.5%,#0000 16.5% 100%);
+ -webkit-mask-image:linear-gradient(#000,#0000 78%);mask-image:linear-gradient(#000,#0000 78%)}
+#app{position:relative;z-index:2}
+#lu{position:fixed;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+.lu{position:absolute;width:6px;height:6px;border-radius:50%;background:#e6ff8a;opacity:0;
+ box-shadow:0 0 8px 3px #d4ff5acc,0 0 22px 8px #b8f03a55;
+ animation:luz var(--t) ease-in-out var(--r) infinite,deriva calc(var(--t)*2) ease-in-out var(--r) infinite alternate}
+@keyframes luz{0%,100%{opacity:0}45%,55%{opacity:.9}}
+@keyframes deriva{from{transform:translate(0,0)}to{transform:translate(var(--dx),var(--dy))}}
+.mece{animation:mece 7s ease-in-out infinite;animation-delay:var(--dl,0s)}
+@keyframes mece{0%,100%{transform:rotate(-1.2deg)}50%{transform:rotate(1.2deg)}}
+
+/* ----- cartel de madera ----- */
+.cartel{position:relative;width:min(calc(100% - 2.4rem),640px);margin:4rem auto 0;padding:1.1rem 1.4rem 1.2rem;text-align:center;
+ background:repeating-linear-gradient(90deg,#0000 0 9px,#0000000f 9px 10px),linear-gradient(180deg,var(--m1),var(--m2));
+ border:3px solid var(--m3);border-radius:8px;box-shadow:inset 0 2px 0 #c9945a44,0 12px 26px #000a}
+.cartel::before,.cartel::after{content:"";position:absolute;top:-70px;height:70px;width:5px;background:linear-gradient(90deg,#1b5028,#2f7a3d,#1b5028);border-radius:3px}
+.cartel::before{left:14%}.cartel::after{right:14%}
+.cartel h1{margin:0;font:400 clamp(2.3rem,8vw,3.7rem)/1 "Pirata One",Georgia,serif;color:#f6dd9a;text-shadow:0 2px 0 var(--m3),0 4px 10px #0007}
+.cartel p{margin:.5rem auto 0;max-width:46ch;color:var(--perg)}
+.cartel .prog{display:inline-block;margin-top:.7rem;padding:.12rem .9rem;border-radius:999px;background:#2b1a0a88;color:#f6dd9a;font-weight:700}
+#st{min-height:1.5em;margin-top:.5rem;color:#ffd77a;font-weight:700}
+
+/* ----- mapa ----- */
+.mapw{position:relative;width:min(calc(100% - 1.6rem),620px);margin:2.6rem auto 2.2rem}
+#m{display:block;width:100%;height:auto;filter:drop-shadow(0 18px 26px #000a)}
+.rio-b{fill:none;stroke:#5d7f73;stroke-width:21;stroke-linecap:round;opacity:.45}
+.rio{fill:none;stroke:#8db4a5;stroke-width:14;stroke-linecap:round;opacity:.85}
+.mt{fill:#cdb67e;stroke:var(--tinta);stroke-width:2;stroke-linejoin:round}
+.mt2{fill:#a58c55;opacity:.7}
+.tr-l{fill:none;stroke:var(--tinta);stroke-width:1.6;stroke-linecap:round;opacity:.7}
+.tk{stroke:var(--tinta);stroke-width:2.4;stroke-linecap:round;fill:none}
+.cp{fill:#76934a;stroke:#3f4d24;stroke-width:1.6}
+.br{fill:none;stroke:var(--tinta);stroke-width:2}
+.rs{fill:var(--tinta)}.rs2{fill:#b99a5c;stroke:var(--tinta);stroke-width:1.4}
+.nn{font:400 22px "Pirata One",Georgia,serif;fill:var(--tinta)}
+
+/* camino: punteado gris mientras está bloqueado, rojo cuando ya se recorrió */
+.cam{fill:none;stroke:#8c7650;stroke-width:4.5;stroke-linecap:round;stroke-dasharray:1 13;opacity:.6}
+.cam.on{stroke:var(--berme);stroke-width:6;stroke-dasharray:1 11;opacity:1}
+
+/* paradas */
+.mk{cursor:pointer;outline:none}
+.mk.bloq{cursor:not-allowed}
+.hit{fill:transparent}
+.foco{fill:none;stroke:none}
+.mk:focus-visible .foco{stroke:var(--oro);stroke-width:4}
+.mkr{transform-box:fill-box;transform-origin:center;transition:transform .15s}
+.mk:not(.bloq):hover .mkr{transform:scale(1.08)}
+.roca{fill:var(--piedra);stroke:#3d3a30;stroke-width:3}
+.d{stroke:var(--tinta2);stroke-width:3}
+.nb circle{fill:#f6ead0;stroke:var(--tinta);stroke-width:2.5}
+.nb text{font:700 15px "Alegreya Sans",system-ui,sans-serif;fill:var(--tinta2)}
+.bloq .nb circle{fill:#cfc8b0;stroke:#6d6650}.bloq .nb text{fill:#5e5844}
+.pl rect{fill:var(--perg2);stroke:var(--tinta);stroke-width:2.5}
+.pl text{font:400 25px "Pirata One",Georgia,serif;fill:var(--tinta2)}
+.bloq .pl rect{fill:#d8d0b6;stroke:#786f55}.bloq .pl text{fill:#6a634e}
+.actual .pl rect{fill:#fff3cf;stroke:var(--berme);stroke-width:3.5}
+.pulso{fill:none;stroke:var(--oro);stroke-width:3.5;transform-box:fill-box;transform-origin:center;animation:pulso 1.9s ease-out infinite}
+@keyframes pulso{0%{transform:scale(.9);opacity:.95}100%{transform:scale(1.75);opacity:0}}
+.sacude .mkr{animation:sacude .45s}
+@keyframes sacude{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+/* el candado se abre al desbloquear la parada */
+.cand{opacity:0;transform-box:fill-box;transform-origin:center;animation:candado .95s ease-out both}
+@keyframes candado{0%{opacity:1;transform:none}35%{opacity:1;transform:translateY(-3px) rotate(-10deg)}100%{opacity:0;transform:translateY(-26px) rotate(-28deg) scale(1.25)}}
+
+/* conexiones: portal y moneda */
+.pt1,.pt2,.mo{transform-box:fill-box;transform-origin:center}
+.pt2{animation:mvspin 2.6s linear infinite}
+.pt1{animation:mvspin 1.6s linear infinite reverse}
+.pc{stroke:#b36bff;stroke-width:1.5;animation:mvpulse 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.mc{stroke:#7a5200;stroke-width:2.5}
+.ms{font:800 12px Georgia,serif;fill:#6b4500;pointer-events:none}
+.mo{animation:mvflip 2.6s ease-in-out infinite}
+@keyframes mvspin{to{transform:rotate(360deg)}}
+@keyframes mvpulse{50%{transform:scale(.7)}}
+@keyframes mvflip{0%,55%,100%{transform:scaleX(1)}75%{transform:scaleX(.12)}}
+
+/* cofre del tesoro */
+.cofre .cu{fill:#7a4a1c;stroke:var(--tinta);stroke-width:2.4}
+.cofre .ba{fill:#d9a43a;stroke:var(--tinta);stroke-width:1.8}
+.cofre .equis{fill:none;stroke:var(--berme);stroke-width:8;stroke-linecap:round}
+.cofre .tapa{transform-box:fill-box;transform-origin:0 100%}
+.cofre .brillo,.cofre .monedas{opacity:0}
+.cofre .monedas circle{fill:#f2b705;stroke:#7a5200;stroke-width:2}
+.cofre.abierto .tapa{transform:rotate(-62deg)}
+.cofre.abierto .brillo,.cofre.abierto .monedas{opacity:1}
+.cofre.abierto.nuevo .tapa{animation:tapa 1s .25s ease-out both}
+.cofre.abierto.nuevo .brillo,.cofre.abierto.nuevo .monedas{animation:aparece 1s .4s ease-out both}
+@keyframes tapa{from{transform:none}to{transform:rotate(-62deg)}}
+@keyframes aparece{from{opacity:0}to{opacity:1}}
+
+/* recuadro al pasar el cursor */
+#tip{position:absolute;pointer-events:none;display:none;max-width:240px;padding:.55rem .75rem;border-radius:6px;background:#fff6d6;color:var(--tinta2);border:2px solid var(--tc,var(--oro));box-shadow:0 8px 20px #0008;font-size:.85rem;line-height:1.35;z-index:5}
+#tip b{display:block;font-size:.95rem}
+#tip i{display:block;color:var(--berme);font-style:normal;font-weight:700;margin-top:.3rem;font-size:.8rem}
+
+/* ----- panel de prueba (madera) ----- */
+.prueba{width:min(calc(100% - 2.4rem),640px);margin:0 auto 3rem;padding:.9rem 1.2rem 1.2rem;
+ background:repeating-linear-gradient(90deg,#0000 0 9px,#0000000f 9px 10px),linear-gradient(180deg,var(--m1),var(--m2));
+ border:3px solid var(--m3);border-radius:8px;box-shadow:inset 0 2px 0 #c9945a44,0 12px 26px #000a}
+.prueba summary{cursor:pointer;font:400 1.55rem/1.2 "Pirata One",Georgia,serif;color:#f6dd9a;text-shadow:0 2px 0 var(--m3)}
+.prueba p{margin:.5rem 0 .8rem;color:var(--perg);font-size:.95rem}
+.at{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;margin:0;padding:0;list-style:none}
+.at button{display:flex;align-items:center;gap:.6rem;width:100%;padding:.5rem .7rem;background:var(--perg2);border:2px solid var(--tinta);border-radius:6px;color:var(--tinta2);font:700 .95rem/1.2 "Alegreya Sans",system-ui,sans-serif;text-align:left;cursor:pointer}
+.at button:hover{background:#fff6dc}
+.at b{display:grid;place-items:center;flex:none;width:1.6rem;height:1.6rem;border-radius:50%;border:2px solid var(--tinta);background:#e8d7a8}
+.at small{display:block;font-weight:400;color:var(--berme)}
+.ctl{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;justify-content:space-between;margin-top:.9rem;color:var(--perg);font-weight:700}
+.ctl select,.ctl button{margin-left:.3rem;padding:.3rem .6rem;border:2px solid var(--m3);border-radius:6px;background:var(--perg2);color:var(--tinta2);font:700 .9rem "Alegreya Sans",system-ui,sans-serif}
+.ctl button{margin:0;cursor:pointer}
+@media (max-width:520px){.at{grid-template-columns:1fr}}
+
+/* ----- visor de museos ----- */
+#mv{position:fixed;inset:0;z-index:9999;background:#000;display:none}
+#mv.on{display:block}
+#mv iframe{width:100%;height:100%;border:0;background:#000;display:block}
+#mvx,#mvs{position:absolute;top:calc(10px + env(safe-area-inset-top,0px));z-index:2;border:0;border-radius:999px;padding:7px 14px;background:#000b;color:#fff;font:700 14px "Alegreya Sans",system-ui,sans-serif;cursor:pointer;max-width:48vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#mvx{left:10px}
+#mvs{right:10px;background:#5d3d20ee;color:#f6dd9a;border:1.5px solid var(--oro)}
+#mv.fx-portal{animation:mvp .9s ease-out}
+#mv.fx-moneda{animation:mvm .8s ease-out}
+#mv.fx-pin{animation:mvf .35s ease-out}
+@keyframes mvp{from{clip-path:circle(0% at 50% 50%);filter:hue-rotate(120deg) brightness(2)}to{clip-path:circle(75% at 50% 50%)}}
+@keyframes mvm{from{transform:rotateY(90deg) scale(.2);opacity:0}to{transform:none;opacity:1}}
+@keyframes mvf{from{opacity:0}to{opacity:1}}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
