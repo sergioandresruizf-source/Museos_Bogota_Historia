@@ -1,0 +1,145 @@
+
+#museum-map {
+    width: 100%;
+    min-height: 300px;
+    background: transparent;
+    overflow: hidden;
+}
+
+.museum-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* CAMINOS */
+
+.paths path {
+    fill: none;
+    stroke: #bd6247;
+    stroke-width: 2.5;
+    stroke-dasharray: 4 8;
+    stroke-linecap: round;
+}
+
+/* ENTRADA */
+
+.entry-outer {
+    fill: #f8edda;
+    stroke: #c69b6d;
+    stroke-width: 1.5;
+}
+
+.entry-inner {
+    fill: #e4d0ae;
+    stroke: #c69b6d;
+    stroke-width: 1;
+}
+
+.entry-symbol {
+    fill: #6b4937;
+    font-size: 24px;
+    text-anchor: middle;
+}
+
+.entry-label {
+    fill: #b6533c;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-anchor: middle;
+}
+
+/* OBRAS */
+
+.outer-ring {
+    fill: transparent;
+    stroke: #cdbb9c;
+    stroke-width: 1;
+}
+
+.inner-ring {
+    fill: #f2e5ce;
+    stroke: #bda98a;
+    stroke-width: 1;
+}
+
+.node-center {
+    fill: #aaa397;
+    stroke: #8f887d;
+    stroke-width: 1;
+}
+
+/* INTERACCIÓN CON LAS SALAS */
+
+/* Transiciones suaves */
+.room .outer-ring,
+.room .inner-ring,
+.room .node-center {
+    transition: all 0.25s ease;
+}
+
+/* Las salas disponibles indican que se pueden visitar */
+.room.available {
+    cursor: pointer;
+}
+
+/* Efecto al pasar el cursor */
+.room.available:hover .outer-ring {
+    stroke: #bd6247;
+    stroke-width: 2.5;
+    transform: scale(1.12);
+    transform-origin: center;
+    transform-box: fill-box;
+}
+
+.room.available:hover .inner-ring {
+    fill: #ead3b5;
+    stroke: #bd6247;
+}
+
+.room.available:hover .node-center {
+    fill: #bd6247;
+    stroke: #9e4934;
+}
+
+/* Las salas bloqueadas no responden al cursor */
+.room.locked {
+    cursor: not-allowed;
+}
+
+/* CANDADOS */
+
+.lock-icon {
+    fill: none;
+    stroke: #f8f0e1;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.lock-icon circle {
+    fill: #f8f0e1;
+    stroke: none;
+}
+
+/* NOMBRES */
+
+.work-label {
+    fill: #796b5b;
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    text-anchor: middle;
+}
+
+/* ADAPTACIÓN */
+
+@media (max-width: 600px) {
+    #museum-map {
+        overflow-x: auto;
+    }
+
+    .museum-svg {
+        min-width: 580px;
+    }
+}

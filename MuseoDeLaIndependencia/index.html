@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Museo Interactivo</title>
+
+    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./css/map.css">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <a href="#" class="brand">
+            <span class="brand-icon">✿</span>
+            <span>MUSEO<br>INTERACTIVO</span>
+        </a>
+
+        <nav>
+            <a href="#proyecto">¿QUÉ ES ESTE PROYECTO?</a>
+            <a href="#funcionamiento">CÓMO FUNCIONA</a>
+            <a href="#visitanos">VISÍTANOS</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- PORTADA Y MAPA -->
+        <section class="hero" id="recorrido">
+
+            <div class="decoration diamond diamond-left"></div>
+            <div class="decoration diamond diamond-right"></div>
+
+            <div class="hero-heading">
+                <span class="eyebrow">— EL RECORRIDO</span>
+
+                <h1>
+                    Un camino<br>
+                    para<br>
+                    <em>descubrir.</em>
+                </h1>
+
+                <p>
+                    Explora la historia a través de sus obras
+                    y desbloquea nuevas salas en el camino.
+                </p>
+            </div>
+
+            <section class="map-section">
+
+                <div class="map-heading">
+                    <span>RUTA DE LA MEMORIA</span>
+                    <span>NIVEL 01</span>
+                </div>
+
+                <div id="museum-map">
+                    <p>Preparando el mapa...</p>
+                </div>
+
+                            <!-- Exposición de cada obra -->
+                <section id="work-view" class="work-view" hidden>
+
+                    <button id="back-to-map" class="back-button">
+                        ← Volver al mapa
+                    </button>
+
+                    <div class="work-content">
+
+                        <div class="work-image-container">
+                            <img id="work-image" src="" alt="">
+                        </div>
+
+                        <div class="work-information">
+
+                            <p id="work-type" class="work-type"></p>
+
+                            <h1 id="work-title"></h1>
+
+                            <p id="work-author"></p>
+
+                            <p id="work-date"></p>
+
+                            <p id="work-description"></p>
+
+                            <div class="work-audio">
+                                <h3>Banda sonora</h3>
+                                <audio id="work-audio" controls></audio>
+                            </div>
+
+                            <button id="start-game">
+                                Comenzar actividad
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <div class="map-footer">
+                    <span>Tu recorrido comienza aquí</span>
+                    <span>MONEDAS: <strong id="coin-counter">0</strong></span>
+                </div>
+
+            </section>
+        </section>
+
+
+        <!-- SOBRE EL PROYECTO -->
+        <section class="info-section" id="proyecto">
+
+            <div class="info-content">
+
+                <div class="info-title">
+                    <span class="eyebrow">— ¿QUÉ ES ESTE PROYECTO?</span>
+
+                    <h2>
+                        La historia<br>
+                        <em>se juega.</em>
+                    </h2>
+                </div>
+
+                <div class="info-description">
+                    <p>
+                        Este proyecto presenta una forma distinta
+                        de recorrer un museo. Una experiencia
+                        interactiva que transforma el aprendizaje
+                        en un recorrido lleno de descubrimientos.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- CÓMO FUNCIONA -->
+        <section class="how-section" id="funcionamiento">
+
+            <div class="info-content">
+
+                <div class="info-title">
+                    <span class="eyebrow">— CÓMO FUNCIONA</span>
+
+                    <h2>
+                        Aprende a tu<br>
+                        <em>propio ritmo.</em>
+                    </h2>
+                </div>
+
+                <div class="info-description">
+                    <p>
+                        Ingresa a cada obra, supera su minijuego
+                        y consigue recompensas para desbloquear
+                        nuevas salas.
+                    </p>
+
+                    <ol class="steps">
+                        <li><span>01</span> ELIGE UNA OBRA</li>
+                        <li><span>02</span> SUPERA EL MINIJUEGO</li>
+                        <li><span>03</span> DESBLOQUEA LA SIGUIENTE SALA</li>
+                    </ol>
+                </div>
+
+            </div>
+        </section>
+
+        
+        <!-- VISITANOS -->
+        <section class="visit-section" id="visitanos">
+
+            <div class="info-content">
+
+                <div class="info-title">
+                    <span class="eyebrow">— VISITANOS</span>
+
+                    <h2>
+                        Ven a hacer<br>
+                        <em>parte de la historia.</em>
+                    </h2>
+                </div>
+
+                <div class="visit-details">
+                    <div class="details">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+                        stroke-linejoin="round" class="lucide lucide-clock3">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16.5 12"></polyline>
+                        </svg>
+                        <div>
+                            <span>Horarios</span>
+                            <strong>
+                                Martes a Domingo
+                                <br>
+                                9:00 am - 5:00 pm
+                            </strong>
+                        </div>
+                    </div>
+                    <div class="details">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+                        stroke-linejoin="round" class="lucide lucide-map-pin">
+                            <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        <div>
+                            <span>Encuentrános</span>
+                            <strong>
+                                Calle 10 # 3-15
+                                <br>
+                                La candelaria, Bogotá D.C.
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer id="visitanos">
+        <p>MUSEO DE LA INDEPENDENCIA INTERACTIVO</p>
+    </footer>
+
+    <script type="module" src="./js/main.js"></script>
+
+</body>
+</html>
