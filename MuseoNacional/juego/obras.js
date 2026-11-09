@@ -56,11 +56,11 @@ window.MUSEO = {
     exigirVerTodas: true,
     // true = en la Isla Calavera debes ver todas las obras antes de usar el cofre
     exigirVerTodasEnCalavera: true,
-    velocidadBarco: 110,
+    velocidadBarco: 200,
     // true = busca solo las imágenes obras/islaN_obraK.* e islaN_esculturaK.* (ver arriba)
     // Puzzles de la cinemática final: aparece el botón OMITIR tras estos segundos (false = nunca)
     puzzlesOmitibles: true,
-    puzzleOmitirSeg: 45,
+    puzzleOmitirSeg: 1,
     autoDescubrir: true,
     descripcionAuto: "Descripción pendiente: agrega esta obra en obras.js para ponerle título y texto.",
     // true = activa atajos de prueba: Shift+E (explorar todo), Shift+C (cinemática)
