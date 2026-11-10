@@ -148,8 +148,9 @@ window.MUSEO = {
       nombre: "Sala 4 · Memoria y nación",
       musica: "musica/isla4.mp3",
       obras: [
-        { titulo: "Obra 1 (presente)", descripcion: "Descripción de la obra.", imagen: "obras/isla4_obra1.jpg", removida: false },
-        { titulo: "Obra 2 (removida)", descripcion: "Descripción de la obra removida.", removida: true }
+        { titulo: "Viacrucis", descripcion: "Descripción de la obra.", imagen: "obras/isla4_obra1.png", removida: true },
+        { titulo: "Libertinaje y desorden", descripcion: "Descripción de la obra.", imagen: "obras/isla4_obra2.png", removida: true },
+        { titulo: "La cosecha de los violentos", descripcion: "Descripción de la obra.", imagen: "obras/isla4_obra3.png", removida: true }
       ]
     },
     {
@@ -186,7 +187,7 @@ window.MUSEO = {
       nombre: "Sala 8 · Tierra como recurso",
       musica: "musica/isla8.mp3",
       obras: [
-        { titulo: "Obra 1 (presente)", descripcion: "Descripción de la obra.", imagen: "obras/isla8_obra1.jpg", removida: false },
+        { titulo: "Minería", descripcion: "Descripción de la obra.", imagen: "obras/isla8_obra1.png", removida: true },
         { titulo: "Obra 2 (removida)", descripcion: "Descripción de la obra removida.", removida: true }
       ]
     },
