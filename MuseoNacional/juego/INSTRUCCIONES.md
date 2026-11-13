@@ -62,3 +62,21 @@ El progreso se guarda en el navegador (botón NUEVO JUEGO lo reinicia).
   - Botón OMITIR PUZZLE tras 45 s (`puzzlesOmitibles`, `puzzleOmitirSeg` en `obras.js`).
   - Con `atajos: true`: Shift+P resuelve el puzzle actual.
 - **Música:** en `obras.js` → `musica` (navegación, título, calavera, cinemática, volumen) y `musica: "musica/islaN.mp3"` dentro de cada isla. Pon los archivos en la carpeta `musica/` (ver `musica/LEAME.txt`). Si un archivo no existe, no suena. Los navegadores solo reproducen audio después del primer clic/toque (el botón ZARPAR).
+
+## 10. Islas temáticas, cierre con el oro y orfebrería
+- **Islas con identidad propia:** 1 Panóptico (Museo Nacional) · 2 San Agustín · 3 Ferrocarril · 4 Capitolio y Puente de Boyacá · 5 Ciudad Perdida (Tayrona) · 6 Villa de Leyva · 7 Puente colgante sobre el río · 8 Mina y café · 9 Ranchería Wayuu · 10 Santuario de Las Lajas. Cada una cambia paleta, edificio, vegetación y detalles, y su pantalla de llegada tiene fachada y emblema propios.
+- **Objeto de cierre:** al terminar la cinemática de los puzzles y pulsar SEGUIR NAVEGANDO aparece una **botella con un mensaje** (se ve un haz de luz y un punto en el minimapa). Al leerla empieza la cinemática: un **galeón español** carga el oro de «Tierra como recurso» y el **barco pirata** lo persigue; el galeón deja caer **6 piezas de orfebrería indígena** (poporo Quimbaya, balsa Muisca, tunjo Muisca, pectoral Tairona, diadema Calima, nariguera Zenú) que quedan flotando y se pueden examinar con A.
+- **Redirección:** al terminar esa cinemática se envía `{ tipo: "museo-completo", museo: "nacional" }` a la página contenedora (`config.museoId`). La botella pasa a ser una **boya**: al interactuar de nuevo se vuelve a enviar el aviso. Si el juego se abre solo, `config.urlSiguienteMuseo` puede redirigir a otra dirección.
+- **Textos de la orfebrería y de la botella:** `obras.js` → `orfebreria` y `textos.botellaMensaje`.
+- **Esculturas anchas** (por ejemplo una espada horizontal): `ancho: 90` en la obra permite más ancho que el límite de 64.
+
+## 11. Correr y banderas
+- **Correr en los museos (y en la llegada a cada isla):** mantén **Shift** (PC) o el botón **B** (celular). La velocidad se cambia con `velocidadCorrer` en `obras.js` (1.8 = 80 % más rápido). Con `atajos: true`, Shift+E y Shift+C siguen siendo atajos de prueba, así que para jugar normal déjalo en `false`.
+- **Banderas al devolver las obras:** durante la entrega ya no aparece ninguna bandera en las islas pendientes. La de cada isla se iza una sola vez, cuando las cajas llegan, después de resolver el puzzle.
+
+## 12. Obras removidas: dónde se ven
+- **En la sala de su isla:** NO se ven mientras estén removidas.
+- **En la Isla Calavera:** sí, como marcos negros con su título y descripción (y desaparecen de ahí al restituirlas).
+- **Después de devolverlas:** aparecen en su sala como obras presentes ("OBRA RESTITUIDA"), con su imagen si la agregaste.
+- Las obras removidas no cuentan para marcar una isla como explorada; solo las presentes.
+- Si una isla solo tiene obras removidas, su sala queda vacía hasta que las restituyas (cuenta como explorada al entrar).

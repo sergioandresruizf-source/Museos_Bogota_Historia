@@ -164,7 +164,6 @@ body.touch #pad{display:block}
         <h2 id="finTitle"></h2>
         <p id="finText"></p>
         <button id="btnKeep" class="btn">SEGUIR NAVEGANDO</button>
-        <button id="btnMuseoCompleto" class="btn alt" type="button">MUSEO COMPLETO</button>
       </div>
 
       <div id="title">
@@ -172,7 +171,7 @@ body.touch #pad{display:block}
         <p class="sub" id="sub"></p>
         <button id="btnPlay" class="btn">ZARPAR</button>
         <button id="btnNew" class="btn alt" style="display:none">NUEVO JUEGO</button>
-        <div class="help">Mover: flechas / WASD o joystick<br>Acción: Espacio / Enter / E o botón A<br>Cerrar: Esc / B o botón B</div>
+        <div class="help">Mover: flechas / WASD o joystick<br>Acción: Espacio / Enter / E o botón A<br>Cerrar: Esc / B o botón B<br>Correr (museos): mantén Shift o el botón B</div>
       </div>
       <div id="fade"></div>
     </div>
@@ -199,7 +198,7 @@ body.touch #pad{display:block}
 
 const VW = 400, VH = 300;
 const DATA = window.MUSEO || { islas: [] };
-const CFG = Object.assign({ exigirVerTodas: true, exigirVerTodasEnCalavera: true, velocidadBarco: 105, atajos: false, autoDescubrir: true,
+const CFG = Object.assign({ exigirVerTodas: true, exigirVerTodasEnCalavera: true, velocidadBarco: 105, velocidadCorrer: 1.8, atajos: false, autoDescubrir: true,
   descripcionAuto: 'Descripción pendiente: agrega esta obra en obras.js para ponerle título y texto.' }, DATA.config || {});
 const TXT = Object.assign({
   nieblaBloqueada: 'Una espesa niebla bloquea el paso a la Isla Calavera…',
@@ -225,7 +224,7 @@ const ctx = canvas.getContext('2d');
 ctx.imageSmoothingEnabled = false;
 
 /* ------------------------------ guardado ------------------------------ */
-function defaultSave() { return { viewed: {}, entered: {}, restored: {}, cineDone: false }; }
+function defaultSave() { return { viewed: {}, entered: {}, restored: {}, cineDone: false, oroDone: false, oroItems: [], oroSeen: {} }; }
 function loadSave() {
   try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); if (s && s.viewed) return Object.assign(defaultSave(), s); } catch (e) { /* sin almacenamiento */ }
   return defaultSave();
@@ -443,7 +442,8 @@ function drawRaggedFlag(g, x, y) {
 
 function renderIsland(p, idx) {
   const w = p.ex * 2, h = p.ey * 2, { c, g } = mk(w, h);
-  const pal = p.skull ? PAL_S : tintPal(PAL_N, idx);
+  const th = p.skull ? null : TEMAS[idx], pal = p.skull ? PAL_S : Object.assign({}, PAL_N, th.pal);
+  const rv = th && th.river, riverX = (y) => p.ex + rv.x0 + rv.amp * Math.sin((y - p.ey) / rv.per);
   const img = g.createImageData(w, h), d = img.data, mask = new Uint8Array(w * h), tm = new Float32Array(w * h);
   const CL = 11;
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
@@ -453,6 +453,12 @@ function renderIsland(p, idx) {
   const put = (i, col, a) => { d[i * 4] = col[0]; d[i * 4 + 1] = col[1]; d[i * 4 + 2] = col[2]; d[i * 4 + 3] = a === undefined ? 255 : a; };
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
     const i = y * w + x, t = tm[i];
+    if (rv && mask[i]) {   // cauce de río / cañón
+      const dd = Math.abs(x - riverX(y));
+      if (dd < rv.w - 2) { put(i, hash2(x, y, 3) > 0.82 ? rv.c2 : rv.c1); continue; }
+      if (dd < rv.w) { put(i, rv.edge); continue; }
+      if (dd < rv.w + 2) { put(i, rv.bank); continue; }
+    }
     if (mask[i]) {
       const n = hash2(x, y, idx + 3), patch = hash2(x >> 2, y >> 2, idx + 9);
       if (t < 0.55) put(i, n > 0.9 ? pal.g3 : patch > 0.72 ? pal.g2 : pal.g1);
@@ -480,18 +486,27 @@ function renderIsland(p, idx) {
 
   // objetos (ordenados por y para dar profundidad)
   const rnd = mulberry32(5000 + idx * 17), objs = [];
-  const nTrees = Math.max(3, Math.round(p.rx / 16)), nRocks = 3;
+  const nTrees = Math.max(2, Math.round(p.rx / 16 * (th ? th.nt : 1))), nRocks = 3;
+  const inRiver = (x) => !!rv && Math.abs(x - riverX(0)) < rv.w + 22;
   const free = p.skull ? ((dx, dy) => !(Math.abs(dx) < 50 && dy > -52 && dy < 30)) : ((dx, dy) => !(Math.abs(dx) < 40 && dy > -40 && dy < 14));
   let tries = 0;
   while (objs.filter((o) => o.k === 'tree').length < nTrees && tries++ < 300) {
     const a = rnd() * 6.28, r = Math.sqrt(rnd()) * 0.78, x = Math.round(p.ex + Math.cos(a) * r * p.rx), y = Math.round(p.ey + Math.sin(a) * r * p.ry);
-    if (normDist({ pos: { x: p.ex, y: p.ey }, rx: p.rx, ry: p.ry, R: p.R }, x, y).t < 0.78 && free(x - p.ex, y - p.ey)) objs.push({ k: 'tree', x, y });
+    if (normDist({ pos: { x: p.ex, y: p.ey }, rx: p.rx, ry: p.ry, R: p.R }, x, y).t < 0.78 && free(x - p.ex, y - p.ey) && !(rv && Math.abs(x - riverX(y)) < rv.w + 5) && !(th && th.main === mFerrocarril && Math.abs(y - (p.ey + 17)) < 8)) objs.push({ k: 'tree', x, y });
   }
   tries = 0;
   while (objs.filter((o) => o.k === 'rock').length < nRocks && tries++ < 200) {
     const a = rnd() * 6.28, r = 0.6 + rnd() * 0.25, x = Math.round(p.ex + Math.cos(a) * r * p.rx), y = Math.round(p.ey + Math.sin(a) * r * p.ry);
     if (normDist({ pos: { x: p.ex, y: p.ey }, rx: p.rx, ry: p.ry, R: p.R }, x, y).t < 0.92) objs.push({ k: 'rock', x, y });
   }
+  if (th) th.ex.forEach((q) => {   // detalles propios del tema (estatuas, chozas, casas...)
+    let c = 0, tr = 0;
+    while (c < q[1] && tr++ < 500) {
+      const a = rnd() * 6.28, r = 0.3 + rnd() * 0.5, x = Math.round(p.ex + Math.cos(a) * r * p.rx), y = Math.round(p.ey + Math.sin(a) * r * p.ry);
+      const okRiver = !rv || Math.abs(x - riverX(y)) > rv.w + 8, okRail = !(th.main === mFerrocarril && Math.abs(y - (p.ey + 17)) < 14);
+      if (normDist({ pos: { x: p.ex, y: p.ey }, rx: p.rx, ry: p.ry, R: p.R }, x, y).t < 0.8 && (th.main === mFerrocarril || free(x - p.ex, y - p.ey)) && okRiver && okRail) { objs.push({ k: q[0], x, y, v: c, prop: true }); c++; }
+    }
+  });
   if (p.skull) {
     const inside = (x, y, m) => normDist({ pos: { x: p.ex, y: p.ey }, rx: p.rx, ry: p.ry, R: p.R }, x, y).t < m;
     [['tomb', 8, 0.8], ['bones', 6, 0.88]].forEach((q) => { let c = 0, tr = 0; while (c < q[1] && tr++ < 400) {
@@ -504,19 +519,189 @@ function renderIsland(p, idx) {
   objs.sort((a, b) => a.y - b.y);
   const accent = ['#e0b030', '#d04a4a', '#4a8ad0', '#4ab08a', '#c870d0'][idx % 5];
   objs.forEach((o) => {
-    if (o.k === 'tree') { if (p.skull) drawDeadTree(g, o.x, o.y); else drawPalm(g, o.x, o.y, rnd); }
+    if (o.prop) PROP[o.k](g, o.x, o.y, o.v);
+    else if (o.k === 'tree') { if (p.skull) drawDeadTree(g, o.x, o.y); else TREES[th.tree](g, o.x, o.y, rnd); }
     else if (o.k === 'rock') drawRock(g, o.x, o.y, p.skull);
     else if (o.k === 'tomb') drawTomb(g, o.x, o.y, o.v);
     else if (o.k === 'bones') drawBones(g, o.x, o.y, o.v);
     else if (o.k === 'wreck') drawWreck(g, o.x, o.y);
     else if (o.k === 'sflag') drawRaggedFlag(g, o.x, o.y);
-    else if (p.skull) drawSkullRock(g, o.x, o.y - 4); else drawMiniMuseum(g, o.x, o.y, accent);
+    else if (p.skull) drawSkullRock(g, o.x, o.y - 4); else th.main(g, o.x, o.y);
   });
   p.canvas = c;
 }
 function drawDeadTree(g, x, y) {
   g.fillStyle = '#3b2a1a'; g.fillRect(x, y - 16, 3, 16); g.fillRect(x - 5, y - 14, 5, 2); g.fillRect(x - 6, y - 18, 2, 5); g.fillRect(x + 3, y - 11, 6, 2); g.fillRect(x + 7, y - 15, 2, 5);
 }
+/* ======================================================================
+   TEMAS DE ISLA — cada isla tiene su propio edificio principal, vegetación y detalles.
+   1 Panóptico/Museo Nacional · 2 San Agustín · 3 Ferrocarril · 4 Capitolio y Puente de Boyacá
+   5 Ciudad Perdida (Tayrona) · 6 Villa de Leyva · 7 Puente colgante · 8 Mina y café
+   9 Ranchería Wayuu · 10 Santuario de Las Lajas
+   ====================================================================== */
+const Rr = (g, x, y, w, h, c) => { g.fillStyle = c; g.fillRect(Math.round(x), Math.round(y), w, h); };
+function shd(g, x, y, w) { g.fillStyle = 'rgba(0,0,0,.25)'; g.fillRect(Math.round(x - w / 2), y + 2, w, 5); }
+function blob(g, cx, cy, r, col) { g.fillStyle = col; for (let dy = -r; dy <= r; dy++) { const hw = Math.round(Math.sqrt(r * r - dy * dy)); g.fillRect(cx - hw, cy + dy, hw * 2, 1); } }
+function ell(g, cx, cy, rx, ry, col) { g.fillStyle = col; for (let dy = -ry; dy <= ry; dy++) { const hw = Math.round(rx * Math.sqrt(1 - (dy / ry) * (dy / ry))); g.fillRect(cx - hw, cy + dy, hw * 2, 1); } }
+
+/* ---------- árboles ---------- */
+function treeJungle(g, x, y) { shd(g, x, y, 12); Rr(g, x, y - 14, 3, 14, '#5a3a1f'); blob(g, x + 1, y - 18, 7, '#1f6a35'); blob(g, x - 3, y - 15, 5, '#2a8040'); blob(g, x + 5, y - 16, 5, '#2a8040'); Rr(g, x - 4, y - 21, 5, 2, '#48a050'); Rr(g, x + 2, y - 23, 4, 2, '#48a050'); }
+function treePine(g, x, y) { shd(g, x, y, 10); Rr(g, x, y - 5, 2, 5, '#5a3a1f'); for (let t = 0; t < 3; t++) { const top = y - 26 + t * 7; for (let r = 0; r < 9; r++) { const w = Math.round((r + 1) * (2 + t * 0.7) / 2.2); Rr(g, x + 1 - w, top + r, w * 2, 1, (r % 3 === 0) ? '#3f8a4a' : '#2f6a3a'); } } }
+function treeCactus(g, x, y) { shd(g, x, y, 8); Rr(g, x - 1, y - 15, 3, 15, '#4f8a45'); Rr(g, x, y - 15, 1, 15, '#6aaa5a'); Rr(g, x - 6, y - 10, 5, 2, '#4f8a45'); Rr(g, x - 6, y - 13, 2, 5, '#4f8a45'); Rr(g, x + 2, y - 8, 5, 2, '#4f8a45'); Rr(g, x + 5, y - 11, 2, 5, '#4f8a45'); }
+function treeCoffee(g, x, y) { blob(g, x, y - 4, 4, '#2f6a3a'); Rr(g, x - 3, y - 6, 6, 1, '#48a050'); Rr(g, x - 2, y - 4, 1, 1, '#d04a4a'); Rr(g, x + 1, y - 3, 1, 1, '#d04a4a'); Rr(g, x - 1, y - 2, 1, 1, '#d04a4a'); }
+function treeFrailejon(g, x, y) { Rr(g, x, y - 9, 3, 9, '#a89868'); Rr(g, x - 4, y - 13, 11, 4, '#9ab898'); Rr(g, x - 2, y - 16, 7, 3, '#b8d0b4'); Rr(g, x + 1, y - 18, 1, 2, '#d8e8d0'); }
+const TREES = { palm: (g, x, y, r) => drawPalm(g, x, y, r || mulberry32(x * 7 + y)), jungle: treeJungle, pine: treePine, cactus: treeCactus, coffee: treeCoffee, frailejon: treeFrailejon };
+
+/* ---------- detalles (props) ---------- */
+function pEstatua(g, x, y, v) {
+  shd(g, x, y, 12); const c = v % 2 ? '#8d9187' : '#9a9e92';
+  Rr(g, x - 4, y - 20, 8, 20, c); Rr(g, x + 1, y - 20, 3, 20, '#767a70'); Rr(g, x - 5, y - 26, 10, 8, '#a7ab9e'); Rr(g, x - 6, y - 28, 12, 3, '#6f7368');
+  Rr(g, x - 3, y - 24, 2, 2, '#2d3028'); Rr(g, x + 1, y - 24, 2, 2, '#2d3028'); Rr(g, x - 3, y - 20, 6, 2, '#2d3028'); Rr(g, x - 2, y - 19, 1, 2, '#e8e8dc'); Rr(g, x + 1, y - 19, 1, 2, '#e8e8dc');
+  Rr(g, x - 7, y - 16, 3, 10, '#7d8177'); Rr(g, x + 4, y - 16, 3, 10, '#7d8177'); Rr(g, x + 6, y - 26, 2, 14, '#6a5a3a');
+}
+function pMonolito(g, x, y) { shd(g, x, y, 8); Rr(g, x - 3, y - 14, 6, 14, '#8d9187'); Rr(g, x - 2, y - 16, 4, 2, '#9ea297'); Rr(g, x + 1, y - 14, 2, 14, '#767a70'); Rr(g, x - 1, y - 9, 2, 1, '#5c6058'); }
+function pFarol(g, x, y) { shd(g, x, y, 6); Rr(g, x, y - 14, 1, 14, '#3a3a44'); Rr(g, x - 2, y - 18, 5, 4, '#f0c24a'); Rr(g, x - 1, y - 19, 3, 1, '#3a3a44'); }
+function pBandera(g, x, y) { Rr(g, x, y - 22, 2, 22, '#7a7a84'); Rr(g, x + 2, y - 22, 9, 4, '#f0c24a'); Rr(g, x + 2, y - 18, 9, 2, '#2a4a9e'); Rr(g, x + 2, y - 16, 9, 2, '#c0392b'); }
+function pObelisco(g, x, y) { shd(g, x, y, 16); Rr(g, x - 7, y - 4, 14, 4, '#b4b2a6'); Rr(g, x - 5, y - 8, 10, 4, '#c8c6ba'); Rr(g, x - 3, y - 34, 6, 26, '#e4e2d8'); Rr(g, x + 1, y - 34, 2, 26, '#bcbaae'); Rr(g, x - 2, y - 38, 4, 4, '#e4e2d8'); Rr(g, x - 1, y - 44, 2, 6, '#c8a24a'); Rr(g, x - 3, y - 42, 6, 2, '#c8a24a'); }
+function pChoza(g, x, y) { shd(g, x, y, 16); Rr(g, x - 7, y - 8, 14, 8, '#c8a878'); Rr(g, x + 2, y - 8, 5, 8, '#a88858'); Rr(g, x - 2, y - 6, 4, 6, '#3a2a1a'); for (let r = 0; r < 12; r++) { const w = Math.round(9 - r * 0.7); Rr(g, x - w, y - 9 - r, w * 2, 1, r % 3 === 0 ? '#a8843a' : '#c9a44a'); } Rr(g, x - 1, y - 22, 2, 3, '#8a6a2a'); }
+function pCasa(g, x, y) { shd(g, x, y, 18); Rr(g, x - 8, y - 10, 16, 10, '#f0ece0'); Rr(g, x + 3, y - 10, 5, 10, '#d8d4c4'); Rr(g, x - 9, y - 13, 18, 4, '#a8473a'); Rr(g, x - 9, y - 13, 18, 1, '#c9604f'); Rr(g, x - 2, y - 6, 4, 6, '#7a5028'); Rr(g, x - 6, y - 8, 3, 3, '#3a4a6a'); Rr(g, x + 3, y - 8, 3, 3, '#3a4a6a'); Rr(g, x - 7, y - 5, 6, 1, '#7a5028'); }
+function pPozo(g, x, y) { shd(g, x, y, 18); ell(g, x, y - 2, 9, 4, '#9a9a8c'); ell(g, x, y - 3, 7, 3, '#2f80ba'); Rr(g, x - 1, y - 8, 2, 6, '#7a5028'); Rr(g, x - 4, y - 9, 8, 2, '#7a5028'); }
+function pVagoneta(g, x, y, v) { shd(g, x, y, 14); Rr(g, x - 6, y - 8, 12, 7, '#6a4a2a'); Rr(g, x - 7, y - 9, 14, 2, '#8a6a3a'); blob(g, x - 3, y - 1, 2, '#2a2a34'); blob(g, x + 3, y - 1, 2, '#2a2a34'); Rr(g, x - 4, y - 11, 3, 3, v % 2 ? '#f0c24a' : '#1c1c24'); Rr(g, x, y - 12, 4, 4, v % 2 ? '#1c1c24' : '#f0c24a'); }
+function pBomba(g, x, y) { shd(g, x, y, 18); Rr(g, x - 7, y - 3, 14, 3, '#4a4a54'); Rr(g, x - 1, y - 16, 3, 14, '#3a3a44'); Rr(g, x - 9, y - 19, 18, 3, '#2a2a34'); Rr(g, x - 9, y - 19, 6, 6, '#2a2a34'); Rr(g, x + 6, y - 17, 2, 8, '#5a5a64'); Rr(g, x - 9, y - 13, 1, 4, '#5a5a64'); }
+function pVasija(g, x, y) { shd(g, x, y, 10); blob(g, x, y - 4, 4, '#a8603a'); Rr(g, x - 2, y - 9, 4, 2, '#a8603a'); Rr(g, x - 3, y - 5, 6, 1, '#f0e0c0'); Rr(g, x - 1, y - 3, 2, 1, '#f0e0c0'); }
+function pTelar(g, x, y) { shd(g, x, y, 18); Rr(g, x - 8, y - 14, 2, 14, '#6b4426'); Rr(g, x + 6, y - 14, 2, 14, '#6b4426'); Rr(g, x - 8, y - 15, 16, 2, '#6b4426'); for (let i = -5; i < 5; i++) Rr(g, x + i, y - 12, 1, 9, ['#d04a4a', '#f0c24a', '#2a4a9e', '#e8e0d0'][(i + 5) % 4]); }
+function pCruz(g, x, y) { shd(g, x, y, 8); Rr(g, x, y - 16, 2, 16, '#e4e6f0'); Rr(g, x - 4, y - 12, 10, 2, '#e4e6f0'); Rr(g, x + 1, y - 16, 1, 16, '#b4b8cc'); }
+const PROP = { estatua: pEstatua, monolito: pMonolito, farol: pFarol, bandera: pBandera, obelisco: pObelisco, choza: pChoza, casa: pCasa, pozo: pPozo, vagoneta: pVagoneta, bomba: pBomba, vasija: pVasija, telar: pTelar, cruz: pCruz };
+
+/* ---------- edificios principales ---------- */
+function mPanoptico(g, cx, cy) {   // Museo Nacional: antiguo Panóptico
+  shd(g, cx, cy, 60);
+  Rr(g, cx - 27, cy - 14, 54, 16, '#a8473a'); Rr(g, cx - 27, cy - 14, 54, 2, '#c9604f'); Rr(g, cx + 15, cy - 14, 12, 16, '#8a382d');
+  for (const i of [-23, -16, -9, 9, 16, 22]) { Rr(g, cx + i, cy - 10, 3, 4, '#2a1a14'); Rr(g, cx + i, cy - 4, 3, 4, '#2a1a14'); }
+  Rr(g, cx - 28, cy + 1, 56, 2, '#e8e0d0');
+  Rr(g, cx - 9, cy - 31, 18, 18, '#b9503f'); Rr(g, cx - 9, cy - 31, 18, 2, '#e8e0d0'); Rr(g, cx + 3, cy - 31, 6, 18, '#8a382d');
+  Rr(g, cx - 6, cy - 27, 3, 5, '#2a1a14'); Rr(g, cx, cy - 27, 3, 5, '#2a1a14'); Rr(g, cx - 6, cy - 20, 3, 4, '#2a1a14'); Rr(g, cx, cy - 20, 3, 4, '#2a1a14');
+  for (let r = 0; r < 9; r++) { const w = 10 - r; Rr(g, cx - w, cy - 32 - r, w * 2, 1, r % 3 === 0 ? '#8a8a9a' : '#6a6a7a'); }
+  Rr(g, cx - 1, cy - 46, 2, 7, '#3a3a44'); Rr(g, cx + 1, cy - 46, 6, 3, '#f0c24a'); Rr(g, cx + 1, cy - 43, 6, 2, '#2a4a9e'); Rr(g, cx + 1, cy - 41, 6, 1, '#c0392b');
+  Rr(g, cx - 4, cy - 5, 8, 7, '#3a2214');
+}
+function mSanAgustin(g, cx, cy) {
+  shd(g, cx, cy, 50); Rr(g, cx - 16, cy - 12, 5, 12, '#7d8177'); Rr(g, cx + 11, cy - 12, 5, 12, '#7d8177'); Rr(g, cx - 19, cy - 17, 38, 6, '#9ea297'); Rr(g, cx - 19, cy - 12, 38, 1, '#6f7368'); Rr(g, cx - 16, cy - 17, 12, 2, '#b4b8aa');
+  pEstatua(g, cx - 26, cy + 2, 0); pEstatua(g, cx + 26, cy + 2, 1);
+}
+function mFerrocarril(g, cx, cy) {
+  for (let x = cx - 70; x <= cx + 70; x += 4) Rr(g, x, cy + 14, 2, 6, '#5a3a1f'); Rr(g, cx - 70, cy + 15, 141, 1, '#8a8a96'); Rr(g, cx - 70, cy + 18, 141, 1, '#8a8a96');
+  shd(g, cx, cy, 56);
+  Rr(g, cx - 26, cy - 15, 52, 17, '#d8b25a'); Rr(g, cx - 26, cy - 15, 52, 2, '#ecd08a'); Rr(g, cx + 16, cy - 15, 10, 17, '#b8923a');
+  Rr(g, cx - 30, cy - 21, 60, 7, '#a8473a'); Rr(g, cx - 30, cy - 21, 60, 2, '#c9604f');
+  Rr(g, cx - 5, cy - 36, 10, 16, '#d8b25a'); for (let r = 0; r < 6; r++) Rr(g, cx - 6 + r, cy - 37 - r, 12 - r * 2, 1, '#a8473a'); Rr(g, cx - 3, cy - 31, 6, 6, '#fff'); Rr(g, cx, cy - 30, 1, 3, '#222'); Rr(g, cx, cy - 28, 2, 1, '#222');
+  Rr(g, cx - 18, cy - 8, 5, 10, '#4a2f1a'); Rr(g, cx + 10, cy - 8, 5, 10, '#4a2f1a'); Rr(g, cx - 9, cy - 9, 3, 4, '#2a1a14'); Rr(g, cx + 4, cy - 9, 3, 4, '#2a1a14');
+  Rr(g, cx - 30, cy + 2, 60, 3, '#8a8a8a');
+  const tx = cx + 24, ty = cy + 18;   // locomotora de vapor
+  Rr(g, tx - 2, ty - 12, 26, 9, '#1c1c24'); Rr(g, tx + 14, ty - 18, 8, 15, '#2a2a34'); Rr(g, tx + 17, ty - 12, 3, 3, '#e8e0a0'); Rr(g, tx, ty - 16, 4, 5, '#1c1c24'); Rr(g, tx - 1, ty - 18, 6, 2, '#3a3a44'); Rr(g, tx + 22, ty - 9, 6, 6, '#a8473a');
+  [0, 8, 16, 22].forEach((o) => { blob(g, tx + o + 2, ty - 2, 3, '#2a2a34'); Rr(g, tx + o + 1, ty - 3, 2, 2, '#8a8a96'); });
+  for (let i = 0; i < 3; i++) blob(g, tx + 2 + i * 2, ty - 22 - i * 3, 2 + i, 'rgba(220,220,230,.8)');
+}
+function mCapitolio(g, cx, cy) {
+  shd(g, cx, cy, 70);
+  Rr(g, cx - 32, cy + 1, 64, 3, '#cfcdc3'); Rr(g, cx - 30, cy - 2, 60, 3, '#e0ded4');
+  Rr(g, cx - 30, cy - 16, 60, 14, '#ecebe4'); Rr(g, cx + 14, cy - 16, 16, 14, '#d6d4ca');
+  for (let i = 0; i < 9; i++) { Rr(g, cx - 28 + i * 7, cy - 16, 3, 14, '#fff'); Rr(g, cx - 26 + i * 7, cy - 16, 1, 14, '#c4c2b8'); }
+  Rr(g, cx - 31, cy - 19, 62, 3, '#f4f2ea');
+  for (let r = 0; r < 10; r++) { const w = Math.round(30 - r * 3); Rr(g, cx - w, cy - 20 - r, w * 2, 1, r === 0 ? '#f4f2ea' : (r % 2 ? '#e6e4da' : '#ecebe4')); }
+  Rr(g, cx - 5, cy - 8, 10, 10, '#3a2a22'); Rr(g, cx - 1, cy - 8, 1, 10, '#5a4636');
+  Rr(g, cx - 1, cy - 40, 2, 12, '#7a7a84'); Rr(g, cx + 1, cy - 40, 8, 3, '#f0c24a'); Rr(g, cx + 1, cy - 37, 8, 2, '#2a4a9e'); Rr(g, cx + 1, cy - 35, 8, 2, '#c0392b');
+}
+function mTayrona(g, cx, cy) {   // terrazas de piedra tipo Ciudad Perdida
+  shd(g, cx, cy, 70);
+  ell(g, cx, cy, 30, 11, '#7a7a72'); ell(g, cx, cy - 1, 29, 10, '#9a9a8c'); ell(g, cx, cy - 1, 24, 8, '#6aa05a');
+  ell(g, cx, cy - 8, 21, 8, '#7a7a72'); ell(g, cx, cy - 9, 20, 7, '#9a9a8c'); ell(g, cx, cy - 9, 15, 5, '#6aa05a');
+  ell(g, cx, cy - 15, 12, 5, '#7a7a72'); ell(g, cx, cy - 16, 11, 4, '#9a9a8c'); ell(g, cx, cy - 16, 7, 2, '#7ab06a');
+  for (let s = 0; s < 6; s++) Rr(g, cx - 3, cy + 8 - s * 4, 6, 3, s % 2 ? '#b4b4a6' : '#a0a092');
+  for (let i = -24; i <= 24; i += 6) Rr(g, cx + i, cy + 3, 3, 1, '#6a6a62');
+}
+function mVilla(g, cx, cy) {   // plaza con iglesia colonial
+  shd(g, cx, cy, 36);
+  Rr(g, cx - 15, cy - 20, 30, 22, '#f0ece0'); Rr(g, cx + 7, cy - 20, 8, 22, '#d8d4c4'); Rr(g, cx - 17, cy - 24, 34, 5, '#a8473a'); Rr(g, cx - 17, cy - 24, 34, 1, '#c9604f');
+  Rr(g, cx + 4, cy - 38, 9, 15, '#f0ece0'); Rr(g, cx + 9, cy - 38, 4, 15, '#d8d4c4'); for (let r = 0; r < 5; r++) Rr(g, cx + 3 + r, cy - 39 - r, 11 - r * 2, 1, '#a8473a');
+  Rr(g, cx + 8, cy - 47, 2, 6, '#7a7a84'); Rr(g, cx + 6, cy - 45, 6, 1, '#7a7a84'); Rr(g, cx + 6, cy - 34, 5, 6, '#2a1a14');
+  Rr(g, cx - 12, cy - 17, 3, 5, '#3a4a6a'); Rr(g, cx - 6, cy - 17, 3, 5, '#3a4a6a');
+  for (let dy = 0; dy < 9; dy++) { const hw = Math.round(5 * Math.sqrt(1 - ((8 - dy) / 9) * ((8 - dy) / 9))); Rr(g, cx - hw - 2, cy - 10 + dy, hw * 2 + 4, 1, '#2a1a14'); }
+}
+function mPuente(g, cx, cy) {   // puente colgante sobre el río
+  shd(g, cx, cy, 60);
+  Rr(g, cx - 30, cy - 3, 60, 6, '#a0703a'); for (let i = -30; i < 30; i += 3) Rr(g, cx + i, cy - 3, 1, 6, '#7a5028');
+  [-30, 28].forEach((x) => { Rr(g, cx + x, cy - 20, 3, 24, '#5a3a1f'); Rr(g, cx + x - 1, cy - 21, 5, 2, '#7a5028'); });
+  for (let t = -29; t <= 28; t++) { const yy = cy - 20 + Math.round((t * t) / 55); Rr(g, cx + t, yy, 1, 1, '#d8c8a0'); Rr(g, cx + t, cy - 9 + Math.round((t * t) / 90), 1, 1, '#d8c8a0'); if (t % 8 === 0) Rr(g, cx + t, yy, 1, cy - 3 - yy, '#bfae84'); }
+}
+function mMina(g, cx, cy) {
+  shd(g, cx, cy, 50);
+  ell(g, cx, cy - 6, 26, 14, '#6a6258'); ell(g, cx, cy - 8, 24, 12, '#8a8072'); ell(g, cx - 6, cy - 12, 12, 6, '#a29888');
+  Rr(g, cx - 9, cy - 14, 18, 16, '#17100a'); Rr(g, cx - 11, cy - 16, 3, 18, '#7a5028'); Rr(g, cx + 8, cy - 16, 3, 18, '#7a5028'); Rr(g, cx - 11, cy - 18, 22, 3, '#8a5a2b'); Rr(g, cx - 11, cy - 18, 22, 1, '#a87648');
+  for (let y = cy + 2; y < cy + 22; y += 4) Rr(g, cx - 6, y, 12, 1, '#5a3a1f'); Rr(g, cx - 6, cy + 2, 1, 20, '#8a8a96'); Rr(g, cx + 5, cy + 2, 1, 20, '#8a8a96');
+  Rr(g, cx + 14, cy - 30, 2, 14, '#5a3a1f'); Rr(g, cx + 10, cy - 30, 10, 2, '#5a3a1f');
+}
+function mWayuu(g, cx, cy) {   // ranchería: ramada con chinchorros
+  shd(g, cx, cy, 64);
+  Rr(g, cx - 28, cy - 20, 56, 7, '#b89c5a'); Rr(g, cx - 28, cy - 20, 56, 2, '#d8bc7a'); for (let x = -28; x < 28; x += 3) Rr(g, cx + x, cy - 13, 1, 3, '#8a7040');
+  [-26, 24].forEach((x) => Rr(g, cx + x, cy - 13, 3, 16, '#6b4426'));
+  [['#d04a4a', '#f0c24a'], ['#2a4a9e', '#e8e0d0'], ['#2f8f4e', '#d04a4a']].forEach((c, i) => { const x0 = cx - 18 + i * 14; for (let t = 0; t < 12; t++) { const yy = cy - 10 + Math.round(Math.sin(t / 11 * Math.PI) * 5); Rr(g, x0 + t, yy, 1, 3, t % 4 < 2 ? c[0] : c[1]); } });
+  Rr(g, cx - 30, cy + 3, 60, 1, '#c8a878');
+}
+function mLajas(g, cx, cy) {   // santuario sobre el puente del cañón
+  shd(g, cx, cy, 50);
+  Rr(g, cx - 26, cy - 2, 52, 6, '#b4b4c0'); Rr(g, cx - 26, cy - 2, 52, 1, '#d4d4de');
+  for (let dy = 0; dy < 8; dy++) { const hw = Math.round(11 * Math.sqrt(1 - ((7 - dy) / 8) * ((7 - dy) / 8))); Rr(g, cx - hw, cy + 4 + dy, hw * 2, 1, '#1a1d2a'); }
+  Rr(g, cx - 26, cy + 4, 10, 8, '#9a9aa8'); Rr(g, cx + 16, cy + 4, 10, 8, '#9a9aa8');
+  Rr(g, cx - 12, cy - 28, 24, 26, '#d8dae6'); Rr(g, cx + 4, cy - 28, 8, 26, '#b4b8cc');
+  Rr(g, cx - 14, cy - 34, 6, 32, '#e4e6f0'); Rr(g, cx + 8, cy - 34, 6, 32, '#c8ccdc'); Rr(g, cx - 4, cy - 38, 8, 36, '#eceef6'); Rr(g, cx + 1, cy - 38, 3, 36, '#c8ccdc');
+  [[-14, -34, 6], [8, -34, 6], [-4, -38, 8]].forEach((q) => { for (let r = 0; r < q[2] * 2; r++) { const w = Math.max(1, Math.round(q[2] - r / 2)); Rr(g, cx + q[0] + (q[2] - w) / 2, cy + q[1] - 1 - r, w, 1, '#6a7088'); } });
+  Rr(g, cx - 1, cy - 62, 2, 8, '#6a7088'); Rr(g, cx - 3, cy - 60, 6, 2, '#6a7088');
+  Rr(g, cx - 2, cy - 30, 4, 4, '#2a3a5a');
+  for (const x of [-10, 7]) { Rr(g, cx + x, cy - 24, 3, 7, '#2a3a5a'); Rr(g, cx + x, cy - 26, 3, 2, '#2a3a5a'); }
+  Rr(g, cx - 3, cy - 10, 6, 10, '#2a1a14');
+}
+
+/* ---------- tabla de temas: paleta, árbol, edificio principal, detalles y cauce ---------- */
+const TEMAS = [
+  { nombre: 'Panóptico', pal: {}, tree: 'palm', nt: 0.6, main: mPanoptico, ex: [['farol', 4]] },
+  { nombre: 'San Agustín', pal: { g1: [88, 150, 72], g2: [68, 126, 60], g3: [120, 176, 92] }, tree: 'jungle', nt: 0.7, main: mSanAgustin, ex: [['estatua', 4], ['monolito', 4]] },
+  { nombre: 'Ferrocarril', pal: { g1: [150, 165, 80], g2: [130, 145, 70], g3: [175, 185, 100], sand: [225, 205, 150] }, tree: 'pine', nt: 0.5, main: mFerrocarril, ex: [['farol', 3]] },
+  { nombre: 'Capitolio', pal: { g1: [70, 160, 75], g2: [58, 138, 64], g3: [100, 186, 92] }, tree: 'palm', nt: 0.4, main: mCapitolio, ex: [['bandera', 3], ['obelisco', 1]] },
+  { nombre: 'Ciudad Perdida', pal: { g1: [38, 120, 52], g2: [28, 98, 42], g3: [60, 150, 70], sand: [200, 185, 130] }, tree: 'jungle', nt: 1.7, main: mTayrona, ex: [['choza', 4]] },
+  { nombre: 'Villa de Leyva', pal: { g1: [170, 160, 90], g2: [150, 140, 80], g3: [190, 180, 110], sand: [235, 215, 160], sand2: [215, 190, 130] }, tree: 'cactus', nt: 0.5, main: mVilla, ex: [['casa', 5], ['pozo', 1]] },
+  { nombre: 'Puente colgante', pal: { g1: [70, 150, 80], g2: [56, 128, 68], g3: [96, 176, 100] }, tree: 'jungle', nt: 1.1, main: mPuente, ex: [],
+    river: { x0: 0, amp: 7, per: 20, w: 9, c1: [47, 128, 186], c2: [88, 176, 220], edge: [220, 235, 245], bank: [180, 215, 235] } },
+  { nombre: 'Mina y café', pal: { g1: [120, 115, 80], g2: [100, 95, 65], g3: [140, 135, 95], sand: [190, 160, 120], sand2: [165, 135, 100] }, tree: 'coffee', nt: 3.2, main: mMina, ex: [['vagoneta', 3], ['bomba', 1]] },
+  { nombre: 'Ranchería Wayuu', pal: { g1: [196, 176, 104], g2: [176, 156, 88], g3: [214, 196, 126], sand: [240, 222, 170], sand2: [220, 196, 140] }, tree: 'cactus', nt: 1.5, main: mWayuu, ex: [['vasija', 6], ['telar', 1]] },
+  { nombre: 'Las Lajas', pal: { g1: [96, 132, 92], g2: [78, 112, 80], g3: [118, 150, 110], sand: [190, 190, 176], sand2: [160, 160, 148], cl1: [120, 120, 130], cl2: [92, 92, 104], cl3: [62, 62, 72] }, tree: 'pine', nt: 1.0, main: mLajas, ex: [['cruz', 3]],
+    river: { x0: 0, amp: 4, per: 24, w: 9, c1: [26, 29, 42], c2: [40, 46, 66], edge: [70, 76, 92], bank: [96, 102, 118] } }
+];
+
+/* ---------- fachadas de la pantalla de llegada (una por isla) ---------- */
+const emTower = (g) => { Rr(g, 194, 42, 12, 10, '#e8e0d0'); for (let r = 0; r < 5; r++) Rr(g, 194 + r, 41 - r, 12 - r * 2, 1, '#8a8a9a'); Rr(g, 199, 34, 2, 4, '#3a3a44'); Rr(g, 198, 44, 2, 3, '#2a1a14'); Rr(g, 202, 44, 2, 3, '#2a1a14'); };
+const emFace = (g) => { Rr(g, 193, 38, 14, 14, '#b4b8aa'); Rr(g, 195, 42, 3, 3, '#2d3028'); Rr(g, 202, 42, 3, 3, '#2d3028'); Rr(g, 196, 47, 8, 2, '#2d3028'); Rr(g, 197, 47, 1, 3, '#fff'); Rr(g, 202, 47, 1, 3, '#fff'); };
+const emWheel = (g) => { blob(g, 200, 45, 7, '#e8e0a0'); blob(g, 200, 45, 5, '#a8473a'); Rr(g, 199, 38, 2, 14, '#e8e0a0'); Rr(g, 193, 44, 14, 2, '#e8e0a0'); };
+const emTricolor = (g) => { Rr(g, 190, 40, 20, 5, '#f0c24a'); Rr(g, 190, 45, 20, 3, '#2a4a9e'); Rr(g, 190, 48, 20, 3, '#c0392b'); };
+const emSun = (g) => { blob(g, 200, 45, 6, '#f0c24a'); Rr(g, 199, 36, 2, 3, '#f0c24a'); Rr(g, 199, 52, 2, 3, '#f0c24a'); Rr(g, 191, 44, 3, 2, '#f0c24a'); Rr(g, 207, 44, 3, 2, '#f0c24a'); };
+const emCross = (g) => { Rr(g, 199, 38, 2, 14, '#fff'); Rr(g, 194, 43, 12, 2, '#fff'); };
+const emBridge = (g) => { Rr(g, 190, 49, 20, 2, '#d8c8a0'); Rr(g, 190, 38, 2, 13, '#d8c8a0'); Rr(g, 208, 38, 2, 13, '#d8c8a0'); for (let t = -9; t <= 9; t++) Rr(g, 200 + t, 38 + Math.round(t * t / 10), 1, 1, '#d8c8a0'); };
+const emPick = (g) => { Rr(g, 199, 40, 2, 12, '#c8a24a'); Rr(g, 191, 39, 18, 3, '#8a8a96'); Rr(g, 191, 41, 3, 2, '#8a8a96'); Rr(g, 206, 41, 3, 2, '#8a8a96'); };
+const emRombos = (g) => { [['#d04a4a', 191], ['#f0c24a', 197], ['#2a4a9e', 203], ['#2f8f4e', 209]].forEach((q) => { Rr(g, q[1] - 1, 44, 3, 1, q[0]); Rr(g, q[1] - 2, 45, 5, 2, q[0]); Rr(g, q[1] - 1, 47, 3, 1, q[0]); Rr(g, q[1], 41, 1, 3, q[0]); Rr(g, q[1], 48, 1, 3, q[0]); }); };
+const emArch = (g) => { for (let r = 0; r < 14; r++) { const w = Math.round(5 * Math.sqrt(Math.max(0, 1 - Math.pow((r - 3) / 11, 2)))); if (r < 4) Rr(g, 200 - Math.round(r * 1.2), 52 - r, Math.round(r * 2.4) + 1, 1, '#2a3a5a'); else Rr(g, 195, 52 - r, 10, 1, '#2a3a5a'); } Rr(g, 199, 36, 2, 8, '#fff'); Rr(g, 196, 38, 8, 2, '#fff'); };
+const FAC = [
+  { stone: ['#a8473a', '#9a3f33', '#7a2f26'], cornice: '#e8e0d0', ped: '#b9503f', pedIn: '#7a2f26', col: '#e8e0d0', colSh: '#c4baa8', colCap: '#f4eee0', step: '#d8d0c0', step2: '#bcb4a4', step3: '#a49c8c', gr: ['#5ea84a', '#4f9a3f'], path: '#e6cf91', path2: '#d2b977', emblem: emTower, tree: 'palm', props: [] },
+  { stone: ['#9aa092', '#868c7e', '#6c7266'], cornice: '#8d9187', ped: '#9a9e92', pedIn: '#6f7368', col: '#8d9187', colSh: '#6f7368', colCap: '#a7ab9e', step: '#9a9e92', step2: '#868a7e', step3: '#767a6e', gr: ['#58964a', '#4a8240'], path: '#b8b49a', path2: '#a09c84', emblem: emFace, tree: 'jungle', props: [[30, 204, 'estatua', 0], [370, 204, 'estatua', 1]] },
+  { stone: ['#d8b25a', '#c8a24a', '#a8823a'], cornice: '#a8473a', ped: '#a8473a', pedIn: '#7a2f26', col: '#4a4a54', colSh: '#2a2a34', colCap: '#6a6a74', step: '#c8b88a', step2: '#b4a47a', step3: '#9c8c64', gr: ['#96a550', '#86954a'], path: '#d8c896', path2: '#c0b07a', emblem: emWheel, tree: 'pine', props: [[140, 204, 'farol'], [260, 204, 'farol']] },
+  { stone: ['#ecebe4', '#dcdad0', '#c4c2b8'], cornice: '#f4f2ea', ped: '#ecebe4', pedIn: '#c4c2b8', col: '#fff', colSh: '#d4d2c8', colCap: '#fff', step: '#e8e6dc', step2: '#d4d2c8', step3: '#bcbab0', gr: ['#46a04b', '#3a8a40'], path: '#e6dcc0', path2: '#d2c8a6', emblem: emTricolor, tree: 'palm', props: [[40, 204, 'bandera'], [350, 204, 'bandera']] },
+  { stone: ['#8a8a7e', '#78786c', '#5c5c52'], cornice: '#8a6a2a', ped: '#c9a44a', pedIn: '#8a6a2a', col: '#c8a878', colSh: '#8a6a40', colCap: '#a8843a', step: '#8a8a7e', step2: '#74746a', step3: '#5e5e54', gr: ['#2f7d3a', '#276a32'], path: '#b4a07a', path2: '#9c8a64', emblem: emSun, tree: 'jungle', props: [[28, 204, 'choza'], [372, 204, 'choza']] },
+  { stone: ['#f0ece0', '#e4e0d2', '#c8c4b4'], cornice: '#a8473a', ped: '#a8473a', pedIn: '#7a2f26', col: '#7a5028', colSh: '#5a3a1f', colCap: '#8a6a38', step: '#d8d4c4', step2: '#c4c0b0', step3: '#aca898', gr: ['#b0a860', '#a09850'], path: '#e8d8a8', path2: '#d2c088', emblem: emCross, tree: 'cactus', props: [[30, 204, 'casa'], [370, 204, 'casa']] },
+  { stone: ['#a0703a', '#8a5a2b', '#6b4326'], cornice: '#5a3a1f', ped: '#8a5a2b', pedIn: '#5a3a1f', col: '#d8c8a0', colSh: '#bfae84', colCap: '#e8dcb8', step: '#a88a5a', step2: '#8a6e44', step3: '#6e5632', gr: ['#4a9a50', '#3e8a46'], path: '#c8a870', path2: '#b09058', emblem: emBridge, tree: 'jungle', props: [] },
+  { stone: ['#6a6258', '#5a5248', '#463e36'], cornice: '#7a5028', ped: '#5a5248', pedIn: '#2a1c12', col: '#7a5028', colSh: '#5a3a1f', colCap: '#a87648', step: '#7a7266', step2: '#625a50', step3: '#4e463e', gr: ['#7a7a50', '#6a6a44'], path: '#a08a64', path2: '#8a7650', emblem: emPick, tree: 'coffee', props: [[60, 204, 'vagoneta', 1], [340, 204, 'bomba']] },
+  { stone: ['#e6cf91', '#d8be7e', '#b89c5a'], cornice: '#b89c5a', ped: '#c8ac6a', pedIn: '#8a7040', col: '#6b4426', colSh: '#4a2f1a', colCap: '#8a5a35', step: '#e0c888', step2: '#c8b070', step3: '#b09858', gr: ['#d8c080', '#c8b070'], path: '#e8d6a0', path2: '#d0bc84', emblem: emRombos, tree: 'cactus', props: [[30, 204, 'vasija'], [58, 204, 'vasija'], [372, 204, 'telar']] },
+  { stone: ['#b4b8cc', '#a0a4bc', '#80849c'], cornice: '#d8dae6', ped: '#d8dae6', pedIn: '#6a7088', col: '#e4e6f0', colSh: '#c8ccdc', colCap: '#f4f6fa', step: '#c8ccdc', step2: '#b0b4c8', step3: '#9498b0', gr: ['#6a8a70', '#5a7a60'], path: '#c8c8b8', path2: '#b0b0a0', emblem: emArch, tree: 'pine', props: [[32, 204, 'cruz'], [368, 204, 'cruz']] }
+];
+
 PLACES.forEach((p, i) => renderIsland(p, i));
 const AURA = (() => {
   const { c, g } = mk(640, 560);
@@ -608,6 +793,9 @@ function findPath(a, b) {
    ENTRADA (teclado + pantalla táctil)
    ====================================================================== */
 const keys = {}, pressed = {}, padEdge = { a: false, b: false };
+let padHeldB = false;   // botón B mantenido en pantalla táctil = correr
+/** ¿El jugador está corriendo? (Shift en PC, mantener B en celular) */
+const isRunning = () => !!(keys.ShiftLeft || keys.ShiftRight || padHeldB);
 window.addEventListener('keydown', (e) => {
   if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].indexOf(e.code) >= 0) e.preventDefault();
   if (!keys[e.code]) pressed[e.code] = true;
@@ -618,7 +806,7 @@ window.addEventListener('keydown', (e) => {
   if (CFG.atajos && e.shiftKey && e.code === 'KeyP' && ui.puzzle) finishPuzzle();
 });
 window.addEventListener('keyup', (e) => { keys[e.code] = false; });
-window.addEventListener('blur', () => { for (const k in keys) keys[k] = false; });
+window.addEventListener('blur', () => { for (const k in keys) keys[k] = false; padHeldB = false; });
 const joy = { x: 0, y: 0, id: null };
 function axis() {
   let x = (keys.ArrowRight || keys.KeyD ? 1 : 0) - (keys.ArrowLeft || keys.KeyA ? 1 : 0) + joy.x;
@@ -647,7 +835,10 @@ function endFrameInput() { for (const k in pressed) delete pressed[k]; padEdge.a
   jz.addEventListener('pointermove', (e) => { if (e.pointerId === joy.id) { e.preventDefault(); move(e); } });
   jz.addEventListener('pointerup', end); jz.addEventListener('pointercancel', end);
   $('btnA').addEventListener('pointerdown', (e) => { e.preventDefault(); audioInit(); padEdge.a = true; });
-  $('btnB').addEventListener('pointerdown', (e) => { e.preventDefault(); audioInit(); padEdge.b = true; });
+  const bB = $('btnB');
+  bB.addEventListener('pointerdown', (e) => { e.preventDefault(); audioInit(); padEdge.b = true; padHeldB = true; });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach((ev) => bB.addEventListener(ev, () => { padHeldB = false; }));
+  window.addEventListener('pointerup', () => { padHeldB = false; });
   document.addEventListener('contextmenu', (e) => e.preventDefault());
 })();
 
@@ -676,7 +867,8 @@ function isExplored(i) {
   const w = islandWorks(i);
   if (!CFG.exigirVerTodas) return !!save.entered[i];
   if (!save.entered[i]) return false;
-  for (let j = 0; j < w.length; j++) if (!save.viewed[i + ':' + j]) return false;
+  // las obras removidas no están en la sala, así que no cuentan para explorarla
+  for (let j = 0; j < w.length; j++) if (!w[j].removida && !save.viewed[i + ':' + j]) return false;
   return true;
 }
 const exploredCount = () => { let n = 0; for (let i = 0; i < N_ISL; i++) if (isExplored(i)) n++; return n; };
@@ -738,8 +930,9 @@ function go(name, params) {
 let cineFlags = null; // durante la cinemática: {indice: progreso 0..1}
 function flagFor(i) {
   if (i === SKULL_I) return null;
-  if (cineFlags && cineFlags[i] !== undefined) return { k: 'luffy', p: cineFlags[i] };
+  if (cineFlags && cineFlags[i] !== undefined) return { k: 'luffy', p: cineFlags[i] };   // izándose durante la entrega
   if (save.cineDone || save.restored[i]) return { k: 'luffy', p: 1 };
+  if (cineFlags) return null;   // durante la entrega, las islas pendientes no muestran bandera hasta que se iza la suya
   if (isExplored(i)) return { k: 'pen' };
   return null;
 }
@@ -771,6 +964,7 @@ function drawWorld(g, cam, t) {
       if (fl.p > 0.05) drawFlagCloth(g, FLAG, fx + 2, fy - h, t, 2.2);
     }
   });
+  drawOroObjects(g, cam, t);
 }
 const fog = { alpha: 1, clouds: [] };
 (function () {
@@ -804,6 +998,8 @@ function drawMini(ship, t) {
     g.fillRect(Math.round(p.pos.x * sx - w / 2), Math.round(p.pos.y * sy - h / 2), w, h);
   });
   if (!allExplored()) { g.fillStyle = 'rgba(255,255,255,.55)'; const c = PLACES[SKULL_I]; g.fillRect(Math.round(c.pos.x * sx - 5), Math.round(c.pos.y * sy - 4), 10, 8); }
+  save.oroItems.forEach((it) => { g.fillStyle = save.oroSeen[it.id] ? '#a08a3a' : '#ffd24a'; g.fillRect(Math.round(it.x * sx), Math.round(it.y * sy), 2, 2); });
+  if (save.cineDone) { g.fillStyle = save.oroDone ? '#ff6a4a' : '#9ff'; g.fillRect(Math.round(GOAL.x * sx) - 1, Math.round(GOAL.y * sy) - 1, 3, 3); }
   if (ship && Math.floor(t * 3) % 2 === 0) { g.fillStyle = '#fff'; g.fillRect(Math.round(ship.x * sx) - 1, Math.round(ship.y * sy) - 1, 3, 3); }
 }
 
@@ -835,7 +1031,7 @@ function walkOK(rects, x, y) {
   return pts.every((p) => rects.some((r) => p[0] >= r.x && p[0] <= r.x + r.w && p[1] >= r.y && p[1] <= r.y + r.h));
 }
 function movePlayer(pl, a, dt, sp, canGo) {
-  let moving = false;
+  let moving = false; const run = isRunning(); if (run) sp *= (CFG.velocidadCorrer || 1.8);
   if (a.l > 0.15) {
     const vx = a.x * sp * dt, vy = a.y * sp * dt;
     if (canGo(pl.x + vx, pl.y)) { pl.x += vx; }
@@ -843,7 +1039,7 @@ function movePlayer(pl, a, dt, sp, canGo) {
     moving = true;
     if (Math.abs(a.x) > Math.abs(a.y)) pl.dir = a.x < 0 ? 'l' : 'r'; else pl.dir = a.y < 0 ? 'u' : 'd';
   }
-  pl.t = (pl.t || 0) + (moving ? dt : 0); pl.fr = moving ? (Math.floor(pl.t * 7) % 2) : 0;
+  pl.t = (pl.t || 0) + (moving ? dt * (run ? 1.6 : 1) : 0); pl.fr = moving ? (Math.floor(pl.t * 7) % 2) : 0;
 }
 
 /* ======================================================================
@@ -863,6 +1059,8 @@ const sea = {
     if (p && p.from !== undefined) {
       const pl = PLACES[p.from], dk = pl.dock;
       this.ship.x = dk.tip.x + dk.ux * 12; this.ship.y = dk.tip.y + dk.uy * 12; this.ship.vx = this.ship.vy = 0; this.ship.dir = dirIndex(dk.ux, dk.uy);
+    } else if (p && p.at) {
+      this.ship.x = p.at.x + 46; this.ship.y = p.at.y + 52; this.ship.vx = this.ship.vy = 0; this.ship.dir = 6;
     } else if (p && p.reset) { this.ship.x = START.x; this.ship.y = START.y; this.ship.dir = 0; this.ship.vx = this.ship.vy = 0; }
     this.snapCam(); updateHUD('');
     if (allExplored() && !save.fogLifted) { save.fogLifted = true; persist(); setTimeout(() => { toast(TXT.nieblaSeDisipa, 4200); sfx.win(); }, 500); }
@@ -907,7 +1105,14 @@ const sea = {
     });
     if (!this.demo) {
       updateHUD(nearName || 'Mar abierto');
-      if (this.near >= 0 && !isBlocked()) {
+      // objetos del mar: botella/boya de cierre y piezas de orfebrería
+      let obj = null, od = 1e9;
+      if (save.cineDone) { const d0 = Math.hypot(s.x - GOAL.x, s.y - GOAL.y); if (d0 < 52) { obj = { type: 'goal' }; od = d0; } }
+      if (save.oroDone) save.oroItems.forEach((it) => { const d1 = Math.hypot(s.x - it.x, s.y - it.y); if (d1 < 44 && d1 < od) { obj = { type: 'item', it }; od = d1; } });
+      if (obj && !isBlocked()) {
+        setPrompt(obj.type === 'goal' ? (save.oroDone ? '[A] Zarpar hacia el Museo del Oro' : '[A] Recoger la botella') : '[A] Examinar: ' + oroInfo(obj.it.id).titulo);
+        if (actionPressed()) oroInteract(obj);
+      } else if (this.near >= 0 && !isBlocked()) {
         setPrompt('[A] Atracar en: ' + placeName(this.near));
         if (actionPressed()) { sfx.ok(); go('arrival', { idx: this.near }); }
       } else setPrompt(null);
@@ -928,27 +1133,30 @@ scenes.sea = sea;
 
 /* ----------------------------- LLEGADA A LA ISLA ----------------------------- */
 const arrivalBG = {};
-function buildArrivalBG(skull) {
+const FSKULL = { stone: ['#6a6a82', '#585870', '#4a4a60'], cornice: '#3a3a4c', ped: '#4e4e64', pedIn: '#2a2a3c', col: '#8a8aa2', colSh: '#6a6a82', colCap: '#a0a0b8', step: '#6a6a82', step2: '#55556b', step3: '#4a4a60', gr: ['#4a4e46', '#3e423a'], path: '#8a8672', path2: '#76725f', emblem: null, tree: 'dead', props: [] };
+function buildArrivalBG(skull, idx) {
+  const F = skull ? FSKULL : (FAC[idx] || FAC[0]);
   const SKY = mk(VW, VH), { c, g } = mk(VW, VH), g0 = SKY.g;
   const sky = skull ? ['#262a44', '#323656', '#40456a', '#4f5580'] : ['#6cc0ee', '#85cdf2', '#a3dbf6', '#c4eaf9'];
   for (let i = 0; i < 4; i++) { g0.fillStyle = sky[i]; g0.fillRect(0, i * 38, VW, 39); if (i) { g0.fillStyle = sky[i - 1]; for (let x = 0; x < VW; x += 4) g0.fillRect(x + ((i % 2) * 2), i * 38, 2, 2); } }
   g0.fillStyle = skull ? '#e4e8f4' : '#ffe27a';
   for (let dy = -12; dy <= 12; dy++) { const hw = Math.round(Math.sqrt(144 - dy * dy)); g0.fillRect(356 - hw, 34 + dy, hw * 2, 1); }
   // edificio
-  const stone = skull ? ['#6a6a82', '#585870', '#4a4a60'] : ['#c2c2cf', '#aaaabb', '#8e8ea0'];
+  const stone = F.stone;
   for (let y = 60; y < 152; y += 8) for (let x = 70; x < 330; x += 16) {
     const off = ((y - 60) / 8) % 2 ? 8 : 0, bx = x - off; const n = hash2(bx, y, 4);
     g.fillStyle = n > 0.66 ? stone[0] : n > 0.33 ? stone[1] : stone[0]; g.fillRect(Math.max(70, bx), y, Math.min(16, 330 - Math.max(70, bx)), 8);
     g.fillStyle = stone[2]; g.fillRect(Math.max(70, bx), y + 7, 16, 1); g.fillRect(Math.max(70, bx), y, 1, 8);
   }
-  g.fillStyle = skull ? '#3a3a4c' : '#e4e4ee'; g.fillRect(60, 56, 280, 8); g.fillStyle = stone[2]; g.fillRect(60, 62, 280, 2);
-  for (let y = 22; y < 56; y++) { const hw = Math.round((y - 22) / 34 * 140); g.fillStyle = skull ? '#4e4e64' : '#d6d6e2'; g.fillRect(200 - hw, y, hw * 2, 1); }
-  for (let y = 30; y < 55; y++) { const hw = Math.round((y - 30) / 25 * 96); g.fillStyle = skull ? '#2a2a3c' : '#9a9ab0'; g.fillRect(200 - hw, y, hw * 2, 1); }
+  g.fillStyle = F.cornice; g.fillRect(60, 56, 280, 8); g.fillStyle = stone[2]; g.fillRect(60, 62, 280, 2);
+  for (let y = 22; y < 56; y++) { const hw = Math.round((y - 22) / 34 * 140); g.fillStyle = F.ped; g.fillRect(200 - hw, y, hw * 2, 1); }
+  for (let y = 30; y < 55; y++) { const hw = Math.round((y - 30) / 25 * 96); g.fillStyle = F.pedIn; g.fillRect(200 - hw, y, hw * 2, 1); }
   if (skull) { g.fillStyle = '#e8e8dc'; g.fillRect(190, 38, 20, 12); g.fillStyle = '#12121a'; g.fillRect(193, 41, 5, 5); g.fillRect(202, 41, 5, 5); g.fillRect(198, 47, 4, 3); }
+  else if (F.emblem) F.emblem(g);
   else { g.fillStyle = '#f0c24a'; for (let i = 0; i < 5; i++) g.fillRect(196 + i * 2 - (i % 2 ? 0 : 0), 40 + Math.abs(2 - i), 2, 6 - Math.abs(2 - i) * 2 > 0 ? 6 - Math.abs(2 - i) : 1); }
   [78, 106, 134, 266, 294, 322].forEach((x) => {
-    g.fillStyle = skull ? '#8a8aa2' : '#efeef5'; g.fillRect(x, 66, 10, 84); g.fillStyle = skull ? '#6a6a82' : '#b9b8c6'; g.fillRect(x + 7, 66, 3, 84);
-    g.fillStyle = skull ? '#a0a0b8' : '#fff'; g.fillRect(x - 2, 64, 14, 5); g.fillRect(x - 2, 146, 14, 5);
+    g.fillStyle = F.col; g.fillRect(x, 66, 10, 84); g.fillStyle = F.colSh; g.fillRect(x + 7, 66, 3, 84);
+    g.fillStyle = F.colCap; g.fillRect(x - 2, 64, 14, 5); g.fillRect(x - 2, 146, 14, 5);
   });
   // puerta
   g.fillStyle = '#1b1008'; g.fillRect(184, 112, 32, 40);
@@ -959,18 +1167,19 @@ function buildArrivalBG(skull) {
   g.fillStyle = '#2a1608'; g.fillRect(146, 66, 108, 22); g.fillStyle = '#6b4426'; g.fillRect(148, 68, 104, 18); g.fillStyle = '#8a5a35'; g.fillRect(148, 68, 104, 2);
   g.fillStyle = '#1b1008'; g.fillRect(160, 62, 2, 5); g.fillRect(238, 62, 2, 5);
   // escalones y suelo
-  g.fillStyle = skull ? '#6a6a82' : '#d8d8e2'; g.fillRect(60, 150, 280, 4); g.fillStyle = skull ? '#55556b' : '#bcbccb'; g.fillRect(40, 154, 320, 4); g.fillStyle = skull ? '#4a4a60' : '#a4a4b4'; g.fillRect(0, 150, 60, 8); g.fillRect(340, 150, 60, 8);
-  const gr = skull ? ['#4a4e46', '#3e423a'] : ['#5ea84a', '#4f9a3f'];
+  g.fillStyle = F.step; g.fillRect(60, 150, 280, 4); g.fillStyle = F.step2; g.fillRect(40, 154, 320, 4); g.fillStyle = F.step3; g.fillRect(0, 150, 60, 8); g.fillRect(340, 150, 60, 8);
+  const gr = F.gr;
   for (let y = 158; y < 205; y++) for (let x = 0; x < VW; x++) { g.fillStyle = hash2(x >> 1, y >> 1, 12) > 0.8 ? gr[1] : gr[0]; g.fillRect(x, y, 1, 1); }
-  g.fillStyle = skull ? '#8a8672' : '#e6cf91'; g.fillRect(176, 158, 48, 47);
-  for (let y = 158; y < 205; y += 3) { g.fillStyle = skull ? '#76725f' : '#d2b977'; g.fillRect(176 + ((y * 7) % 40), y, 3, 1); }
+  g.fillStyle = F.path; g.fillRect(176, 158, 48, 47);
+  for (let y = 158; y < 205; y += 3) { g.fillStyle = F.path2; g.fillRect(176 + ((y * 7) % 40), y, 3, 1); }
   g.fillStyle = skull ? '#4a3a30' : '#8a5a35'; g.fillRect(0, 205, VW, 6); g.fillStyle = skull ? '#33281f' : '#6b4326'; g.fillRect(0, 211, VW, 5); g.fillStyle = skull ? '#221a14' : '#4d2f1a'; g.fillRect(0, 216, VW, 3);
   // muelle
   for (let y = 205; y < 262; y++) { g.fillStyle = Math.floor(y / 5) % 2 ? '#a06a38' : '#8a5a2b'; g.fillRect(186, y, 28, 1); if (y % 5 === 0) { g.fillStyle = '#4d2f1a'; g.fillRect(186, y, 28, 1); } }
   g.fillStyle = '#4d2f1a'; [208, 236, 258].forEach((y) => { g.fillRect(182, y, 4, 6); g.fillRect(214, y, 4, 6); });
   // palmeras / árboles
   const r = mulberry32(skull ? 4 : 8);
-  [[48, 204], [92, 200], [352, 204], [308, 200]].forEach((q) => { if (skull) drawDeadTree(g, q[0], q[1]); else drawPalm(g, q[0], q[1], r); });
+  [[48, 204], [92, 200], [352, 204], [308, 200]].forEach((q) => { if (skull) drawDeadTree(g, q[0], q[1]); else TREES[F.tree](g, q[0], q[1], r); });
+  (F.props || []).forEach((q) => PROP[q[2]](g, q[0], q[1], q[3] || 0));
   return { sky: SKY.c, fg: c };
 }
 const arrival = {
@@ -978,7 +1187,7 @@ const arrival = {
   rects: [{ x: 16, y: 154, w: 368, h: 50 }, { x: 188, y: 200, w: 24, h: 64 }],
   enter(p) {
     this.idx = p.idx; this.skull = p.idx === SKULL_I; this.pl = { x: 200, y: 238, dir: 'u', fr: 0, t: 0 }; musicSet(trackFor(this.idx));
-    const key = this.skull ? 's' : 'n'; this.bg = arrivalBG[key] || (arrivalBG[key] = buildArrivalBG(this.skull));
+    const key = this.skull ? 's' : 'n' + this.idx; this.bg = arrivalBG[key] || (arrivalBG[key] = buildArrivalBG(this.skull, this.idx));
     const r = mulberry32(3); this.clouds = []; for (let i = 0; i < 4; i++) this.clouds.push({ x: r() * VW, y: 14 + r() * 70, v: i % 3, s: 4 + r() * 6 });
     const sg = $('sign'), nm = placeName(this.idx); sg.style.display = 'flex';
     // letrero: una línea si cabe; si no, se parte en dos por el espacio más cercano al centro
@@ -1218,18 +1427,194 @@ function finishPuzzle() {
 }
 $('pzSkip').addEventListener('click', () => { audioInit(); finishPuzzle(); });
 
+/* ======================================================================
+   EL ORO — objeto de cierre, cinemática del galeón español y orfebrería flotante
+   · Tras entregar todas las obras y "seguir navegando" aparece una BOTELLA con un mensaje.
+   · Al leerla: cinemática del galeón español llevándose el oro de una isla, con el barco pirata
+     persiguiéndolo. El galeón va soltando piezas de orfebrería indígena que quedan flotando en el mar.
+   · Al terminar se avisa a la página (postMessage) para dar paso al Museo del Oro.
+   ====================================================================== */
+const ORO_DEF = [
+  { id: 'poporo', titulo: 'Poporo Quimbaya', descripcion: 'Recipiente de oro (aleación llamada tumbaga) de la cultura Quimbaya, del centro-occidente de Colombia. Se usaba para guardar la cal que se mezclaba con hojas de coca en rituales y en la vida diaria. Es una de las piezas más reconocidas de la orfebrería colombiana.' },
+  { id: 'balsa', titulo: 'Balsa Muisca', descripcion: 'Pequeña balsa de oro con un cacique y sus acompañantes. Representa la ceremonia de ofrendas en la laguna de Guatavita, origen de la leyenda de El Dorado, en el altiplano cundiboyacense.' },
+  { id: 'tunjo', titulo: 'Tunjo Muisca', descripcion: 'Figura votiva de oro que los muiscas ofrendaban a sus dioses en lagunas y santuarios. Cada tunjo representa personas, animales u objetos sagrados.' },
+  { id: 'pectoral', titulo: 'Pectoral Tairona', descripcion: 'Adorno de pecho de la cultura Tairona, de la Sierra Nevada de Santa Marta. Muchas piezas combinan formas humanas y de aves, y evocan el vuelo y el poder de los chamanes.' },
+  { id: 'diadema', titulo: 'Diadema Calima', descripcion: 'Adorno de cabeza de la cultura Calima, del suroccidente colombiano. Las diademas de oro martillado se lucían en ceremonias y marcaban el prestigio de quien las portaba.' },
+  { id: 'nariguera', titulo: 'Nariguera Zenú', descripcion: 'Adorno nasal de oro de la cultura Zenú, de las sabanas del Caribe colombiano. Los adornos corporales mostraban rango, identidad y vínculos con lo sagrado.' }
+];
+function oroInfo(id) {
+  const d = ORO_DEF.find((x) => x.id === id) || { id, titulo: id, descripcion: '' }, o = (DATA.orfebreria || []).find((x) => x.id === id) || {};
+  return { id, titulo: String(o.titulo || d.titulo).trim(), descripcion: o.descripcion || d.descripcion };
+}
+TXT.botellaTitulo = TXT.botellaTitulo || 'Una botella a la deriva';
+TXT.botellaMensaje = TXT.botellaMensaje || 'Capitán: el oro de estas tierras zarpa hoy rumbo a España, bajo bandera de la Corona. Quien lo siga encontrará, en el Museo del Oro, la historia de lo que el mar no pudo devolver.\\n\\n— Un amigo del archivo';
+TXT.oroFinal = TXT.oroFinal || 'El oro cruza el océano… pero la persecución continúa en el Museo del Oro.';
+
+/* ---------- sprites de orfebrería (16x16, dorados) ---------- */
+const ORO_SPR = (() => {
+  const Y = '#f0c24a', Y2 = '#c8941c', Y3 = '#fff2a0', D = '#7a5a10', out = {};
+  const mkS = (id, fn) => { const { c, g } = mk(16, 16); fn(g); out[id] = c; };
+  mkS('poporo', (g) => { blob(g, 8, 10, 5, Y); blob(g, 7, 9, 3, Y3); Rr(g, 7, 3, 3, 5, Y2); Rr(g, 6, 2, 5, 2, Y); Rr(g, 12, 5, 1, 9, D); Rr(g, 11, 4, 3, 1, Y3); Rr(g, 5, 13, 7, 1, Y2); Rr(g, 4, 9, 1, 2, D); Rr(g, 12, 9, 1, 2, D); });
+  mkS('balsa', (g) => { Rr(g, 1, 12, 14, 2, Y2); Rr(g, 2, 11, 12, 1, Y); for (let i = 2; i < 14; i += 2) Rr(g, i, 12, 1, 2, D); Rr(g, 7, 4, 2, 7, Y); Rr(g, 6, 3, 4, 1, Y3); Rr(g, 6, 2, 1, 1, Y3); Rr(g, 9, 2, 1, 1, Y3); Rr(g, 3, 7, 1, 5, Y2); Rr(g, 12, 7, 1, 5, Y2); Rr(g, 2, 6, 3, 1, Y); Rr(g, 11, 6, 3, 1, Y); Rr(g, 8, 11, 1, 1, D); });
+  mkS('tunjo', (g) => { Rr(g, 5, 0, 6, 1, Y3); Rr(g, 6, 1, 4, 4, Y); Rr(g, 5, 5, 6, 6, Y2); Rr(g, 6, 5, 4, 5, Y); Rr(g, 3, 6, 2, 2, Y); Rr(g, 11, 6, 2, 2, Y); Rr(g, 3, 8, 1, 2, Y2); Rr(g, 12, 8, 1, 2, Y2); Rr(g, 5, 11, 2, 4, Y2); Rr(g, 9, 11, 2, 4, Y2); Rr(g, 7, 2, 1, 1, D); Rr(g, 9, 2, 1, 1, D); });
+  mkS('pectoral', (g) => { Rr(g, 1, 5, 14, 3, Y); Rr(g, 1, 8, 3, 2, Y2); Rr(g, 12, 8, 3, 2, Y2); Rr(g, 6, 3, 4, 10, Y2); Rr(g, 7, 3, 2, 10, Y); Rr(g, 7, 1, 2, 3, Y3); Rr(g, 6, 12, 4, 3, Y); Rr(g, 3, 6, 1, 1, D); Rr(g, 12, 6, 1, 1, D); Rr(g, 7, 6, 2, 2, D); });
+  mkS('diadema', (g) => { Rr(g, 1, 8, 14, 3, Y2); Rr(g, 1, 8, 14, 1, Y3); Rr(g, 3, 4, 2, 4, Y); Rr(g, 7, 2, 2, 6, Y); Rr(g, 11, 4, 2, 4, Y); for (const x of [2, 6, 9, 13]) { Rr(g, x, 11, 2, 2, Y); Rr(g, x, 13, 2, 1, Y2); } Rr(g, 7, 9, 2, 1, D); });
+  mkS('nariguera', (g) => { for (let dx = -6; dx <= 6; dx++) { const yy = 4 + Math.round(dx * dx / 8); Rr(g, 8 + dx, yy, 1, 2, Y); } Rr(g, 3, 8, 1, 5, Y2); Rr(g, 7, 9, 2, 5, Y); Rr(g, 12, 8, 1, 5, Y2); Rr(g, 3, 13, 1, 2, Y3); Rr(g, 12, 13, 1, 2, Y3); Rr(g, 7, 14, 2, 1, Y3); });
+  return out;
+})();
+function oroPreview(id) { const { c, g } = mk(160, 160); g.imageSmoothingEnabled = false; g.drawImage(ORO_SPR[id], 0, 0, 160, 160); return c.toDataURL('image/png'); }
+const BOTTLE_PNG = (() => {
+  const { c, g } = mk(16, 16); Rr(g, 5, 4, 6, 10, '#7fd0c0'); Rr(g, 4, 6, 8, 7, '#6ac0b0'); Rr(g, 6, 1, 4, 4, '#7fd0c0'); Rr(g, 6, 0, 4, 2, '#a87648'); Rr(g, 6, 7, 4, 5, '#f4e6c3'); Rr(g, 6, 8, 4, 1, '#c8a878'); Rr(g, 6, 10, 3, 1, '#c8a878'); Rr(g, 5, 5, 1, 7, '#d8fff4');
+  const o = mk(160, 160); o.g.drawImage(c, 0, 0, 160, 160); return o.c.toDataURL('image/png');
+})();
+
+/* ---------- el objeto de cierre en el mar (botella → boya) ---------- */
+const GOAL = { x: START.x - 110, y: START.y - 60 };
+(function () { for (let k = 0; k < 60 && blockedAt(GOAL.x, GOAL.y, 40); k++) { GOAL.x += 22; GOAL.y += 12; } })();
+function drawOroObjects(g, cam, t) {
+  const sparkle = (x, y, ph) => { if (Math.floor(t * 4 + ph) % 3 === 0) { Rr(g, x, y - 2, 1, 5, '#fff7b0'); Rr(g, x - 2, y, 5, 1, '#fff7b0'); } };
+  if (save.cineDone) {
+    const x = Math.round(GOAL.x - cam.x), y = Math.round(GOAL.y - cam.y);
+    if (x > -40 && x < VW + 40 && y > -50 && y < VH + 40) {
+      const bob = Math.round(Math.sin(t * 2) * 2); Rr(g, x - 3, y - 70, 6, 52, 'rgba(255,245,170,' + (0.12 + 0.06 * Math.sin(t * 3)).toFixed(2) + ')'); ell(g, x, y + 2, 13, 5, 'rgba(255,245,170,' + (0.18 + 0.1 * Math.sin(t * 3)).toFixed(2) + ')');
+      if (!save.oroDone) {   // botella con mensaje
+        Rr(g, x - 4, y - 14 + bob, 8, 12, '#7fd0c0'); Rr(g, x - 5, y - 11 + bob, 10, 8, '#6ac0b0'); Rr(g, x - 2, y - 20 + bob, 4, 7, '#7fd0c0'); Rr(g, x - 2, y - 22 + bob, 4, 3, '#a87648');
+        Rr(g, x - 2, y - 11 + bob, 4, 7, '#f4e6c3'); Rr(g, x - 4, y - 13 + bob, 1, 9, '#d8fff4'); sparkle(x + 7, y - 20 + bob, 0);
+      } else {               // boya dorada: zarpar hacia el Museo del Oro
+        blob(g, x, y - 5 + bob, 7, '#d04a4a'); Rr(g, x - 7, y - 7 + bob, 14, 3, '#f4f0e0'); Rr(g, x - 1, y - 20 + bob, 2, 10, '#5a3a1f'); Rr(g, x + 1, y - 20 + bob, 8, 3, '#f0c24a'); Rr(g, x + 1, y - 17 + bob, 8, 3, '#c0272d'); sparkle(x - 9, y - 16 + bob, 1); sparkle(x + 10, y - 8 + bob, 2);
+      }
+    }
+  }
+  save.oroItems.forEach((it, k) => {
+    const x = Math.round(it.x - cam.x), y = Math.round(it.y - cam.y); if (x < -30 || x > VW + 30 || y < -30 || y > VH + 30) return;
+    const bob = Math.round(Math.sin(t * 2 + k) * 2); ell(g, x, y + 3, 11, 4, 'rgba(255,255,255,.3)'); ell(g, x, y + 3, 7, 2, 'rgba(255,230,120,.35)');
+    g.drawImage(ORO_SPR[it.id], x - 12, y - 22 + bob, 24, 24); sparkle(x + 9, y - 20 + bob, k);
+    if (!save.oroSeen[it.id]) { Rr(g, x - 1, y - 30 + bob, 3, 3, '#fff7b0'); Rr(g, x - 1, y - 52, 2, 22, 'rgba(255,240,150,.16)'); }
+  });
+}
+function completarJuego() {
+  const id = CFG.museoId || 'nacional';
+  try { if (window.parent !== window) window.parent.postMessage({ tipo: 'museo-completo', museo: id }, '*'); } catch (e) { /* sin página contenedora */ }
+  try { window.dispatchEvent(new CustomEvent('museo-completo', { detail: { museo: id } })); } catch (e) { /* */ }
+  if (CFG.urlSiguienteMuseo && window.parent === window) { try { window.location.href = CFG.urlSiguienteMuseo; } catch (e) { /* */ } }
+}
+/** Interacción con el objeto de cierre y con las piezas de orfebrería (la llama la escena del mar). */
+function oroInteract(obj) {
+  if (obj.type === 'goal') {
+    if (!save.oroDone) openDialog({ titulo: TXT.botellaTitulo, descripcion: TXT.botellaMensaje.replace(/\\n/g, '\n'), imagen: BOTTLE_PNG, removida: false, tipo: 'escultura', formato: 'cuadrado', fmt: 'cuadrado' }, () => go('oro', {}));
+    else { sfx.win(); toast('¡Rumbo al Museo del Oro!', 3000); completarJuego(); }
+  } else {
+    const info = oroInfo(obj.it.id);
+    openDialog({ titulo: info.titulo, descripcion: info.descripcion, imagen: oroPreview(obj.it.id), removida: false, tipo: 'escultura', formato: 'cuadrado', fmt: 'cuadrado', origen: 'Orfebrería indígena colombiana' }, () => {
+      if (!save.oroSeen[obj.it.id]) { save.oroSeen[obj.it.id] = true; persist(); toast('Orfebrería hallada: ' + Object.keys(save.oroSeen).length + '/' + ORO_DEF.length, 2600); sfx.ok(); }
+    });
+  }
+}
+
+/* ---------- galeón español (vista lateral, mira a la derecha; face = -1 lo voltea) ---------- */
+function drawGalleon(g, x, y, face, bob) {
+  g.save(); g.translate(Math.round(x), Math.round(y + bob)); if (face < 0) g.scale(-1, 1);
+  const R = (a, b, w, h, c) => { g.fillStyle = c; g.fillRect(a, b, w, h); }, red = '#c0272d';
+  R(-33, 1, 68, 3, 'rgba(0,0,0,.22)');
+  R(-1, -60, 2, 48, '#2a190c'); R(17, -50, 2, 38, '#2a190c'); R(-21, -44, 2, 32, '#2a190c');
+  const sail = (x0, y0, w, h) => { R(x0, y0, w, h, '#f2e8c8'); R(x0, y0, w, 1, '#c8bc98'); R(x0 + w - 3, y0, 3, h, '#d8cca8'); const n = Math.min(w, h) - 6; for (let i = 0; i <= n; i += 2) { R(x0 + 2 + Math.round(i * (w - 6) / n), y0 + 2 + Math.round(i * (h - 6) / n), 2, 2, red); R(x0 + w - 4 - Math.round(i * (w - 6) / n), y0 + 2 + Math.round(i * (h - 6) / n), 2, 2, red); } };
+  sail(-9, -56, 20, 20); sail(-10, -35, 22, 15); sail(12, -47, 16, 17); sail(-27, -40, 14, 13);
+  R(-32, -12, 60, 13, '#4a2a12'); R(-32, -12, 60, 3, '#7a4a22'); R(-30, -5, 58, 1, '#e0b030'); R(-28, 0, 54, 2, '#3a2010');
+  R(-34, -24, 18, 13, '#5a3418'); R(-34, -24, 18, 2, '#e0b030'); R(-31, -19, 3, 3, '#f0c24a'); R(-25, -19, 3, 3, '#f0c24a'); R(-34, -26, 2, 3, '#3a2010');
+  R(26, -11, 8, 9, '#4a2a12'); R(32, -9, 6, 4, '#7a4a22'); R(36, -13, 14, 2, '#3a2410'); R(48, -14, 3, 2, '#e0b030');
+  for (let k = 0; k < 5; k++) R(-18 + k * 9, -8, 3, 2, '#14090a');
+  R(1, -62, 12, 2, red); R(1, -60, 12, 3, '#f2c200'); R(1, -57, 12, 2, red); R(19, -52, 8, 2, red); R(19, -50, 8, 2, '#f2c200');
+  [[-12, -17], [-5, -17], [-9, -22]].forEach((q) => { R(q[0] - 1, q[1] - 1, 9, 7, '#7a5a10'); R(q[0], q[1], 7, 5, '#f0c24a'); R(q[0], q[1], 7, 1, '#fff2a0'); });
+  g.restore();
+}
+
+/* ---------- escena: cinemática del galeón y el barco pirata ---------- */
+const GOLD_ISLAND = 7;   // índice (0-9) de la isla de la que se lleva el oro: «Tierra como recurso»
+const oro = {
+  gal: { x: 0, y: 0, face: 1 }, pir: { x: 0, y: 0, dir: 2 }, cam: { x: 0, y: 0 }, phase: 'load', pt: 0, route: [], cum: [], L: 1, dist: 0, drops: [], flying: [], rip: [], wake: [], wt: 0, loaded: 0, nSpawn: 0, spawnT: 0, done: false, pirInit: { x: 0, y: 0 }, prev: { x: 0, y: 0 },
+  enter() {
+    $('hud').style.display = 'none'; $('mini').style.display = 'none'; setPrompt(null); $('btnSkip').style.display = 'block'; musicSet(MUS.cinematica);
+    this.done = false; this.phase = 'load'; this.pt = 0; this.dist = 0; this.flying = []; this.rip = []; this.wake = []; this.loaded = 0; this.nSpawn = 0; this.spawnT = 0; save.oroItems = []; save.oroSeen = {};
+    const isl = PLACES[GOLD_ISLAND], dk = isl.dock, start = { x: dk.tip.x + dk.ux * 8, y: dk.tip.y + dk.uy * 8 };
+    const free = (w) => { const q = { x: w.x, y: w.y }; for (let k = 0; k < 40 && blockedAt(q.x, q.y, 44); k++) q.x += 25; return q; };
+    let pts = [start], cur = start;
+    [{ x: 230, y: 700 }, { x: 150, y: 1500 }, { x: 300, y: 2300 }, { x: 800, y: 2650 }].forEach((w) => { const q = free(w), seg = findPath(cur, q); pts = pts.concat(seg.slice(1)); cur = q; });
+    pts.push({ x: 1250, y: 3300 });
+    this.route = pts; this.cum = [0]; for (let i = 1; i < pts.length; i++) this.cum.push(this.cum[i - 1] + Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y)); this.L = this.cum[this.cum.length - 1];
+    this.drops = ORO_DEF.map((d, k) => {
+      const dd = this.L * (0.09 + k * 0.125), a = this.posAt(dd), b = this.posAt(dd + 6), nx = -(b.y - a.y), ny = b.x - a.x, nl = Math.hypot(nx, ny) || 1;
+      let off = (k % 2 ? 1 : -1) * 24, pos = { x: a.x + nx / nl * off, y: a.y + ny / nl * off };
+      if (blockedAt(pos.x, pos.y, 24)) pos = { x: a.x, y: a.y }; return { d: dd, id: d.id, x: Math.round(pos.x), y: Math.round(pos.y), done: false };
+    });
+    this.gal.x = start.x; this.gal.y = start.y; this.gal.face = 1;
+    this.pirInit = { x: start.x + 220, y: start.y + 260 }; this.pir.x = this.pirInit.x; this.pir.y = this.pirInit.y; this.pir.dir = dirIndex(-1, -1);
+    this.cam.x = clamp(start.x - VW / 2, 0, WORLD_W - VW); this.cam.y = clamp(start.y - VH / 2, 0, WORLD_H - VH);
+    setCaption('La Corona española carga el oro de «' + placeName(GOLD_ISLAND) + '»…');
+  },
+  leave() { setCaption(null); $('btnSkip').style.display = 'none'; },
+  posAt(d) { d = clamp(d, 0, this.L); let i = 1; while (i < this.cum.length - 1 && this.cum[i] < d) i++; const a = this.route[i - 1], b = this.route[i], seg = (this.cum[i] - this.cum[i - 1]) || 1, u = (d - this.cum[i - 1]) / seg; return { x: lerp(a.x, b.x, u), y: lerp(a.y, b.y, u) }; },
+  update(dt) {
+    this.pt += dt; const isl = PLACES[GOLD_ISLAND];
+    if (this.phase === 'load') {
+      this.spawnT += dt; while (this.nSpawn < 8 && this.spawnT >= 0.42) { this.spawnT -= 0.42; this.nSpawn++; this.flying.push({ t: 0 }); }
+      this.flying.forEach((c) => { c.t += dt / 0.8; }); this.flying.filter((c) => c.t >= 1).forEach(() => { this.loaded++; sfx.thud(); }); this.flying = this.flying.filter((c) => c.t < 1);
+      const u = clamp((this.pt - 1.2) / 2.6, 0, 1); this.pir.x = lerp(this.pirInit.x, this.gal.x + 70, u); this.pir.y = lerp(this.pirInit.y, this.gal.y + 95, u); this.pir.dir = dirIndex(this.gal.x + 70 - this.pirInit.x, this.gal.y + 95 - this.pirInit.y);
+      if (this.pt > 3.0 && this.pt < 3.1) setCaption('¡Un barco pirata los acecha!');
+      if (this.pt > 5.2 && this.loaded >= 8) { this.phase = 'chase'; this.prev = { x: this.gal.x, y: this.gal.y }; setCaption('El galeón huye con el oro… ¡síguelo!'); }
+    } else if (this.phase === 'chase') {
+      this.dist = Math.min(this.L, this.dist + 175 * dt); const p = this.posAt(this.dist), q = this.posAt(Math.max(0, this.dist - 115));
+      const dx = p.x - this.gal.x; if (Math.abs(dx) > 0.3) this.gal.face = dx > 0 ? 1 : -1; this.gal.x = p.x; this.gal.y = p.y;
+      const ox = this.pir.x, oy = this.pir.y; this.pir.x = lerp(ox, q.x, Math.min(1, 3.5 * dt)); this.pir.y = lerp(oy, q.y, Math.min(1, 3.5 * dt));
+      if (Math.hypot(this.pir.x - ox, this.pir.y - oy) > 0.15) this.pir.dir = dirIndex(this.pir.x - ox, this.pir.y - oy);
+      this.wt -= dt; if (this.wt <= 0) { this.wake.push({ x: this.gal.x - this.gal.face * 26, y: this.gal.y + 2, l: 1 }); this.wake.push({ x: this.pir.x, y: this.pir.y + 2, l: 1 }); this.wt = 0.07; }
+      this.drops.forEach((d) => { if (!d.done && this.dist >= d.d) { d.done = true; save.oroItems.push({ id: d.id, x: d.x, y: d.y }); this.rip.push({ x: d.x, y: d.y, t: 0 }); sfx.thud(); toast('¡Se le cae: ' + oroInfo(d.id).titulo + '!', 2200); } });
+      if (this.dist >= this.L) { this.phase = 'end'; this.pt = 0; setCaption(TXT.oroFinal); }
+    } else if (this.phase === 'end') { if (this.pt > 3.4) this.finish(); }
+    this.rip.forEach((r) => { r.t += dt; }); this.rip = this.rip.filter((r) => r.t < 1.2);
+    this.wake.forEach((w) => { w.l -= dt * 1.6; }); this.wake = this.wake.filter((w) => w.l > 0);
+    const fx = this.phase === 'end' ? this.pir.x : (this.gal.x + this.pir.x) / 2, fy = this.phase === 'end' ? this.pir.y : (this.gal.y + this.pir.y) / 2;
+    this.cam.x += (clamp(fx - VW / 2, 0, WORLD_W - VW) - this.cam.x) * Math.min(1, 4 * dt); this.cam.y += (clamp(fy - VH / 2, 0, WORLD_H - VH) - this.cam.y) * Math.min(1, 4 * dt);
+  },
+  finish() {
+    if (this.done) return; this.done = true;
+    this.drops.forEach((d) => { if (!d.done) { d.done = true; save.oroItems.push({ id: d.id, x: d.x, y: d.y }); } });
+    save.oroDone = true; persist(); setCaption(null); $('btnSkip').style.display = 'none'; completarJuego();
+    go('sea', { at: GOAL }); setTimeout(() => toast('El oro dejó rastros en el mar: explora y examina las piezas.', 4800), 1200);
+  },
+  skip() { this.finish(); },
+  draw() {
+    const g = ctx, cam = { x: Math.round(this.cam.x), y: Math.round(this.cam.y) };
+    drawWorld(g, cam, gt);
+    this.wake.forEach((w) => { g.fillStyle = 'rgba(235,250,255,' + (w.l * 0.8).toFixed(2) + ')'; const z = 2 + Math.round((1 - w.l) * 5); g.fillRect(Math.round(w.x - cam.x - z / 2), Math.round(w.y - cam.y), z, 2); });
+    this.rip.forEach((r) => { const k = r.t / 1.2, x = Math.round(r.x - cam.x), y = Math.round(r.y - cam.y); g.strokeStyle = 'rgba(255,255,255,' + (0.8 * (1 - k)).toFixed(2) + ')'; g.lineWidth = 1; g.strokeRect(x - 6 - k * 14, y - 2 - k * 5, 12 + k * 28, 4 + k * 10); });
+    const bob = Math.round(Math.sin(gt * 2.4));
+    drawShip(g, this.pir.dir, this.pir.x - cam.x, this.pir.y - cam.y, 0.75, Math.round(Math.sin(gt * 3)));
+    drawGalleon(g, this.gal.x - cam.x, this.gal.y - cam.y, this.gal.face, bob);
+    const crate = (x, y) => { const cx = Math.round(x - cam.x), cy = Math.round(y - cam.y); g.fillStyle = '#7a5a10'; g.fillRect(cx - 6, cy - 6, 12, 12); g.fillStyle = '#f0c24a'; g.fillRect(cx - 5, cy - 5, 10, 10); g.fillStyle = '#fff2a0'; g.fillRect(cx - 5, cy - 5, 10, 2); g.fillStyle = '#c8941c'; g.fillRect(cx - 1, cy - 5, 2, 10); };
+    const isl = PLACES[GOLD_ISLAND].pos; this.flying.forEach((c) => { const u = clamp(c.t, 0, 1); crate(lerp(isl.x, this.gal.x, u), lerp(isl.y + 10, this.gal.y - 18, u) - Math.sin(u * Math.PI) * 44); });
+  }
+};
+scenes.oro = oro;
+
 /* ----------------------------- SALA DEL MUSEO ----------------------------- */
 const WALL_H = 64, HALL_H = 208, FLOOR_BOTTOM = 198;
 const FRAME = { horizontal: { w: 48, h: 34 }, vertical: { w: 32, h: 42 }, cuadrado: { w: 38, h: 38 } };
 const PED_TOP = WALL_H + 28; // y de la parte alta del pedestal de las esculturas
 function mkSlot(o, key, extra) {
-  const s = { titulo: o.titulo, descripcion: o.descripcion, imagen: o.removida ? '' : o.imagen, removida: !!o.removida, key,
-    tipo: o.tipo === 'escultura' ? 'escultura' : 'cuadro', formato: o.formato || 'auto', alto: o.alto || 48, pixelado: !!o.pixelado };
+  const s = { titulo: String(o.titulo || '').trim(), descripcion: o.descripcion, imagen: o.removida ? '' : o.imagen, removida: !!o.removida, key,
+    tipo: o.tipo === 'escultura' ? 'escultura' : 'cuadro', formato: o.formato || 'auto', alto: o.alto || 48, ancho: o.ancho || 64, pixelado: !!o.pixelado };
   s.fmt = (s.formato !== 'auto' && FRAME[s.formato]) ? s.formato : 'horizontal';
   return Object.assign(s, extra || {});
 }
 function buildSlots(kind, idx) {
-  if (kind === 'isla') return islandWorks(idx).map((o, j) => (o.removida && save.restored[idx]) ? mkSlot(Object.assign({}, o, { removida: false }), idx + ':' + j, { restituida: true, origen: 'Regresó de la Isla Calavera' }) : mkSlot(o, idx + ':' + j));
+  if (kind === 'isla') {   // las obras removidas NO se ven en la sala hasta que se restituyen (solo están en la Isla Calavera)
+    const out = [];
+    islandWorks(idx).forEach((o, j) => {
+      if (o.removida && !save.restored[idx]) return;
+      out.push(o.removida ? mkSlot(Object.assign({}, o, { removida: false }), idx + ':' + j, { restituida: true, origen: 'Regresó de la Isla Calavera' }) : mkSlot(o, idx + ':' + j));
+    });
+    return out;
+  }
   return removedList().map((r) => mkSlot(r.o, 'k:' + r.i + ':' + r.j, { origen: 'Pertenecía a: ' + placeName(r.i), imagen: '' }));
 }
 function drawFrame(g, cx, slot) {
@@ -1261,7 +1646,7 @@ function drawFrame(g, cx, slot) {
 /* Esculturas / objetos (PNG con fondo transparente) sobre un pedestal */
 function statueBox(s) {
   let h = s.alto || 48, w = h; const im = s.im;
-  if (im && im.complete && im.naturalWidth && !s.imErr) { w = h * im.naturalWidth / im.naturalHeight; if (w > 64) { h = h * 64 / w; w = 64; } }
+  if (im && im.complete && im.naturalWidth && !s.imErr) { w = h * im.naturalWidth / im.naturalHeight; const mw = s.ancho || 64; if (w > mw) { h = h * mw / w; w = mw; } }
   return { w: Math.round(w), h: Math.round(h) };
 }
 function drawStatue(g, cx, s) {
@@ -1369,7 +1754,7 @@ const museum = {
   update(dt) {
     if (this.dirty) { this.hall = buildHall(this.slots, this.skull, this.WW, this.benches); this.dirty = false; }
     if (isBlocked()) return;
-    const p = this.pl; movePlayer(p, axis(), dt, 74, (x, y) => this.canGo(x, y));
+    const p = this.pl; movePlayer(p, axis(), dt, 74, (x, y) => this.canGo(x, y));   // Shift / mantener B = correr
     this.cam += (clamp(p.x - VW / 2, 0, this.WW - VW) - this.cam) * Math.min(1, 8 * dt);
     if (p.y >= 205 && p.x >= 36 && p.x <= 60) { sfx.ok(); go('arrival', { idx: this.skull ? SKULL_I : this.idx }); return; }
     // objetivo de interacción
@@ -1400,7 +1785,7 @@ const museum = {
           this.wasExplored = true; sfx.win(); toast('¡ISLA EXPLORADA! ' + exploredCount() + '/' + N_ISL, 3200);
           if (allExplored()) setTimeout(() => toast('¡Exploraste las 10 islas! Algo cambia en el mar…', 4200), 3300);
         } else if (first && CFG.exigirVerTodas) {
-          const rest = islandWorks(this.idx).filter((_, j) => !save.viewed[this.idx + ':' + j]).length;
+          const rest = islandWorks(this.idx).filter((o, j) => !o.removida && !save.viewed[this.idx + ':' + j]).length;
           if (rest > 0) toast('Te faltan ' + rest + ' obra(s) en esta sala', 1800);
         }
       }
@@ -1477,7 +1862,7 @@ const cine = {
     runPuzzle(Object.keys(save.restored).length, placeName(isl), () => this.solved());
   },
   solved() {
-    const isl = this.order[this.oi]; save.restored[isl] = true; persist(); this.phase = 'unload'; this.pt = 0; this.crate = null; this._fl = false;
+    const isl = this.order[this.oi]; cineFlags[isl] = 0; save.restored[isl] = true; persist(); this.phase = 'unload'; this.pt = 0; this.crate = null; this._fl = false;
     toast('¡Las obras regresaron a «' + placeName(isl) + '»!', 3200);
   },
   deckCount() { const n = this.order.length || 1; return Math.round(clamp(this.loaded, 0, 8) * (n - this.delivered) / n); },
@@ -1531,14 +1916,7 @@ const cine = {
   }
 };
 scenes.cine = cine;
-$('btnSkip').addEventListener('click', () => { audioInit(); if (cur === cine) cine.skip(); });
-function crearBotonTerminar(texto = 'Terminar museo ✓', museo = 'nacional') {
-  const b = document.createElement('button');
-  b.textContent = texto;
-  b.style.cssText = 'position:fixed;right:16px;bottom:16px;z-index:9999;padding:10px 18px;border:0;border-radius:999px;background:#e3a82b;color:#3a2a12;font:700 16px sans-serif;cursor:pointer';
-  b.onclick = () => { if (window.parent !== window) parent.postMessage({ tipo: 'museo-completo', museo }, '*'); };
-  document.body.appendChild(b);
-}
+$('btnSkip').addEventListener('click', () => { audioInit(); if (cur && cur.skip) cur.skip(); });
 
 
 /* ----------------------------- AUTO-DESCUBRIMIENTO DE IMÁGENES -----------------------------
@@ -1606,11 +1984,6 @@ function startFromTitle(fresh) {
 $('btnPlay').addEventListener('click', () => startFromTitle(false));
 $('btnNew').addEventListener('click', () => { if (window.confirm('¿Borrar tu progreso y empezar de nuevo?')) startFromTitle(true); });
 $('btnKeep').addEventListener('click', () => { audioInit(); $('finale').style.display = 'none'; ui.finale = false; go('sea', { from: SKULL_I }); });
-$('btnMuseoCompleto').addEventListener('click', () => {
-  if (window.parent !== window) {
-    parent.postMessage({ tipo: 'museo-completo', museo: 'nacional' }, '*');
-  }
-});
 
 /* ----------------------------- atajos de prueba (config.atajos) ----------------------------- */
 function cheatExploreAll() {
@@ -1648,11 +2021,10 @@ function boot() {
   requestAnimationFrame((t) => { last = t; frame(t); });
 }
 window.__art = { mk, buildArrivalBG, buildHall, drawFrame, drawCheck, drawPirate, WATER, CLOUD, FLAG };
-window.__juego = { openDialog, closeDialog, PZ, music, MUS, runPuzzle, PUZZLE_SEQ, finishPuzzle, get cur() { return cur; }, scenes, go, save: () => save, setScene, sea, museum, arrival, cine, ui, PLACES, FLAG, cheatExploreAll };
+window.__juego = { flagFor, isRunning, oro, GOAL, ORO_DEF, completarJuego, oroInteract, openDialog, closeDialog, PZ, music, MUS, runPuzzle, PUZZLE_SEQ, finishPuzzle, get cur() { return cur; }, scenes, go, save: () => save, setScene, sea, museum, arrival, cine, ui, PLACES, FLAG, cheatExploreAll };
 if (SHIP.length && SHIP.every((im) => im.complete)) boot();
 else { let n = 0; SHIP.forEach((im) => { const done = () => { if (++n === SHIP.length) boot(); }; if (im.complete) done(); else { im.onload = done; im.onerror = done; } }); }
 })();
-
 
 </script>
 </body>

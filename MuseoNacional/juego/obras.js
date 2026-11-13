@@ -10,8 +10,9 @@
    3) En cada obra escribe la ruta:  imagen: "obras/mi_cuadro.jpg"
 
    - Obra PRESENTE  → removida: false  (lleva imagen)
-   - Obra REMOVIDA  → removida: true   (NO lleva imagen: se muestra un
-                       recuadro negro con su título y su descripción)
+   - Obra REMOVIDA  → removida: true   (NO aparece en la sala de su isla: solo se ve
+                       en la ISLA CALAVERA, con título y descripción; al devolverla
+                       reaparece en su sala como obra presente)
 
    Puedes poner las obras que quieras por isla (recomendado 2 a 8).
    Si una imagen no existe o la ruta está mal, el juego no se rompe:
@@ -27,10 +28,12 @@
    agrégalas aquí abajo con esa misma ruta de imagen.
 
    ── OBRAS REMOVIDAS QUE REGRESAN ──
-   Una obra removida (removida: true) no muestra imagen. Al final del juego, cuando el jugador
-   resuelve el puzzle de la isla, esas obras REGRESAN a la sala y quedan como obras presentes
-   ("OBRA RESTITUIDA"). Si quieres que se vea su imagen al regresar, agrega  imagen: "obras/..."
-   en la obra removida: se mantiene oculta hasta que la restituyan.
+   Una obra removida (removida: true) NO se ve en la sala de su isla mientras esté removida;
+   solo aparece en la Isla Calavera (recuadro negro con su título y descripción).
+   Al final del juego, cuando el jugador resuelve el puzzle de la isla, esas obras REGRESAN
+   y aparecen en la sala como obras presentes ("OBRA RESTITUIDA"). Si quieres que se vea su
+   imagen al regresar, agrega  imagen: "obras/..."  en la obra removida.
+   Las obras removidas no cuentan para marcar una isla como explorada.
 
    ── FORMATO DEL CUADRO ──
    formato: "auto" (por defecto: se adapta a la imagen), "horizontal", "vertical" o "cuadrado"
@@ -57,8 +60,15 @@ window.MUSEO = {
     // true = en la Isla Calavera debes ver todas las obras antes de usar el cofre
     exigirVerTodasEnCalavera: true,
     velocidadBarco: 200,
+    // multiplicador al correr en museos: mantén Shift (PC) o el botón B (celular)
+    velocidadCorrer: 1.8,
     // true = busca solo las imágenes obras/islaN_obraK.* e islaN_esculturaK.* (ver arriba)
     // Puzzles de la cinemática final: aparece el botón OMITIR tras estos segundos (false = nunca)
+    // Al terminar el juego se avisa a la página que lo contiene (mapa general) con postMessage:
+    //   { tipo: "museo-completo", museo: museoId }
+    museoId: "nacional",
+    // Si el juego se abre solo (sin mapa), puedes redirigir a esta dirección al completarlo (vacío = no redirige)
+    urlSiguienteMuseo: "",
     puzzlesOmitibles: true,
     puzzleOmitirSeg: 1,
     autoDescubrir: true,
@@ -85,7 +95,18 @@ window.MUSEO = {
     cinematica: "musica/cinematica.mp3"
   },
 
+  // ---------------------------------------------------------------
+  // ORFEBRERÍA INDÍGENA que el galeón deja flotando en el mar tras la cinemática final.
+  // Edita título y descripción de cada pieza (ids: poporo, balsa, tunjo, pectoral, diadema, nariguera).
+  // ---------------------------------------------------------------
+  orfebreria: [
+    // { id: "poporo", titulo: "Poporo Quimbaya", descripcion: "Tu texto..." },
+  ],
+
   textos: {
+    botellaTitulo: "Una botella a la deriva",
+    botellaMensaje: "Capitán: el oro de estas tierras zarpa hoy rumbo a España, bajo bandera de la Corona. Quien lo siga encontrará, en el Museo del Oro, la historia de lo que el mar no pudo devolver.\n\n— Un amigo del archivo",
+    oroFinal: "El oro cruza el océano… pero la persecución continúa en el Museo del Oro.",
     nieblaBloqueada: "Una espesa niebla bloquea el paso a la Isla Calavera…",
     nieblaSeDisipa: "¡La niebla se disipa! La Isla Calavera ya es accesible.",
     cineInicio: "Las obras removidas vuelven a casa…",
@@ -117,10 +138,10 @@ window.MUSEO = {
   // ---------------------------------------------------------------
   islas: [
     {
-      nombre: "Sala 1 · La historia del museo",
+      nombre: "Isla 1 · La historia del museo",
       musica: "musica/isla1.mp3",
       obras: [
-        { tipo: "escultura", titulo: "Aerolito de Santa ROsa de Viterbo", descripcion: "Exhibición temporal", imagen: "obras/estatuaIsla1.jpg",
+        { tipo: "escultura", titulo: "Aerolito de Santa Rosa de Viterbo", descripcion: "Exhibición temporal", imagen: "obras/estatuaIsla1.jpg",
      alto: 48, pixelado: false, removida: false },
         { titulo: "Obra 1 (presente)", descripcion: "Escribe aquí la descripción de esta obra: autor, año, técnica y por qué importa.", imagen: "obras/isla1_obra1.jpg", removida: false },
         { titulo: "Obra 2 (presente)", descripcion: "Descripción de la segunda obra que sí se exhibe actualmente.", imagen: "obras/isla1_obra2.jpg", removida: false },
@@ -128,7 +149,7 @@ window.MUSEO = {
       ]
     },
     {
-      nombre: "Sala 2 · Tierra de historias",
+      nombre: "Isla 2 · Tierra de historias",
       musica: "musica/isla2.mp3",
       obras: [
         { titulo: "Obra 1 (presente)", descripcion: "Descripción de la obra.", imagen: "obras/isla2_obra1.jpg", removida: false },
@@ -136,7 +157,7 @@ window.MUSEO = {
       ]
     },
     {
-      nombre: "Sala 3 · Memoria en movimiento",
+      nombre: "Isla 3 · Memoria en movimiento",
       musica: "musica/isla3.mp3",
       obras: [
         { titulo: "Obra 1 (presente)", descripcion: "Descripción de la obra.", imagen: "obras/isla3_obra1.jpg", removida: false },
@@ -145,16 +166,16 @@ window.MUSEO = {
       ]
     },
     {
-      nombre: "Sala 4 · Memoria y nación",
+      nombre: "Isla 4 · Memoria y nación",
       musica: "musica/isla4.mp3",
       obras: [
-        { titulo: "Viacrucis", descripcion: "Descripción de la obra.", imagen: "obras/isla4_obra1.png", removida: true },
-        { titulo: "Libertinaje y desorden", descripcion: "Descripción de la obra.", imagen: "obras/isla4_obra2.png", removida: true },
-        { titulo: "La cosecha de los violentos", descripcion: "Descripción de la obra.", imagen: "obras/isla4_obra3.png", removida: true }
+        { titulo: "Víacrucis", descripcion: "Obra gráfica de la sala Memoria y Nación.", imagen: "obras/isla4_obra1.png", removida: true },
+        { titulo: "Libertinaje y desorden", descripcion: "Obra gráfica de la sala Memoria y Nación.", imagen: "obras/isla4_obra2.png", removida: true },
+        { titulo: "La cosecha de los violentos", descripcion: "Obra gráfica asociada a la representación de la violencia.", imagen: "obras/isla4_obra3.png", removida: true }
       ]
     },
     {
-      nombre: "Sala 5 · Ser territorio",
+      nombre: "Isla 5 · Ser territorio",
       musica: "musica/isla5.mp3",
       obras: [
         { titulo: "Obra 1 (presente)", descripcion: "Descripción de la obra.", imagen: "obras/isla5_obra1.jpg", removida: false },
@@ -162,21 +183,20 @@ window.MUSEO = {
       ]
     },
     {
-      nombre: "Sala 6 · Hacer sociedad",
+      nombre: "Isla 6 · Hacer sociedad",
       musica: "musica/isla6.mp3",
       obras: [
-        { titulo: "Marcha de la ciudadanía plena LGBT: Por una Colombia incluyente", descripcion: "Descripción de la obra.", imagen: "obras/isla6_obra1.png", removida: true },
+        { titulo: "Marcha de la ciudadanía plena LGBT: Por una Colombia incluyente", descripcion: "Registro fotográfico de movilización por derechos LGBT.", imagen: "obras/isla6_obra1.png", removida: true },
         { tipo: "escultura", titulo: "Espada de Bolívar", descripcion: "Exhibición temporal", imagen: "obras/estatuaIsla6.png",
      alto: 48, pixelado: false, removida: true },
-        { titulo: "La séptima papeleta", descripcion: "Descripción de la obra.", imagen: "obras/isla6_obra2.png", removida: true },
-        { titulo: "Afiche de homenaje a Carlos Pizarro", descripcion: "Descripción de la obra.", imagen: "obras/isla6_obra3.png", removida: true },
-        { titulo: "Ideales feministas", descripcion: "Descripción de la obra.", imagen: "obras/isla6_obra4.png", removida: true },
-        { titulo: " Bandera del orgullo gay de Elizabeth Castillo", descripcion: "Descripción de la obra.", imagen: "obras/isla6_obra5.png", removida: true },
-        { titulo: "Obra 2 (removida)", descripcion: "Descripción de la obra removida.", removida: true }
+        { titulo: "La séptima papeleta", descripcion: "Documento asociado a la convocatoria de la Asamblea Constituyente.", imagen: "obras/isla6_obra2.png", removida: true },
+        { titulo: "Afiche de homenaje a Carlos Pizarro", descripcion: "Afiche de memoria política de una candidatura presidencial.", imagen: "obras/isla6_obra3.png", removida: true },
+        { titulo: "Ideales feministas", descripcion: "Publicación relativa a la historia del feminismo colombiano.", imagen: "obras/isla6_obra4.png", removida: true },
+        { titulo: " Bandera del orgullo gay de Elizabeth Castillo", descripcion: "Bandera que perteneció a la activista Elizabeth Castillo.", imagen: "obras/isla6_obra5.png", removida: true }
       ]
     },
     {
-      nombre: "Sala 7 · Conexiones",
+      nombre: "Isla 7 · Conexiones",
       musica: "musica/isla7.mp3",
       obras: [
         { titulo: "Obra 1 (presente)", descripcion: "Descripción de la obra.", imagen: "obras/isla7_obra1.jpg", removida: false },
@@ -184,23 +204,22 @@ window.MUSEO = {
       ]
     },
     {
-      nombre: "Sala 8 · Tierra como recurso",
+      nombre: "Isla 8 · Tierra como recurso",
       musica: "musica/isla8.mp3",
       obras: [
-        { titulo: "Minería", descripcion: "Descripción de la obra.", imagen: "obras/isla8_obra1.png", removida: true },
+        { titulo: "Obra 1 (presente)", descripcion: "Descripción de la obra.", imagen: "obras/isla8_obra1.jpg", removida: false },
         { titulo: "Obra 2 (removida)", descripcion: "Descripción de la obra removida.", removida: true }
       ]
     },
     {
-      nombre: "Sala 9 · Ser y hacer",
+      nombre: "Isla 9 · Ser y hacer",
       musica: "musica/isla9.mp3",
       obras: [
-        { titulo: "Obra 1 (presente)", descripcion: "Descripción de la obra.", imagen: "obras/isla9_obra1.jpg", removida: false },
-        { titulo: "Obra 2 (removida)", descripcion: "Descripción de la obra removida.", removida: true }
+        { titulo: "Minería", descripcion: "Descripción de la obra.", imagen: "obras/isla9_obra1.jpg", removida: true }
       ]
     },
     {
-      nombre: "Sala 10 · Fuerza,Fe y Sustancia",
+      nombre: "Isla 10 · Fuerza,Fe y Sustancia",
       musica: "musica/isla10.mp3",
       obras: [
         { titulo: "Obra 1 (presente)", descripcion: "Descripción de la obra.", imagen: "obras/isla10_obra1.jpg", removida: false },
