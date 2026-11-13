@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Museo del Oro - La Bóveda</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Efecto de luz de fondo -->
+    <div id="luz-ambiente"></div>
+
+    <!-- Navegación Superior -->
+    <header class="navbar">
+        <div class="logo">
+            <a href="#/">La Bóveda <span>| Museo del Oro</span></a>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#/" class="btn-nav">Inicio</a></li>
+                <li><a href="#/mapa" class="btn-nav">Explorar Culturas</a></li>
+            </ul>
+        </nav>
+        <button id="btn-luz" class="btn-icon" title="Alternar Iluminación">💡</button>
+    </header>
+
+    <!-- Contenedor Principal Dinámico -->
+    <main id="main-content" class="fade-transition">
+        <!-- El contenido se inyecta aquí -->
+    </main>
+
+    <!-- Reproductor de Audio Flotante -->
+    <div id="reproductor-audio" class="audio-panel colapsado">
+        <div class="audio-info">
+            <span class="icono-musica">🎵</span>
+            <span id="track-name">Pista de audio</span>
+        </div>
+        <div class="audio-controles">
+            <button id="btn-play-pause" class="btn-icon" title="Reproducir/Pausar">▶</button>
+            <button id="btn-mute" class="btn-icon" title="Silenciar">🔊</button>
+        </div>
+        <audio id="audio-elemento" loop></audio>
+    </div>
+
+    <footer class="footer">
+        <p>Explorando el patrimonio ancestral de Colombia</p>
+    </footer>
+
+    <!-- Scripts de Datos -->
+    <script src="data/datos.js"></script>
+    
+    <!-- Scripts de Lógica -->
+    <script src="js/app.js"></script>
+</body>
+</html>
