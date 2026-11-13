@@ -23,7 +23,7 @@ const M=[
 ];
 
 const L={nacional:'../../MuseoNacional/juego/index.html',
-        oro:'../../MuseoDelOro/index.html',
+        oro:'../../MuseoDelOro/galeriaInteractiva/index.html',
         mambo:'../../MuseoDeArteModerno/museo V2/index.html',
         florero:'../../MuseoDeLaIndependencia/index.html',
         moneda:'../../MuseoCasaDeMoneda/index.html',
