@@ -2,545 +2,2764 @@
 <html lang="es">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="theme-color" content="#c9512f" />
-    <title>Más allá de Botero · Galería experimental</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <title>Más allá de Botero · Museo jugable</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,900,0..100,0..1&family=Nunito:wght@400;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,900,0..100,0..1&family=Nunito:wght@400;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="estilos.css" />
-    <script src="script.js" defer></script>
+    <style>
+      :root {
+        --cr: #fbebc6;
+        --c2: #fff6dc;
+        --oc: #eab04a;
+        --te: #c9512f;
+        --td: #7d2c15;
+        --ca: #3a1d12;
+        --mu: #6b4a3a;
+        --t: "Fraunces", Georgia, serif;
+        --b: "Nunito", "Trebuchet MS", sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+        background: var(--ca);
+        color: var(--ca);
+        font: 400 1rem/1.5 var(--b);
+        touch-action: none;
+        user-select: none;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      canvas {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+      button,
+      input,
+      textarea {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      :focus-visible {
+        outline: 3px solid var(--oc);
+        outline-offset: 2px;
+      }
+      h2 {
+        font: 900 2rem/1 var(--t);
+        margin: 0 0 12px;
+      }
+      .muted {
+        color: var(--mu);
+        font-size: 0.8rem;
+      }
+      #hud {
+        position: fixed;
+        z-index: 5;
+        top: max(10px, env(safe-area-inset-top));
+        left: 10px;
+        right: 10px;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .pill,
+      .chip,
+      .btn {
+        border: 0;
+        border-radius: 99px;
+        font-weight: 800;
+        color: var(--ca);
+        background: var(--c2);
+        padding: 5px 14px;
+        box-shadow:
+          inset 0 -3px 5px rgba(58, 29, 18, 0.22),
+          0 4px 0 rgba(58, 29, 18, 0.5);
+      }
+      .chip:active,
+      .btn:active {
+        transform: translateY(3px);
+      }
+      .chip[aria-pressed="true"] {
+        background: var(--te);
+        color: var(--c2);
+      }
+      .btn {
+        padding: 12px 24px;
+        color: var(--c2);
+        background: var(--te);
+      }
+      .btn.s {
+        background: var(--c2);
+        color: var(--ca);
+      }
+      #vm {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        position: relative;
+      }
+      #vm span {
+        font-size: 0.8rem;
+      }
+      #vm div {
+        position: relative;
+        width: 110px;
+        height: 12px;
+        border-radius: 9px;
+        background: rgba(58, 29, 18, 0.2);
+        overflow: hidden;
+      }
+      #vb {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        background: var(--te);
+        transition: width 0.2s;
+      }
+      #vm u {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: var(--ca);
+      }
+      #sl {
+        display: flex;
+        gap: 6px;
+        margin-left: auto;
+      }
+      .st {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle at 34% 28%,
+          #fff,
+          var(--c) 50%,
+          rgba(0, 0, 0, 0.4)
+        );
+        filter: grayscale(1) opacity(0.4);
+      }
+      .st.on {
+        filter: none;
+      }
+      #mi {
+        max-width: min(560px, 92vw);
+        font-size: 0.8rem;
+        line-height: 1.25;
+      }
+      #zn {
+        font-family: var(--t);
+        font-weight: 900;
+      }
+      #mm {
+        position: fixed;
+        z-index: 4;
+        left: 10px;
+        bottom: max(10px, env(safe-area-inset-bottom));
+        border: 3px solid var(--ca);
+        border-radius: 10px;
+        background: rgba(251, 235, 198, 0.9);
+        width: 144px;
+        height: 96px;
+      }
+      #ctl {
+        position: fixed;
+        z-index: 6;
+        right: 12px;
+        bottom: max(12px, env(safe-area-inset-bottom));
+        display: flex;
+        gap: 10px;
+      }
+      #ctl button {
+        min-width: 64px;
+        height: 64px;
+        border-radius: 99px;
+        font-size: 1rem;
+      }
+      dialog {
+        border: 0;
+        border-radius: 26px;
+        max-width: 520px;
+        width: 92%;
+        padding: 0;
+        background: var(--c2);
+        color: var(--ca);
+      }
+      dialog::backdrop {
+        background: rgba(31, 74, 58, 0.8);
+      }
+      .in {
+        padding: 26px;
+        max-height: 86vh;
+        overflow: auto;
+        user-select: text;
+      }
+      .in label {
+        display: flex;
+        gap: 10px;
+        margin: 8px 0;
+        font-weight: 700;
+      }
+      .in input[type="checkbox"] {
+        accent-color: var(--te);
+        width: 20px;
+        height: 20px;
+        flex: none;
+      }
+      .aviso {
+        font-size: 0.88rem;
+        border-left: 5px solid var(--te);
+        padding-left: 12px;
+      }
+      textarea {
+        display: block;
+        width: 100%;
+        border: 0;
+        border-radius: 8px;
+        padding: 6px 14px;
+        font: 700 1rem/33px var(--b);
+        color: var(--ca);
+        background: repeating-linear-gradient(
+          var(--cr) 0 31px,
+          rgba(201, 81, 47, 0.3) 31px 33px
+        );
+      }
+      .cartela {
+        background: #f5ecd6;
+        padding: 12px 16px;
+        border-left: 6px solid var(--te);
+        font-size: 0.82rem;
+        margin-top: 14px;
+      }
+      #por {
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        display: grid;
+        place-items: center;
+        overflow: auto;
+        background:
+          radial-gradient(circle at 70% 18%, #f7d588, transparent 55%),
+          var(--oc);
+        text-align: center;
+        padding: 20px;
+        transition: transform 0.9s cubic-bezier(0.65, 0, 0.25, 1);
+      }
+      #por.fuera {
+        transform: translateY(-105%);
+      }
+      h1 {
+        font: 900 clamp(2.8rem, 10vw, 6rem)/0.95 var(--t);
+        color: var(--c2);
+        letter-spacing: -0.03em;
+        margin: 8px 0 14px;
+        text-shadow:
+          0 3px 0 #a8401f,
+          0 6px 0 var(--td),
+          0 16px 20px rgba(58, 29, 18, 0.4);
+      }
+      .pc {
+        max-width: 560px;
+      }
+      #bo {
+        display: grid;
+        gap: 8px;
+        max-width: 380px;
+        margin: 18px auto;
+        padding: 16px 22px;
+        background: var(--c2);
+        transform: rotate(-2deg);
+        border-left: 6px dotted var(--te);
+        border-right: 6px dotted var(--te);
+        text-align: left;
+      }
+      #bo input {
+        border: 0;
+        border-bottom: 3px solid var(--ca);
+        background: transparent;
+        font: 900 1.4rem var(--t);
+        padding: 6px 0;
+        color: var(--ca);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
+      dialog {
+        max-width: 640px;
+      }
+      .ob {
+        display: block;
+        width: 100%;
+        max-height: 50vh;
+        object-fit: contain;
+        background: #f5ecd6;
+        border-radius: 14px;
+        margin-bottom: 12px;
+      }
+      #por {
+        text-align: left;
+      }
+      .hero {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 40px;
+        max-width: 1080px;
+        align-items: center;
+      }
+      .lead {
+        font-size: 1.05rem;
+        max-width: 520px;
+      }
+      .wall {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        transform: rotate(2deg);
+      }
+      .wall img {
+        width: 100%;
+        aspect-ratio: 3/4;
+        object-fit: cover;
+        border: 7px solid #e8c25a;
+        box-shadow: 0 8px 0 rgba(58, 29, 18, 0.45);
+      }
+      .wall img:nth-child(even) {
+        transform: translateY(22px);
+      }
+      #bo {
+        margin: 18px 0;
+      }
+      @media (max-width: 820px) {
+        .hero {
+          grid-template-columns: 1fr;
+          gap: 18px;
+        }
+        .wall {
+          order: -1;
+          grid-template-columns: repeat(6, 1fr);
+          gap: 6px;
+          transform: none;
+        }
+        .wall img {
+          border-width: 3px;
+          box-shadow: none;
+        }
+        .wall img:nth-child(even) {
+          transform: none;
+        }
+      }
+      #mm {
+        top: auto;
+      }
+      #vo {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      #vo input {
+        width: 96px;
+        accent-color: var(--te);
+        touch-action: pan-x;
+      }
+      #meta {
+        max-width: min(420px, 90vw);
+        font-size: 0.8rem;
+        line-height: 1.25;
+      }
+    </style>
   </head>
-
   <body>
-    <a class="skip" href="#contenido">Saltar al contenido</a>
-    <div id="progreso" aria-hidden="true"></div>
-    <header>
-      <a class="marca" href="#inicio"
-        >M<span>↗</span>B <small>Más allá de Botero</small></a
-      ><button id="menu" aria-expanded="false" aria-controls="nav">
-        Menú ☰
-      </button>
-      <nav id="nav" aria-label="Principal">
-        <a href="#proyecto">Proyecto</a><a href="#galeria">Galería</a
-        ><a href="#mirar">Mirar</a><a href="#trayectoria">Trayectoria</a
-        ><a href="#laboratorio">Laboratorio</a><a href="#debate">Debate</a>
-      </nav>
-      <button id="plano" type="button" aria-haspopup="dialog">▦ Plano</button>
-    </header>
-    <main id="contenido">
-      <section class="hero" id="inicio" data-sala="Entrada">
-        <div class="hero-copy">
-          <p class="eyebrow">ARTE · MEMORIA · PREGUNTAS</p>
-          <h1>Más allá<br />del <em>volumen.</em></h1>
-          <p class="lead">
-            Una mirada a Fernando Botero entre la forma, la memoria y el debate.
-          </p>
-          <p class="muted">Más allá de Botero · Prototipo académico</p>
-          <div class="acciones">
-            <a class="btn" href="#galeria">Explorar el recorrido ↗</a
-            ><button class="btn secundario" id="heroAudio">
-              ♫ Entrar con sonido
-            </button>
-          </div>
-        </div>
-        <div
-          class="poster"
-          aria-label="Composición abstracta decorativa; no reproduce una obra de Botero"
-        >
-          <div class="orb o1"></div>
-          <div class="orb o2"></div>
-          <div class="orb o3"></div>
-          <span class="poster-top">ESTUDIO DE FORMA / 001</span
-          ><span class="poster-bottom">La forma es solo<br />el comienzo.</span
-          ><span class="sello">MÁS ALLÁ<br />DE BOTERO</span>
-        </div>
-        <div class="boleto" aria-hidden="true">
-          <b>BOLETO · ENTRADA LIBRE</b
-          ><span>Recorrido por 10 salas · Más allá de Botero</span>
-        </div>
-      </section>
-      <div class="cinta" aria-hidden="true">
-        FORMA / CONTEXTO / MEMORIA / EXPRESIÓN / FORMA / CONTEXTO / MEMORIA /
-        EXPRESIÓN
-      </div>
-      <section id="proyecto" data-sala="Sala 01 · El proyecto" class="">
-        <div class="cabecera">
-          <p class="eyebrow">EL PROYECTO</p>
-          <h2>No solo mirar.<br /><em>Aprender a preguntar.</em></h2>
-        </div>
-        <div class="intro-grid">
-          <p class="lead">
-            Un recorrido propuesto por diez obras del Museo Botero y cinco obras
-            externas o casos de debate, acompañado de imágenes, investigación y
-            música.
-          </p>
-          <div>
-            <p>
-              Esta primera entrega presenta la estructura y la experiencia
-              visual. Las fichas de la galería son espacios de trabajo: no son
-              un catálogo verificado.
-            </p>
-            <p class="aviso">
-              Las formas abstractas son ilustraciones del prototipo, no
-              reproducciones de obras del artista.
-            </p>
-          </div>
-        </div>
-        <div class="pilares">
-          <article>
-            <span>01</span>
-            <h3>Mirar</h3>
-            <p>Observar técnica, composición y volumen.</p>
-          </article>
-          <article>
-            <span>02</span>
-            <h3>Comprender</h3>
-            <p>Relacionar cada obra con su contexto.</p>
-          </article>
-          <article>
-            <span>03</span>
-            <h3>Cuestionar</h3>
-            <p>Abrir preguntas sobre memoria y expresión.</p>
-          </article>
-        </div>
-      </section>
-      <section id="galeria" data-sala="Sala 02 · Galería principal" class="">
-        <div class="cabecera">
-          <p class="eyebrow">GALERÍA EN CONSTRUCCIÓN</p>
-          <h2>Quince entradas.<br /><em>Muchas preguntas.</em></h2>
-          <p>
-            Recorre la sala: arrastra, usa las flechas o el deslizador. Toca la
-            obra del centro para abrir su ficha.
-          </p>
-        </div>
-        <div class="herramientas">
-          <div class="filtros" role="group" aria-label="Filtrar galería">
-            <button class="activo" data-filter="todos" aria-pressed="true">
-              Todas · 15</button
-            ><button data-filter="museo" aria-pressed="false">Museo · 10</button
-            ><button data-filter="debate" aria-pressed="false">
-              Fuera del museo · 5
-            </button>
-          </div>
-          <label class="buscar"
-            >⌕
-            <input
-              id="busqueda"
-              type="search"
-              placeholder="Buscar ficha…"
-              aria-label="Buscar ficha"
-          /></label>
-        </div>
-        <p id="resultados" class="muted" aria-live="polite"></p>
-        <div class="sala" id="sala">
-          <div
-            id="obras"
-            class="escena"
-            role="group"
-            aria-label="Sala de obras"
-          ></div>
-        </div>
-        <div class="sala-ctl">
-          <button
-            class="btn secundario"
-            id="prev"
-            type="button"
-            aria-label="Obra anterior"
-          >
-            ←
-          </button>
-          <div class="scrub">
-            <output id="contador">01 / 15</output
-            ><input
-              type="range"
-              id="scrub"
-              min="0"
-              max="14"
-              value="0"
-              aria-label="Recorrer obras"
-            />
-          </div>
-          <button
-            class="btn secundario"
-            id="next"
-            type="button"
-            aria-label="Obra siguiente"
-          >
-            →
-          </button>
-        </div>
-      </section>
-      <section id="mirar" data-sala="Sala 03 · Cómo mirar" class="">
-        <p class="eyebrow">CÓMO MIRAR</p>
-        <h2>Cuatro preguntas<br /><em>para cada obra.</em></h2>
-        <p class="ancho">
-          Antes de leer la ficha, mira. Toca una tarjeta para ver la pregunta.
-        </p>
-        <div class="miradas">
-          <button class="mirar" aria-pressed="false">
-            <span class="mi-ico" aria-hidden="true"></span>
-            <h3>Volumen</h3>
-            <small>Toca para ver la pregunta</small>
-            <p>
-              ¿Dónde se concentra el peso de la figura? Compara el cuerpo con
-              las manos, los pies y el rostro.
-            </p>
-          </button>
-          <button class="mirar" aria-pressed="false">
-            <span class="mi-ico" aria-hidden="true"></span>
-            <h3>Color</h3>
-            <small>Toca para ver la pregunta</small>
-            <p>
-              ¿Qué colores dominan? ¿Cómo cambiaría la escena si imaginas otros?
-            </p>
-          </button>
-          <button class="mirar" aria-pressed="false">
-            <span class="mi-ico" aria-hidden="true"></span>
-            <h3>Escena</h3>
-            <small>Toca para ver la pregunta</small>
-            <p>
-              ¿Qué ocurre? Describe lo que se ve, sin dar por hecho lo que no
-              aparece.
-            </p>
-          </button>
-          <button class="mirar" aria-pressed="false">
-            <span class="mi-ico" aria-hidden="true"></span>
-            <h3>Contexto</h3>
-            <small>Toca para ver la pregunta</small>
-            <p>
-              ¿Cuándo y dónde se hizo? Busca la ficha del museo antes de
-              interpretar.
-            </p>
-          </button>
-        </div>
-      </section>
-      <section
-        id="trayectoria"
-        data-sala="Sala 04 · Trayectoria"
-        class="oscuro"
-      >
-        <p class="eyebrow">MAPA DE INVESTIGACIÓN</p>
-        <h2>Un estilo no aparece<br /><em>de un día para otro.</em></h2>
-        <p>
-          Estos son ejes del guion, no una periodización histórica confirmada.
-          Selecciona uno para explorar las preguntas.
-        </p>
-        <div class="etapas" role="group" aria-label="Ejes de investigación">
-          <button data-etapa="0" aria-pressed="true" class="activo">
-            01 · Influencias</button
-          ><button data-etapa="1" aria-pressed="false">
-            02 · Lenguaje visual</button
-          ><button data-etapa="2" aria-pressed="false">03 · Museo</button
-          ><button data-etapa="3" aria-pressed="false">04 · Memoria</button>
-        </div>
-        <article id="etapaTexto" class="etapa" aria-live="polite"></article>
-      </section>
-      <section id="laboratorio" data-sala="Sala 05 · Laboratorio" class="">
-        <div class="lab">
-          <div>
-            <p class="eyebrow">LABORATORIO DE VOLUMEN</p>
-            <h2>Infla la figura.<br /><em>Mira qué pasa.</em></h2>
-            <p>
-              Mueve el control y cambia el color del vestido. Fíjate en qué
-              partes crecen y cuáles se quedan pequeñas. La figura es inventada
-              para este prototipo, no una obra del artista.
-            </p>
-            <label class="ctl" for="infla"
-              >Volumen: <output id="inflaVal">100 %</output></label
-            >
-            <input
-              type="range"
-              id="infla"
-              min="0.6"
-              max="1.6"
-              step="0.01"
-              value="1"
-            />
-            <div class="swatches" role="group" aria-label="Color del vestido">
-              <button
-                style="--k: #c9512f"
-                data-vestido="#c9512f"
-                aria-label="Terracota"
-                aria-pressed="true"
-              ></button>
-              <button
-                style="--k: #3f7d5c"
-                data-vestido="#3f7d5c"
-                aria-label="Verde hoja"
-                aria-pressed="false"
-              ></button>
-              <button
-                style="--k: #4a8fa8"
-                data-vestido="#4a8fa8"
-                aria-label="Azul cielo"
-                aria-pressed="false"
-              ></button>
-              <button
-                style="--k: #e0586a"
-                data-vestido="#e0586a"
-                aria-label="Sandía"
-                aria-pressed="false"
-              ></button>
-              <button
-                style="--k: #eab04a"
-                data-vestido="#eab04a"
-                aria-label="Ocre"
-                aria-pressed="false"
-              ></button>
-            </div>
-          </div>
-          <div
-            class="lab-stage"
-            id="labStage"
-            role="img"
-            aria-label="Figura abstracta cuyo volumen cambia con el control"
-          >
-            <div class="lf-pie p1"></div>
-            <div class="lf-pie p2"></div>
-            <div class="lf-cuerpo"></div>
-            <div class="lf-mano m1"></div>
-            <div class="lf-mano m2"></div>
-            <div class="lf-cabeza">
-              <i class="ojo"></i><i class="ojo d"></i><i class="boca"></i>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section id="debate" data-sala="Sala 06 · El arte incomoda" class="">
-        <p class="eyebrow">EL ARTE TAMBIÉN INCOMODA</p>
-        <h2>¿Representar es<br /><em>justificar?</em></h2>
-        <p class="ancho">
-          Preguntas de trabajo para investigar los casos sugeridos en la
-          propuesta. No se presupone que hayan sido censurados.
-        </p>
-        <div class="debates">
-          <details open>
-            <summary>Abu Ghraib <span>↗</span></summary>
-            <p>
-              Investigar obras concretas de la serie, su contexto, las
-              exposiciones y las reacciones documentadas. ¿Cómo se construye una
-              denuncia visual?
-            </p>
-          </details>
-          <details>
-            <summary>El Pájaro y la memoria <span>↗</span></summary>
-            <p>
-              Verificar la historia de la escultura, el atentado y su
-              transformación como lugar de memoria. ¿Cómo cambia el significado
-              de una obra en el espacio público?
-            </p>
-          </details>
-          <details>
-            <summary>Violencia en Colombia <span>↗</span></summary>
-            <p>
-              Identificar títulos y fuentes de obras relacionadas con la
-              violencia. ¿Qué evidencias permiten distinguir una representación
-              crítica de una glorificación?
-            </p>
-          </details>
-        </div>
-      </section>
-      <section id="sonido" data-sala="Sala 07 · Sala sonora" class="sonido">
+    <canvas id="cv"></canvas
+    ><canvas
+      id="mm"
+      width="144"
+      height="96"
+      aria-label="Plano del museo"
+    ></canvas>
+    <div id="hud">
+      <b class="pill" id="zn">Vestíbulo</b><span class="pill" id="pts">● 0</span
+      ><span class="pill" id="mi" hidden></span
+      ><span class="pill" id="meta"></span>
+      <span
+        class="pill"
+        id="vm"
+        title="Delgada: cabes por las grietas. Pesada: rompes las puertas macizas."
+        ><span>Inflado</span>
         <div>
-          <p class="eyebrow">PAISAJE SONORO</p>
-          <h2>Otra forma<br />de <em>recorrer.</em></h2>
-          <p>
-            Prueba el ambiente instrumental generado para este prototipo o carga
-            un archivo de audio de tu equipo. La música definitiva y sus
-            permisos quedan pendientes.
-          </p>
-          <button id="soundMain" class="btn">▶ Escuchar ambiente</button
-          ><label class="btn secundario archivo"
-            >Cargar mi audio<input
-              type="file"
-              id="archivoAudio"
-              accept="audio/*"
-          /></label>
-          <p id="archivoNombre" class="muted">
-            Sin canciones externas incluidas.
-          </p>
-          <button id="volverAmbiente" class="linkbtn" hidden>
-            Volver al ambiente generado
-          </button>
-        </div>
-        <div class="visualizador" aria-hidden="true">
-          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i
-          ><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i
-          ><i></i>
-        </div>
-      </section>
-      <section id="libreta" data-sala="Sala 08 · Libreta" class="">
-        <p class="eyebrow">TU LIBRETA</p>
-        <h2>Anota lo que <em>notaste.</em></h2>
-        <p class="ancho">
-          Escribe observaciones mientras recorres la galería. Se guardan solo en
-          este navegador.
-        </p>
-        <div class="chips">
-          <button
-            class="chip"
-            data-pregunta="¿Qué detalle no esperaba encontrar?"
-          >
-            ¿Qué detalle no esperabas?
-          </button>
-          <button
-            class="chip"
-            data-pregunta="¿Qué me dice el color de esta escena?"
-          >
-            ¿Qué te dice el color?
-          </button>
-          <button class="chip" data-pregunta="¿Qué le preguntaría al museo?">
-            ¿Qué preguntarías al museo?
-          </button>
-        </div>
-        <div class="papel">
-          <textarea
-            id="nota"
-            rows="7"
-            aria-label="Mi libreta"
-            placeholder="Empieza a escribir…"
-          ></textarea>
-          <div class="papel-pie">
-            <span id="notaCuenta" class="muted">0 caracteres</span
-            ><button class="btn secundario" id="notaBorrar" type="button">
-              Borrar notas
-            </button>
-          </div>
-        </div>
-      </section>
-      <section id="equipo" data-sala="Sala 09 · Equipo" class="">
-        <p class="eyebrow">EQUIPO</p>
-        <h2>Cuatro miradas.<br /><em>Una historia.</em></h2>
-        <div class="equipo">
-          <article>
-            <span>01 / GUION</span>
-            <h3>Manuela<br />Gutiérrez</h3>
-          </article>
-          <article>
-            <span>02 / IMÁGENES</span>
-            <h3>Daniel<br />Duque</h3>
-          </article>
-          <article>
-            <span>03 / MÚSICA</span>
-            <h3>Jacobo<br />Parada</h3>
-          </article>
-          <article>
-            <span>04 / PROGRAMACIÓN</span>
-            <h3>Kevin<br />Caro</h3>
-          </article>
-        </div>
-      </section>
-      <section id="fuentes" data-sala="Sala 10 · Fuentes" class="fuentes">
-        <p class="eyebrow">FUENTES Y CRÉDITOS</p>
-        <h2>Investigar también es <em>citar.</em></h2>
-        <p>
-          Documento base: «Propuesta · Trabajo final: Más allá de Botero»,
-          equipo del proyecto, 4 páginas.
-        </p>
-        <p>
-          Por completar: fuentes de cada obra, referencias biográficas,
-          procedencia de imágenes, permisos y fichas musicales. Los dibujos
-          abstractos son recursos gráficos del prototipo. El ambiente sonoro se
-          sintetiza mediante código y no utiliza grabaciones de terceros.
-        </p>
-      </section>
-    </main>
-    <footer>
-      <a class="marca" href="#inicio">Más allá de Botero ↗</a>
-      <p>
-        Salida del museo · Gracias por la visita · Prototipo académico ·
-        Contenido en investigación
-      </p>
-    </footer>
-    <aside class="player" aria-label="Reproductor de música">
-      <button id="play" aria-label="Reproducir ambiente">▶</button>
-      <div>
-        <span id="estadoAudio" role="status">Sonido desactivado</span
-        ><small id="tipoAudio">Ambiente instrumental de prueba</small>
-      </div>
-      <label
-        >Volumen<input
-          id="volumen"
+          <i id="vb"></i><u style="left: 18%"></u><u style="left: 65%"></u></div
+      ></span>
+      <div id="sl"></div>
+      <label class="pill" id="vo" title="Volumen de la música"
+        >🔊
+        <input
+          id="vol"
           type="range"
           min="0"
-          max="1"
-          step="0.01"
-          value="0.35"
-      /></label>
-    </aside>
-    <aside class="guia" aria-label="Guía del recorrido">
-      <div class="guia-burbuja" id="guiaTexto">
-        <b>Chela, guía del museo</b><span id="guiaMsg"></span
-        ><button class="guia-sig" id="guiaSig" type="button">
-          Siguiente sala →
-        </button>
-      </div>
-      <button
-        class="guia-btn"
-        id="guiaBtn"
-        aria-expanded="true"
-        aria-controls="guiaTexto"
-        aria-label="Mostrar u ocultar el mensaje de Chela, guía del museo"
+          max="100"
+          value="80"
+          aria-label="Volumen de la música" /></label
+      ><button
+        id="son"
+        class="chip"
+        type="button"
+        aria-pressed="false"
+        aria-label="Música ambiente"
       >
-        <svg viewBox="0 0 140 170" aria-hidden="true">
-          <defs>
-            <radialGradient id="gV" cx=".32" cy=".25" r=".85">
-              <stop offset="0" stop-color="#ef8a63" />
-              <stop offset=".5" stop-color="#c9512f" />
-              <stop offset="1" stop-color="#7d2c15" />
-            </radialGradient>
-            <radialGradient id="gP" cx=".34" cy=".28" r=".8">
-              <stop offset="0" stop-color="#fff0dc" />
-              <stop offset=".5" stop-color="#f1c19b" />
-              <stop offset="1" stop-color="#c98a5f" />
-            </radialGradient>
-            <radialGradient id="gS" cx=".35" cy=".25" r=".9">
-              <stop offset="0" stop-color="#ffdc8a" />
-              <stop offset=".55" stop-color="#eab04a" />
-              <stop offset="1" stop-color="#a8741a" />
-            </radialGradient>
-          </defs>
-          <ellipse cx="70" cy="162" rx="46" ry="7" fill="rgba(58,29,18,.25)" />
-          <ellipse cx="70" cy="114" rx="52" ry="48" fill="url(#gV)" />
-          <circle cx="22" cy="120" r="12" fill="url(#gP)" />
-          <circle cx="118" cy="120" r="12" fill="url(#gP)" />
-          <g fill="#fff6dc">
-            <circle cx="52" cy="90" r="3.4" />
-            <circle cx="60" cy="94" r="3.4" />
-            <circle cx="70" cy="96" r="3.4" />
-            <circle cx="80" cy="94" r="3.4" />
-            <circle cx="88" cy="90" r="3.4" />
-          </g>
-          <circle cx="70" cy="60" r="31" fill="url(#gP)" />
-          <circle cx="51" cy="68" r="6" fill="#e0586a" opacity=".55" />
-          <circle cx="89" cy="68" r="6" fill="#e0586a" opacity=".55" />
-          <ellipse cx="60" cy="57" rx="2.8" ry="3.4" fill="#3a1d12" />
-          <ellipse cx="80" cy="57" rx="2.8" ry="3.4" fill="#3a1d12" />
-          <ellipse cx="70" cy="73" rx="6" ry="3.2" fill="#c9512f" />
-          <ellipse cx="70" cy="38" rx="42" ry="9" fill="url(#gS)" />
-          <path d="M48 38c0-22 10-30 22-30s22 8 22 30z" fill="url(#gS)" />
-          <path d="M48 36c14 5 30 5 44 0v5c-14 5-30 5-44 0z" fill="#c9512f" />
-          <circle cx="92" cy="34" r="6" fill="#e0586a" />
-          <circle cx="92" cy="34" r="2.4" fill="#fff6dc" />
-        </svg>
+        ♪
       </button>
-    </aside>
-    <audio id="audio" loop></audio>
-    <dialog id="mapa">
-      <button id="cerrarMapa" class="cerrar" aria-label="Cerrar plano">
-        ✕
-      </button>
-      <h2>Plano del museo</h2>
-      <p>Estás en: <b id="aqui">Entrada</b>. Toca una sala para ir.</p>
-      <div class="plano" id="planoGrid"></div>
+    </div>
+    <div id="ctl">
+      <button id="bx" class="chip" type="button">Soltar aire</button
+      ><button id="bi" class="btn" type="button" hidden>Ver</button>
+    </div>
+    <div id="por">
+      <div class="hero">
+        <div>
+          <p class="muted"><b>Museo jugable · Trabajo final · Grupo 4</b></p>
+          <h1>Más allá<br />del volumen</h1>
+          <p class="lead">
+            Fernando Botero (Medellín, 1932 – Mónaco, 2023) hizo célebres a las
+            figuras de volúmenes enormes. Este museo te muestra lo que hay
+            detrás: sus primeros ensayos, la donación que en 2000 dio origen al
+            Museo Botero en Bogotá y las obras que provocaron debate por mostrar
+            la violencia.
+          </p>
+          <p class="lead">
+            Eres <b>Chela, guardiana del museo</b>. Recorre las salas en vista
+            isométrica, aprende de cada obra, juega en la
+            <b>Sala de Juegos</b> (trivia y memoria), restaura cuadros e infla
+            figuras… y cuidado: cada tanto suena la alarma y un
+            <b>ladrón</b> intenta llevarse una obra. ¡Atrápalo antes de que
+            escape!
+          </p>
+          <form id="bo">
+            <label for="nom"><b>Nombre del visitante</b></label
+            ><input
+              id="nom"
+              maxlength="20"
+              placeholder="Escribe tu nombre"
+              autocomplete="given-name"
+            /><button class="btn">Empezar la visita</button>
+          </form>
+          <p class="muted">
+            Flechas o WASD para caminar · E o Espacio para mirar y usar · X
+            suelta aire · En el celular arrastra el dedo.
+          </p>
+          <p class="muted">
+            Imágenes con fines académicos: faltan créditos y permisos de cada
+            una.
+          </p>
+        </div>
+        <div class="wall" aria-hidden="true">
+          <img src="media/t13.jpg" alt="" /><img
+            src="media/t6.jpg"
+            alt=""
+          /><img src="media/t42.jpg" alt="" /><img
+            src="media/t19.jpg"
+            alt=""
+          /><img src="media/t20.jpg" alt="" /><img src="media/t9.jpg" alt="" />
+        </div>
+      </div>
+    </div>
+    <dialog id="ficha"><div class="in" id="fc"></div></dialog>
+    <dialog id="final">
+      <div class="in">
+        <h2>Salida del museo</h2>
+        <p id="resu"></p>
+        <h3>Tu libreta</h3>
+        <textarea
+          id="nota"
+          rows="5"
+          aria-label="Mi libreta"
+          placeholder="Anota lo que notaste…"
+        ></textarea
+        ><small class="muted" id="cuenta"></small>
+        <div class="cartela">
+          <b>Equipo:</b> Manuela Gutiérrez (guion) · Daniel Duque (imágenes) ·
+          Jacobo Parada (música) · Kevin Caro (programación).<br /><b
+            >Fuentes:</b
+          >
+          «Propuesta · Trabajo final: Más allá de Botero». Por completar:
+          fuentes de cada obra, procedencia de imágenes y permisos.
+        </div>
+        <p>
+          <button class="btn" data-x type="button">Seguir visitando</button>
+        </p>
+      </div>
     </dialog>
-    <dialog id="ficha">
-      <button id="cerrar" class="cerrar" aria-label="Cerrar ficha">✕</button>
-      <div id="fichaContenido"></div>
-    </dialog>
+    <script>
+      "use strict";
+      const $ = (s) => document.querySelector(s),
+        T = 64,
+        cl = (v, a, b) => Math.max(a, Math.min(b, v)),
+        rnd = Math.random;
+      const L = (k, v) => {
+        try {
+          if (v === undefined)
+            return JSON.parse(localStorage.getItem("mb-" + k));
+          localStorage.setItem("mb-" + k, JSON.stringify(v));
+        } catch {
+          return null;
+        }
+      };
+      const rp = (a, b) => a.repeat(b),
+        CO = ["#e0704a", "#5aa67f", "#f0bb52", "#ee9a97", "#5aa3ba"];
+      const NC = 61,
+        NR = 54,
+        W = NC * T,
+        H = NR * T,
+        gv = { w: 1000, h: 640 },
+        IMG = {};
+      const M = Array.from({ length: NR }, () => Array(NC).fill("#"));
+      const R = (t, a, b, c, d) => {
+        for (let j = b; j <= d; j++) for (let i = a; i <= c; i++) M[j][i] = t;
+      };
+      R("f", 2, 1, 13, 8);
+      R("c", 16, 1, 31, 8);
+      R("w", 32, 4, 33, 5);
+      R("h", 34, 1, 58, 8);
+      R("a", 2, 11, 15, 24);
+      R("d", 18, 11, 41, 24);
+      R("b", 44, 11, 58, 24);
+      R("d", 16, 17, 17, 18);
+      R("d", 42, 17, 43, 18);
+      R("d", 7, 9, 8, 10);
+      R("d", 23, 9, 24, 10);
+      R("n", 50, 9, 50, 10);
+      R("e", 14, 29, 45, 35);
+      R("e", 14, 25, 15, 28);
+      R("e", 29, 25, 30, 28);
+      R("e", 44, 25, 45, 28);
+      R("g", 29, 36, 30, 36);
+      R("g", 4, 37, 55, 40);
+      [
+        [20, 12],
+        [40, 12],
+        [20, 22],
+        [40, 22],
+        [30, 12],
+      ].forEach(([i, j]) => (M[j][i] = "k"));
+      R("d", 29, 41, 30, 42);
+      R("j", 18, 43, 41, 52);
+      const PAL = {
+        j: ["#d7c8ee", "#c3b0e2"],
+        a: ["#f3b9aa", "#eaa090"],
+        b: ["#9ccbad", "#7bb592"],
+        c: ["#b1d8e2", "#86bccd"],
+        d: ["#fff1cf", "#f5e2b3"],
+        e: ["#f2d9a0", "#e8c680"],
+        f: ["#f6c875", "#eab04a"],
+        g: ["#b8d49a", "#a6c785"],
+        h: ["#8a3a20", "#6e2c18"],
+      };
+      const ZN = {
+        j: "Sala de Juegos",
+        a: "Sala Rosa · Retratos",
+        b: "Sala Verde · Vida cotidiana",
+        c: "Sala Azul · Esculturas",
+        d: "Patio central",
+        e: "Vestíbulo",
+        f: "Inicios y dibujos",
+        g: "Plaza de esculturas",
+        h: "Fuera del museo",
+        n: "Fuera del museo",
+        w: "Fuera del museo",
+      };
+      const SA = {
+          f: "Inicios y dibujos",
+          a: "Sala Rosa",
+          b: "Sala Verde",
+          c: "Sala Azul",
+          g: "Plaza de esculturas",
+        },
+        HID = [57, 30, 33, 27, 56],
+        VER = [6, 13, 23, 27, 57];
+      const RN = {
+        f: [1, 2, 3, 5, 41, 44, 46, 47, 48, 32],
+        a: [4, 13, 15, 6, 7, 8, 9, 10, 20, 45, 53, 26],
+        b: [19, 34, 43, 51, 54, 55, 49, 42, 31, 22, 17, 16, 35],
+        c: [14, 11, 12, 28, 36, 37, 38, 39, 40, 50, 52, 58, 59],
+        g: [18, 21, 23, 24, 25, 29, 60],
+      };
+      const RC = {
+        f: [2, 1, 13, 8, 2, 0],
+        a: [2, 11, 15, 24, 2, 0],
+        b: [44, 11, 58, 24, 2, 0],
+        c: [16, 1, 31, 8, 2, 0],
+        g: [4, 37, 55, 40, 7, 1],
+      };
+      const D = {};
+      `1|Mástiles y figuras|Obra temprana de color suave y figuras alargadas, aún lejos del volumen.
+2|Retrato de joven|Rostro sereno con flequillo, de trazo sobrio, de sus primeros años.
+3|Composición geométrica|Formas planas y color oscuro: su etapa de exploración cubista.
+4|Mona Lisa, variación|Versión de trazo suelto y rostro verdoso: Botero conversa con Leonardo.
+5|Figuras en movimiento|Diagonales y colores intensos, antes de que llegara el volumen.
+6|La familia presidencial|Sátira del poder: militares, clero y familia posan con ternura grotesca.
+7|Militar de uniforme verde|Autoridad inflada hasta el humor, con gorra y charreteras.
+8|Hombre de sombrero|Figura de traje oscuro con una fruta en la mano, entre follaje.
+9|Mujer de vestido verde|Figura voluminosa de cabello pelirrojo y mirada serena.
+10|Policía sobre caballito|Un policía enorme sobre un caballo de juguete: juego y autoridad.
+11|La mano|Mano monumental en bronce, de dedos redondeados.
+12|Hombre con bastón|Pequeño bronce de figura con sombrero y bastón.
+13|Mona Lisa a los doce años|Reinterpretación famosa de Leonardo: volumen, ironía y cariño.
+14|Esqueleto músico|La muerte toca la guitarra frente a una cortina roja.
+15|Infanta de vestido rojo|Homenaje a Velázquez con rostro serio y mejillas rosadas.
+16|Plaza de toros|Picadores, caballos y público en la arena: tema taurino recurrente.
+17|Pareja bailando|Dos figuras voluminosas en pleno baile, ella de azul.
+18|Mujer reclinada|Bronce de cuerpo redondo recostado en una calle de ciudad.
+19|Ramo de flores|Un ramo gigante y colorido sostenido por una mano.
+20|Familia en el campo|Padre de sombrero, madre, hijos y un gato bajo los árboles.
+21|Figuras reclinadas|Bronce de cuerpos redondeados tendidos en una plaza urbana.
+22|El pintor y su modelo|Mujer desnuda de espaldas frente al caballete.
+23|El gato|Felino de bronce enorme y sonriente en plena calle.
+24|Pájaro|Ave de bronce de formas rotundas ante un edificio.
+25|Caballo|Caballo monumental de patas macizas en un espacio público.
+26|Madre con bebé|Madre voluminosa con su hijo junto a una cortina rosa.
+28|Mujer y cisne|Mujer reclinada con un cisne: mito clásico en bronce.
+29|Maternidad|Madre con niños sobre un pedestal, en una plaza.
+31|Mujer en la playa|Figura recostada sobre una toalla rosa frente al mar.
+32|Hombre a caballo|Hombre de traje oscuro cabalga bajo un cielo azul.
+34|Libros y partitura|Naturaleza muerta con libros apilados y un lápiz sobre el escritorio.
+35|Bote a la deriva|Personas dormidas o agotadas en un bote sobre mar verde.
+36|Caballo blanco|Caballo pequeño en mármol blanco de formas redondas.
+37|Jinete|Figura sobre un caballo, en bronce negro.
+38|Mano de bronce|Otra mano de pulgar y dedos abultados.
+39|Mujer reclinada en mármol|Figura blanca recostada, con el brazo sobre la cabeza.
+40|Mujer reclinada en bronce|Cuerpo oscuro tendido, de formas suaves.
+41|Escena expresionista|Cuerpos retorcidos en rojos y ocres, dentro de un marco dorado.
+42|Mujer en la cama|Mujer desnuda con naranjas sobre una cama roja.
+43|Jarrón con rosas|Dibujo suave de rosas blancas en un jarrón.
+44|Bailarina|Dibujo en sanguina de una mujer de lunares en pose de baile.
+45|Hombre con bananos|Figura de traje oscuro entre hojas de banano, con un perro.
+46|Pareja sentada|Dibujo a lápiz de dos figuras desnudas en una cama.
+47|Rostro en sanguina|Una figura se cubre la boca con la mano.
+48|Crucifixión|Dibujo a lápiz de Cristo en la cruz sobre un paisaje de montañas.
+49|El baño|Interior de baño: pies en la bañera y una figura en el espejo.
+50|Pareja de espaldas|Relieve de dos figuras abrazadas, vistas desde atrás.
+51|Frutas y guitarra|Dibujo de frutas y guitarra frente a una ventana con tejados.
+52|Mujer sentada|Bronce de una mujer sentada con una pierna recogida.
+53|Dos mujeres|Mujer de vestido rojo y compañera de negro junto a una puerta.
+54|Naranjas y cuchillo|Naranjas y un vaso de jugo sobre la mesa; una mano sostiene un cuchillo.
+55|Violín y jarra|Naturaleza muerta con violín, jarra y paño rojo ante una ventana.
+56|Soldado|Combatiente de camuflaje con fusil entre árboles: la violencia en Colombia.
+57|Abu Ghraib|Serie de 2005 sobre las torturas en una prisión de Irak; fue muy debatida.
+58|Hombre de pie|Bronce de un hombre desnudo en pose erguida.
+59|Mujer de pie|Bronce de una mujer desnuda con la mano en la frente.
+30|Masacre|Fiesta interrumpida por hombres armados: memoria de la violencia en Colombia.
+33|Coche bomba|Auto destrozado tras un atentado: el terror en las calles colombianas.
+27|Pájaros de San Antonio|Pájaro herido y Pájaro de la Paz en Medellín tras la bomba de 1995.`
+        .split("\n")
+        .forEach((l) => {
+          const [a, b, c] = l.split("|");
+          D[a] = [b, c];
+        });
+      const fr = [];
+      const slots = (a, b, c, d, s, st) => {
+        const o = [];
+        for (const [r, dr] of [
+          [b, -1],
+          [d, 1],
+        ])
+          for (let i = a + st; i <= c; i += s)
+            if (
+              M[r + dr] &&
+              M[r + dr][i] === "#" &&
+              "abcdefg".includes(M[r][i])
+            )
+              o.push([i, r]);
+        return o;
+      };
+      const mk = (n, i, j, k) =>
+        fr.push({
+          n,
+          x: (i + 0.5) * T,
+          y: (j + 0.5) * T,
+          k,
+          ti: D[n] ? D[n][0] : "Espacio libre",
+        });
+      Object.keys(RN).forEach((k) => {
+        const [a, b, c, d, s, st] = RC[k],
+          sl = slots(a, b, c, d, s, st);
+        RN[k].forEach((n, q) => mk(n, sl[q][0], sl[q][1], k));
+      });
+      [57, 30, 33, 27, 56].forEach((n, q) => mk(n, 36 + q * 5, 1, "h"));
+      const t2 = (a) => a.map(([c, r]) => ({ x: c * T, y: r * T })),
+        PU = t2([
+          [4.5, 4],
+          [4.5, 20],
+          [22, 20],
+          [20, 32],
+          [55, 20],
+          [10, 38.5],
+        ]),
+        CA = t2([
+          [10, 6],
+          [11, 22],
+          [36, 20],
+          [27, 6],
+          [20, 14],
+          [22, 33],
+          [52, 20],
+          [50, 39],
+        ]),
+        PI = [26, 28, 30, 32, 34].map((c, i) => ({
+          x: (c + 0.5) * T,
+          y: 14.5 * T,
+          f: [261.6, 293.7, 329.6, 392, 440][i],
+          g: 0,
+        })),
+        EX = { x: 30 * T, y: 34.6 * T },
+        SC = { x: 30 * T, y: 21 * T, r: 66 };
+      const FL = [];
+      M.forEach((r, j) =>
+        r.forEach((t, i) => "abcdefg".includes(t) && FL.push([i, j])),
+      );
+      const FR = Array.from({ length: 90 }, () => {
+        const [i, j] = FL[(rnd() * FL.length) | 0];
+        return {
+          x: (i + 0.2 + rnd() * 0.6) * T,
+          y: (j + 0.2 + rnd() * 0.6) * T,
+          t: 0,
+        };
+      });
+      const LN = [
+        "¿Una grieta en la Sala Verde? Solo caben los delgados.",
+        "Dicen que una Chela muy inflada abre las puertas macizas.",
+        "El cactus del taller desinfla. Con cariño, pero desinfla.",
+        "Las baldosas del patio suenan. Pisa las cinco rápido.",
+        "Las obras más grandes están en la plaza, al sur.",
+        "Hay un ala fuera del museo. Se llega sin que te vea el guardia.",
+        "Mira los dibujos del taller: Botero empezó dibujando.",
+        "Las esculturas de la plaza se pueden tocar. Las pinturas, no.",
+        "Hay obras que no están en las salas. Algunas generaron debate.",
+      ];
+      const NP = [
+        [6, 14],
+        [52, 14],
+        [22, 5],
+        [8, 4],
+        [28, 14],
+        [30, 32],
+        [12, 40],
+        [48, 40],
+        [38, 20],
+      ].map(([c, r], i) => ({
+        x: c * T,
+        y: r * T,
+        a: rnd() * 6.28,
+        tm: 0,
+        c: CO[i % 5],
+        l: LN[i],
+      }));
+      const G = { x: 22 * T, y: 13 * T, w: 0, cd: 0 },
+        WP = [
+          [22, 13],
+          [38, 13],
+          [38, 22],
+          [22, 22],
+        ];
+      const DEC = [];
+      [
+        ["f", 2, 1, 13, 8, "#f6c875"],
+        ["a", 2, 11, 15, 24, "#ee9a97"],
+        ["b", 44, 11, 58, 24, "#7bb592"],
+        ["c", 16, 1, 31, 8, "#86bccd"],
+      ].forEach(([k, a, b, c, d, col]) => {
+        const mx = ((a + c + 1) / 2) * T,
+          my = ((b + d + 1) / 2) * T;
+        DEC.push(
+          ["r", mx, my, col],
+          ["b", mx, my],
+          ["p", (a + 0.5) * T, my],
+          ["p", (c + 0.5) * T, my],
+        );
+      });
+      DEC.push(
+        ["r", 30 * T, 32 * T, "#c9512f"],
+        ["b", 26 * T, 32 * T],
+        ["b", 34 * T, 32 * T],
+        ["l", 15 * T, 30 * T],
+        ["l", 45 * T, 30 * T],
+        ["l", 15 * T, 34 * T],
+        ["l", 45 * T, 34 * T],
+        ["o", 38 * T, 18 * T],
+      );
+      [8, 16, 24, 36, 44, 52].forEach((c) => DEC.push(["t", c * T, 39.6 * T]));
+      const ST = [
+        ["vol", "Infla", "#c9512f"],
+        ["bod", "Bodegón", "#3f7d5c"],
+        ["rit", "Ritmo", "#4a8fa8"],
+        ["gal", "Galería", "#eab04a"],
+        ["lib", "Libreta", "#eaa090"],
+        ["mis", "Guía", "#5aa3ba"],
+        ["res", "Restaurador", "#c9512f"],
+        ["inf", "Aire", "#eab04a"],
+        ["lad", "Guardiana", "#d22"],
+        ["tri", "Trivia", "#7a5bb0"],
+        ["mem", "Memoria", "#3f7d5c"],
+        ["deb", "Debate", "#8a3a20"],
+      ];
+      let got = new Set(L("sellos") || []),
+        pts = L("pts") || 0,
+        vis = new Set(L("vis") || []),
+        chk = L("chk") || {},
+        nombre = "visitante";
+      let X = 30 * T,
+        Y = 33.5 * T,
+        v = 1.2,
+        go = 0,
+        burst = 0,
+        near = null,
+        bub = { t: "", u: 0 },
+        fru = 0,
+        pi = { s: new Set(), t0: 0 },
+        sh = 0,
+        dk = 0,
+        zon = "e",
+        cx = 0,
+        cy = 0,
+        pf = [],
+        seen = new Uint8Array(NC * NR),
+        joy = null;
+      const keys = {},
+        rr = () => 22 + v * 4.5,
+        cv = $("#cv"),
+        c = cv.getContext("2d"),
+        mm = $("#mm").getContext("2d");
+      $("#sl").innerHTML = ST.map(
+        ([k, n, col]) =>
+          `<i class="st" id="s-${k}" style="--c:${col}" title="${n}"></i>`,
+      ).join("");
+      let mis = null,
+        mok = L("mok") || 0,
+        sim = null,
+        ev = { t: 16, ap: 0, rush: 0, n: 0, sir: 0, alt: 0 },
+        ban = null;
+      function hud() {
+        $("#mi").hidden = !mis;
+        if (mis) $("#mi").textContent = "Encargo: " + D[mis.n][1];
+        ST.forEach(([k]) => $("#s-" + k).classList.toggle("on", got.has(k)));
+        $("#pts").textContent = "● " + pts;
+        $("#vb").style.width = (v / 9.5) * 100 + "%";
+      }
+      const say = (t, ms = 3800) => (bub = { t, u: performance.now() + ms });
+      function suma(n) {
+        pts = Math.max(0, pts + n);
+        L("pts", pts);
+        hud();
+      }
+      function sello(k, t) {
+        if (got.has(k)) return;
+        got.add(k);
+        L("sellos", [...got]);
+        hud();
+        say(t, 5000);
+        tono(660, 0.5, 0.15);
+        setTimeout(() => tono(880, 0.6, 0.15), 150);
+      }
+      function puff(x, y, col, n = 10) {
+        for (let i = 0; i < n; i++)
+          pf.push({
+            x,
+            y,
+            vx: (rnd() - 0.5) * 300,
+            vy: (rnd() - 0.5) * 300,
+            l: 0.6,
+            c: col,
+          });
+      }
+      /* Audio */
+      let ctx,
+        mas,
+        mus,
+        amb = 0,
+        tm,
+        st = 0,
+        nt = 0,
+        vol = L("vol");
+      if (vol == null) vol = 80;
+      const gain_ = () => Math.pow(vol / 100, 1.6) * 1.2;
+      function aud() {
+        if (ctx) return;
+        try {
+          ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const cp = ctx.createDynamicsCompressor();
+          cp.connect(ctx.destination);
+          mas = ctx.createGain();
+          mas.gain.value = gain_();
+          mas.connect(cp);
+          mus = ctx.createBiquadFilter();
+          mus.type = "lowpass";
+          mus.frequency.value = 5200;
+          mus.connect(mas);
+        } catch {}
+      }
+      function nota(f, t, d, l, ty = "triangle", bus = mus) {
+        const o = ctx.createOscillator(),
+          g = ctx.createGain();
+        o.type = ty;
+        o.frequency.value = f;
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(l, t + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+        o.connect(g);
+        g.connect(bus);
+        o.start(t);
+        o.stop(t + d + 0.05);
+        o.onended = () => {
+          o.disconnect();
+          g.disconnect();
+        };
+      }
+      const tono = (f, d = 0.25, l = 0.12) => {
+        if (ctx && ctx.state === "running")
+          nota(f, ctx.currentTime, d, Math.min(0.45, l * 2.2), "triangle", mas);
+      };
+      const CH = [
+          [220, 261.63, 329.63],
+          [174.61, 220, 261.63],
+          [261.63, 329.63, 392],
+          [196, 246.94, 293.66],
+        ],
+        AR = [0, 1, 2, 1, 2, 1, 0, 1];
+      function plan() {
+        while (nt < ctx.currentTime + 0.3) {
+          const b = st % 8,
+            q = CH[(st >> 3) % 4];
+          nota(q[AR[b]] * 2, nt, 0.5, 0.17);
+          if (b === 0) {
+            nota(q[0] / 2, nt, 1.9, 0.3, "sine");
+            q.forEach((f) => nota(f, nt, 2.3, 0.05, "sine"));
+          }
+          if (b === 4) nota(q[0] * 0.75, nt, 0.9, 0.2, "sine");
+          if (b % 2 === 0 && (st >> 3) % 4 > 1)
+            nota(q[[2, 1, 0, 1][b >> 1]] * 4, nt, 0.6, 0.09, "sine");
+          st++;
+          nt += 0.3;
+        }
+      }
+      async function musica(on) {
+        aud();
+        if (!ctx) return;
+        if (on && !amb) {
+          await ctx.resume();
+          nt = ctx.currentTime + 0.06;
+          plan();
+          tm = setInterval(plan, 100);
+          amb = 1;
+        } else if (!on && amb) {
+          clearInterval(tm);
+          amb = 0;
+        }
+        $("#son").setAttribute("aria-pressed", !!amb);
+      }
+      $("#son").onclick = () => musica(!amb);
+      $("#vol").value = vol;
+      $("#vol").oninput = (e) => {
+        vol = +e.target.value;
+        L("vol", vol);
+        if (mas) mas.gain.setTargetAtTime(gain_(), ctx.currentTime, 0.03);
+      };
+      /* Colisión */
+      const sol = (i, j, r) => {
+        const t = (M[j] || [])[i];
+        return (
+          t === undefined ||
+          t === "#" ||
+          t === "k" ||
+          (t === "n" && r > 30) ||
+          (t === "w" && !burst)
+        );
+      };
+      function hit(x, y, r) {
+        for (let j = Math.floor((y - r) / T); j <= Math.floor((y + r) / T); j++)
+          for (
+            let i = Math.floor((x - r) / T);
+            i <= Math.floor((x + r) / T);
+            i++
+          )
+            if (sol(i, j, r)) {
+              const nx = cl(x, i * T, i * T + T),
+                ny = cl(y, j * T, j * T + T);
+              if ((x - nx) ** 2 + (y - ny) ** 2 < r * r) return 1;
+            }
+        return 0;
+      }
+      function mv(o, dx, dy, r) {
+        if (!hit(o.x + dx, o.y, r) || hit(o.x, o.y, r)) o.x += dx;
+        if (!hit(o.x, o.y + dy, r) || hit(o.x, o.y, r)) o.y += dy;
+      }
+      /* Interacción */
+      function act() {
+        if (!near) return;
+        if (near.k === "f") ficha(near.o);
+        else if (near.k === "x") final();
+        else if (near.k === "v") hablar();
+        else if (near.k === "s") rest();
+        else if (near.k === "q") trivia();
+        else if (near.k === "y") memo();
+        else if (near.k === "i") infla();
+      }
+      function ficha(f) {
+        chkMis(f.n);
+        const n = f.n,
+          e = n > 59,
+          d = D[n] || [
+            "Espacio libre",
+            "Aquí cabe la obra número 60. Reemplaza este espacio cuando la tengan.",
+          ],
+          h = HID.includes(n);
+        $("#fc").innerHTML =
+          `${e ? "" : `<img class="ob" src="media/${n}.jpg" alt="${d[0]}">`}<h2>${d[0]}</h2><p class="muted">${h ? "Fuera del museo · obra polémica o censurada" : "Museo Botero · " + SA[f.k]}</p><p>${d[1]}</p>${h ? `<p class="aviso">Contenido sensible. Se muestra con fines educativos para discutir los límites entre libertad de expresión, censura y apología.</p>` : ""}${e || VER.includes(n) ? "" : `<p class="aviso">Título y descripción provisionales: confírmalos con fuentes.</p>`}${h ? DEB(n) : ""}<button class="btn" data-x type="button">Cerrar</button>`;
+        $("#ficha").showModal();
+        if (!vis.has(n)) {
+          vis.add(n);
+          L("vis", [...vis]);
+          suma(20);
+          v = Math.min(9.3, v + 0.8);
+          hud();
+          say("¡Esa obra te infló!");
+          puff(X, Y, "#eab04a", 14);
+        }
+        if (vis.size >= 10)
+          sello("gal", "¡Diez obras vistas! Investigar también es recorrer.");
+      }
+      document.querySelectorAll("dialog").forEach(
+        (d) =>
+          (d.onclick = (e) => {
+            if (e.target === d || e.target.closest("[data-x]")) d.close();
+          }),
+      );
+      const nt_ = $("#nota");
+      nt_.value = L("nota") || "";
+      function guarda() {
+        $("#cuenta").textContent =
+          nt_.value.length + " caracteres · se guarda solo en este navegador";
+        L("nota", nt_.value);
+        if (nt_.value.length >= 30)
+          sello("lib", "Libreta sellada. ¡Gracias por la visita!");
+      }
+      nt_.oninput = guarda;
+      guarda();
+      function final() {
+        $("#resu").textContent =
+          `${nombre}, llevas ${pts} puntos y ${got.size} de ${ST.length} sellos.${got.size >= ST.length ? " ¡Visita completa!" : " Aún quedan rincones: el museo no tiene un solo camino."}`;
+        $("#final").showModal();
+      }
+      /* Minijuegos */
+      const PM = RN.f
+          .concat(RN.a, RN.b, RN.c, RN.g)
+          .filter((n) => !HID.includes(n) && D[n]),
+        zonaDe = (n) => SA[fr.find((f) => f.n === n).k];
+      function hablar() {
+        if (!mis)
+          mis = { n: PM[(rnd() * PM.length) | 0], t: performance.now(), f: 0 };
+        say(`Busco una obra: ${D[mis.n][1]}`, 7000);
+      }
+      function chkMis(n) {
+        if (!mis) return;
+        if (n === mis.n) {
+          const b = Math.max(
+            20,
+            80 - (((performance.now() - mis.t) / 1000) | 0),
+          );
+          suma(b);
+          mok++;
+          L("mok", mok);
+          say(`¡Era esa! +${b} puntos`, 4500);
+          puff(X, Y, "#5aa3ba", 20);
+          tono(880, 0.3, 0.15);
+          mis = null;
+          if (mok >= 3) sello("mis", "¡Guía del museo! 3 encargos cumplidos.");
+        } else {
+          mis.f++;
+          say(
+            mis.f > 1
+              ? `No es esa. Prueba en: ${zonaDe(mis.n)}.`
+              : "No es esa. Sigue buscando.",
+            4500,
+          );
+        }
+      }
+      function rest() {
+        const n = PM[(rnd() * PM.length) | 0];
+        $("#fc").innerHTML =
+          '<h2>Restaura la obra</h2><p class="muted">Toca dos piezas para intercambiarlas y arma el cuadro.</p><canvas id="pz" width="360" height="360" style="position:static;inset:auto;width:100%;max-width:400px;height:auto;display:block;margin:0 auto 12px;touch-action:manipulation;border:6px solid #e8c25a"></canvas><p id="pm"></p><button class="btn" data-x type="button">Salir</button>';
+        $("#ficha").showModal();
+        const pz = $("#pz"),
+          g = pz.getContext("2d"),
+          im = new Image(),
+          ord = [...Array(9).keys()];
+        let sel = -1,
+          ok = 0;
+        for (let i = 8; i > 0; i--) {
+          const j = (rnd() * (i + 1)) | 0;
+          [ord[i], ord[j]] = [ord[j], ord[i]];
+        }
+        const pin = () => {
+          const A = pz.width,
+            B = pz.height,
+            w = im.naturalWidth / 3,
+            h = im.naturalHeight / 3;
+          g.clearRect(0, 0, A, B);
+          ord.forEach((o, i) =>
+            g.drawImage(
+              im,
+              (o % 3) * w,
+              ((o / 3) | 0) * h,
+              w,
+              h,
+              ((i % 3) * A) / 3,
+              (((i / 3) | 0) * B) / 3,
+              A / 3,
+              B / 3,
+            ),
+          );
+          g.strokeStyle = "#fff6dc";
+          g.lineWidth = 2;
+          for (let i = 0; i < 9; i++)
+            g.strokeRect(
+              ((i % 3) * A) / 3,
+              (((i / 3) | 0) * B) / 3,
+              A / 3,
+              B / 3,
+            );
+          if (sel >= 0) {
+            g.strokeStyle = "#c9512f";
+            g.lineWidth = 6;
+            g.strokeRect(
+              ((sel % 3) * A) / 3 + 3,
+              (((sel / 3) | 0) * B) / 3 + 3,
+              A / 3 - 6,
+              B / 3 - 6,
+            );
+          }
+        };
+        im.onload = () => {
+          pz.height = Math.round(
+            cl((360 * im.naturalHeight) / im.naturalWidth, 240, 460),
+          );
+          pin();
+        };
+        im.src = "media/" + n + ".jpg";
+        pz.onpointerdown = (e) => {
+          if (ok) return;
+          const r = pz.getBoundingClientRect(),
+            i =
+              cl(Math.floor(((e.clientX - r.left) / r.width) * 3), 0, 2) +
+              3 * cl(Math.floor(((e.clientY - r.top) / r.height) * 3), 0, 2);
+          if (sel < 0) sel = i;
+          else {
+            [ord[sel], ord[i]] = [ord[i], ord[sel]];
+            sel = -1;
+          }
+          pin();
+          if (ord.every((o, i) => o === i)) {
+            ok = 1;
+            const rs = L("rest") || [];
+            $("#pm").innerHTML = `¡Restaurada! Es <b>${D[n][0]}</b>.`;
+            tono(880, 0.4, 0.15);
+            if (!rs.includes(n)) {
+              rs.push(n);
+              L("rest", rs);
+              suma(60);
+              $("#pm").innerHTML += " +60 puntos";
+            }
+            sello("res", "¡Restaurador del museo!");
+          }
+        };
+      }
+      /* Más minijuegos */
+      const TA = { x: 22 * T, y: 32 * T };
+      const DQ = [
+          "Sí: la memoria necesita verse",
+          "Sí, con aviso y contexto",
+          "No: es demasiado duro",
+        ],
+        DR = [
+          "Botero quiso que la violencia no se olvidara: el arte como memoria.",
+          "El contexto permite mirar sin convertir el dolor en espectáculo.",
+          "Es una postura válida: hay imágenes que hieren. Por eso hay aviso.",
+        ];
+      const DEB = (n) =>
+        `<div><b>Debate: ¿debe un museo exhibir esta obra?</b><div style="display:grid;gap:6px;margin:8px 0">${DQ.map((q, i) => `<button class="chip" type="button" onclick="deb(${n},${i})">${q}</button>`).join("")}</div><p class="aviso" id="dr" hidden></p></div>`;
+      function deb(n, i) {
+        $("#dr").hidden = 0;
+        $("#dr").textContent = DR[i] + " No hay respuesta única.";
+        const d = L("deb") || [];
+        if (!d.includes(n)) {
+          d.push(n);
+          L("deb", d);
+          suma(15);
+          if (d.length >= 3)
+            sello("deb", "¡Debatiente! Opinar también es visitar.");
+        }
+      }
+      function infla() {
+        $("#fc").innerHTML =
+          '<h2>Taller de inflado</h2><p class="muted">Mantén el botón para inflar la figura hasta el aro. Si te pasas, ¡pum!</p><canvas id="iz" width="320" height="300" style="position:static;inset:auto;width:100%;max-width:340px;height:auto;display:block;margin:0 auto 10px"></canvas><p id="im" class="muted"></p><button class="btn" id="ib" type="button">Empezar</button> <button class="btn s" data-x type="button">Salir</button>';
+        $("#ficha").showModal();
+        const g = $("#iz").getContext("2d"),
+          b = $("#ib");
+        let ro = 0,
+          tg = 0,
+          r = 0,
+          on = 0,
+          fase = 0,
+          tot = 0,
+          ex = 0,
+          last = performance.now();
+        const nueva = () => {
+          tg = 50 + rnd() * 60;
+          r = 18;
+          fase = 1;
+          on = 0;
+          b.textContent = "Mantén para inflar";
+          $("#im").textContent = "Ronda " + (ro + 1) + " de 3";
+        };
+        const cierra = (bum) => {
+          on = 0;
+          const e = Math.abs(r - tg) / tg,
+            p = bum ? 0 : e < 0.06 ? 50 : e < 0.15 ? 25 : e < 0.3 ? 10 : 0;
+          if (!bum && e < 0.1) ex++;
+          tot += p;
+          ro++;
+          fase = 2;
+          $("#im").textContent = bum
+            ? "¡Pum! Te pasaste. +0"
+            : `Error del ${Math.round(e * 100)}%. +${p} puntos`;
+          tono(bum ? 120 : 660, 0.3, 0.2);
+          if (ro < 3)
+            setTimeout(() => {
+              if ($("#ficha").open) nueva();
+            }, 1100);
+          else {
+            suma(tot);
+            if (ex >= 2) sello("inf", "¡Maestro del aire!");
+            $("#im").textContent += ` · Total ${tot}`;
+            b.textContent = "Jugar otra vez";
+            ro = 0;
+            tot = 0;
+            ex = 0;
+            fase = 0;
+          }
+        };
+        b.onpointerdown = () => {
+          if (fase === 0) nueva();
+          else if (fase === 1) on = 1;
+        };
+        b.onpointerup = b.onpointerleave = () => {
+          if (fase === 1 && on) cierra(0);
+        };
+        const step = () => {
+          if (!$("#ficha").open) return;
+          const n = performance.now(),
+            dt = Math.min(0.05, (n - last) / 1000);
+          last = n;
+          if (fase === 1 && on) {
+            r += 60 * dt;
+            if (r > tg * 1.35) cierra(1);
+          }
+          g.fillStyle = "#f5ecd6";
+          g.fillRect(0, 0, 320, 300);
+          if (fase) {
+            g.setLineDash([6, 6]);
+            g.strokeStyle = "#c9512f";
+            g.lineWidth = 4;
+            g.beginPath();
+            g.arc(160, 150, tg, 0, 7);
+            g.stroke();
+            g.setLineDash([]);
+          }
+          g.fillStyle = "#eab04a";
+          g.beginPath();
+          g.ellipse(160, 150, r, r * 0.95, 0, 0, 7);
+          g.fill();
+          g.fillStyle = "#f1c19b";
+          g.beginPath();
+          g.arc(160, 150 - r * 0.9, r * 0.35, 0, 7);
+          g.fill();
+          requestAnimationFrame(step);
+        };
+        step();
+      }
+      /* Visual */
+      PAL.k = PAL.d;
+      const COL = [
+        [20, 12],
+        [40, 12],
+        [20, 22],
+        [40, 22],
+        [30, 12],
+      ];
+      const hs = (i, j) => (((i * 73856093) ^ (j * 19349663)) >>> 0) % 100,
+        WC = {
+          j: ["#b9a6dd", "#9d86cc"],
+          a: ["#e9a392", "#cf8272"],
+          b: ["#8fbfa3", "#6ea083"],
+          c: ["#a7cfdd", "#7fb0c4"],
+          d: ["#f2dfae", "#d9c088"],
+          e: ["#ecc983", "#cfa55a"],
+          f: ["#f1bd63", "#d4963a"],
+          g: ["#5f9a5a", "#437a43"],
+          h: ["#7a3f26", "#5a2d17"],
+        };
+      [
+        [2, 1, 13, 8],
+        [16, 1, 31, 8],
+        [34, 1, 58, 8],
+        [2, 11, 15, 24],
+        [44, 11, 58, 24],
+        [18, 11, 41, 24],
+      ].forEach(([a, b, c2, d]) =>
+        DEC.push(
+          ["p", (a + 0.6) * T, (b + 1.3) * T],
+          ["p", (c2 + 0.4) * T, (b + 1.3) * T],
+          ["p", (a + 0.6) * T, (d + 0.2) * T],
+          ["p", (c2 + 0.4) * T, (d + 0.2) * T],
+        ),
+      );
+      function pared(i, j, px, py) {
+        const z = (M[j + 1] || [])[i];
+        if (!z || z === "#") {
+          c.fillStyle = "#3a1d12";
+          c.fillRect(px, py, T, T);
+          c.fillStyle = "#4a2415";
+          c.fillRect(px, py, T, 6);
+          return;
+        }
+        const q = WC[z === "k" ? "d" : z] || WC.h,
+          h = hs(i, j);
+        c.fillStyle = q[0];
+        c.fillRect(px, py, T, T);
+        c.fillStyle = "rgba(255,255,255,.07)";
+        for (let k = 0; k < T; k += 16) c.fillRect(px + k, py, 8, T);
+        c.fillStyle = q[1];
+        c.fillRect(px, py + T * 0.62, T, T * 0.38);
+        c.fillStyle = "rgba(255,255,255,.25)";
+        c.fillRect(px, py + T * 0.62, T, 3);
+        c.fillStyle = "#3a1d12";
+        c.fillRect(px, py + T - 7, T, 7);
+        c.fillRect(px, py, T, 8);
+        c.fillStyle = "#e8c25a";
+        c.fillRect(px, py + 8, T, 3);
+        if (z !== "g" && h < 22) {
+          const wx = px + 14,
+            wy = py + 16;
+          c.fillStyle = "#3a1d12";
+          c.fillRect(wx - 3, wy - 3, 42, 34);
+          const gg = c.createLinearGradient(0, wy, 0, wy + 28);
+          gg.addColorStop(0, "#bfe3f5");
+          gg.addColorStop(1, "#fff2c4");
+          c.fillStyle = gg;
+          c.fillRect(wx, wy, 36, 28);
+          c.fillStyle = "#3a1d12";
+          c.fillRect(wx + 17, wy, 2, 28);
+        } else if (z !== "g" && h < 40) {
+          c.fillStyle = "rgba(255,240,180,.25)";
+          c.beginPath();
+          c.arc(px + T / 2, py + 26, 16, 0, 7);
+          c.fill();
+          c.fillStyle = "#e8c25a";
+          c.beginPath();
+          c.arc(px + T / 2, py + 26, 5, 0, 7);
+          c.fill();
+        }
+      }
+      function suelo(t, i, j, px, py) {
+        const h = hs(i, j);
+        if ("abcef".includes(t)) {
+          c.fillStyle = "rgba(58,29,18,.08)";
+          for (let k = 1; k < 4; k++) c.fillRect(px, py + k * 16, T, 1);
+          for (let k = 0; k < 4; k++)
+            c.fillRect(px + ((h * 7 + k * 23) % T), py + k * 16, 1, 16);
+        } else if (t === "d" || t === "k") {
+          c.fillStyle = "rgba(255,255,255,.35)";
+          c.fillRect(px, py, T, 2);
+          c.fillRect(px, py, 2, T);
+          if (h < 30) {
+            c.fillStyle = "rgba(150,110,60,.12)";
+            c.beginPath();
+            c.moveTo(px + (h % 40), py);
+            c.lineTo(px + (h % 40) + 20, py + T);
+            c.lineTo(px + (h % 40) + 23, py + T);
+            c.lineTo(px + (h % 40) + 3, py);
+            c.fill();
+          }
+        } else if (t === "g") {
+          c.fillStyle = "rgba(40,90,40,.25)";
+          if (h < 60) c.fillRect(px + (h % 50), py + ((h * 3) % 50), 3, 8);
+          c.fillStyle = "rgba(255,255,255,.12)";
+          c.fillRect(px + ((h * 5) % 60), py + ((h * 9) % 60), 5, 3);
+          if (h > 93) {
+            c.fillStyle = CO[h % 5];
+            c.beginPath();
+            c.arc(px + ((h * 11) % 56) + 4, py + ((h * 7) % 56) + 4, 4, 0, 7);
+            c.fill();
+          }
+        }
+        if ((M[j - 1] || [])[i] === "#") {
+          const sg = c.createLinearGradient(0, py, 0, py + 30);
+          sg.addColorStop(0, "rgba(20,6,2,.4)");
+          sg.addColorStop(1, "rgba(20,6,2,0)");
+          c.fillStyle = sg;
+          c.fillRect(px, py, T, 30);
+        }
+      }
+      function columna(x, y) {
+        c.fillStyle = "rgba(58,29,18,.3)";
+        c.beginPath();
+        c.ellipse(x, y, 30, 10, 0, 0, 7);
+        c.fill();
+        const gg = c.createLinearGradient(x - 18, 0, x + 18, 0);
+        gg.addColorStop(0, "#d9c088");
+        gg.addColorStop(0.4, "#fff6dc");
+        gg.addColorStop(1, "#c9a45a");
+        c.fillStyle = gg;
+        c.fillRect(x - 17, y - 110, 34, 110);
+        c.fillStyle = "#c9a45a";
+        c.fillRect(x - 26, y - 12, 52, 12);
+        c.fillRect(x - 24, y - 124, 48, 16);
+        c.fillStyle = "#e8c25a";
+        c.fillRect(x - 26, y - 128, 52, 5);
+      }
+      function fuente(now) {
+        const x = 38 * T,
+          y = 18 * T;
+        for (let k = 0; k < 3; k++) {
+          const r = (now / 45 + k * 20) % 56;
+          c.strokeStyle = `rgba(255,255,255,${0.6 * (1 - r / 56)})`;
+          c.lineWidth = 3;
+          c.beginPath();
+          c.arc(x, y, r, 0, 7);
+          c.stroke();
+        }
+      }
+      function luz(dpr, VW, VH, now) {
+        c.globalCompositeOperation = "lighter";
+        fr.forEach((f) => {
+          const [a, b] = Pt(f.x, f.y);
+          if (
+            a < cx - 130 ||
+            a > cx + gv.w + 130 ||
+            b < cy - 60 ||
+            b > cy + gv.h + 200
+          )
+            return;
+          const g = c.createRadialGradient(a, b - 50, 6, a, b - 50, 120);
+          g.addColorStop(0, "rgba(255,226,150,.2)");
+          g.addColorStop(1, "rgba(255,226,150,0)");
+          c.fillStyle = g;
+          c.fillRect(a - 120, b - 170, 240, 240);
+        });
+        c.globalCompositeOperation = "source-over";
+        c.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const vg = c.createRadialGradient(
+          VW / 2,
+          VH / 2,
+          Math.min(VW, VH) * 0.35,
+          VW / 2,
+          VH / 2,
+          Math.max(VW, VH) * 0.75,
+        );
+        vg.addColorStop(0, "rgba(40,12,4,0)");
+        vg.addColorStop(1, "rgba(40,12,4,.5)");
+        c.fillStyle = vg;
+        c.fillRect(0, 0, VW, VH);
+        for (let k = 0; k < 34; k++) {
+          const x = (k * 137 + now * 0.012 * ((k % 4) + 1)) % VW,
+            y =
+              (k * 89 +
+                now * 0.005 * ((k % 3) + 1) +
+                Math.sin(now / 1300 + k) * 20) %
+              VH;
+          c.fillStyle = `rgba(255,240,190,${0.1 + (k % 5) * 0.05})`;
+          c.beginPath();
+          c.arc(x, y, 1.5 + (k % 3), 0, 7);
+          c.fill();
+        }
+        if (ban && now < ban.u) {
+          const a = Math.min(
+            1,
+            (ban.u - now) / 500,
+            (now - (ban.u - 2800)) / 350,
+          );
+          c.globalAlpha = Math.max(0, a);
+          c.font = "900 " + Math.min(54, VW / 12) + "px Fraunces,Georgia,serif";
+          c.textAlign = "center";
+          c.lineWidth = 8;
+          c.strokeStyle = "#3a1d12";
+          c.strokeText(ban.t, VW / 2, VH * 0.24);
+          c.fillStyle = "#fff6dc";
+          c.fillText(ban.t, VW / 2, VH * 0.24);
+          c.globalAlpha = 1;
+        }
+      }
+      function fig(x, y, r, body, hat, b) {
+        const t = performance.now(),
+          bo = b ? Math.sin(t / 90) * 2 : 0,
+          sq = b ? 1 + Math.sin(t / 90) * 0.04 : 1,
+          E = (a, bb, rx, ry, f) => {
+            c.fillStyle = f;
+            c.beginPath();
+            c.ellipse(a, bb, rx, ry, 0, 0, 7);
+            c.fill();
+          };
+        E(x, y + r * 0.85, r * 1.1, r * 0.34, "rgba(58,29,18,.3)");
+        E(x - r * 0.55, y + r * 0.82 + bo * 0.5, r * 0.3, r * 0.16, "#3a1d12");
+        E(x + r * 0.55, y + r * 0.82 - bo * 0.5, r * 0.3, r * 0.16, "#3a1d12");
+        E(x - r * 0.98, y + r * 0.1 + bo, r * 0.24, r * 0.38, body);
+        E(x + r * 0.98, y + r * 0.1 + bo, r * 0.24, r * 0.38, body);
+        E(x, y + bo, r, r * 0.92 * sq, body);
+        const g = c.createRadialGradient(
+          x - r * 0.4,
+          y - r * 0.45 + bo,
+          r * 0.1,
+          x,
+          y + bo,
+          r * 1.1,
+        );
+        g.addColorStop(0, "rgba(255,255,255,.4)");
+        g.addColorStop(0.55, "rgba(255,255,255,0)");
+        g.addColorStop(1, "rgba(40,10,0,.35)");
+        E(x, y + bo, r, r * 0.92 * sq, g);
+        E(x, y - r * 0.85 + bo, r * 0.5, r * 0.48, "#f1c19b");
+        E(
+          x - r * 0.28,
+          y - r * 0.72 + bo,
+          r * 0.12,
+          r * 0.08,
+          "rgba(238,120,110,.6)",
+        );
+        E(
+          x + r * 0.28,
+          y - r * 0.72 + bo,
+          r * 0.12,
+          r * 0.08,
+          "rgba(238,120,110,.6)",
+        );
+        E(x - r * 0.18, y - r * 0.9 + bo, r * 0.06, r * 0.08, "#3a1d12");
+        E(x + r * 0.18, y - r * 0.9 + bo, r * 0.06, r * 0.08, "#3a1d12");
+        E(x, y - r * 1.15 + bo, r * 0.82, r * 0.17, hat);
+        E(x, y - r * 1.36 + bo, r * 0.43, r * 0.3, hat);
+        E(x, y - r * 1.2 + bo, r * 0.44, r * 0.07, "#3a1d12");
+      }
+      /* Entradas */
+      addEventListener("keydown", (e) => {
+        if (
+          !go ||
+          document.querySelector("dialog[open]") ||
+          /INPUT|TEXTAREA/.test(e.target.tagName)
+        )
+          return;
+        const k = e.key.toLowerCase();
+        keys[k] = 1;
+        if (k.startsWith("arrow") || k === " ") e.preventDefault();
+        if (!e.repeat && (k === "e" || k === " " || k === "enter")) act();
+      });
+      addEventListener("keyup", (e) => (keys[e.key.toLowerCase()] = 0));
+      cv.addEventListener("pointerdown", (e) => {
+        if (go)
+          joy = { ox: e.clientX, oy: e.clientY, x: e.clientX, y: e.clientY };
+      });
+      addEventListener("pointermove", (e) => {
+        if (joy) {
+          joy.x = e.clientX;
+          joy.y = e.clientY;
+        }
+      });
+      addEventListener("pointerup", () => (joy = null));
+      $("#bi").onpointerdown = (e) => {
+        e.stopPropagation();
+        keys.e = 1;
+        act();
+      };
+      $("#bi").onpointerup = () => (keys.e = 0);
+      $("#bx").onpointerdown = (e) => {
+        e.stopPropagation();
+        keys.x = 1;
+      };
+      $("#bx").onpointerup = () => (keys.x = 0);
+      $("#bo").onsubmit = (e) => {
+        e.preventDefault();
+        nombre = $("#nom").value.trim() || "visitante";
+        aud();
+        musica(1);
+        $("#por").classList.add("fuera");
+        go = 1;
+        say(
+          `Bienvenido, ${nombre}. Eres la guardiana: cuida las obras y atrapa ladrones.`,
+          5000,
+        );
+      };
+      /* Actualización */
+      function upd(dt) {
+        ev.t -= dt;
+        ev.ap -= dt;
+        ev.rush -= dt;
+        if (ev.t <= 0) {
+          ev.t = 26 + rnd() * 20;
+          evento();
+        }
+        let dx =
+            (keys.arrowright || keys.d || 0) - (keys.arrowleft || keys.a || 0),
+          dy = (keys.arrowdown || keys.s || 0) - (keys.arrowup || keys.w || 0);
+        if (joy) {
+          const jx = joy.x - joy.ox,
+            jy = joy.y - joy.oy,
+            m = Math.hypot(jx, jy);
+          if (m > 8) {
+            dx = jx / Math.max(m, 50);
+            dy = jy / Math.max(m, 50);
+          }
+        }
+        {
+          const ix = dx,
+            iy = dy;
+          dx = ix + iy;
+          dy = iy - ix;
+        }
+        const m = Math.hypot(dx, dy);
+        if (m > 1) {
+          dx /= m;
+          dy /= m;
+        }
+        const r = rr(),
+          sp = 400 - v * 14;
+        mv(
+          {
+            get x() {
+              return X;
+            },
+            set x(a) {
+              X = a;
+            },
+            get y() {
+              return Y;
+            },
+            set y(a) {
+              Y = a;
+            },
+          },
+          dx * sp * dt,
+          dy * sp * dt,
+          r,
+        );
+        if (keys.x) v = Math.max(0.8, v - 1.3 * dt);
+        if (!burst && r >= 50)
+          for (
+            let j = Math.floor((Y - r - 4) / T);
+            j <= Math.floor((Y + r + 4) / T);
+            j++
+          )
+            for (
+              let i = Math.floor((X - r - 4) / T);
+              i <= Math.floor((X + r + 4) / T);
+              i++
+            )
+              if ((M[j] || [])[i] === "w") {
+                burst = 1;
+                M.forEach((q) =>
+                  q.forEach((t, i) => {
+                    if (t === "w") q[i] = "c";
+                  }),
+                );
+                sh = 0.5;
+                puff(X, Y, "#8a5a14", 30);
+                tono(110, 0.6, 0.3);
+                sello(
+                  "vol",
+                  "¡Rompiste la puerta maciza! Hay más ala por descubrir.",
+                );
+              }
+        const ti = (X / T) | 0,
+          tj = (Y / T) | 0;
+        for (let j = tj - 3; j <= tj + 3; j++)
+          for (let i = ti - 3; i <= ti + 3; i++)
+            if (i >= 0 && j >= 0 && i < NC && j < NR) seen[j * NC + i] = 1;
+        const z = (M[tj] || [])[ti];
+        if (z && z !== "#" && ZN[z] && ZN[z] !== $("#zn").textContent) {
+          $("#zn").textContent = ZN[z];
+          ban = { t: ZN[z], u: performance.now() + 2800 };
+        }
+        zon = z;
+        near = null;
+        let bd = 1e9;
+        fr.forEach((f) => {
+          const d = Math.hypot(f.x - X, f.y - Y);
+          if (d < 100 && d < bd && !f.rb) {
+            bd = d;
+            near = { k: "f", o: f, t: "E · " + f.ti };
+          }
+        });
+        if (Math.hypot(EX.x - X, EX.y - Y) < 110)
+          near = { k: "x", t: "E · Salir y escribir en la libreta" };
+        if (Math.hypot(SC.x - X, SC.y - Y) < SC.r + 50)
+          near = { k: "s", t: "E · Restaurar la obra" };
+        if (Math.hypot(TR.x - X, TR.y - Y) < 80)
+          near = { k: "q", t: "E · Trivia: ¿qué obra es?" };
+        if (Math.hypot(ME.x - X, ME.y - Y) < 80)
+          near = { k: "y", t: "E · Memoria Botero" };
+        if (Math.hypot(TA.x - X, TA.y - Y) < 70)
+          near = { k: "i", t: "E · Taller de inflado" };
+        NP.forEach((n) => {
+          const d = Math.hypot(n.x - X, n.y - Y);
+          if (d < 70 && (!near || (near.k === "f" && d < bd)))
+            near = { k: "v", o: n, t: "E · Hablar con el visitante" };
+        });
+        PU.forEach((p) => {
+          if (Math.hypot(p.x - X, p.y - Y) < r + 50) {
+            near = { k: "p", t: "Mantén E · Inflar aquí" };
+            if (keys.e || keys[" "]) {
+              v = Math.min(9.3, v + 1.6 * dt);
+              puff(p.x, p.y, "#fff6dc", 1);
+            }
+          }
+        });
+        $("#bi").hidden = !near;
+        if (near)
+          $("#bi").textContent =
+            near.k === "p"
+              ? "Inflar"
+              : near.k === "x"
+                ? "Salir"
+                : near.k === "v"
+                  ? "Hablar"
+                  : near.k === "s"
+                    ? "Restaurar"
+                    : "miqy".includes(near.k)
+                      ? "Jugar"
+                      : "Ver";
+        CA.forEach((p) => {
+          if (p.cd > 0) p.cd -= dt;
+          else if (Math.hypot(p.x - X, p.y - Y) < r + 26) {
+            p.cd = 1.5;
+            v = Math.max(0.8, v - 2);
+            puff(X, Y, "#3f7d5c", 16);
+            tono(180, 0.2, 0.2);
+            say("¡Ay! Un cactus: pierdes volumen.");
+          }
+        });
+        FR.forEach((f) => {
+          if (!f.t && Math.hypot(f.x - X, f.y - Y) < r + 14) {
+            f.t = 1;
+            fru++;
+            suma(5);
+            v = Math.min(9.3, v + 0.12);
+            puff(f.x, f.y, "#eab04a", 6);
+            tono(700 + (fru % 5) * 90, 0.15, 0.1);
+            if (fru >= 20) sello("bod", "¡Bodegón completo! 20 frutas.");
+          }
+        });
+        PI.forEach((p, i) => {
+          p.g = Math.max(0, p.g - dt * 2);
+          if (Math.hypot(p.x - X, p.y - Y) < 34 && p.g < 0.5) {
+            p.g = 1;
+            tono(p.f, 0.7, 0.2);
+            const n = performance.now();
+            if (n - pi.t0 > 9000) {
+              pi.s.clear();
+              pi.t0 = n;
+            }
+            pi.s.add(i);
+            if (pi.s.size === 5) sello("rit", "¡Tocaste el patio completo!");
+          }
+        });
+        NP.forEach((n) => {
+          n.tm -= dt;
+          if (n.tm <= 0) {
+            n.tm = 1 + rnd() * 2.5;
+            n.a = rnd() * 6.28;
+          }
+          const q = { x: n.x, y: n.y };
+          mv(n, Math.cos(n.a) * 40 * dt, Math.sin(n.a) * 40 * dt, 24);
+          if (n.x === q.x && n.y === q.y) n.tm = 0;
+        });
+        const w = WP[G.w],
+          gx = w[0] * T - G.x,
+          gy = w[1] * T - G.y,
+          gd = Math.hypot(gx, gy);
+        if (gd < 20) G.w = (G.w + 1) % 4;
+        else {
+          G.x += (gx / gd) * 95 * (ev.rush > 0 ? 2.2 : 1) * dt;
+          G.y += (gy / gd) * 95 * (ev.rush > 0 ? 2.2 : 1) * dt;
+        }
+        G.cd -= dt;
+        const q = Math.hypot(G.x - X, G.y - Y);
+        if (q < r + 36 && G.cd <= 0) {
+          G.cd = 2.5;
+          v = Math.max(0.8, v - 1.2);
+          const a = Math.atan2(Y - G.y, X - G.x);
+          for (let k = 0; k < 8; k++)
+            mv(
+              {
+                get x() {
+                  return X;
+                },
+                set x(a) {
+                  X = a;
+                },
+                get y() {
+                  return Y;
+                },
+                set y(a) {
+                  Y = a;
+                },
+              },
+              Math.cos(a) * 16,
+              Math.sin(a) * 16,
+              r,
+            );
+          say("Guardia: ¡No infles tanto cerca de las obras!");
+          tono(220, 0.3, 0.2);
+        }
+        ladronTick(dt, r);
+        guia();
+        pf.forEach((p) => {
+          p.l -= dt;
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+          p.vy += 400 * dt;
+        });
+        pf = pf.filter((p) => p.l > 0);
+        sh = Math.max(0, sh - dt);
+        dk +=
+          ((zon === "h" || zon === "n" || zon === "w" || ev.ap > 0 ? 1 : 0) -
+            dk) *
+          Math.min(1, dt * 3);
+        hud();
+      }
+      /* Dibujo */
+      const tx = (t, x, y, s, col = "#3a1d12") => {
+        c.font = `800 ${s}px Nunito,sans-serif`;
+        c.textAlign = "center";
+        c.fillStyle = col;
+        c.fillText(t, x, y);
+      };
+      function fig(x, y, r, body, hat, b) {
+        const bo = b ? Math.sin(performance.now() / 90) * 2 : 0;
+        c.fillStyle = "rgba(58,29,18,.25)";
+        c.beginPath();
+        c.ellipse(x, y + r * 0.8, r * 1.05, r * 0.35, 0, 0, 7);
+        c.fill();
+        c.fillStyle = body;
+        c.beginPath();
+        c.ellipse(x, y + bo, r, r * 0.92, 0, 0, 7);
+        c.fill();
+        c.fillStyle = "rgba(255,255,255,.28)";
+        c.beginPath();
+        c.ellipse(x - r * 0.3, y - r * 0.3 + bo, r * 0.35, r * 0.25, 0, 0, 7);
+        c.fill();
+        c.fillStyle = "#f1c19b";
+        c.beginPath();
+        c.arc(x, y - r * 0.85 + bo, r * 0.5, 0, 7);
+        c.fill();
+        c.fillStyle = "#3a1d12";
+        c.fillRect(x - r * 0.2, y - r * 0.9 + bo, 3, 5);
+        c.fillRect(x + r * 0.12, y - r * 0.9 + bo, 3, 5);
+        c.fillStyle = hat;
+        c.beginPath();
+        c.ellipse(x, y - r * 1.22 + bo, r * 0.8, r * 0.17, 0, 0, 7);
+        c.fill();
+        c.beginPath();
+        c.ellipse(x, y - r * 1.4 + bo, r * 0.42, r * 0.3, 0, 0, 7);
+        c.fill();
+      }
+      function bubble(t, x, y) {
+        c.font = "800 14px Nunito,sans-serif";
+        const ws = t.split(" "),
+          ls = [""];
+        ws.forEach((w) => {
+          if ((ls[ls.length - 1] + w).length > 26) ls.push("");
+          ls[ls.length - 1] += w + " ";
+        });
+        const bw = Math.max(...ls.map((l) => c.measureText(l).width)) + 24,
+          bh = ls.length * 18 + 14;
+        c.fillStyle = "#fff6dc";
+        c.strokeStyle = "#3a1d12";
+        c.lineWidth = 3;
+        c.beginPath();
+        c.roundRect(x - bw / 2, y - bh, bw, bh, 14);
+        c.fill();
+        c.stroke();
+        ls.forEach((l, i) => tx(l.trim(), x, y - bh + 22 + i * 18, 14));
+      }
+      function mark(f) {
+        const g = near && near.o === f,
+          e = f.n > 59 || !!f.rb;
+        let im = null;
+        if (!e)
+          im =
+            IMG[f.n] ||
+            (IMG[f.n] = Object.assign(new Image(), {
+              src: "media/t" + f.n + ".jpg",
+            }));
+        c.save();
+        c.translate(f.x, f.y);
+        c.fillStyle = "rgba(58,29,18,.3)";
+        c.beginPath();
+        c.ellipse(0, 26, 54, 12, 0, 0, 7);
+        c.fill();
+        c.fillStyle = "#5a2d17";
+        c.fillRect(-34, 10, 6, 18);
+        c.fillRect(28, 10, 6, 18);
+        if (g) {
+          c.shadowColor = "#ffd678";
+          c.shadowBlur = 40;
+        }
+        {
+          const gg = c.createLinearGradient(-48, -98, 48, 14);
+          gg.addColorStop(0, "#f6dd86");
+          gg.addColorStop(0.5, "#c99a32");
+          gg.addColorStop(1, "#f0cf6a");
+          c.fillStyle = gg;
+          c.fillRect(-48, -98, 96, 112);
+          c.shadowBlur = 0;
+          c.fillStyle = "#7a5418";
+          c.fillRect(-44, -94, 88, 104);
+        }
+        c.fillStyle = e ? "#f5ecd6" : "#fff6dc";
+        c.fillRect(-42, -92, 84, 100);
+        if (im && im.complete && im.naturalWidth) {
+          const r = Math.min(78 / im.naturalWidth, 94 / im.naturalHeight),
+            w = im.naturalWidth * r,
+            h = im.naturalHeight * r;
+          c.drawImage(im, -w / 2, -42 - h / 2, w, h);
+        } else tx(f.rb ? "vacío" : e ? "libre" : "…", 0, -38, 14, "#6b4a3a");
+        c.fillStyle = "#f5ecd6";
+        c.fillRect(-26, 16, 52, 15);
+        tx(
+          f.rb ? "ROBADA" : (vis.has(f.n) ? "✓ " : "") + (e ? "60" : f.n),
+          0,
+          28,
+          11,
+        );
+        c.restore();
+      }
+      function decor(fl, one) {
+        (one ? [one] : DEC).forEach(([k, x, y, col]) => {
+          if (fl && !fl(k)) return;
+          if (k === "r") {
+            c.fillStyle = col;
+            c.globalAlpha = 0.35;
+            c.fillRect(x - 150, y - 80, 300, 160);
+            c.globalAlpha = 0.6;
+            c.strokeStyle = col;
+            c.lineWidth = 6;
+            c.strokeRect(x - 136, y - 66, 272, 132);
+            c.globalAlpha = 1;
+          } else if (k === "b") {
+            c.fillStyle = "#5a2d17";
+            c.fillRect(x - 40, y - 9, 80, 18);
+            c.fillStyle = "#a8401f";
+            c.fillRect(x - 40, y - 9, 80, 9);
+            c.fillRect(x - 36, y + 9, 6, 10);
+            c.fillRect(x + 30, y + 9, 6, 10);
+          } else if (k === "p") {
+            c.fillStyle = "#a8401f";
+            c.fillRect(x - 14, y, 28, 22);
+            c.fillStyle = "#3f7d5c";
+            [
+              [0, -16],
+              [-14, -6],
+              [14, -6],
+              [0, -4],
+            ].forEach(([a, b]) => {
+              c.beginPath();
+              c.ellipse(x + a, y + b, 11, 16, 0, 0, 7);
+              c.fill();
+            });
+          } else if (k === "l") {
+            c.fillStyle = "#e8c680";
+            c.fillRect(x - 16, y - 44, 32, 70);
+            c.fillStyle = "#c9a45a";
+            c.fillRect(x - 20, y - 48, 40, 8);
+            c.fillRect(x - 20, y + 22, 40, 8);
+          } else if (k === "o") {
+            c.fillStyle = "#86bccd";
+            c.beginPath();
+            c.arc(x, y, 58, 0, 7);
+            c.fill();
+            c.strokeStyle = "#e8c680";
+            c.lineWidth = 8;
+            c.stroke();
+            c.fillStyle = "#b1d8e2";
+            c.beginPath();
+            c.arc(x, y, 24, 0, 7);
+            c.fill();
+          } else if (k === "t") {
+            c.fillStyle = "rgba(58,29,18,.25)";
+            c.beginPath();
+            c.ellipse(x, y + 30, 40, 12, 0, 0, 7);
+            c.fill();
+            c.fillStyle = "#5a2d17";
+            c.fillRect(x - 7, y - 10, 14, 40);
+            c.fillStyle = "#3f7d5c";
+            c.beginPath();
+            c.arc(x, y - 34, 40, 0, 7);
+            c.fill();
+            c.fillStyle = "#5aa67f";
+            c.beginPath();
+            c.arc(x - 10, y - 44, 22, 0, 7);
+            c.fill();
+          }
+        });
+      }
+      /* ===== Isométrico, ladrón, juegos y guía ===== */
+      const Pt = (x, y) => [(x - y) * 0.5, (x + y) * 0.25],
+        WH = 84,
+        TR = { x: 24 * T, y: 47 * T },
+        ME = { x: 36 * T, y: 47 * T },
+        mez = (a) => [...a].sort(() => rnd() - 0.5);
+      let th = null,
+        cap = L("cap") || 0,
+        MT = null,
+        metaT = "";
+      DEC.push(
+        ["r", 30 * T, 48 * T, "#8e6bc4"],
+        ["p", 19.5 * T, 44 * T],
+        ["p", 40.5 * T, 44 * T],
+        ["p", 19.5 * T, 51.5 * T],
+        ["p", 40.5 * T, 51.5 * T],
+        ["l", 21 * T, 50 * T],
+        ["l", 39 * T, 50 * T],
+      );
+      const up = (x, y, f) => {
+        const [a, b] = Pt(x, y);
+        c.save();
+        c.translate(a - x, b - y);
+        f();
+        c.restore();
+      };
+      const fl = (i, j) => {
+          const t = (M[j] || [])[i];
+          return t && t !== "#";
+        },
+        near8 = (i, j) => {
+          for (let b = -1; b < 2; b++)
+            for (let a = -1; a < 2; a++) if (fl(i + a, j + b)) return 1;
+          return 0;
+        };
+      function paredIso(i, j, al, col) {
+        const x = i * T,
+          y = j * T,
+          A = Pt(x, y),
+          B = Pt(x + T, y),
+          C = Pt(x + T, y + T),
+          D = Pt(x, y + T),
+          U = (p) => [p[0], p[1] - WH];
+        let z = "h";
+        for (const [a, b] of [
+          [1, 0],
+          [0, 1],
+          [-1, 0],
+          [0, -1],
+        ]) {
+          const t = (M[j + b] || [])[i + a];
+          if (t && t !== "#") {
+            z = t === "k" ? "d" : t === "n" ? "h" : t === "w" ? "c" : t;
+            break;
+          }
+        }
+        const q = col ? [col, "#5a3a0a"] : WC[z] || WC.h,
+          po = (p, f) => {
+            c.fillStyle = f;
+            c.beginPath();
+            p.forEach(([a, b], n) => (n ? c.lineTo(a, b) : c.moveTo(a, b)));
+            c.closePath();
+            c.fill();
+          };
+        c.globalAlpha = al;
+        if (fl(i + 1, j)) po([B, C, U(C), U(B)], q[1]);
+        if (fl(i, j + 1)) po([D, C, U(C), U(D)], q[0]);
+        po([U(A), U(B), U(C), U(D)], col ? "#c99a32" : "#5a2d17");
+        c.strokeStyle = "rgba(255,246,220,.5)";
+        c.lineWidth = 2;
+        c.beginPath();
+        c.moveTo(...U(D));
+        c.lineTo(...U(C));
+        c.lineTo(...U(B));
+        c.stroke();
+        c.fillStyle = "rgba(58,29,18,.35)";
+        if (fl(i, j + 1)) {
+          c.beginPath();
+          c.moveTo(...D);
+          c.lineTo(...C);
+          c.lineTo(C[0], C[1] - 10);
+          c.lineTo(D[0], D[1] - 10);
+          c.fill();
+        }
+        if (col) {
+          c.font = "800 12px Nunito";
+          c.textAlign = "center";
+          c.fillStyle = "#fff6dc";
+          c.fillText("maciza", (C[0] + D[0]) / 2, D[1] - WH / 2);
+        }
+        c.globalAlpha = 1;
+      }
+      /* Navegación: objetivo + flecha */
+      function meta() {
+        if (th)
+          return {
+            x: th.x,
+            y: th.y,
+            t:
+              th.fase < 2
+                ? "¡Atrapa al ladrón antes de que robe!"
+                : "¡Persíguelo! Suelta aire (X) para correr más",
+          };
+        if (mis) {
+          const f = fr.find((f) => f.n === mis.n);
+          return { x: f.x, y: f.y, t: "Encargo: busca la obra pedida" };
+        }
+        const f = fr
+          .filter((f) => f.n < 60 && !vis.has(f.n) && !HID.includes(f.n))
+          .sort(
+            (a, b) =>
+              Math.hypot(a.x - X, a.y - Y) - Math.hypot(b.x - X, b.y - Y),
+          )[0];
+        return f
+          ? {
+              x: f.x,
+              y: f.y,
+              t: "Próxima obra sin ver: " + f.ti + " (" + (SA[f.k] || "") + ")",
+            }
+          : {
+              x: EX.x,
+              y: EX.y,
+              t: "Visita completa: ve a la salida y escribe en la libreta",
+            };
+      }
+      function guia() {
+        MT = meta();
+        if (MT.t !== metaT) {
+          metaT = MT.t;
+          $("#meta").textContent = "➤ " + MT.t;
+        }
+      }
+      /* Ladrón */
+      const walk = (i, j) => {
+        const t = (M[j] || [])[i];
+        return t && t !== "#" && t !== "k" && !(t === "w" && !burst);
+      };
+      function ruta(a, b) {
+        const s = a[1] * NC + a[0],
+          e = b[1] * NC + b[0],
+          pr = new Int32Array(NR * NC).fill(-2),
+          q = [s],
+          o = [];
+        pr[s] = -1;
+        for (let h = 0; h < q.length && pr[e] === -2; h++) {
+          const u = q[h],
+            i = u % NC,
+            j = (u / NC) | 0;
+          for (const [a1, b1] of [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+          ]) {
+            const n = (j + b1) * NC + i + a1;
+            if (walk(i + a1, j + b1) && pr[n] === -2) {
+              pr[n] = u;
+              q.push(n);
+            }
+          }
+        }
+        for (let u = e; u >= 0 && pr[u] !== -2; u = pr[u])
+          o.unshift({ x: ((u % NC) + 0.5) * T, y: (((u / NC) | 0) + 0.5) * T });
+        return o;
+      }
+      function ladron() {
+        if (th) return;
+        const cs = fr.filter((f) => "fabc".includes(f.k) && !f.rb);
+        if (!cs.length) return;
+        const f = cs[(rnd() * cs.length) | 0];
+        th = {
+          x: 30.5 * T,
+          y: 39.5 * T,
+          f,
+          fase: 0,
+          w: 0,
+          p: ruta([30, 39], [(f.x / T) | 0, (f.y / T) | 0]),
+        };
+        ev.sir = 0;
+        sh = 0.4;
+        say(
+          `¡ALARMA! Un ladrón entró por la plaza y va por «${f.ti}». ¡Atrápalo!`,
+          6500,
+        );
+      }
+      function ladronTick(dt, r) {
+        fr.forEach((f) => {
+          if (f.rt > 0 && (f.rt -= dt) <= 0) {
+            f.rt = 0;
+            f.rb = 0;
+          }
+        });
+        if (!th) return;
+        ev.sir -= dt;
+        if (ev.sir <= 0) {
+          ev.sir = 0.5;
+          tono((ev.alt ^= 1) ? 780 : 600, 0.4, 0.1);
+        }
+        if (th.fase === 1) {
+          th.w -= dt;
+          if (th.w <= 0) {
+            th.f.rb = 1;
+            th.fase = 2;
+            th.p = ruta([(th.x / T) | 0, (th.y / T) | 0], [30, 39]);
+            tono(150, 0.5, 0.3);
+            say(
+              `¡Se llevó «${th.f.ti}»! Corre tras él: suelta aire con X para ser más rápida.`,
+              5500,
+            );
+          }
+        } else {
+          const q = th.p[0];
+          if (q) {
+            const dx = q.x - th.x,
+              dy = q.y - th.y,
+              d = Math.hypot(dx, dy),
+              s = (th.fase ? 170 : 125) * dt;
+            if (d < s) th.p.shift();
+            else {
+              th.x += (dx / d) * s;
+              th.y += (dy / d) * s;
+            }
+          } else if (th.fase === 0) {
+            th.fase = 1;
+            th.w = 2.2;
+          } else {
+            const f = th.f;
+            f.rt = 40;
+            suma(-30);
+            th = null;
+            say(
+              `El ladrón escapó con «${f.ti}». La policía la devuelve en 40 s.`,
+              5500,
+            );
+            return;
+          }
+        }
+        if (Math.hypot(th.x - X, th.y - Y) < r + 30) {
+          const f = th.f,
+            l = f.rb;
+          f.rb = 0;
+          f.rt = 0;
+          th = null;
+          cap++;
+          L("cap", cap);
+          suma(l ? 100 : 60);
+          puff(X, Y, "#eab04a", 24);
+          tono(660, 0.3, 0.2);
+          if (cap >= 3)
+            sello("lad", "¡Guardiana del museo! 3 ladrones atrapados.");
+          say(
+            l
+              ? "¡Lo atrapaste y recuperaste la obra!"
+              : "¡Lo atrapaste antes de que robara!",
+            4500,
+          );
+          setTimeout(() => ficha(f), 800);
+        }
+      }
+      /* Eventos */
+      const FD = [
+        "Fernando Botero nació en Medellín en 1932 y murió en Mónaco en 2023.",
+        "Antes de los volúmenes, Botero ensayó cubismo y dibujo: visita la sala de Inicios.",
+        "Su donación en 2000 dio origen al Museo Botero.",
+      ];
+      function evento() {
+        const k = ev.n++ % 2 === 0 && !th ? 9 : (rnd() * 5) | 0;
+        if (k === 9) ladron();
+        else if (k === 0) {
+          for (let i = 0; i < 15; i++) {
+            const [a, b] = FL[(rnd() * FL.length) | 0];
+            FR.push({
+              x: (a + 0.2 + rnd() * 0.6) * T,
+              y: (b + 0.2 + rnd() * 0.6) * T,
+              t: 0,
+            });
+          }
+          say("¡Lluvia de frutas! Llegó un bodegón nuevo.", 5000);
+        } else if (k === 1) {
+          ev.ap = 12;
+          say("¡Apagón! Ves poco: camina con calma.", 5000);
+        } else if (k === 2) {
+          ev.rush = 14;
+          say("¡El guardia sale a toda prisa! Aléjate.", 5000);
+        } else if (k === 3) hablar();
+        else {
+          say("📢 Dato del museo: " + FD[(rnd() * 3) | 0], 7000);
+          suma(10);
+        }
+        tono(330, 0.3, 0.2);
+      }
+      /* Sala de Juegos */
+      function trivia() {
+        const q = mez(PM).slice(0, 5);
+        let i = 0,
+          ok = 0;
+        const paso = () => {
+          if (i > 4) {
+            const p = ok * 20;
+            suma(p);
+            if (ok >= 4)
+              sello("tri", "¡Ojo de curador! Reconoces la obra de Botero.");
+            $("#fc").innerHTML =
+              `<h2>Trivia terminada</h2><p>Acertaste ${ok} de 5. +${p} puntos.</p><button class="btn" data-x type="button">Seguir</button>`;
+            return;
+          }
+          const n = q[i],
+            op = mez([n, ...mez(PM.filter((m) => m !== n)).slice(0, 2)]);
+          $("#fc").innerHTML =
+            `<h2>¿Qué obra es?</h2><p class="muted">Pregunta ${i + 1} de 5 · mira bien la imagen</p><img class="ob" src="media/${n}.jpg" alt="Obra misteriosa">${op.map((m) => `<button class="chip" data-m="${m}" style="display:block;width:100%;margin:6px 0">${D[m][0]}</button>`).join("")}<p class="aviso" id="tr" hidden></p>`;
+          document.querySelectorAll("#fc [data-m]").forEach(
+            (b) =>
+              (b.onclick = () => {
+                const g = +b.dataset.m === n;
+                if (g) ok++;
+                document
+                  .querySelectorAll("#fc [data-m]")
+                  .forEach((x) => (x.disabled = 1));
+                b.style.background = g ? "#5aa67f" : "#c9512f";
+                $("#tr").hidden = 0;
+                $("#tr").innerHTML =
+                  `${g ? "¡Correcto!" : "Era «" + D[n][0] + "»."} ${D[n][1]}<br><button class="btn" id="sg" type="button" style="margin-top:8px">Siguiente</button>`;
+                $("#sg").onclick = () => {
+                  i++;
+                  paso();
+                };
+                tono(g ? 880 : 200, 0.25);
+              }),
+          );
+        };
+        paso();
+        $("#ficha").showModal();
+      }
+      function memo() {
+        const ps = mez(PM).slice(0, 6),
+          cs = mez([...ps, ...ps]);
+        let a = -1,
+          mo = 0,
+          hit = 0,
+          bl = 0;
+        $("#fc").innerHTML =
+          `<h2>Memoria Botero</h2><p class="muted" id="mm2">Encuentra las 6 parejas · movimientos: 0</p><div id="tb" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">${cs.map((n, i) => `<button type="button" style="aspect-ratio:3/4;border:0;border-radius:10px;background:#c9512f;color:#fff6dc;font-size:1.6rem;padding:0;overflow:hidden">?</button>`).join("")}</div><p class="aviso" id="mr" hidden></p>`;
+        const bt = [...document.querySelectorAll("#tb button")],
+          show = (i, on) => {
+            bt[i].innerHTML = on
+              ? `<img src="media/t${cs[i]}.jpg" alt="${D[cs[i]][0]}" style="width:100%;height:100%;object-fit:cover">`
+              : "?";
+          };
+        bt.forEach(
+          (b, i) =>
+            (b.onclick = () => {
+              if (bl || b.dataset.ok || i === a) return;
+              show(i, 1);
+              tono(500 + i * 30, 0.1);
+              if (a < 0) {
+                a = i;
+                return;
+              }
+              mo++;
+              $("#mm2").textContent =
+                `Encuentra las 6 parejas · movimientos: ${mo}`;
+              const j = a;
+              a = -1;
+              if (cs[i] === cs[j]) {
+                b.dataset.ok = bt[j].dataset.ok = 1;
+                hit++;
+                $("#mr").hidden = 0;
+                $("#mr").textContent = D[cs[i]][0] + ": " + D[cs[i]][1];
+                tono(880, 0.2);
+                if (hit === 6) {
+                  const p = Math.max(30, 120 - mo * 6);
+                  suma(p);
+                  sello("mem", "¡Memoria de curador!");
+                  $("#mm2").textContent =
+                    `¡Listo en ${mo} movimientos! +${p} puntos`;
+                }
+              } else {
+                bl = 1;
+                setTimeout(() => {
+                  show(i, 0);
+                  show(j, 0);
+                  bl = 0;
+                }, 800);
+              }
+            }),
+        );
+        $("#ficha").showModal();
+      }
+      /* Dibujo isométrico */
+      const est = (p, t, col) =>
+        up(p.x, p.y, () => {
+          c.fillStyle = "rgba(58,29,18,.3)";
+          c.beginPath();
+          c.ellipse(p.x, p.y + 26, 44, 13, 0, 0, 7);
+          c.fill();
+          c.fillStyle = col;
+          c.fillRect(p.x - 36, p.y - 64, 72, 90);
+          c.fillStyle = "#fff6dc";
+          c.fillRect(p.x - 30, p.y - 58, 60, 50);
+          tx(t, p.x, p.y - 28, 12, col);
+          c.fillStyle = "#3a1d12";
+          c.fillRect(p.x - 22, p.y, 44, 6);
+        });
+      function draw(dt) {
+        const dpr = devicePixelRatio || 1,
+          VW = innerWidth,
+          VH = innerHeight;
+        if (cv.width !== VW * dpr) {
+          cv.width = VW * dpr;
+          cv.height = VH * dpr;
+        }
+        const z = cl(Math.min(VW / 860, VH / 560), 0.6, 1.25),
+          k = dpr * z,
+          vw = VW / z,
+          vh = VH / z,
+          [px, py] = Pt(X, Y),
+          now = performance.now();
+        gv.w = vw;
+        gv.h = vh;
+        cx += (px - vw / 2 - cx) * Math.min(1, dt * 6);
+        cy += (py - vh / 2 - 30 - cy) * Math.min(1, dt * 6);
+        const ox = sh ? (rnd() - 0.5) * 10 : 0,
+          oy = sh ? (rnd() - 0.5) * 10 : 0,
+          e = -cx * k + ox * dpr,
+          f = -cy * k + oy * dpr;
+        c.setTransform(1, 0, 0, 1, 0, 0);
+        c.fillStyle = "#2a120a";
+        c.fillRect(0, 0, cv.width, cv.height);
+        const co = [
+            [cx, cy],
+            [cx + vw, cy],
+            [cx, cy + vh + WH],
+            [cx + vw, cy + vh + WH],
+          ].map(([a, b]) => [a + 2 * b, 2 * b - a]),
+          i0 = cl(
+            Math.floor(Math.min(...co.map((p) => p[0])) / T) - 1,
+            0,
+            NC - 1,
+          ),
+          i1 = cl(
+            Math.ceil(Math.max(...co.map((p) => p[0])) / T) + 1,
+            0,
+            NC - 1,
+          ),
+          j0 = cl(
+            Math.floor(Math.min(...co.map((p) => p[1])) / T) - 1,
+            0,
+            NR - 1,
+          ),
+          j1 = cl(
+            Math.ceil(Math.max(...co.map((p) => p[1])) / T) + 1,
+            0,
+            NR - 1,
+          ),
+          ti = (X / T) | 0,
+          tj = (Y / T) | 0,
+          pd = X + Y,
+          es = [];
+        c.setTransform(0.5 * k, 0.25 * k, -0.5 * k, 0.25 * k, e, f);
+        for (let j = j0; j <= j1; j++)
+          for (let i = i0; i <= i1; i++) {
+            const t = M[j][i],
+              x = i * T,
+              y = j * T,
+              dd = (i + j + 1) * T;
+            if (t === "#") {
+              if (near8(i, j))
+                es.push({
+                  d: dd,
+                  f: () =>
+                    paredIso(
+                      i,
+                      j,
+                      dd > pd && Math.abs(i - ti) < 3 && Math.abs(j - tj) < 3
+                        ? 0.35
+                        : 1,
+                    ),
+                });
+              continue;
+            }
+            c.fillStyle =
+              PAL[t === "n" ? "h" : t === "w" ? "c" : t][(i + j) & 1];
+            c.fillRect(x, y, T, T);
+            suelo(t, i, j, x, y);
+            if (t === "n") {
+              c.fillStyle = "#eab04a";
+              c.fillRect(x, y, 6, T);
+              c.fillRect(x + T - 6, y, 6, T);
+            }
+            if (t === "w")
+              es.push({ d: dd, f: () => paredIso(i, j, 1, "#8a5a14") });
+          }
+        decor((q) => q === "r" || q === "o");
+        fuente(now);
+        PI.forEach((p) => {
+          c.fillStyle = `rgba(255,246,220,${0.35 + p.g * 0.65})`;
+          c.fillRect(p.x - 26, p.y - 26, 52, 52);
+          c.strokeStyle = "#4a8fa8";
+          c.lineWidth = 4;
+          c.strokeRect(p.x - 26, p.y - 26, 52, 52);
+        });
+        c.fillStyle = "#d9962c";
+        c.beginPath();
+        c.arc(SC.x, SC.y, SC.r, 0, 7);
+        c.fill();
+        c.fillStyle = "#f6c875";
+        c.beginPath();
+        c.arc(SC.x - 14, SC.y - 16, SC.r * 0.55, 0, 7);
+        c.fill();
+        const E = (x, y, fn, dd = 0) =>
+          es.push({ d: x + y + dd, f: () => up(x, y, fn) });
+        COL.forEach(([i, j]) =>
+          E((i + 0.5) * T, (j + 1) * T, () =>
+            columna((i + 0.5) * T, (j + 1) * T),
+          ),
+        );
+        DEC.forEach((d) => {
+          if (d[0] !== "r" && d[0] !== "o") E(d[1], d[2], () => decor(0, d));
+        });
+        fr.forEach((q) => E(q.x, q.y, () => mark(q), 70));
+        NP.forEach((n) => {
+          E(n.x, n.y, () => fig(n.x, n.y, 22, n.c, "#7d2c15", 1));
+          if (Math.hypot(n.x - X, n.y - Y) < 110)
+            E(n.x, n.y, () => bubble(n.l, n.x, n.y - 70), 600);
+        });
+        E(G.x, G.y, () => fig(G.x, G.y, 34, "#1f4a3a", "#3a1d12", 1));
+        es.push(
+          { d: TA.x + TA.y, f: () => est(TA, "INFLAR", "#c9512f") },
+          { d: TR.x + TR.y, f: () => est(TR, "TRIVIA", "#7a5bb0") },
+          { d: ME.x + ME.y, f: () => est(ME, "MEMORIA", "#3f7d5c") },
+        );
+        PU.forEach((p) =>
+          E(p.x, p.y, () => {
+            c.fillStyle = "#7d2c15";
+            c.beginPath();
+            c.arc(p.x, p.y, 24, 0, 7);
+            c.fill();
+            c.fillStyle = "#c9512f";
+            c.beginPath();
+            c.arc(p.x, p.y - 4, 20, 0, 7);
+            c.fill();
+            tx("AIRE", p.x, p.y + 3, 10, "#fff6dc");
+          }),
+        );
+        CA.forEach((p) =>
+          E(p.x, p.y, () => {
+            c.fillStyle = "#1f4a3a";
+            for (let a = 0; a < 12; a++) {
+              c.beginPath();
+              c.arc(
+                p.x + Math.cos(a * 0.52) * 22,
+                p.y + Math.sin(a * 0.52) * 22,
+                4,
+                0,
+                7,
+              );
+              c.fill();
+            }
+            c.fillStyle = "#3f7d5c";
+            c.beginPath();
+            c.arc(p.x, p.y, 19, 0, 7);
+            c.fill();
+          }),
+        );
+        FR.forEach((q) => {
+          if (!q.t)
+            E(q.x, q.y, () => {
+              const b = Math.sin(now / 300 + q.x) * 3 - 14;
+              c.fillStyle = "#eab04a";
+              c.beginPath();
+              c.arc(q.x, q.y + b, 10, 0, 7);
+              c.fill();
+              c.fillStyle = "#fff6c8";
+              c.beginPath();
+              c.arc(q.x - 3, q.y - 3 + b, 3, 0, 7);
+              c.fill();
+            });
+        });
+        E(SC.x, SC.y + SC.r, () =>
+          tx("obra por restaurar", SC.x, SC.y + SC.r + 22, 13),
+        );
+        E(EX.x, EX.y, () => tx("SALIDA", EX.x, EX.y - 4, 16, "#c9512f"));
+        if (th)
+          E(th.x, th.y, () => {
+            fig(th.x, th.y, 22, "#2b2b3a", "#111", 1);
+            tx("!", th.x, th.y - 60 + Math.sin(now / 120) * 4, 30, "#d22");
+          });
+        E(X, Y, () =>
+          fig(
+            X,
+            Y,
+            rr(),
+            "#c9512f",
+            "#eab04a",
+            keys.arrowleft ||
+              keys.arrowright ||
+              keys.arrowup ||
+              keys.arrowdown ||
+              keys.w ||
+              keys.a ||
+              keys.s ||
+              keys.d ||
+              joy,
+          ),
+        );
+        es.sort((a, b) => a.d - b.d);
+        c.setTransform(k, 0, 0, k, e, f);
+        es.forEach((o) => o.f());
+        pf.forEach((p) => {
+          const [a, b] = Pt(p.x, p.y);
+          c.globalAlpha = cl(p.l * 2, 0, 1);
+          c.fillStyle = p.c;
+          c.beginPath();
+          c.arc(a, b - 20, 5, 0, 7);
+          c.fill();
+        });
+        c.globalAlpha = 1;
+        if (MT) {
+          const [ta, tb] = Pt(MT.x, MT.y),
+            dx = ta - px,
+            dy = tb - py;
+          if (Math.hypot(dx, dy) > 140) {
+            const an = Math.atan2(dy, dx),
+              R = 90 + Math.sin(now / 200) * 6;
+            c.save();
+            c.translate(
+              px + Math.cos(an) * R,
+              py - 20 + Math.sin(an) * R * 0.6,
+            );
+            c.rotate(an);
+            c.fillStyle = th ? "#d22" : "#eab04a";
+            c.strokeStyle = "#3a1d12";
+            c.lineWidth = 3;
+            c.beginPath();
+            c.moveTo(16, 0);
+            c.lineTo(-10, -12);
+            c.lineTo(-4, 0);
+            c.lineTo(-10, 12);
+            c.closePath();
+            c.stroke();
+            c.fill();
+            c.restore();
+          }
+        }
+        if (now < bub.u) up(X, Y, () => bubble(bub.t, X, Y - rr() * 1.8 - 14));
+        luz(dpr, VW, VH, now);
+        if (th) {
+          c.fillStyle = `rgba(220,30,30,${0.07 + 0.07 * Math.sin(now / 150)})`;
+          c.fillRect(0, 0, VW, VH);
+        }
+        if (dk > 0.02) {
+          c.setTransform(dpr, 0, 0, dpr, 0, 0);
+          const sx = (px - cx) * z,
+            sy = (py - cy) * z,
+            g = c.createRadialGradient(sx, sy, 60 * z, sx, sy, 260 * z);
+          g.addColorStop(0, "rgba(20,6,2,0)");
+          g.addColorStop(1, `rgba(20,6,2,${0.92 * dk})`);
+          c.fillStyle = g;
+          c.fillRect(0, 0, VW, VH);
+        }
+        if (near && near.t) {
+          c.setTransform(dpr, 0, 0, dpr, 0, 0);
+          c.font = "800 15px Nunito,sans-serif";
+          const w = c.measureText(near.t).width + 28;
+          c.fillStyle = "#3a1d12";
+          c.beginPath();
+          c.roundRect(VW / 2 - w / 2, VH - 64, w, 32, 16);
+          c.fill();
+          tx(near.t, VW / 2, VH - 43, 15, "#fbebc6");
+        }
+        if (joy) {
+          c.setTransform(dpr, 0, 0, dpr, 0, 0);
+          c.strokeStyle = "rgba(255,246,220,.7)";
+          c.lineWidth = 4;
+          c.beginPath();
+          c.arc(joy.ox, joy.oy, 50, 0, 7);
+          c.stroke();
+          c.fillStyle = "rgba(255,246,220,.7)";
+          c.beginPath();
+          c.arc(
+            joy.ox + cl(joy.x - joy.ox, -50, 50),
+            joy.oy + cl(joy.y - joy.oy, -50, 50),
+            22,
+            0,
+            7,
+          );
+          c.fill();
+        }
+        mapa();
+        if (th) {
+          mm.fillStyle = "#e22";
+          mm.fillRect(
+            (th.x / T) * (144 / NC) - 2.5,
+            (th.y / T) * (96 / NR) - 2.5,
+            6,
+            6,
+          );
+        }
+      }
+      function mapa() {
+        mm.clearRect(0, 0, 144, 96);
+        const s = 144 / NC,
+          s2 = 96 / NR;
+        for (let j = 0; j < NR; j++)
+          for (let i = 0; i < NC; i++)
+            if (seen[j * NC + i]) {
+              const t = M[j][i];
+              mm.fillStyle =
+                t === "#"
+                  ? "#7a3f26"
+                  : t === "n" || t === "w"
+                    ? "#c9512f"
+                    : PAL[t][0];
+              mm.fillRect(i * s, j * s2, s + 0.5, s2 + 0.5);
+            }
+        fr.forEach((f) => {
+          if (seen[((f.y / T) | 0) * NC + ((f.x / T) | 0)]) {
+            mm.fillStyle = vis.has(f.n) ? "#eab04a" : "#c9512f";
+            mm.fillRect((f.x / T) * s - 1, (f.y / T) * s2 - 1, 3, 3);
+          }
+        });
+        mm.fillStyle = "#3a1d12";
+        mm.beginPath();
+        mm.arc((X / T) * s, (Y / T) * s2, 3.5, 0, 7);
+        mm.fill();
+      }
+      let last = 0;
+      function loop(t) {
+        const dt = Math.min(0.05, (t - last) / 1000 || 0);
+        last = t;
+        if (go && !document.querySelector("dialog[open]")) upd(dt);
+        draw(dt);
+        requestAnimationFrame(loop);
+      }
+      hud();
+      requestAnimationFrame(loop);
+    </script>
   </body>
 </html>
