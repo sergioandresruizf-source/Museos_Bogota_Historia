@@ -1,0 +1,35 @@
+body { margin:0; background:#000; color:#eee; font-family:Georgia,serif; }
+#juego { position:relative; width:min(100vw, 160vh); margin:0 auto; }
+canvas { width:100%; display:block; image-rendering:pixelated; cursor:crosshair; }
+#mira { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); opacity:.6; pointer-events:none; }
+#titulo { position:absolute; top:8px; left:12px; font-size:18px; text-shadow:0 0 4px #000; }
+#ayuda { position:absolute; bottom:6px; left:12px; font-size:12px; opacity:.7; }
+#pista { position:absolute; bottom:12%; width:100%; text-align:center; font-size:20px; text-shadow:0 0 4px #000; }
+#panel, #mapa-ui { position:absolute; inset:8% 12%; background:rgba(10,8,5,.94); border:2px solid #b8913b; padding:18px 26px;
+         overflow:auto; text-align:center; }
+#panel[hidden], #mapa-ui[hidden] { display:none; }
+#panel h3 { margin:0 0 10px; font-weight:normal; color:#ccc; }
+#panel h2, #mapa-ui h2 { color:#e0b84f; margin:0 0 10px; }
+#panel img { max-width:100%; max-height:58%; border:2px solid #b8913b; margin-bottom:10px; }
+#panel p { font-size:18px; line-height:1.5; white-space:pre-line; }
+#sala { position:absolute; top:8px; right:12px; font-size:16px; color:#e0b84f; text-shadow:0 0 4px #000; }
+#m-canvas { max-width:100%; border:2px solid #b8913b; }
+button { background:#2a2118; color:#eee; border:1px solid #b8913b; padding:6px 12px; margin:6px 4px; font:inherit; cursor:pointer; }
+button.act { background:#b8913b; color:#000; }
+
+/* ===== controles táctiles (se activan solos en teléfono/tablet) ===== */
+canvas { touch-action: none; }
+.cerrar { position:absolute; top:8px; right:8px; width:36px; height:36px; padding:0; margin:0; border-radius:50%; font-size:18px; }
+#tactil[hidden], #giro { display:none; }
+body.tactil { user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; overscroll-behavior:none; }
+#joy { position:fixed; z-index:6; left:max(20px, env(safe-area-inset-left)); bottom:max(20px, env(safe-area-inset-bottom)); width:136px; height:136px;
+       border-radius:50%; background:rgba(255,255,255,.1); border:2px solid rgba(255,255,255,.35); touch-action:none; }
+#knob { position:absolute; left:50%; top:50%; width:58px; height:58px; margin:-29px 0 0 -29px; border-radius:50%; background:rgba(224,184,79,.8); pointer-events:none; }
+#b-act { position:fixed; z-index:6; right:max(24px, env(safe-area-inset-right)); bottom:max(28px, env(safe-area-inset-bottom)); width:96px; height:96px; margin:0; padding:0;
+         border-radius:50%; font-size:14px; background:rgba(40,30,20,.75); color:#fff; border:2px solid rgba(255,255,255,.45); touch-action:none; }
+#b-act.lista { background:#e0b84f; color:#000; border-color:#fff; }
+#b-top { position:fixed; z-index:6; top:max(8px, env(safe-area-inset-top)); left:50%; transform:translateX(-50%); display:flex; gap:6px; }
+#b-top button { margin:0; min-width:44px; height:40px; border-radius:20px; background:rgba(40,30,20,.75); }
+body.modal #joy { visibility:hidden; }
+body.tactil #titulo { font-size:13px; } body.tactil #sala { font-size:12px; } body.tactil #pista { bottom:22%; }
+@media (orientation: portrait) { body.tactil #giro { display:block; position:fixed; z-index:6; bottom:170px; width:100%; text-align:center; font-size:13px; opacity:.7; } }
