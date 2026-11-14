@@ -41,7 +41,7 @@ html,body{margin:0;height:100%;background:#0b1522;color:#fff;overflow:hidden;
   font-size:calc(var(--u)*6);display:none;text-align:center;max-width:92%;border-color:#fff}
 #caption{position:absolute;left:50%;bottom:calc(var(--u)*12);transform:translateX(-50%);padding:calc(var(--u)*6) calc(var(--u)*10);
   font-size:calc(var(--u)*7);display:none;text-align:center;max-width:92%}
-#sign{position:absolute;left:37%;top:22.2%;width:26%;height:6.8%;display:none;align-items:center;justify-content:center;
+#sign{position:absolute;left:37%;top:2%;width:26%;height:7.4%;display:none;align-items:center;justify-content:center;
   font-family:var(--px);color:#ffe9a8;text-shadow:calc(var(--u)*1) calc(var(--u)*1) 0 #2a1608;text-align:center;
   white-space:pre;overflow:hidden;pointer-events:none;line-height:1.2}
 #fade{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .35s steps(6)}
@@ -1134,52 +1134,53 @@ scenes.sea = sea;
 /* ----------------------------- LLEGADA A LA ISLA ----------------------------- */
 const arrivalBG = {};
 const FSKULL = { stone: ['#6a6a82', '#585870', '#4a4a60'], cornice: '#3a3a4c', ped: '#4e4e64', pedIn: '#2a2a3c', col: '#8a8aa2', colSh: '#6a6a82', colCap: '#a0a0b8', step: '#6a6a82', step2: '#55556b', step3: '#4a4a60', gr: ['#4a4e46', '#3e423a'], path: '#8a8672', path2: '#76725f', emblem: null, tree: 'dead', props: [] };
+/** Dibuja fn en un lienzo pequeño y lo estampa ampliado (2x, píxel nítido): así la fachada es la misma isla vista de cerca. */
+function stampScaled(g, fn, ax, ay, ox, oy, w, h, sc) { const t = mk(w, h); fn(t.g, ox, oy); g.drawImage(t.c, Math.round(ax - ox * sc), Math.round(ay - oy * sc), w * sc, h * sc); }
+const ASC = [2, 3, 2, 2, 3, 2, 3, 3, 3, 2];   // ampliación de cada isla en su fachada (las altas usan 2x para no tapar el cartel)
+const HILLS = [['#7a9ab4', '#5a8a70'], ['#6a8aa0', '#4a7a58'], ['#8aa0b8', '#6a8a58'], ['#7a9ab4', '#5a8a68'], ['#2f6a60', '#1f5a40'], ['#b8a878', '#9a9060'], ['#6a8aa0', '#3a7a50'], ['#8a7a6a', '#6a5a48'], ['#e0c088', '#c8a868'], ['#7a7aa0', '#5a6a80']];
 function buildArrivalBG(skull, idx) {
-  const F = skull ? FSKULL : (FAC[idx] || FAC[0]);
+  const F = skull ? FSKULL : (FAC[idx] || FAC[0]), th = skull ? null : TEMAS[idx];
   const SKY = mk(VW, VH), { c, g } = mk(VW, VH), g0 = SKY.g;
   const sky = skull ? ['#262a44', '#323656', '#40456a', '#4f5580'] : ['#6cc0ee', '#85cdf2', '#a3dbf6', '#c4eaf9'];
   for (let i = 0; i < 4; i++) { g0.fillStyle = sky[i]; g0.fillRect(0, i * 38, VW, 39); if (i) { g0.fillStyle = sky[i - 1]; for (let x = 0; x < VW; x += 4) g0.fillRect(x + ((i % 2) * 2), i * 38, 2, 2); } }
   g0.fillStyle = skull ? '#e4e8f4' : '#ffe27a';
   for (let dy = -12; dy <= 12; dy++) { const hw = Math.round(Math.sqrt(144 - dy * dy)); g0.fillRect(356 - hw, 34 + dy, hw * 2, 1); }
-  // edificio
-  const stone = F.stone;
-  for (let y = 60; y < 152; y += 8) for (let x = 70; x < 330; x += 16) {
-    const off = ((y - 60) / 8) % 2 ? 8 : 0, bx = x - off; const n = hash2(bx, y, 4);
-    g.fillStyle = n > 0.66 ? stone[0] : n > 0.33 ? stone[1] : stone[0]; g.fillRect(Math.max(70, bx), y, Math.min(16, 330 - Math.max(70, bx)), 8);
-    g.fillStyle = stone[2]; g.fillRect(Math.max(70, bx), y + 7, 16, 1); g.fillRect(Math.max(70, bx), y, 1, 8);
-  }
-  g.fillStyle = F.cornice; g.fillRect(60, 56, 280, 8); g.fillStyle = stone[2]; g.fillRect(60, 62, 280, 2);
-  for (let y = 22; y < 56; y++) { const hw = Math.round((y - 22) / 34 * 140); g.fillStyle = F.ped; g.fillRect(200 - hw, y, hw * 2, 1); }
-  for (let y = 30; y < 55; y++) { const hw = Math.round((y - 30) / 25 * 96); g.fillStyle = F.pedIn; g.fillRect(200 - hw, y, hw * 2, 1); }
-  if (skull) { g.fillStyle = '#e8e8dc'; g.fillRect(190, 38, 20, 12); g.fillStyle = '#12121a'; g.fillRect(193, 41, 5, 5); g.fillRect(202, 41, 5, 5); g.fillRect(198, 47, 4, 3); }
-  else if (F.emblem) F.emblem(g);
-  else { g.fillStyle = '#f0c24a'; for (let i = 0; i < 5; i++) g.fillRect(196 + i * 2 - (i % 2 ? 0 : 0), 40 + Math.abs(2 - i), 2, 6 - Math.abs(2 - i) * 2 > 0 ? 6 - Math.abs(2 - i) : 1); }
-  [78, 106, 134, 266, 294, 322].forEach((x) => {
-    g.fillStyle = F.col; g.fillRect(x, 66, 10, 84); g.fillStyle = F.colSh; g.fillRect(x + 7, 66, 3, 84);
-    g.fillStyle = F.colCap; g.fillRect(x - 2, 64, 14, 5); g.fillRect(x - 2, 146, 14, 5);
-  });
-  // puerta
-  g.fillStyle = '#1b1008'; g.fillRect(184, 112, 32, 40);
-  for (let dy = 0; dy < 16; dy++) { const hw = Math.round(16 * Math.sqrt(1 - ((16 - dy) / 16) * ((16 - dy) / 16))); g.fillRect(200 - hw, 96 + dy, hw * 2, 1); }
-  g.fillStyle = '#5a3a20'; g.fillRect(187, 112, 26, 40); for (let dy = 0; dy < 14; dy++) { const hw = Math.round(13 * Math.sqrt(1 - ((14 - dy) / 14) * ((14 - dy) / 14))); g.fillRect(200 - hw, 99 + dy, hw * 2, 1); }
-  g.fillStyle = '#7a5230'; g.fillRect(199, 100, 2, 52); g.fillStyle = '#f0c24a'; g.fillRect(195, 130, 3, 3); g.fillRect(202, 130, 3, 3);
-  // cartel (el texto es HTML encima)
-  g.fillStyle = '#2a1608'; g.fillRect(146, 66, 108, 22); g.fillStyle = '#6b4426'; g.fillRect(148, 68, 104, 18); g.fillStyle = '#8a5a35'; g.fillRect(148, 68, 104, 2);
-  g.fillStyle = '#1b1008'; g.fillRect(160, 62, 2, 5); g.fillRect(238, 62, 2, 5);
-  // escalones y suelo
-  g.fillStyle = F.step; g.fillRect(60, 150, 280, 4); g.fillStyle = F.step2; g.fillRect(40, 154, 320, 4); g.fillStyle = F.step3; g.fillRect(0, 150, 60, 8); g.fillRect(340, 150, 60, 8);
+  // cerros lejanos
+  const hc = skull ? ['#2a2a44', '#1c1c30'] : HILLS[idx % HILLS.length];
+  for (let layer = 0; layer < 2; layer++) { g0.fillStyle = hc[layer]; for (let x = 0; x < VW; x++) { const h = Math.round((layer ? 14 : 30) + (layer ? 8 : 16) * Math.sin(x / (layer ? 23 : 41) + (idx || 0) * 1.7) + (layer ? 4 : 7) * Math.sin(x / (layer ? 9 : 15))); g0.fillRect(x, 152 - h, 1, h + 2); } }
+  // suelo y camino hasta la entrada
   const gr = F.gr;
-  for (let y = 158; y < 205; y++) for (let x = 0; x < VW; x++) { g.fillStyle = hash2(x >> 1, y >> 1, 12) > 0.8 ? gr[1] : gr[0]; g.fillRect(x, y, 1, 1); }
-  g.fillStyle = F.path; g.fillRect(176, 158, 48, 47);
-  for (let y = 158; y < 205; y += 3) { g.fillStyle = F.path2; g.fillRect(176 + ((y * 7) % 40), y, 3, 1); }
+  for (let y = 150; y < 205; y++) for (let x = 0; x < VW; x++) { g.fillStyle = hash2(x >> 1, y >> 1, 12) > 0.8 ? gr[1] : gr[0]; g.fillRect(x, y, 1, 1); }
+  g.fillStyle = F.path; g.fillRect(176, 152, 48, 53);
+  for (let y = 152; y < 205; y += 3) { g.fillStyle = F.path2; g.fillRect(176 + ((y * 7) % 40), y, 3, 1); }
   g.fillStyle = skull ? '#4a3a30' : '#8a5a35'; g.fillRect(0, 205, VW, 6); g.fillStyle = skull ? '#33281f' : '#6b4326'; g.fillRect(0, 211, VW, 5); g.fillStyle = skull ? '#221a14' : '#4d2f1a'; g.fillRect(0, 216, VW, 3);
+  // río o cañón que cruza la isla (puente colgante / Las Lajas)
+  const sc = skull ? 2 : ASC[idx % ASC.length], rv = th && th.river;
+  if (rv) {
+    const hw = rv.w * sc;
+    for (let y = 150; y < 220; y++) for (let dx = -hw - 4; dx <= hw + 4; dx++) {
+      const d = Math.abs(dx), col = d < hw - 3 ? (hash2(dx, y, 3) > 0.84 ? rv.c2 : rv.c1) : d < hw ? rv.edge : rv.bank;
+      g.fillStyle = 'rgb(' + col.join(',') + ')'; g.fillRect(200 + dx, y, 1, 1);
+    }
+  }
+  // edificio principal: la misma isla vista de cerca
+  if (skull) stampScaled(g, (tg, x, y) => drawSkullRock(tg, x, y), 200, 124, 55, 50, 110, 80, 2);
+  else stampScaled(g, th.main, 200, 152, 85, 108, 170, 140, sc);
+  if (rv) {   // pasarela de tablones sobre el río para llegar a la entrada
+    for (let y = 154; y < 205; y++) { g.fillStyle = Math.floor(y / 4) % 2 ? '#a0703a' : '#8a5a2b'; g.fillRect(190, y, 20, 1); }
+    g.fillStyle = '#4d2f1a'; for (let y = 156; y < 205; y += 12) { g.fillRect(186, y, 4, 4); g.fillRect(210, y, 4, 4); }
+  }
+  // decoración lateral (árboles y detalles propios de la isla, ampliados 2x)
+  const treeAt = (x) => stampScaled(g, (tg, px, py) => { if (skull) drawDeadTree(tg, px, py); else TREES[th.tree](tg, px, py, mulberry32(x * 3)); }, x, 202, 30, 56, 64, 64, sc);
+  const propAt = (k, x, v) => stampScaled(g, (tg, px, py) => PROP[k](tg, px, py, v || 0), x, 202, 35, 60, 70, 70, sc);
+  if (skull) { treeAt(46); stampScaled(g, (tg, px, py) => drawTomb(tg, px, py, 0), 100, 202, 35, 60, 70, 70, 2); stampScaled(g, (tg, px, py) => drawBones(tg, px, py, 1), 304, 202, 35, 60, 70, 70, 2); treeAt(356); }
+  else { const kinds = th.ex.map((q) => q[0]); const L = sc > 2 ? [34, 80, 320, 366] : [40, 92, 308, 360]; treeAt(L[0]); if (kinds.length) propAt(kinds[0], L[1], 0); if (kinds.length) propAt(kinds[kinds.length > 1 ? 1 : 0], L[2], 1); treeAt(L[3]); }
   // muelle
   for (let y = 205; y < 262; y++) { g.fillStyle = Math.floor(y / 5) % 2 ? '#a06a38' : '#8a5a2b'; g.fillRect(186, y, 28, 1); if (y % 5 === 0) { g.fillStyle = '#4d2f1a'; g.fillRect(186, y, 28, 1); } }
   g.fillStyle = '#4d2f1a'; [208, 236, 258].forEach((y) => { g.fillRect(182, y, 4, 6); g.fillRect(214, y, 4, 6); });
-  // palmeras / árboles
-  const r = mulberry32(skull ? 4 : 8);
-  [[48, 204], [92, 200], [352, 204], [308, 200]].forEach((q) => { if (skull) drawDeadTree(g, q[0], q[1]); else TREES[F.tree](g, q[0], q[1], r); });
-  (F.props || []).forEach((q) => PROP[q[2]](g, q[0], q[1], q[3] || 0));
+  // cartel con el nombre (el texto es HTML encima), colgado arriba
+  g.fillStyle = '#1b1008'; g.fillRect(160, 0, 2, 8); g.fillRect(238, 0, 2, 8);
+  g.fillStyle = '#2a1608'; g.fillRect(146, 6, 108, 22); g.fillStyle = '#6b4426'; g.fillRect(148, 8, 104, 18); g.fillStyle = '#8a5a35'; g.fillRect(148, 8, 104, 2);
   return { sky: SKY.c, fg: c };
 }
 const arrival = {
@@ -1223,7 +1224,9 @@ const arrival = {
     this.clouds.forEach((c) => { g.save(); g.globalAlpha = this.skull ? 0.35 : 0.9; g.drawImage(CLOUD[c.v], Math.round(c.x), Math.round(c.y)); g.restore(); });
     g.drawImage(this.bg.fg, 0, 0);
     // antorchas
-    [175, 225].forEach((x) => { const f = Math.floor(gt * 10 + x) % 3; g.fillStyle = '#4d2f1a'; g.fillRect(x - 1, 124, 3, 12); g.fillStyle = this.skull ? '#39ff9c' : '#ff9a2a'; g.fillRect(x - 2, 116 - f, 5, 8 + f); g.fillStyle = this.skull ? '#c8ffe4' : '#ffe27a'; g.fillRect(x - 1, 119 - f, 3, 5); });
+    // flecha que marca la entrada
+    { const b = Math.round(Math.sin(gt * 5) * 2); g.fillStyle = '#fff7b0'; g.fillRect(199, 139 + b, 2, 2); g.fillRect(197, 141 + b, 6, 2); g.fillRect(195, 143 + b, 10, 2); g.fillStyle = '#7a5a10'; g.fillRect(195, 145 + b, 10, 1); }
+    if (this.skull) { const al = 0.16 + 0.14 * Math.sin(gt * 3); g.fillStyle = 'rgba(57,255,156,' + al.toFixed(2) + ')'; g.fillRect(158, 76, 32, 28); g.fillRect(210, 76, 32, 28); }
     drawShip(g, 0, 200, 303 + Math.round(Math.sin(gt * 2.2) * 1), 0.75, 0);
     const p = this.pl; drawPirate(g, p.x, p.y, p.dir, p.fr, this.skull);
     if (this.skull) {
@@ -1596,6 +1599,179 @@ const oro = {
 };
 scenes.oro = oro;
 
+/* ======================================================================
+   INTERIORES — cada sala se parece a lo que se ve desde fuera de su isla
+   (paredes, piso, alfombra/vía/estera, iluminación y decoración propias)
+   ====================================================================== */
+const BENCH_WOOD = ['#8a5a35', '#5a3a1a', '#3a2410', '#a87648'];
+const HSKULL = {
+  wall: { t: 'brick', c: ['#5a5670', '#4a4660', '#3a364c'] }, trim: ['#2a2638', '#4a4660', '#2a1f3a', '#3e3052'],
+  floor: { t: 'planks', c: ['#4a4058', '#3f364c', '#2e2640'] }, carpet: { t: 'runner', c: ['#1f4d4a', '#39ff9c', '#17403d', '#2a6e68'] },
+  pillar: ['#3a364c', '#4a4660'], bottom: ['#2a2638', '#3a364c'], door: ['#6a7ea0', '#1f4d4a'], deco: ['torch'], flame: ['#39ff9c', '#d0ffe8', 'rgba(57,255,156,.07)'], bench: BENCH_WOOD
+};
+const FLAME_OR = ['#ff9a2a', '#ffe27a', 'rgba(255,180,60,.09)'];
+const HI = [
+  { // 1 Panóptico: ladrillo, celdas con rejas, lámparas de gas
+    wall: { t: 'brick', c: ['#a8473a', '#9a3f33', '#6a2a20'] }, trim: ['#4a2a22', '#c9604f', '#3a2a22', '#6a4a3a'],
+    floor: { t: 'tiles', c: ['#8a8a94', '#7c7c86', '#5e5e68'] }, carpet: { t: 'runner', c: ['#5a1f1f', '#c8a24a', '#3e1414', '#8a2f2f'] },
+    pillar: ['#6a2a20', '#8a382d'], bottom: ['#3a2a22', '#6a4a3a'], door: ['#bfe6ff', '#5a1f1f'], deco: ['bars', 'gas'], flame: FLAME_OR, bench: BENCH_WOOD },
+  { // 2 San Agustín: piedra megalítica con musgo, relieves
+    wall: { t: 'rough', c: ['#8d9187', '#7d8177', '#5c6058', '#9a9e92'], moss: true }, trim: ['#3a3d38', '#6a6e64', '#3a3d38', '#6a6e64'],
+    floor: { t: 'earth', c: ['#9a8a6a', '#8a7a5a', '#6a5a3e'] }, carpet: { t: 'mat', c: ['#7a5a3a', '#c8a24a', '#3a6a4a', '#5a3a1a'] },
+    pillar: ['#5c6058', '#7d8177'], bottom: ['#3a3d38', '#5c6058'], door: ['#bfe6ff', '#7a5a3a'], deco: ['relief', 'torch'], flame: FLAME_OR, bench: ['#9a9e92', '#7d8177', '#5c6058', '#b4b8aa'] },
+  { // 3 Ferrocarril: estación con zócalo de madera, relojes y vía
+    wall: { t: 'wainscot', c: ['#d8b25a', '#7a4a22', '#4a2a12'] }, trim: ['#4a2a12', '#a8473a', '#4a2a12', '#7a4a22'],
+    floor: { t: 'planks', c: ['#9a6a3a', '#8a5a2f', '#6a4222'] }, carpet: { t: 'rails', c: ['#4a4a52', '#6a4a2a', '#b4b4c0'] },
+    pillar: ['#2a2a34', '#4a4a54'], bottom: ['#2a2a34', '#4a4a54'], door: ['#bfe6ff', '#4a4a52'], deco: ['clock', 'gas'], flame: FLAME_OR, bench: BENCH_WOOD },
+  { // 4 Capitolio: mármol blanco, piso de ajedrez, alfombra tricolor, estandartes
+    wall: { t: 'marble', c: ['#ecebe4', '#c4c2b8', '#a8a69c'] }, trim: ['#c4c2b8', '#f4f2ea', '#a8a69c', '#d4d2c8'],
+    floor: { t: 'checker', c: ['#f0eee6', '#3a3a44'] }, carpet: { t: 'tricolor' },
+    pillar: ['#a8a69c', '#ecebe4'], bottom: ['#a8a69c', '#d4d2c8'], door: ['#bfe6ff', '#c0392b'], deco: ['banner'], flame: FLAME_OR, bench: ['#ecebe4', '#d4d2c8', '#a8a69c', '#fff'] },
+  { // 5 Ciudad Perdida: muros de piedra con techo de paja y antorchas
+    wall: { t: 'rough', c: ['#7a7a72', '#6a6a62', '#4a4a44', '#8a8a80'], moss: true, thatch: true }, trim: ['#8a6a2a', '#c9a44a', '#4a4a44', '#6a6a62'],
+    floor: { t: 'earth', c: ['#8a7a5a', '#7a6a4a', '#5a4a32'] }, carpet: { t: 'mat', c: ['#8a5a2a', '#d8b25a', '#2f7d3a', '#5a3a1a'] },
+    pillar: ['#5a5a52', '#7a7a72'], bottom: ['#4a4a44', '#6a6a62'], door: ['#9fd8a0', '#8a5a2a'], deco: ['torch', 'weaving'], flame: FLAME_OR, bench: ['#a08a5a', '#7a6a42', '#5a4a30', '#c8b078'] },
+  { // 6 Villa de Leyva: muros blancos con vigas, piso de terracota, ventanas con postigos
+    wall: { t: 'whitewash', c: ['#f0ece0', '#d8d4c4', '#6b4426'] }, trim: ['#a8473a', '#c9604f', '#6b4426', '#8a5a35'],
+    floor: { t: 'terracotta', c: ['#b8643a', '#a85a32', '#7a3e22'] }, carpet: { t: 'runner', c: ['#2a4a6a', '#d4a63a', '#1a3250', '#4a7aa0'] },
+    pillar: ['#6b4426', '#8a5a35'], bottom: ['#6b4426', '#8a5a35'], door: ['#bfe6ff', '#2a4a6a'], deco: ['plant', 'window'], flame: FLAME_OR, bench: BENCH_WOOD },
+  { // 7 Puente colgante: tablones, cuerdas y faroles
+    wall: { t: 'planks', c: ['#a0703a', '#8a5a2b', '#5a3a1f'] }, trim: ['#4a2f1a', '#7a5028', '#4a2f1a', '#6b4426'],
+    floor: { t: 'planks', c: ['#b88a50', '#a87a44', '#7a5530'] }, carpet: { t: 'mat', c: ['#d8c8a0', '#bfae84', '#8a7a50', '#a89868'] },
+    pillar: ['#5a3a1f', '#7a5028'], bottom: ['#4a2f1a', '#7a5028'], door: ['#9fd0f0', '#8a7a50'], deco: ['lantern'], flame: FLAME_OR, bench: BENCH_WOOD },
+  { // 8 Mina: roca con puntales de madera, vía y faroles
+    wall: { t: 'rock', c: ['#5a5248', '#6a6258', '#463e36'] }, trim: ['#2a241e', '#463e36', '#2a241e', '#463e36'],
+    floor: { t: 'slab', c: ['#4a443c', '#3e3832', '#2a2622'] }, carpet: { t: 'rails', c: ['#2a2622', '#7a5028', '#8a8a96'] },
+    pillar: ['#463e36', '#6a5a48'], bottom: ['#2a241e', '#463e36'], door: ['#8a7a5a', '#2a2622'], deco: ['lantern'], flame: FLAME_OR, bench: ['#6a4a2a', '#4a3018', '#2a1c10', '#8a6a3a'] },
+  { // 9 Ranchería Wayuu: tejido de colores, piso de arena, techo de paja
+    wall: { t: 'weave', c: ['#e6cf91', '#d8be7e', '#b89c5a'], thatch: true }, trim: ['#8a7040', '#d8bc7a', '#8a7040', '#b89c5a'],
+    floor: { t: 'sand', c: ['#e8d6a0', '#d8c488', '#c0a86a'] }, carpet: { t: 'mat', c: ['#d04a4a', '#f0c24a', '#2a4a9e', '#2f8f4e'] },
+    pillar: ['#6b4426', '#8a5a35'], bottom: ['#8a7040', '#b89c5a'], door: ['#f0e0a0', '#d04a4a'], deco: ['weaving'], flame: FLAME_OR, bench: BENCH_WOOD },
+  { // 10 Las Lajas: sillería azulada, vitrales y velas
+    wall: { t: 'ashlar', c: ['#b4b8cc', '#a0a4bc', '#80849c'] }, trim: ['#6a7088', '#d8dae6', '#6a7088', '#9498b0'],
+    floor: { t: 'tiles', c: ['#c8ccdc', '#b4b8cc', '#8a8ea6'] }, carpet: { t: 'runner', c: ['#2a3a7a', '#d4d8f0', '#1a2650', '#6a7ac0'] },
+    pillar: ['#80849c', '#b4b8cc'], bottom: ['#6a7088', '#9498b0'], door: ['#cfe0ff', '#2a3a7a'], deco: ['window', 'candle'], flame: ['#9ad0ff', '#f0f8ff', 'rgba(150,200,255,.08)'], bench: ['#b4b8cc', '#9498b0', '#6a7088', '#d8dae6'] }
+];
+
+function hallWall(g, WW, H) {
+  const w = H.wall, c = w.c;
+  switch (w.t) {
+    case 'brick':
+      for (let y = 0; y < WALL_H; y += 8) for (let x = -16; x < WW; x += 16) {
+        const off = (y / 8) % 2 ? 8 : 0, bx = x + off, n = hash2(bx, y, 31);
+        g.fillStyle = n > 0.7 ? c[0] : n > 0.35 ? c[1] : c[0]; g.fillRect(bx, y, 16, 8); g.fillStyle = c[2]; g.fillRect(bx, y + 7, 16, 1); g.fillRect(bx, y, 1, 8);
+        g.fillStyle = 'rgba(255,255,255,.08)'; g.fillRect(bx + 1, y + 1, 14, 1);
+      } break;
+    case 'ashlar':
+      for (let y = 0; y < WALL_H; y += 12) for (let x = -20; x < WW; x += 20) {
+        const bx = x + ((y / 12) % 2 ? 10 : 0), n = hash2(bx, y, 33);
+        g.fillStyle = n > 0.6 ? c[0] : c[1]; g.fillRect(bx, y, 20, 12); g.fillStyle = c[2]; g.fillRect(bx, y + 11, 20, 1); g.fillRect(bx, y, 1, 12); g.fillStyle = 'rgba(255,255,255,.1)'; g.fillRect(bx + 1, y + 1, 18, 1);
+      } break;
+    case 'rough':
+      for (let y = 0; y < WALL_H; y += 10) { let x = -((y / 10) % 2) * 7; while (x < WW) {
+        const ww = 12 + Math.floor(hash2(x, y, 5) * 12), n = hash2(x, y, 6);
+        g.fillStyle = n > 0.66 ? c[0] : n > 0.33 ? c[1] : c[3]; g.fillRect(x, y, ww, 10); g.fillStyle = c[2]; g.fillRect(x, y + 9, ww, 1); g.fillRect(x + ww - 1, y, 1, 10);
+        g.fillStyle = 'rgba(255,255,255,.07)'; g.fillRect(x + 1, y + 1, Math.max(1, ww - 3), 1);
+        if (w.moss && n > 0.82) { g.fillStyle = '#4a7a3a'; g.fillRect(x + 2, y + 7, Math.max(1, ww - 5), 2); }
+        x += ww; } } break;
+    case 'planks':
+      for (let x = 0; x < WW; x += 8) { g.fillStyle = (x / 8) % 2 ? c[0] : c[1]; g.fillRect(x, 0, 8, WALL_H); g.fillStyle = c[2]; g.fillRect(x, 0, 1, WALL_H);
+        for (let k = 0; k < 2; k++) if (hash2(x, k, 9) > 0.7) { g.fillStyle = c[2]; g.fillRect(x + 3, 6 + Math.floor(hash2(x, k, 10) * 44), 2, 3); } } break;
+    case 'wainscot':
+      g.fillStyle = c[0]; g.fillRect(0, 0, WW, 36); for (let i = 0; i < WW * 2; i++) { g.fillStyle = 'rgba(0,0,0,.05)'; g.fillRect(Math.floor(hash2(i, 1, 2) * WW), Math.floor(hash2(i, 2, 2) * 36), 2, 1); }
+      g.fillStyle = c[1]; g.fillRect(0, 36, WW, 28); g.fillStyle = c[2]; g.fillRect(0, 36, WW, 2);
+      for (let x = 4; x < WW; x += 24) { g.fillStyle = 'rgba(0,0,0,.25)'; g.fillRect(x, 41, 20, 17); g.fillStyle = 'rgba(255,255,255,.1)'; g.fillRect(x + 1, 42, 18, 15); } break;
+    case 'whitewash':
+      g.fillStyle = c[0]; g.fillRect(0, 0, WW, WALL_H); for (let i = 0; i < WW * 2; i++) { g.fillStyle = c[1]; g.fillRect(Math.floor(hash2(i, 3, 2) * WW), Math.floor(hash2(i, 4, 2) * WALL_H), 3, 1); }
+      for (let x = 8; x < WW; x += 80) { g.fillStyle = c[2]; g.fillRect(x, 0, 5, WALL_H); g.fillStyle = 'rgba(0,0,0,.25)'; g.fillRect(x + 4, 0, 1, WALL_H); }
+      g.fillStyle = c[2]; g.fillRect(0, 6, WW, 4); break;
+    case 'marble':
+      g.fillStyle = c[0]; g.fillRect(0, 0, WW, WALL_H);
+      for (let i = 0; i < WW / 6; i++) { const x0 = Math.floor(hash2(i, 5, 2) * WW), y0 = Math.floor(hash2(i, 6, 2) * WALL_H); g.fillStyle = c[1]; for (let k = 0; k < 10; k++) g.fillRect(x0 + k, y0 + Math.floor(k * 0.6), 1, 1); }
+      for (let x = 40; x < WW; x += 40) { g.fillStyle = c[2]; g.fillRect(x, 6, 1, 52); } break;
+    case 'weave':
+      g.fillStyle = c[0]; g.fillRect(0, 0, WW, WALL_H);
+      for (let y = 8; y < 56; y += 4) { g.fillStyle = (y / 4) % 2 ? c[1] : c[2]; g.fillRect(0, y, WW, 1); }
+      for (let x = 0; x < WW; x += 16) { const cols = ['#d04a4a', '#2a4a9e', '#2f8f4e', '#f0c24a'], k = (x / 16) % 4; g.fillStyle = cols[k]; g.fillRect(x + 6, 24, 4, 1); g.fillRect(x + 4, 25, 8, 2); g.fillRect(x + 2, 27, 12, 2); g.fillRect(x + 4, 29, 8, 2); g.fillRect(x + 6, 31, 4, 1); g.fillStyle = '#1a1a22'; g.fillRect(x + 7, 27, 2, 2); } break;
+    case 'rock':
+      g.fillStyle = c[2]; g.fillRect(0, 0, WW, WALL_H);
+      for (let i = 0; i < WW * 0.9; i++) { const x = Math.floor(hash2(i, 7, 2) * WW), y = Math.floor(hash2(i, 8, 2) * WALL_H), ww = 3 + Math.floor(hash2(i, 9, 2) * 8); g.fillStyle = hash2(i, 11, 2) > 0.5 ? c[0] : c[1]; g.fillRect(x, y, ww, 2 + Math.floor(hash2(i, 12, 2) * 3)); }
+      for (let x = 8; x < WW; x += 80) { g.fillStyle = '#7a5028'; g.fillRect(x, 0, 6, WALL_H); g.fillStyle = '#5a3a1f'; g.fillRect(x + 5, 0, 1, WALL_H); g.fillStyle = '#a87648'; g.fillRect(x, 0, 1, WALL_H); }
+      g.fillStyle = '#7a5028'; g.fillRect(0, 6, WW, 5); g.fillStyle = '#a87648'; g.fillRect(0, 6, WW, 1); break;
+    default: g.fillStyle = c[0]; g.fillRect(0, 0, WW, WALL_H);
+  }
+  if (w.thatch) { for (let x = 0; x < WW; x += 2) { const h = 9 + Math.floor(hash2(x, 3, 4) * 3); g.fillStyle = hash2(x, 5, 4) > 0.5 ? '#c9a44a' : '#a8843a'; g.fillRect(x, 0, 2, h); } g.fillStyle = 'rgba(0,0,0,.25)'; g.fillRect(0, 11, WW, 1); }
+  const t = H.trim;
+  g.fillStyle = t[0]; g.fillRect(0, 0, WW, 5); g.fillStyle = t[1]; g.fillRect(0, 5, WW, 1);
+  g.fillStyle = t[2]; g.fillRect(0, 58, WW, 6); g.fillStyle = t[3]; g.fillRect(0, 58, WW, 2);
+  if (w.thatch) { for (let x = 0; x < WW; x += 2) { const h = 9 + Math.floor(hash2(x, 3, 4) * 3); g.fillStyle = hash2(x, 5, 4) > 0.5 ? '#c9a44a' : '#a8843a'; g.fillRect(x, 0, 2, h); } }
+}
+function hallFloor(g, WW, H) {
+  const f = H.floor, c = f.c;
+  switch (f.t) {
+    case 'planks':
+      for (let y = WALL_H; y < HALL_H; y += 8) { g.fillStyle = (y / 8) % 2 ? c[0] : c[1]; g.fillRect(0, y, WW, 8); g.fillStyle = c[2]; g.fillRect(0, y + 7, WW, 1); for (let x = ((y / 8) % 3) * 24; x < WW; x += 72) g.fillRect(x, y, 1, 7); } break;
+    case 'tiles':
+      for (let y = WALL_H; y < HALL_H; y += 16) for (let x = 0; x < WW; x += 16) { g.fillStyle = hash2(x, y, 14) > 0.5 ? c[0] : c[1]; g.fillRect(x, y, 16, 16); g.fillStyle = c[2]; g.fillRect(x, y + 15, 16, 1); g.fillRect(x + 15, y, 1, 16); g.fillStyle = 'rgba(255,255,255,.1)'; g.fillRect(x + 1, y + 1, 14, 1); } break;
+    case 'checker':
+      for (let y = WALL_H; y < HALL_H; y += 16) for (let x = 0; x < WW; x += 16) { g.fillStyle = ((x / 16 + (y - WALL_H) / 16) % 2) ? c[1] : c[0]; g.fillRect(x, y, 16, 16); g.fillStyle = 'rgba(255,255,255,.12)'; g.fillRect(x, y, 16, 1); } break;
+    case 'earth':
+      g.fillStyle = c[0]; g.fillRect(0, WALL_H, WW, HALL_H - WALL_H);
+      for (let i = 0; i < WW * 3; i++) { g.fillStyle = hash2(i, 15, 2) > 0.5 ? c[1] : c[2]; g.fillRect(Math.floor(hash2(i, 16, 2) * WW), WALL_H + Math.floor(hash2(i, 17, 2) * (HALL_H - WALL_H)), 2, 1); }
+      for (let i = 0; i < WW / 10; i++) { const x = Math.floor(hash2(i, 18, 2) * WW), y = WALL_H + Math.floor(hash2(i, 19, 2) * 136); g.fillStyle = c[2]; g.fillRect(x, y, 11, 7); g.fillStyle = c[1]; g.fillRect(x + 1, y, 9, 5); } break;
+    case 'terracotta':
+      for (let y = WALL_H; y < HALL_H; y += 8) for (let x = -16; x < WW; x += 16) { const bx = x + ((y - WALL_H) / 8 % 2 ? 8 : 0); g.fillStyle = hash2(bx, y, 21) > 0.5 ? c[0] : c[1]; g.fillRect(bx, y, 16, 8); g.fillStyle = c[2]; g.fillRect(bx, y + 7, 16, 1); g.fillRect(bx + 15, y, 1, 8); } break;
+    case 'sand':
+      g.fillStyle = c[0]; g.fillRect(0, WALL_H, WW, HALL_H - WALL_H);
+      for (let y = WALL_H + 4; y < HALL_H; y += 7) for (let x = 0; x < WW; x += 2) { if (Math.sin(x / 9 + y) > 0.5) { g.fillStyle = c[1]; g.fillRect(x, y, 2, 1); } }
+      for (let i = 0; i < WW * 2; i++) { g.fillStyle = c[2]; g.fillRect(Math.floor(hash2(i, 22, 2) * WW), WALL_H + Math.floor(hash2(i, 23, 2) * 136), 1, 1); } break;
+    case 'slab':
+      for (let y = WALL_H; y < HALL_H; y += 12) for (let x = 0; x < WW; x += 20) { const bx = x + ((y - WALL_H) / 12 % 2 ? 10 : 0); g.fillStyle = hash2(bx, y, 24) > 0.5 ? c[0] : c[1]; g.fillRect(bx, y, 20, 12); g.fillStyle = c[2]; g.fillRect(bx, y + 11, 20, 1); g.fillRect(bx, y, 1, 12); } break;
+    default: g.fillStyle = c[0]; g.fillRect(0, WALL_H, WW, HALL_H - WALL_H);
+  }
+}
+function hallCarpet(g, WW, H) {
+  const k = H.carpet, c = k.c, cy0 = WALL_H + 44, ch = 52;
+  switch (k.t) {
+    case 'runner':
+      g.fillStyle = c[0]; g.fillRect(14, cy0, WW - 28, ch); g.fillStyle = c[1]; g.fillRect(14, cy0, WW - 28, 2); g.fillRect(14, cy0 + ch - 2, WW - 28, 2);
+      g.fillStyle = c[2]; g.fillRect(14, cy0 + 4, WW - 28, 2); g.fillRect(14, cy0 + ch - 6, WW - 28, 2);
+      g.fillStyle = c[3]; for (let x = 24; x < WW - 28; x += 16) { g.fillRect(x + 3, cy0 + 24, 2, 4); g.fillRect(x + 2, cy0 + 25, 4, 2); g.fillRect(x + 5, cy0 + 22, 2, 8); } break;
+    case 'tricolor':
+      g.fillStyle = '#f0c24a'; g.fillRect(14, cy0, WW - 28, 26); g.fillStyle = '#2a4a9e'; g.fillRect(14, cy0 + 26, WW - 28, 13); g.fillStyle = '#c0392b'; g.fillRect(14, cy0 + 39, WW - 28, 13);
+      g.fillStyle = 'rgba(0,0,0,.25)'; g.fillRect(14, cy0, WW - 28, 1); g.fillRect(14, cy0 + ch - 1, WW - 28, 1); g.fillStyle = 'rgba(255,255,255,.2)'; for (let x = 20; x < WW - 28; x += 24) g.fillRect(x, cy0 + 12, 6, 1); break;
+    case 'rails':
+      g.fillStyle = c[0]; g.fillRect(14, cy0 + 8, WW - 28, 36); for (let x = 14; x < WW - 14; x += 6) { g.fillStyle = c[1]; g.fillRect(x, cy0 + 12, 3, 28); }
+      g.fillStyle = c[2]; g.fillRect(14, cy0 + 16, WW - 28, 2); g.fillRect(14, cy0 + 34, WW - 28, 2); g.fillStyle = 'rgba(255,255,255,.35)'; g.fillRect(14, cy0 + 16, WW - 28, 1); g.fillRect(14, cy0 + 34, WW - 28, 1); break;
+    case 'mat':
+      g.fillStyle = c[0]; g.fillRect(14, cy0, WW - 28, ch); g.fillStyle = c[1]; g.fillRect(14, cy0, WW - 28, 3); g.fillRect(14, cy0 + ch - 3, WW - 28, 3);
+      for (let x = 18; x < WW - 28; x += 16) { g.fillStyle = c[2]; g.fillRect(x + 4, cy0 + 20, 4, 1); g.fillRect(x + 2, cy0 + 21, 8, 2); g.fillRect(x + 4, cy0 + 23, 4, 1); g.fillStyle = c[3] || c[1]; g.fillRect(x + 6, cy0 + 10, 1, 4); g.fillRect(x + 6, cy0 + 38, 1, 4); } break;
+    default: break;
+  }
+}
+/** Decoración fija entre marcos (los fuegos/luces animadas se dibujan en hallLight). */
+function hallDeco(g, x, kind, H) {
+  const cols = ['#d04a4a', '#e0b030', '#4a7ad0', '#4ab06a'];
+  switch (kind) {
+    case 'bars': Rr(g, x - 9, 16, 18, 30, '#9ab8d8'); for (let k = 0; k < 5; k++) Rr(g, x - 8 + k * 4, 16, 1, 30, '#2a2a34'); Rr(g, x - 10, 14, 20, 2, '#3a3a44'); Rr(g, x - 10, 46, 20, 2, '#3a3a44'); Rr(g, x - 7, 28, 14, 1, '#2a2a34'); break;
+    case 'clock': blob(g, x, 26, 9, '#4a2a12'); blob(g, x, 26, 7, '#f4f0e0'); Rr(g, x, 20, 1, 7, '#222'); Rr(g, x, 26, 5, 1, '#222'); Rr(g, x - 1, 19, 3, 1, '#a8473a'); Rr(g, x - 1, 33, 3, 1, '#a8473a'); Rr(g, x - 8, 26, 1, 1, '#a8473a'); Rr(g, x + 8, 26, 1, 1, '#a8473a'); break;
+    case 'banner': Rr(g, x - 9, 10, 18, 2, '#c8a24a'); Rr(g, x - 6, 12, 12, 9, '#f0c24a'); Rr(g, x - 6, 21, 12, 4, '#2a4a9e'); Rr(g, x - 6, 25, 12, 4, '#c0392b'); Rr(g, x - 6, 29, 12, 1, '#c8a24a'); break;
+    case 'window': Rr(g, x - 8, 16, 16, 30, '#2a3a5a'); for (let r = 0; r < 7; r++) Rr(g, x - 8 + r, 15 - r, 16 - r * 2, 1, '#2a3a5a'); for (let yy = 0; yy < 7; yy++) for (let xx = 0; xx < 3; xx++) { Rr(g, x - 7 + xx * 5, 17 + yy * 4, 4, 3, cols[(xx + yy) % 4]); } break;
+    case 'weaving': Rr(g, x - 9, 10, 18, 2, '#6b4426'); Rr(g, x - 8, 12, 16, 28, '#d8bc7a'); for (let yy = 0; yy < 7; yy++) { Rr(g, x - 8, 14 + yy * 4, 16, 2, cols[yy % 4]); } Rr(g, x - 2, 24, 4, 4, '#1a1a22'); Rr(g, x - 1, 22, 2, 8, '#1a1a22'); Rr(g, x - 7, 40, 14, 3, '#b89c5a'); break;
+    case 'plant': Rr(g, x - 9, 14, 18, 24, '#6b4426'); Rr(g, x - 7, 16, 14, 20, '#9ab8d8'); Rr(g, x - 7, 25, 14, 1, '#6b4426'); Rr(g, x - 13, 14, 4, 24, '#2a6aa0'); Rr(g, x + 9, 14, 4, 24, '#2a6aa0'); Rr(g, x - 10, 38, 20, 4, '#a8473a'); Rr(g, x - 7, 35, 2, 3, '#4ab06a'); Rr(g, x - 2, 34, 2, 4, '#4ab06a'); Rr(g, x + 3, 35, 2, 3, '#4ab06a'); Rr(g, x - 7, 34, 2, 2, '#e0b030'); Rr(g, x + 3, 33, 2, 2, '#d04a4a'); break;
+    case 'relief': Rr(g, x - 8, 16, 16, 18, '#5c6058'); Rr(g, x - 7, 17, 14, 16, '#8d9187'); Rr(g, x - 5, 21, 3, 3, '#2d3028'); Rr(g, x + 2, 21, 3, 3, '#2d3028'); Rr(g, x - 4, 28, 8, 2, '#2d3028'); Rr(g, x - 3, 28, 1, 3, '#e8e8dc'); Rr(g, x + 2, 28, 1, 3, '#e8e8dc'); break;
+    default: break;
+  }
+}
+const HALL_DYN = { torch: 1, gas: 1, lantern: 1, candle: 1 };
+function hallLight(g, x, kind, t, i, H) {
+  const f = Math.floor(t * 9 + i * 3) % 3, fl = H.flame;
+  if (kind === 'torch') { Rr(g, x - 1, 30, 3, 10, '#3a2410'); Rr(g, x - 3, 28, 7, 3, '#6b6b78'); Rr(g, x - 2, 20 - f, 5, 9 + f, fl[0]); Rr(g, x - 1, 23 - f, 3, 5, fl[1]); g.fillStyle = fl[2]; g.fillRect(x - 22, 6, 44, 52); }
+  else if (kind === 'gas') { Rr(g, x - 1, 30, 3, 10, '#8a6a2a'); Rr(g, x - 4, 28, 9, 3, '#8a6a2a'); Rr(g, x - 3, 18, 7, 10, 'rgba(255,235,160,.92)'); Rr(g, x - 1, 21 - (f ? 1 : 0), 3, 5, f ? '#ffd24a' : '#ff9a2a'); Rr(g, x - 4, 16, 9, 2, '#8a6a2a'); g.fillStyle = fl[2]; g.fillRect(x - 24, 4, 48, 54); }
+  else if (kind === 'lantern') { Rr(g, x, 5, 1, 13, '#bfae84'); Rr(g, x - 4, 18, 9, 2, '#3a2a1a'); Rr(g, x - 3, 20, 7, 10, '#3a2a1a'); Rr(g, x - 2, 21, 5, 8, f ? '#ffd24a' : '#ff9a2a'); Rr(g, x - 1, 23, 3, 4, '#fff2a0'); Rr(g, x - 3, 30, 7, 2, '#3a2a1a'); g.fillStyle = fl[2]; g.fillRect(x - 22, 8, 44, 50); }
+  else if (kind === 'candle') { Rr(g, x - 1, 36, 3, 8, '#c8a24a'); Rr(g, x - 6, 34, 13, 2, '#c8a24a'); [-5, 0, 5].forEach((o, k) => { Rr(g, x + o - 1, 28 + (k === 1 ? -3 : 0), 2, 6 + (k === 1 ? 3 : 0), '#f0ece0'); Rr(g, x + o - 1, 25 + (k === 1 ? -3 : 0) - (f === k ? 1 : 0), 2, 3, fl[0]); Rr(g, x + o - 1, 26 + (k === 1 ? -3 : 0), 1, 2, fl[1]); }); g.fillStyle = fl[2]; g.fillRect(x - 20, 8, 40, 50); }
+}
+
 /* ----------------------------- SALA DEL MUSEO ----------------------------- */
 const WALL_H = 64, HALL_H = 208, FLOOR_BOTTOM = 198;
 const FRAME = { horizontal: { w: 48, h: 34 }, vertical: { w: 32, h: 42 }, cuadrado: { w: 38, h: 38 } };
@@ -1667,42 +1843,22 @@ function drawStatue(g, cx, s) {
   }
   return { w: Math.max(b.w, pw), h: b.h };
 }
-function buildHall(slots, skull, WW, benches) {
-  const { c, g } = mk(WW, HALL_H);
-  const wall = skull ? ['#5a5670', '#4a4660', '#3a364c'] : ['#8a8f9c', '#7a7f8c', '#5a5e6a'];
-  for (let y = 0; y < WALL_H; y += 8) for (let x = -16; x < WW; x += 16) {
-    const off = (y / 8) % 2 ? 8 : 0, bx = x + off, n = hash2(bx, y, 31);
-    g.fillStyle = n > 0.7 ? wall[0] : n > 0.35 ? wall[1] : wall[0]; g.fillRect(bx, y, 16, 8);
-    g.fillStyle = wall[2]; g.fillRect(bx, y + 7, 16, 1); g.fillRect(bx, y, 1, 8);
-    g.fillStyle = 'rgba(255,255,255,.08)'; g.fillRect(bx + 1, y + 1, 14, 1);
-  }
-  g.fillStyle = skull ? '#2a2638' : '#3a3d48'; g.fillRect(0, 0, WW, 5); g.fillStyle = skull ? '#4a4660' : '#5a5e6a'; g.fillRect(0, 5, WW, 1);
-  g.fillStyle = skull ? '#2a1f3a' : '#4d2f1a'; g.fillRect(0, 58, WW, 6); g.fillStyle = skull ? '#3e3052' : '#6b4426'; g.fillRect(0, 58, WW, 2);
-  // suelo de madera
-  const fl = skull ? ['#4a4058', '#3f364c', '#2e2640'] : ['#a9743f', '#9b6a39', '#7a5028'];
-  for (let y = WALL_H; y < HALL_H; y += 8) {
-    g.fillStyle = (y / 8) % 2 ? fl[0] : fl[1]; g.fillRect(0, y, WW, 8); g.fillStyle = fl[2]; g.fillRect(0, y + 7, WW, 1);
-    for (let x = ((y / 8) % 3) * 24; x < WW; x += 72) g.fillRect(x, y, 1, 7);
-  }
-  // alfombra
-  const cy0 = WALL_H + 44, ch = 52;
-  g.fillStyle = skull ? '#1f4d4a' : '#8e2a2a'; g.fillRect(14, cy0, WW - 28, ch);
-  g.fillStyle = skull ? '#39ff9c' : '#d4a63a'; g.fillRect(14, cy0, WW - 28, 2); g.fillRect(14, cy0 + ch - 2, WW - 28, 2);
-  g.fillStyle = skull ? '#17403d' : '#6e1f1f'; g.fillRect(14, cy0 + 4, WW - 28, 2); g.fillRect(14, cy0 + ch - 6, WW - 28, 2);
-  g.fillStyle = skull ? '#2a6e68' : '#b03a3a';
-  for (let x = 24; x < WW - 28; x += 16) { g.fillRect(x + 3, cy0 + 24, 2, 4); g.fillRect(x + 2, cy0 + 25, 4, 2); g.fillRect(x + 5, cy0 + 22, 2, 8); }
+function buildHall(slots, skull, WW, benches, idx) {
+  const { c, g } = mk(WW, HALL_H), H = skull ? HSKULL : (HI[(idx || 0) % HI.length] || HI[0]);
+  hallWall(g, WW, H); hallFloor(g, WW, H); hallCarpet(g, WW, H);
   // pilares laterales
-  [[0, 16], [WW - 16, 16]].forEach((q) => { g.fillStyle = wall[2]; g.fillRect(q[0], 0, q[1], HALL_H); g.fillStyle = wall[1]; g.fillRect(q[0] + 2, 0, q[1] - 4, HALL_H); });
+  [[0, 16], [WW - 16, 16]].forEach((q) => { g.fillStyle = H.pillar[0]; g.fillRect(q[0], 0, q[1], HALL_H); g.fillStyle = H.pillar[1]; g.fillRect(q[0] + 2, 0, q[1] - 4, HALL_H); });
   // pared inferior con salida
-  g.fillStyle = skull ? '#2a2638' : '#3a3d48'; g.fillRect(0, 200, WW, 8);
-  g.fillStyle = skull ? '#3a364c' : '#5a5e6a'; g.fillRect(0, 200, WW, 2);
-  g.fillStyle = skull ? '#6a7ea0' : '#bfe6ff'; g.fillRect(32, 200, 32, 8);
-  g.fillStyle = '#d4a63a'; g.fillRect(32, 192, 32, 2); g.fillStyle = skull ? '#1f4d4a' : '#8e2a2a'; g.fillRect(34, 194, 28, 6);
-  // bancas
+  g.fillStyle = H.bottom[0]; g.fillRect(0, 200, WW, 8); g.fillStyle = H.bottom[1]; g.fillRect(0, 200, WW, 2);
+  g.fillStyle = H.door[0]; g.fillRect(32, 200, 32, 8);
+  g.fillStyle = '#d4a63a'; g.fillRect(32, 192, 32, 2); g.fillStyle = H.door[1]; g.fillRect(34, 194, 28, 6);
+  // decoración fija entre marcos (las luces animadas se dibujan aparte)
+  for (let i = 1; i <= slots.length; i++) { const kind = H.deco[i % H.deco.length]; if (!HALL_DYN[kind]) hallDeco(g, 48 + 80 * i, kind, H); }
+  // bancas con los colores del tema
   benches.forEach((b) => {
     g.fillStyle = 'rgba(0,0,0,.25)'; g.fillRect(b.x + 2, b.y + 10, b.w, 4);
-    g.fillStyle = '#5a3a1a'; g.fillRect(b.x, b.y + 4, b.w, 8); g.fillStyle = '#8a5a35'; g.fillRect(b.x, b.y, b.w, 6); g.fillStyle = '#a87648'; g.fillRect(b.x, b.y, b.w, 1);
-    g.fillStyle = '#3a2410'; g.fillRect(b.x + 2, b.y + 12, 3, 3); g.fillRect(b.x + b.w - 5, b.y + 12, 3, 3);
+    g.fillStyle = H.bench[1]; g.fillRect(b.x, b.y + 4, b.w, 8); g.fillStyle = H.bench[0]; g.fillRect(b.x, b.y, b.w, 6); g.fillStyle = H.bench[3]; g.fillRect(b.x, b.y, b.w, 1);
+    g.fillStyle = H.bench[2]; g.fillRect(b.x + 2, b.y + 12, 3, 3); g.fillRect(b.x + b.w - 5, b.y + 12, 3, 3);
   });
   // marcos
   slots.forEach((s, i) => { if (s.tipo !== 'escultura') drawFrame(g, 88 + 80 * i, s); });
@@ -1730,7 +1886,7 @@ const museum = {
         im.onerror = () => { s.imErr = true; this.dirty = true; }; im.src = s.imagen; s.im = im;
       }
     });
-    this.hall = buildHall(this.slots, this.skull, this.WW, this.benches); this.dirty = false;
+    this.hall = buildHall(this.slots, this.skull, this.WW, this.benches, this.skull ? -1 : this.idx); this.dirty = false;
     this.pl = { x: 48, y: 186, dir: 'u', fr: 0, t: 0 };
     if (p.kind === 'isla') { save.entered[p.idx] = true; persist(); this.wasExplored = isExplored(p.idx); }
     $('hud').style.display = 'block'; $('mini').style.display = 'none'; $('btnMute').style.display = 'block';
@@ -1752,7 +1908,7 @@ const museum = {
   },
   viewedKey(s) { return s.key; },
   update(dt) {
-    if (this.dirty) { this.hall = buildHall(this.slots, this.skull, this.WW, this.benches); this.dirty = false; }
+    if (this.dirty) { this.hall = buildHall(this.slots, this.skull, this.WW, this.benches, this.skull ? -1 : this.idx); this.dirty = false; }
     if (isBlocked()) return;
     const p = this.pl; movePlayer(p, axis(), dt, 74, (x, y) => this.canGo(x, y));   // Shift / mantener B = correr
     this.cam += (clamp(p.x - VW / 2, 0, this.WW - VW) - this.cam) * Math.min(1, 8 * dt);
@@ -1798,13 +1954,9 @@ const museum = {
     g.save(); g.translate(-cx, oy);
     // marcas de "ya vista"
     this.slots.forEach((s, i) => { if (save.viewed[s.key] && s.tipo !== 'escultura') drawCheck(g, 88 + 80 * i); });
-    // antorchas entre marcos
-    for (let i = 0; i <= this.slots.length; i++) {
-      const x = 48 + 80 * i + 0; if (i === 0) continue; const f = Math.floor(gt * 9 + i * 3) % 3;
-      g.fillStyle = '#3a2410'; g.fillRect(x - 1, 30, 3, 10); g.fillStyle = '#6b6b78'; g.fillRect(x - 3, 28, 7, 3);
-      g.fillStyle = this.skull ? '#39ff9c' : '#ff9a2a'; g.fillRect(x - 2, 20 - f, 5, 9 + f); g.fillStyle = this.skull ? '#d0ffe8' : '#ffe27a'; g.fillRect(x - 1, 23 - f, 3, 5);
-      g.fillStyle = this.skull ? 'rgba(57,255,156,.07)' : 'rgba(255,180,60,.09)'; g.fillRect(x - 22, 6, 44, 52);
-    }
+    // luces animadas entre marcos (antorchas, gas, faroles, velas según la sala)
+    { const H = this.skull ? HSKULL : (HI[this.idx % HI.length] || HI[0]);
+      for (let i = 1; i <= this.slots.length; i++) { const kind = H.deco[i % H.deco.length]; if (HALL_DYN[kind]) hallLight(g, 48 + 80 * i, kind, gt, i, H); } }
     if (this.chest) this.drawChest(g, this.chest);
     // flecha de salida
     if (Math.floor(gt * 2) % 2 === 0) { g.fillStyle = '#fff'; g.fillRect(46, 202, 4, 2); g.fillRect(45, 204, 6, 2); g.fillRect(44, 206, 8, 2); }

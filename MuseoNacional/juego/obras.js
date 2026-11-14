@@ -111,7 +111,7 @@ window.MUSEO = {
     nieblaSeDisipa: "¡La niebla se disipa! La Isla Calavera ya es accesible.",
     cineInicio: "Las obras removidas vuelven a casa…",
     finalTitulo: "¡La contrarrevolución está completa!",
-    finalTexto: "Cada obra removida regresó a su sala y la bandera de la revolución ondea en todas las islas. El museo es de quienes lo habitan."
+    finalTexto: "Cada obra removida regresó a su isla y la bandera de la revolución ondea en todas las islas. El museo es de quienes lo habitan."
   },
 
   // ---------------------------------------------------------------
