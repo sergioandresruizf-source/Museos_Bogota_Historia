@@ -88,9 +88,9 @@ window.MUSEO = {
   //   Los cambios de pista se hacen con fundido. Volumen: 0 a 1. La tecla M silencia todo.
   // ---------------------------------------------------------------
   musica: {
-    volumen: 0.5,
+    volumen: 0.4,
     navegacion: "musica/navegacion.mp3",
-    titulo: "",
+    titulo: "musica/titulo.mp3",
     calavera: "musica/calavera.mp3",
     cinematica: "musica/cinematica.mp3"
   },
