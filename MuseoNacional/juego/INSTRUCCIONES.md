@@ -80,3 +80,14 @@ El progreso se guarda en el navegador (botón NUEVO JUEGO lo reinicia).
 - **Después de devolverlas:** aparecen en su sala como obras presentes ("OBRA RESTITUIDA"), con su imagen si la agregaste.
 - Las obras removidas no cuentan para marcar una isla como explorada; solo las presentes.
 - Si una isla solo tiene obras removidas, su sala queda vacía hasta que las restituyas (cuenta como explorada al entrar).
+
+## 13. Pantalla de llegada
+Ya no es un templo griego recoloreado: al atracar ves **la misma isla de cerca** (el Panóptico, las estatuas de San Agustín, la estación con la locomotora, el Capitolio, las terrazas de Ciudad Perdida, la iglesia de Villa de Leyva, el puente colgante, la mina, la ranchería Wayuu, Las Lajas y, en la Isla Calavera, la entrada por la boca de la calavera). La entrada se marca con una flecha que parpadea. El nombre de la exposición cuelga en un cartel arriba.
+
+## 14. Salas con interior temático
+Cada sala se parece a su isla vista desde fuera: **1** ladrillo rojo con rejas de celda y lámparas de gas · **2** piedra megalítica con musgo y relieves · **3** estación con zócalo de madera, relojes y rieles · **4** mármol blanco, piso de ajedrez y alfombra tricolor con estandartes · **5** muros de piedra con techo de paja y antorchas · **6** muros blancos con vigas, piso de terracota y ventanas con postigos · **7** tablones, cuerdas y faroles · **8** roca con puntales de madera, vía y faroles · **9** tejido Wayuu de colores, piso de arena y techo de paja · **10** sillería azulada, vitrales y velas. La Isla Calavera mantiene su sala oscura con llamas verdes. Los colores y la decoración están en `salas.js` (dentro del juego: tabla `HI`).
+
+## 15. Obras removidas: espacio vacío y obra en la Isla Calavera
+- **En la sala:** donde estaba una obra removida se ve su **espacio vacío** (rectángulo claro con borde punteado, clavos y placa). Si es una escultura, queda el pedestal vacío. Al tocarlo se explica que fue removida y que su rastro está en la Isla Calavera (con `huecoMuestraDescripcion: true` también se lee su descripción ahí).
+- **En la Isla Calavera:** se ven las obras removidas. Con `imagen` aparecen como obra real (marco o escultura) con su imagen y descripción; sin `imagen`, como recuadro negro con "?".
+- **Al restituirlas:** el espacio se llena con la obra, que sale de la Isla Calavera.

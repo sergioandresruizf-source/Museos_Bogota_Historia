@@ -198,7 +198,7 @@ body.touch #pad{display:block}
 
 const VW = 400, VH = 300;
 const DATA = window.MUSEO || { islas: [] };
-const CFG = Object.assign({ exigirVerTodas: true, exigirVerTodasEnCalavera: true, velocidadBarco: 105, velocidadCorrer: 1.8, atajos: false, autoDescubrir: true,
+const CFG = Object.assign({ exigirVerTodas: true, exigirVerTodasEnCalavera: true, velocidadBarco: 105, velocidadCorrer: 1.8, huecoMuestraDescripcion: false, atajos: false, autoDescubrir: true,
   descripcionAuto: 'Descripción pendiente: agrega esta obra en obras.js para ponerle título y texto.' }, DATA.config || {});
 const TXT = Object.assign({
   nieblaBloqueada: 'Una espesa niebla bloquea el paso a la Isla Calavera…',
@@ -894,7 +894,7 @@ function sizeDialogImg(R) {
 }
 function openDialog(o, cb) {
   $('dlgTitle').textContent = o.titulo || 'Sin título';
-  const bd = $('dlgBadge'); bd.textContent = o.removida ? 'OBRA REMOVIDA' : (o.restituida ? 'OBRA RESTITUIDA' : (o.tipo === 'escultura' ? 'ESCULTURA / OBJETO' : 'EN EXHIBICIÓN')); bd.className = o.removida ? 'removed' : '';
+  const bd = $('dlgBadge'); bd.textContent = o.removida ? 'OBRA REMOVIDA' : (o.guardada ? 'OBRA REMOVIDA · RESGUARDADA' : (o.restituida ? 'OBRA RESTITUIDA' : (o.tipo === 'escultura' ? 'ESCULTURA / OBJETO' : 'EN EXHIBICIÓN'))); bd.className = (o.removida || o.guardada) ? 'removed' : '';
   $('dlgOrigin').textContent = o.origen || ''; $('dlgOrigin').style.display = o.origen ? 'block' : 'none';
   $('dlgDesc').style.whiteSpace = 'pre-wrap'; $('dlgDesc').textContent = o.descripcion || 'Sin descripción.'; $('dlgDesc').scrollTop = 0;
   const wrap = $('dlgImgWrap'); wrap.innerHTML = ''; wrap.className = o.removida ? 'removed' : (o.tipo === 'escultura' ? 'escultura' : '');
@@ -1786,15 +1786,25 @@ function buildSlots(kind, idx) {
   if (kind === 'isla') {   // las obras removidas NO se ven en la sala hasta que se restituyen (solo están en la Isla Calavera)
     const out = [];
     islandWorks(idx).forEach((o, j) => {
-      if (o.removida && !save.restored[idx]) return;
+      if (o.removida && !save.restored[idx]) { out.push(mkSlot(o, idx + ':' + j, { hueco: true })); return; }   // espacio vacío de la obra que falta
       out.push(o.removida ? mkSlot(Object.assign({}, o, { removida: false }), idx + ':' + j, { restituida: true, origen: 'Regresó de la Isla Calavera' }) : mkSlot(o, idx + ':' + j));
     });
     return out;
   }
-  return removedList().map((r) => mkSlot(r.o, 'k:' + r.i + ':' + r.j, { origen: 'Pertenecía a: ' + placeName(r.i), imagen: '' }));
+  return removedList().map((r) => { const withImg = !!r.o.imagen; return mkSlot(Object.assign({}, r.o, { removida: !withImg }), 'k:' + r.i + ':' + r.j, { origen: 'Pertenecía a: ' + placeName(r.i), guardada: withImg }); });
 }
 function drawFrame(g, cx, slot) {
   const d = FRAME[slot.fmt] || FRAME.horizontal, w = d.w, h = d.h, x = Math.round(cx - w / 2), y = 50 - h;
+  if (slot.hueco) {   // espacio de una obra removida: se nota dónde colgaba
+    g.fillStyle = 'rgba(255,255,255,.24)'; g.fillRect(x, y, w, h); g.fillStyle = 'rgba(0,0,0,.14)'; g.fillRect(x + 2, y + 2, w - 4, 1); g.fillRect(x + 2, y + h - 3, w - 4, 1);
+    g.fillStyle = 'rgba(0,0,0,.5)';
+    for (let i = 0; i < w; i += 4) { g.fillRect(x + i, y, 2, 1); g.fillRect(x + i, y + h - 1, 2, 1); }
+    for (let i = 0; i < h; i += 4) { g.fillRect(x, y + i, 1, 2); g.fillRect(x + w - 1, y + i, 1, 2); }
+    g.fillStyle = '#2a2a2a'; g.fillRect(cx - 1, y + 3, 2, 2); g.fillRect(x + 4, y + h - 6, 2, 2); g.fillRect(x + w - 6, y + h - 6, 2, 2);
+    const b = Math.round(y + h / 2 - 7); g.fillStyle = 'rgba(0,0,0,.4)'; g.fillRect(cx - 3, b, 6, 2); g.fillRect(cx + 1, b + 2, 2, 4); g.fillRect(cx - 1, b + 6, 2, 2); g.fillRect(cx - 1, b + 10, 2, 2);
+    g.fillStyle = '#6b6b75'; g.fillRect(cx - 14, 52, 28, 6); g.fillStyle = '#9a9aa6'; g.fillRect(cx - 6, 54, 12, 1);
+    return;
+  }
   if (slot.removida) {
     g.fillStyle = '#4a4a52'; g.fillRect(x, y, w, h); g.fillStyle = '#2c2c34'; g.fillRect(x + 3, y + 3, w - 6, h - 6);
     g.fillStyle = '#0a0a0c'; g.fillRect(x + 5, y + 5, w - 10, h - 10);
@@ -1933,7 +1943,8 @@ const museum = {
     }
   },
   openSlot(s) {
-    const o = { titulo: s.titulo, descripcion: s.descripcion, imagen: s.imagen, removida: s.removida, origen: s.origen, tipo: s.tipo, restituida: s.restituida, formato: s.formato, fmt: s.fmt };
+    const o = { titulo: s.titulo, descripcion: s.descripcion, imagen: s.imagen, removida: s.removida, origen: s.origen, tipo: s.tipo, restituida: s.restituida, guardada: s.guardada, formato: s.formato, fmt: s.fmt };
+    if (s.hueco) { o.descripcion = CFG.huecoMuestraDescripcion ? s.descripcion : 'Aquí colgaba una obra que fue removida del museo. Su rastro se conserva en la Isla Calavera.'; o.origen = 'Espacio vacío en la sala'; o.imagen = ''; }
     openDialog(o, () => {
       const first = !save.viewed[s.key]; save.viewed[s.key] = true; persist(); updateHUD();
       if (this.kind === 'isla') {

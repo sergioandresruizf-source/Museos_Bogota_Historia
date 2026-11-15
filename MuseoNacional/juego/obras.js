@@ -10,9 +10,9 @@
    3) En cada obra escribe la ruta:  imagen: "obras/mi_cuadro.jpg"
 
    - Obra PRESENTE  → removida: false  (lleva imagen)
-   - Obra REMOVIDA  → removida: true   (NO aparece en la sala de su isla: solo se ve
-                       en la ISLA CALAVERA, con título y descripción; al devolverla
-                       reaparece en su sala como obra presente)
+   - Obra REMOVIDA  → removida: true   (en la sala de su isla queda solo el ESPACIO VACÍO
+                       donde colgaba; en la ISLA CALAVERA sí se ve la obra, con su
+                       imagen si la agregas; al devolverla reaparece en su sala)
 
    Puedes poner las obras que quieras por isla (recomendado 2 a 8).
    Si una imagen no existe o la ruta está mal, el juego no se rompe:
@@ -27,13 +27,15 @@
    Salen con título "Obra 1", "Escultura 1"... Para ponerles título y descripción
    agrégalas aquí abajo con esa misma ruta de imagen.
 
-   ── OBRAS REMOVIDAS QUE REGRESAN ──
-   Una obra removida (removida: true) NO se ve en la sala de su isla mientras esté removida;
-   solo aparece en la Isla Calavera (recuadro negro con su título y descripción).
-   Al final del juego, cuando el jugador resuelve el puzzle de la isla, esas obras REGRESAN
-   y aparecen en la sala como obras presentes ("OBRA RESTITUIDA"). Si quieres que se vea su
-   imagen al regresar, agrega  imagen: "obras/..."  en la obra removida.
-   Las obras removidas no cuentan para marcar una isla como explorada.
+   ── OBRAS REMOVIDAS ──
+   · En la SALA de su isla: solo se ve el espacio vacío donde colgaba (con su placa). Al tocarlo
+     dice que fue removida y que su rastro está en la Isla Calavera (para que ahí también se lea
+     su descripción, pon  huecoMuestraDescripcion: true  en config).
+   · En la ISLA CALAVERA: se ve la obra. Si le pones  imagen: "obras/..."  se muestra con su
+     imagen y su descripción; si no tiene imagen, se ve un recuadro negro con "?".
+   · Al final del juego, cuando el jugador resuelve el puzzle de la isla, la obra REGRESA a su
+     sala como obra presente ("OBRA RESTITUIDA") y sale de la Isla Calavera.
+   · Las obras removidas no cuentan para marcar una isla como explorada.
 
    ── FORMATO DEL CUADRO ──
    formato: "auto" (por defecto: se adapta a la imagen), "horizontal", "vertical" o "cuadrado"
@@ -69,6 +71,8 @@ window.MUSEO = {
     museoId: "nacional",
     // Si el juego se abre solo (sin mapa), puedes redirigir a esta dirección al completarlo (vacío = no redirige)
     urlSiguienteMuseo: "",
+    // false = el espacio vacío de una obra removida no revela su descripción en la sala
+    huecoMuestraDescripcion: false,
     puzzlesOmitibles: true,
     puzzleOmitirSeg: 1,
     autoDescubrir: true,
@@ -88,9 +92,9 @@ window.MUSEO = {
   //   Los cambios de pista se hacen con fundido. Volumen: 0 a 1. La tecla M silencia todo.
   // ---------------------------------------------------------------
   musica: {
-    volumen: 0.4,
+    volumen: 0.5,
     navegacion: "musica/navegacion.mp3",
-    titulo: "musica/titulo.mp3",
+    titulo: "",
     calavera: "musica/calavera.mp3",
     cinematica: "musica/cinematica.mp3"
   },
@@ -111,7 +115,7 @@ window.MUSEO = {
     nieblaSeDisipa: "¡La niebla se disipa! La Isla Calavera ya es accesible.",
     cineInicio: "Las obras removidas vuelven a casa…",
     finalTitulo: "¡La contrarrevolución está completa!",
-    finalTexto: "Cada obra removida regresó a su isla y la bandera de la revolución ondea en todas las islas. El museo es de quienes lo habitan."
+    finalTexto: "Cada obra removida regresó a su sala y la bandera de la revolución ondea en todas las islas. El museo es de quienes lo habitan."
   },
 
   // ---------------------------------------------------------------
@@ -138,7 +142,7 @@ window.MUSEO = {
   // ---------------------------------------------------------------
   islas: [
     {
-      nombre: "Isla 1 · La historia del museo",
+      nombre: "Sala 1 · La historia del museo",
       musica: "musica/isla1.mp3",
       obras: [
         { tipo: "escultura", titulo: "Aerolito de Santa Rosa de Viterbo", descripcion: "Exhibición temporal", imagen: "obras/estatuaIsla1.jpg",
@@ -149,7 +153,7 @@ window.MUSEO = {
       ]
     },
     {
-      nombre: "Isla 2 · Tierra de historias",
+      nombre: "Sala 2 · Tierra de historias",
       musica: "musica/isla2.mp3",
       obras: [
         { titulo: "Obra 1 (presente)", descripcion: "Descripción de la obra.", imagen: "obras/isla2_obra1.jpg", removida: false },
@@ -157,7 +161,7 @@ window.MUSEO = {
       ]
     },
     {
-      nombre: "Isla 3 · Memoria en movimiento",
+      nombre: "Sala 3 · Memoria en movimiento",
       musica: "musica/isla3.mp3",
       obras: [
         { titulo: "Obra 1 (presente)", descripcion: "Descripción de la obra.", imagen: "obras/isla3_obra1.jpg", removida: false },
@@ -175,7 +179,7 @@ window.MUSEO = {
       ]
     },
     {
-      nombre: "Isla 5 · Ser territorio",
+      nombre: "Sala 5 · Ser territorio",
       musica: "musica/isla5.mp3",
       obras: [
         { titulo: "Obra 1 (presente)", descripcion: "Descripción de la obra.", imagen: "obras/isla5_obra1.jpg", removida: false },
@@ -196,7 +200,7 @@ window.MUSEO = {
       ]
     },
     {
-      nombre: "Isla 7 · Conexiones",
+      nombre: "Sala 7 · Conexiones",
       musica: "musica/isla7.mp3",
       obras: [
         { titulo: "Obra 1 (presente)", descripcion: "Descripción de la obra.", imagen: "obras/isla7_obra1.jpg", removida: false },
@@ -204,7 +208,7 @@ window.MUSEO = {
       ]
     },
     {
-      nombre: "Isla 8 · Tierra como recurso",
+      nombre: "Sala 8 · Tierra como recurso",
       musica: "musica/isla8.mp3",
       obras: [
         { titulo: "Obra 1 (presente)", descripcion: "Descripción de la obra.", imagen: "obras/isla8_obra1.jpg", removida: false },
@@ -219,7 +223,7 @@ window.MUSEO = {
       ]
     },
     {
-      nombre: "Isla 10 · Fuerza,Fe y Sustancia",
+      nombre: "Sala 10 · Fuerza,Fe y Sustancia",
       musica: "musica/isla10.mp3",
       obras: [
         { titulo: "Obra 1 (presente)", descripcion: "Descripción de la obra.", imagen: "obras/isla10_obra1.jpg", removida: false },
