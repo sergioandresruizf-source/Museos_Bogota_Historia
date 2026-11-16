@@ -340,6 +340,7 @@ window.MUSEO = {
           registro: "Registro 8184",
           descripcion: "Documento manuscrito en hoja de cuaderno (28 × 21 cm) vinculado a la memoria, resistencia y derechos de las personas trans en situación de reclusión. Retirado el 15 de octubre de 2026.",
           reflexion: "Un testimonio escrito de puño y letra que aporta al museo la voz directa, sin intermediarios, de una mujer trans privada de la libertad.",
+          imagen: "obras/isla6_obra6.jpg",
           removida: true
         },
         {
@@ -349,6 +350,7 @@ window.MUSEO = {
           registro: "Registro 5798",
           descripcion: "Aguafuerte (70 × 99,5 cm) de atmósfera oscura y manchas de tinta vinculado a experiencias homoeróticas y de diversidad sexual en espacios clandestinos. Retirado el 15 de octubre de 2026.",
           reflexion: "Las sombras sugieren los espacios ocultos a los que fue relegada la disidencia sexual cuando no tenía cabida en la esfera pública.",
+          imagen: "obras/isla6_obra7.png",
           removida: true
         },
         {
@@ -358,6 +360,7 @@ window.MUSEO = {
           registro: "Registro 8169",
           descripcion: "Par de zapatos de colores elaborados a medida en cuero sintético y PVC cosidos a máquina (9 × 10 × 28 cm) en trabajo colaborativo con la Red Comunitaria Trans. Retirado el 15 de octubre de 2026.",
           reflexion: "El diseño hecho a la medida para cuerpos históricamente excluidos por el mercado se convierte en un acto de dignidad y reconocimiento social.",
+          imagen: "obras/isla6_obra8.png",
           removida: true
         }
       ]
