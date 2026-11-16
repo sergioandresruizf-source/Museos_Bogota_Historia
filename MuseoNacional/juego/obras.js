@@ -74,7 +74,7 @@ window.MUSEO = {
           fecha: "1948 (reinhumación; arqueólogo: 1892–1941)",
           descripcion: "Lápida y sepultura del arqueólogo y antropólogo alemán Justus Wolfram Schottelius, quien huyó de la Alemania nazi por la ascendencia judía de su esposa y llegó a Colombia en 1938. Introdujo estudios estratigráficos e investigó en Santander; sus restos fueron trasladados al museo el 9 de abril de 1948.",
           reflexion: "Un exiliado acaba enterrado dentro del museo al que ayudó a darle forma: la ciencia también la construyen personas que huyen de la persecución y merecen memoria.",
-          imagen: "obras/isla1_obra1.jpg",
+          imagen: "obras/isla1_obra2.jpg",
           removida: false
         },
         {
@@ -83,7 +83,7 @@ window.MUSEO = {
           fecha: "Viaje en 1823 / Litografía ca. 1857",
           descripcion: "Litografía sobre papel que registra el tránsito científico entre Popayán y Pasto realizado por el ingeniero de minas Mariano Eduardo de Rivero tras dirigir el Museo y la Escuela de Minas.",
           reflexion: "Muestra cómo se hacía la ciencia en la Colombia recién independizada: caminando, dibujando y recogiendo datos, aunque invisibiliza a quienes abrían trocha y cargaban el equipaje.",
-          imagen: "obras/isla1_obra2.jpg",
+          imagen: "obras/isla1_obra3.jpg",
           removida: false
         },
         {
