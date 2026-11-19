@@ -167,6 +167,7 @@ window.MUSEO = {
           fecha: "24 de julio de 1956 / 1957",
           descripcion: "Documentos mecanografiados y manuscritos firmados por los jefes de los partidos Liberal y Conservador para poner fin al gobierno de Gustavo Rojas Pinilla y dar origen al Frente Nacional (1958–1974).",
           reflexion: "Muestra cómo dos rivales políticos pactaron por necesidad común, pero cerraron la participación a otras fuerzas políticas mediante un acuerdo exclusivo de élites.",
+          imagen: "obras/isla3_obra3.jpg",
           removida: false
         }
       ]
@@ -212,6 +213,7 @@ window.MUSEO = {
           registro: "Registro 5861",
           descripcion: "Aguafuerte (74,5 × 70,5 cm) que representa la bandera de Colombia como un telón rojo acompañado de cuadros con rostros dibujados y recortes superpuestos. Retirado el 15 de octubre de 2026.",
           reflexion: "Al hablar de 'sus autores', desmitifica los símbolos patrios como construcciones políticas abiertas al escrutinio crítico y no como dogmas intocables.",
+          imagen: "obras/isla4_obra4.jpeg",
           removida: true
         },
         {
@@ -221,6 +223,7 @@ window.MUSEO = {
           registro: "Registro 6704",
           descripcion: "Dibujo en grafito sobre papel (73,3 × 51,8 cm) que retrata una figura oscura, caída o recostada, con el rostro desdibujado entre sombras profundas. Retirado el 15 de octubre de 2026.",
           reflexion: "Rinde homenaje silencioso a las víctimas anónimas de la violencia cuyas historias nunca llegan a los libros oficiales.",
+          imagen: "obras/isla4_obra5.jpeg",
           removida: true
         },
         {
@@ -229,6 +232,7 @@ window.MUSEO = {
           fecha: "1897",
           descripcion: "Pieza de artillería en hierro, acero forjado y madera tallada utilizada en la Guerra de los Mil Días (1899–1902), conflicto entre liberales y conservadores que dejó cerca de cien mil muertos y precedió la separación de Panamá.",
           reflexion: "Recuerda que las guerras civiles colombianas se libraron con armamento importado y dejaron heridas profundas al iniciar el siglo XX.",
+          imagen: "obras/isla4_obra6.jpg",
           removida: false
         },
         {
@@ -237,6 +241,7 @@ window.MUSEO = {
           fecha: "Abril de 1957",
           descripcion: "Óleo sobre tela que reinterpreta el martirio de San Sebastián en un paisaje desolado cercado por estacas, trincheras y alambre de púas como crítica a la Violencia de los años cincuenta.",
           reflexion: "Traslada la guerra al cuerpo del mártir cristiano como símbolo de las víctimas civiles atrapadas en el conflicto bipartidista.",
+          imagen: "obras/isla4_obra7.jpg",
           removida: false
         }
       ]
