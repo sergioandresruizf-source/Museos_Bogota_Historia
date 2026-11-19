@@ -92,6 +92,7 @@ window.MUSEO = {
           fecha: "Hacia 1790",
           descripcion: "Escultura neoclásica tallada en mármol de un niño dormido, donada por la Fundación Beatriz Osorio (creada en 1948 para fomentar los museos nacionales) junto con otros 219 objetos históricos y artísticos.",
           reflexion: "El sueño del niño y la mariposa —símbolo clásico del alma— transmiten calma y fragilidad, reflejando el coleccionismo y los gustos de las élites del siglo XX.",
+          imagen: "obras/isla1_obra4.jpg",
           removida: false
         }
       ]
@@ -115,6 +116,7 @@ window.MUSEO = {
           fecha: "1000–1600 d. C.",
           descripcion: "Pieza cerámica del altiplano cundiboyacense que representa caciques asentados en sus cercados portando bastones de mando y sombreros adornados con cuentas de piedra y caracoles marinos.",
           reflexion: "El poder se expresaba mediante objetos, postura y redes de comercio a larga distancia —evidenciadas en los caracoles marinos— más que solo por la fuerza.",
+          imagen: "obras/isla2_obra2.jpg",
           removida: false
         },
         {
