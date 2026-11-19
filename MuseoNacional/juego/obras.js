@@ -125,6 +125,7 @@ window.MUSEO = {
           fecha: "700 a. C. – 350 d. C.",
           descripcion: "Cerámica prehispánica que esquematiza un personaje en posición de combate con lanza, escudo y rasgos de jaguar, ejemplificando el poder simbólico y militar personificado en el chamán.",
           reflexion: "La fusión entre humano y jaguar expresa una cosmovisión donde el guerrero, el chamán, el animal y los ancestros forman una misma unidad de poder vital.",
+          imagen: "obras/isla2_obra3.jpg",
           removida: false
         },
         {
@@ -133,6 +134,7 @@ window.MUSEO = {
           fecha: "1–900 d. C. (Período Clásico Regional)",
           descripcion: "Escultura monumental tallada y pulida en roca basáltica que representaba el poder espiritual e ideológico de los jefes de extensos clanes en el macizo colombiano.",
           reflexion: "La piedra volcánica volvía permanente la autoridad de quien gobernaba, trascendiendo al individuo para convertirse en memoria colectiva milenaria.",
+          imagen: "obras/isla2_obra4.jpg",
           removida: false
         }
       ]
