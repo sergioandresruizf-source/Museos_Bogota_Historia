@@ -451,6 +451,7 @@ window.MUSEO = {
           fecha: "1940",
           descripcion: "Óleo sobre tela que muestra una escena íntima en la sala de una familia acomodada bogotana, donde dos mujeres leen y tejen en silencio.",
           reflexion: "Eleva lo doméstico a tema artístico, revelando los roles asignados a las mujeres de élite a mediados del siglo XX y dejando fuera de cuadro a quienes trabajaban en el servicio.",
+          imagen: "obras/isla9_obra2.jpg",
           removida: false
         },
         {
@@ -459,6 +460,7 @@ window.MUSEO = {
           fecha: "1963",
           descripcion: "Collage geométrico elaborado con cartón, tela, lata de acero galvanizado, costal de fique y pigmentos, explorando relaciones cromáticas con materiales cotidianos.",
           reflexion: "Transforma materiales humildes como el fique y la hojalata en arte abstracto, dialogando con las tradiciones geométricas prehispánicas.",
+          imagen: "obras/isla9_obra3.jpg",
           removida: false
         },
         {
@@ -467,6 +469,7 @@ window.MUSEO = {
           fecha: "1923–1930",
           descripcion: "Talla en mármol de estética simbolista realizada en París para un monumento estatal al poeta José Asunción Silva que nunca llegó a erigirse.",
           reflexion: "El contraste entre el mármol pulido y la base sin desbastar hace que la figura emerja de la roca como un lamento contenido.",
+          imagen: "obras/isla9_obra4.jpg",
           removida: false
         },
         {
@@ -475,6 +478,7 @@ window.MUSEO = {
           fecha: "1920–1926",
           descripcion: "Escultura en mármol premiada en París que generó una fuerte controversia y censura moral por parte de la Iglesia en El Catolicismo al exhibirse en la Avenida de las Américas en 1948.",
           reflexion: "El cuerpo desnudo se concibe como símbolo de recogimiento interior, chocando con el conservadurismo moral que buscaba regular el espacio público bogotano.",
+          imagen: "obras/isla9_obra5.jpg",
           removida: false
         },
         {
@@ -483,6 +487,7 @@ window.MUSEO = {
           fecha: "Hacia 1940",
           descripcion: "Vaciado en cemento que sintetiza las formas del cuerpo humano mediante un material urbano y moderno, rompiendo con los cánones académicos tradicionales.",
           reflexion: "Utilizar cemento para esculpir el despertar sugiere el esfuerzo de emerger de una materia pesada y cotidiana.",
+          imagen: "obras/isla9_obra6.jpg",
           removida: false
         },
         {
@@ -491,6 +496,7 @@ window.MUSEO = {
           fecha: "1971",
           descripcion: "Óleo sobre tela pintado en Nueva York en el que el artista retrata a su hijo pequeño Pedro con la monumentalidad volumétrica que definió su estilo maduro.",
           reflexion: "Lo íntimo y familiar adquiere escala monumental con ternura, contrastando con las series sobre la violencia que Botero donó posteriormente al museo.",
+          imagen: "obras/isla9_obra7.jpg",
           removida: false
         }
       ]
@@ -514,6 +520,7 @@ window.MUSEO = {
           fecha: "1945",
           descripcion: "Bastón de madera tallada utilizado por el jaibaná —médico tradicional emberá— para invocar a los jais, conectar con los ancestros y armonizar la salud física y espiritual.",
           reflexion: "Representa una medicina tradicional viva basada en el equilibrio con los espíritus y la naturaleza, aunque la vitrina tiende a presentarla como un vestigio del pasado.",
+          imagen: "obras/isla10_obra2.jpg",
           removida: false
         },
         {
@@ -522,6 +529,7 @@ window.MUSEO = {
           fecha: "Siglo XIX",
           descripcion: "Tela de algodón con plumas de aves adheridas mediante puntadas y resina que combina flora y fauna nativa (papagayos, begonias) con motivos europeos y asiáticos bajo el tema del árbol de la vida.",
           reflexion: "Una técnica plumaria prehispánica que consideraba sagradas a las aves sobrevive y dialoga con gustos decorativos transcontinentales.",
+          imagen: "obras/isla10_obra3.jpg",
           removida: false
         },
         {
@@ -530,6 +538,7 @@ window.MUSEO = {
           fecha: "Siglo XVIII",
           descripcion: "Objeto litúrgico en plata fundida, cincelada, repujada y dorada con esmeraldas, amatistas, diamantes y perlas, exhibido junto a la Virgen del Apocalipsis y una espada de honor.",
           reflexion: "Refleja la alianza simbólica entre riqueza material, fe católica y poder en la Colonia, ocultando el trabajo indígena y esclavizado detrás de la extracción de metales y gemas.",
+          imagen: "obras/isla10_obra4.jpg",
           removida: false
         },
         {
@@ -538,6 +547,7 @@ window.MUSEO = {
           fecha: "1782",
           descripcion: "Grabado en cobre impreso sobre papel usado por los misioneros capuchinos bajo encargo del arzobispo Caballero y Góngora para pacificar las regiones sublevadas tras la rebelión de los Comuneros de 1781.",
           reflexion: "Ilustra el uso político de la estampa religiosa como herramienta de persuasión y control social tras una revuelta popular contra los impuestos virreinales.",
+          imagen: "obras/isla10_obra5.jpg",
           removida: false
         }
       ]
