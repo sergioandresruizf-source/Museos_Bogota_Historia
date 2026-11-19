@@ -393,6 +393,7 @@ window.MUSEO = {
           fecha: "1878 (remitidos al museo en 1963)",
           descripcion: "Placas de mármol del pedestal instalado en el Parque Santander de Bogotá, monumento que sufrió ataques a finales del siglo XIX debido a la rivalidad política entre bolivarianos y santanderistas.",
           reflexion: "Un monumento es una postura esculpida en piedra sobre quién merece ser recordado; estas placas demuestran que la memoria patria fue campo de disputa política.",
+          imagen: "obras/isla7_obra2.jpg",
           removida: false
         }
       ]
@@ -417,6 +418,7 @@ window.MUSEO = {
           fecha: "Vaso: ca. 1760 / Olleta: ca. 1770",
           descripcion: "Objetos domésticos de porcelana y cobre martillado con heráldica de marquesados criollos y españoles del Nuevo Reino de Granada, reflejo de la compra de títulos nobiliarios y privilegios a la Corona.",
           reflexion: "Exhibe cómo el prestigio y las jerarquías coloniales —muchas veces compradas— se ostentaban cotidianamente hasta en los utensilios de la mesa.",
+          imagen: "obras/isla8_obra2.jpg",
           removida: false
         },
         {
@@ -425,6 +427,7 @@ window.MUSEO = {
           fecha: "Abanico: ca. 1803 / Zapato: ca. 1790",
           descripcion: "Abanico de marfil tallado y papel pintado que perteneció a la esposa del virrey Antonio Amar y Borbón, junto a un zapato de cuero tinturado cosido a mano, testimonio de las normas suntuarias coloniales.",
           reflexion: "La indumentaria regulada por leyes funcionaba como mecanismo de control social para marcar jerarquías entre las élites importadoras y los sectores populares.",
+          imagen: "obras/isla8_obra3.jpg",
           removida: false
         }
       ]
