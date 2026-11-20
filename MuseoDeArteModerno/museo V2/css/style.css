@@ -33,3 +33,9 @@ body.tactil { user-select:none; -webkit-user-select:none; -webkit-touch-callout:
 body.modal #joy { visibility:hidden; }
 body.tactil #titulo { font-size:13px; } body.tactil #sala { font-size:12px; } body.tactil #pista { bottom:22%; }
 @media (orientation: portrait) { body.tactil #giro { display:block; position:fixed; z-index:6; bottom:170px; width:100%; text-align:center; font-size:13px; opacity:.7; } }
+
+/* mapa (M) más grande: ocupa casi toda la pantalla */
+#mapa-ui { inset:3% 4%; padding:12px 18px; }
+#mapa-ui:not([hidden]) { display:flex; flex-direction:column; align-items:center; }
+#mapa-ui h2 { margin:0 0 6px; }
+#m-canvas { flex:1 1 0; min-height:0; width:100%; object-fit:contain; }

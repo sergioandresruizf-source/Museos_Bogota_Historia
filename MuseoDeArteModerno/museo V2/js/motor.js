@@ -177,7 +177,7 @@
       if (!N.leyenda[ch]) return;
       g.fillStyle = ch === 'E' ? '#e0b84f' : '#6b5a3c'; g.fillRect(ox + x * cs, oy + y * cs, cs, cs);
     }));
-    g.font = '12px sans-serif'; g.textAlign = 'center';
+    g.font = Math.round(cs * .4) + 'px sans-serif'; g.textAlign = 'center';
     P.salas.forEach(s => {
       g.fillStyle = 'rgba(224,184,79,.14)';
       s.r.forEach(([a, b, c2, d]) => g.fillRect(ox + a * cs, oy + b * cs, (c2 - a + 1) * cs, (d - b + 1) * cs));
