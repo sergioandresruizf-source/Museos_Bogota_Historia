@@ -98,7 +98,7 @@ function siguiente(){
   aviso=avance>=N?'¡Llegaste al tesoro! Recorrido completo.':'Fin de la ruta (modo prueba: tu avance no cambió).';
   cerrar();return;
  }
- abrir(j,desdePanel);
+ transicion(act,j,()=>abrir(j,desdePanel));   // animación entre museos (solo ruta lineal)
 }
 /* recorrido libre: terminar el museo otorga su medalla y devuelve a la galería */
 function completar(){
@@ -110,6 +110,68 @@ const hecho=()=>modo==='libre'?completar():siguiente();
 atras.onclick=()=>{if(puedeVolver())cerrar()};
 sig.onclick=hecho;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ov.className&&puedeVolver())cerrar()});
+/* ---------- transición entre museos (SOLO en la ruta lineal) ----------
+   Cuando un museo avisa 'museo-completo', el mapa tapa el visor con una animación, carga el siguiente museo POR DEBAJO
+   y destapa cuando la animación termina y el museo ya cargó. Los museos NO participan: todo ocurre aquí.
+   · El animador solo entrega archivos con este nombre (carpeta Transiciones/ en la raíz del repositorio):
+        Transiciones/<desde>-<hasta>.webm      p. ej.  Transiciones/nacional-oro.webm     (opcional: .mp4 con el mismo nombre)
+   · Si el archivo no existe, se usa la animación por defecto: el mapa del tesoro dibuja el tramo y un barco lo recorre.
+   · TRANSICION.activa=false la desactiva (se vuelve al paso directo de antes). En el recorrido libre nunca se usa. */
+const TRANSICION={activa:true,dir:'../../Transiciones/',ms:3400,maxMs:12000};
+const tr=document.createElement('div');tr.id='mtr';
+tr.innerHTML='<video muted playsinline preload="auto"></video>'
+ +'<svg viewBox="0 0 600 1100" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><path class="tr-r0"/><path class="tr-r"/>'
+ +'<circle class="tr-a" r="16"/><circle class="tr-b" r="16"/><text class="tr-na" text-anchor="middle"></text><text class="tr-nb" text-anchor="middle"></text>'
+ +'<g class="tr-barco"><path d="M-16 4H16L10 14H-10Z" fill="#5a3418"/><path d="M0 4V-22" stroke="#2a190c" stroke-width="2.5"/><path d="M1-20 15-2H1Z" fill="#fff6d6"/><path d="M-1-16-12-2H-1Z" fill="#f2e8c8"/></g></svg>'
+ +'<p class="tr-t"></p><button type="button" class="tr-s">Saltar ▶▶</button>';
+document.body.appendChild(tr);
+const trV=tr.querySelector('video'),trT=tr.querySelector('.tr-t'),trS=tr.querySelector('.tr-s');
+let trEnCurso=null;
+function transicion(i,j,cargar){
+ if(!TRANSICION.activa||rm||j>=N){cargar();return}
+ if(trEnCurso)trEnCurso.cerrar(true);
+ const a=M[i],b=M[j],base=TRANSICION.dir+a.id+'-'+b.id;
+ let animListo=false,cargado=false,fin=false,raf=0;const tms=[];
+ const T=(f,ms)=>{const t=setTimeout(f,ms);tms.push(t);return t};
+ const cerrar=forzar=>{
+  if(fin)return;fin=true;cancelAnimationFrame(raf);tms.forEach(clearTimeout);trV.pause();trV.removeAttribute('src');trEnCurso=null;
+  fr.removeEventListener('load',alCargar);
+  if(forzar){tr.className='';return}
+  tr.classList.remove('on');tr.classList.add('fuera');setTimeout(()=>{if(!trEnCurso)tr.className=''},480);
+ };
+ const revisar=()=>{if(animListo&&cargado)cerrar()};
+ const alCargar=()=>{cargado=true;revisar()};
+ trEnCurso={cerrar};
+ trT.textContent='De '+a.s+' a '+b.s;tr.className='on';
+ trS.onclick=()=>{animListo=true;if(!cargado)T(()=>{cargado=true;revisar()},1500);revisar()};
+ fr.addEventListener('load',alCargar);
+ T(()=>{cargar()},380);                           // el siguiente museo se carga debajo de la animación
+ T(()=>{cargado=true;animListo=true;revisar()},TRANSICION.maxMs);   // seguro: nunca se queda trabada
+ const porDefecto=()=>{                           // animación por defecto: el barco recorre el tramo del mapa del tesoro
+  tr.classList.remove('vid');const svgE=tr.querySelector('svg'),p=tr.querySelector('.tr-r'),p0=tr.querySelector('.tr-r0'),barco=tr.querySelector('.tr-barco');
+  const d=dTramo(i),A=P[i],B=P[i+1]||P[i];p.setAttribute('d',d);p0.setAttribute('d',d);
+  const ca=tr.querySelector('.tr-a'),cb=tr.querySelector('.tr-b');ca.setAttribute('cx',A[0]);ca.setAttribute('cy',A[1]);cb.setAttribute('cx',B[0]);cb.setAttribute('cy',B[1]);
+  ca.style.fill=a.c;cb.style.fill=b.c;
+  const na=tr.querySelector('.tr-na'),nb=tr.querySelector('.tr-nb');na.textContent=a.s;nb.textContent=b.s;na.setAttribute('x',A[0]);na.setAttribute('y',A[1]+40);nb.setAttribute('x',B[0]);nb.setAttribute('y',B[1]+40);
+  const asp=innerHeight/Math.max(1,innerWidth),w=Math.max(400,Math.abs(A[0]-B[0])+330,(Math.abs(A[1]-B[1])+330)/asp),h=w*asp;
+  svgE.setAttribute('viewBox',((A[0]+B[0])/2-w/2)+' '+((A[1]+B[1])/2-h/2)+' '+w+' '+h);
+  const len=p.getTotalLength?p.getTotalLength():0,t0=performance.now(),dur=TRANSICION.ms,ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+  if(!len){T(()=>{animListo=true;revisar()},dur);return}
+  p.style.strokeDasharray=len+' '+len;
+  const paso=ahora=>{
+   if(fin)return;const t=Math.min(1,(ahora-t0)/dur),e=ease(t),q=p.getPointAtLength(len*e);
+   p.style.strokeDashoffset=len*(1-e);barco.setAttribute('transform','translate('+q.x+' '+q.y+')');
+   if(t<1)raf=requestAnimationFrame(paso);else{animListo=true;revisar()}
+  };
+  raf=requestAnimationFrame(paso);
+ };
+ trV.onended=()=>{animListo=true;revisar()};
+ trV.onerror=()=>{if(trV.dataset.mp4!=='1'&&/\.webm$/.test(trV.getAttribute('src')||'')){trV.dataset.mp4='1';trV.src=base+'.mp4';return}porDefecto()};
+ trV.onloadeddata=()=>{tr.classList.add('vid');const pr=trV.play();if(pr&&pr.catch)pr.catch(()=>{tr.classList.remove('vid');porDefecto()})};
+ trV.dataset.mp4='';
+ if(typeof trV.canPlayType!=='function'||!trV.canPlayType('video/webm')){trV.dataset.mp4='1';porDefecto()}   // sin soporte de video → animación por defecto
+ else trV.src=base+'.webm';
+}
 /* un museo puede traer su propio enlace "Volver al mapa" (mapa.html): lo conectamos con el visor, respetando las reglas del modo */
 fr.onload=()=>{try{fr.contentDocument.querySelectorAll('a[href$="mapa.html"]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();if(puedeVolver())cerrar()}))}catch(e){}};
 /* aviso de "museo terminado" enviado por el propio museo:  parent.postMessage({tipo:'museo-completo',museo:'<id>'},'*')

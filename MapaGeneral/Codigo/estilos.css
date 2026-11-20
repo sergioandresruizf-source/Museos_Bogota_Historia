@@ -177,3 +177,21 @@ button{font-family:inherit}
 /* tarjetas de la galería con la misma altura */
 .galeria>li{display:flex}
 .slot{height:100%;align-content:start}
+
+/* ---------- transición entre museos (ruta lineal) ---------- */
+#mtr{position:fixed;inset:0;z-index:10000;display:none;background:radial-gradient(ellipse at 50% 40%,#f3e3b5,#d9c28f 70%,#b99a5e);color:#3b2a14;overflow:hidden}
+#mtr.on,#mtr.fuera{display:block}
+#mtr.on{animation:mvf .35s ease-out}
+#mtr.fuera{animation:trfuera .45s ease-in forwards}
+@keyframes trfuera{to{opacity:0}}
+#mtr video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;display:none}
+#mtr.vid video{display:block}#mtr.vid svg{display:none}
+#mtr svg{position:absolute;inset:0;width:100%;height:100%}
+#mtr .tr-r0{fill:none;stroke:#8a6a3a;stroke-width:5;stroke-dasharray:3 11;stroke-linecap:round;opacity:.55}
+#mtr .tr-r{fill:none;stroke:#b0382a;stroke-width:7;stroke-linecap:round}
+#mtr .tr-a,#mtr .tr-b{stroke:#3b2a14;stroke-width:4}
+#mtr .tr-na,#mtr .tr-nb{font:700 26px "Pirata One","Alegreya Sans",serif;fill:#3b2a14;paint-order:stroke;stroke:#f3e3b5;stroke-width:5px}
+#mtr .tr-t{position:absolute;left:0;right:0;bottom:11%;margin:0;text-align:center;font:400 clamp(1.4rem,5vw,2.4rem) "Pirata One","Alegreya Sans",serif;color:#3b2a14;text-shadow:0 2px 0 #f3e3b5}
+#mtr.vid .tr-t{color:#fff;text-shadow:0 2px 8px #000}
+#mtr .tr-s{position:absolute;right:12px;top:calc(10px + env(safe-area-inset-top,0px));border:0;border-radius:999px;padding:7px 14px;background:#000b;color:#fff;font:700 14px "Alegreya Sans",system-ui,sans-serif;cursor:pointer}
+@media (prefers-reduced-motion:reduce){#mtr.on,#mtr.fuera{animation:none}}
