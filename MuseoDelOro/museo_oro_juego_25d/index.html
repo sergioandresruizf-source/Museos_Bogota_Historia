@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Secreto del Oro · Aventura 2.5D</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/game.css">
+</head>
+<body>
+    <!-- Lienzo Principal del Juego 2.5D -->
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- PANTALLA DE SELECCIÓN DE PERSONAJE (INICIO) -->
+    <div id="screen-select" class="overlay-screen active">
+        <div class="select-container">
+            <div class="badge-titulo">EXPERIENCIA INTERACTIVA 2.5D</div>
+            <h1 class="game-title">El Oro de los Ancestros</h1>
+            <p class="game-subtitle">Elige tu destino y recorre la historia detrás de las piezas sagradas de Colombia</p>
+
+            <div class="role-cards">
+                <!-- Opción 1: Indígena -->
+                <div class="role-card card-indigena" onclick="iniciarJuego('indigena')">
+                    <div class="role-icon">🌞</div>
+                    <h2>Maestro Orfebre Indígena</h2>
+                    <p class="role-tag">Creación · Tradición · Arte Vivo</p>
+                    <ul class="role-features">
+                        <li>🌿 Recorre la aldea ancestral en 2.5D y conversa con tu comunidad.</li>
+                        <li>🔥 Forja piezas de oro en el taller interactivo de cera perdida.</li>
+                        <li>👑 Viste a tu personaje con narigueras, pectorales y coronas de oro.</li>
+                        <li>🏛️ Visita la <strong>Casita Sagrada</strong> y contempla las esculturas expuestas.</li>
+                    </ul>
+                    <button class="btn-role btn-gold">Jugar como Indígena</button>
+                </div>
+
+                <!-- Opción 2: Español -->
+                <div class="role-card card-espanol" onclick="iniciarJuego('espanol')">
+                    <div class="role-icon">⛵</div>
+                    <h2>Expedicionario Español</h2>
+                    <p class="role-tag">Travesía · Ambición · Saqueo</p>
+                    <ul class="role-features">
+                        <li>📜 Conoce brevemente la vida en España y el mito de El Dorado.</li>
+                        <li>🌊 Zarpa con tu tripulación cruzando el océano hacia Colombia.</li>
+                        <li>⚔️ Desembarca en la costa y saquea las esculturas sagradas.</li>
+                        <li>📦 Inspecciona todas las obras robadas en <strong>La Bodega</strong> del galeón.</li>
+                    </ul>
+                    <button class="btn-role btn-crimson">Jugar como Español</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CINEMÁTICA CORTA DEL ESPAÑOL (VIDA Y ZARPE) -->
+    <div id="screen-cinematic" class="overlay-screen">
+        <div class="cinematic-box">
+            <div class="cinematic-step-badge" id="cine-badge">Capítulo I · Sevilla, 1536</div>
+            <h2 id="cine-title">La Fiebre de El Dorado</h2>
+            <div class="cinematic-visual" id="cine-visual"></div>
+            <p id="cine-text">En los puertos de España corrían rumores de reinos donde el oro brillaba como el sol. Movido por la ambición de fortuna y gloria para la Corona, el capitán reúne a su tripulación y prepara las naves rumbo a tierras desconocidas.</p>
+            <div class="cinematic-actions">
+                <button id="btn-cine-next" class="btn-role btn-crimson" onclick="avanzarCinematica()">Zarpar hacia Colombia &rarr;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HUD DEL JUEGO (INTERFAZ EN PARTIDA) -->
+    <div id="game-hud" class="hidden">
+        <!-- Barra Superior -->
+        <div class="hud-top">
+            <div class="hud-profile">
+                <span id="hud-role-icon" class="hud-avatar">🌞</span>
+                <div>
+                    <div id="hud-role-name" class="hud-title">Orfebre Quimbaya</div>
+                    <div id="hud-zone-name" class="hud-subtitle">Aldea Ancestral</div>
+                </div>
+            </div>
+
+            <div class="hud-mission-box">
+                <span class="mission-label">MISIÓN ACTUAL</span>
+                <p id="hud-mission-text">Explora la aldea, habla con los sabios y forja tus obras de oro.</p>
+            </div>
+
+            <div class="hud-buttons">
+                <button id="btn-vestidor" class="hud-btn" onclick="abrirVestidor()" title="Vestir con joyas de oro">
+                    👑 Vestidor de Oro
+                </button>
+                <button id="btn-mapa-rapido" class="hud-btn" onclick="teletransportarZonaEspecial()" title="Ir directo a la exposición">
+                    🏛️ <span id="txt-btn-exposicion">Casita Sagrada</span>
+                </button>
+                <button class="hud-btn hud-btn-secondary" onclick="volverMenuInicio()" title="Cambiar personaje">
+                    🔄 Cambiar Rol
+                </button>
+            </div>
+        </div>
+
+        <!-- Progreso de Obras -->
+        <div class="hud-progress-pill">
+            <span id="hud-progress-icon">✨</span>
+            <span id="hud-progress-text">Obras creadas: 4 / 8</span>
+        </div>
+
+        <!-- Indicador de Interacción Flotante -->
+        <div id="interact-prompt" class="interact-prompt hidden" onclick="ejecutarInteraccion()">
+            <span class="key-badge">E</span>
+            <span id="interact-label">Interactuar</span>
+        </div>
+
+        <!-- Controles en Pantalla (Amigables con ratón/táctil) -->
+        <div class="hud-controls-hint">
+            <span>Moverse: <strong>WASD</strong> / <strong>Flechas</strong> o <strong>Clic en el suelo</strong></span>
+            <span>Acción: <strong>E</strong> / <strong>Espacio</strong></span>
+        </div>
+    </div>
+
+    <!-- DIÁLOGO CON NPCs -->
+    <div id="modal-dialog" class="modal-overlay hidden">
+        <div class="dialog-card">
+            <div class="dialog-header">
+                <span id="dialog-avatar" class="dialog-avatar">🧓</span>
+                <div>
+                    <h3 id="dialog-name">Sabio de la Aldea</h3>
+                    <span id="dialog-role" class="dialog-sub">Guardián de la Tradición</span>
+                </div>
+            </div>
+            <p id="dialog-body" class="dialog-text">Bienvenido al taller del sol. El oro no es riqueza para nosotros, es la energía misma del astro rey.</p>
+            <div class="dialog-footer">
+                <button id="dialog-action-btn" class="btn-role btn-gold hidden">Ir a crear obra</button>
+                <button class="btn-role btn-neutral" onclick="cerrarModal('modal-dialog')">Continuar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MINIJUEGO: CREAR OBRAS DE ORO (FÁCIL E INTERACTIVO) -->
+    <div id="modal-craft" class="modal-overlay hidden">
+        <div class="craft-card">
+            <button class="btn-close-modal" onclick="cerrarModal('modal-craft')">&times;</button>
+            <div class="badge-titulo">TALLER DE ORFEBRERÍA ANCESTRAL</div>
+            <h2>Forja una Escultura Sagrada</h2>
+            <p class="craft-desc">Selecciona una obra para crearla mediante la técnica de la <strong>cera perdida</strong> en 3 sencillos pasos.</p>
+
+            <!-- Selector de pieza a forjar -->
+            <div id="craft-selector" class="craft-grid"></div>
+
+            <!-- Área interactiva de creación -->
+            <div id="craft-workspace" class="craft-workspace hidden">
+                <h3 id="craft-piece-title">Poporo Quimbaya</h3>
+                <div class="craft-steps">
+                    <div id="step-1" class="craft-step active">1. Fundir Oro</div>
+                    <div id="step-2" class="craft-step">2. Verter Molde</div>
+                    <div id="step-3" class="craft-step">3. Pulir Brillo</div>
+                </div>
+
+                <div class="craft-stage" id="craft-stage">
+                    <div id="craft-visual-emoji" class="craft-emoji">🔥</div>
+                    <p id="craft-instruction">Haz clic varias veces en el crisol para fundir el oro y el cobre (tumbaga).</p>
+                    <div class="progress-bar-wrap">
+                        <div id="craft-progress-fill" class="progress-bar-fill" style="width: 0%"></div>
+                    </div>
+                    <button id="btn-craft-action" class="btn-role btn-gold" onclick="avanzarPasoForja()">🔥 Avivar Fuego</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VESTIDOR DEL INDÍGENA (ADORNOS DE ORO) -->
+    <div id="modal-wardrobe" class="modal-overlay hidden">
+        <div class="wardrobe-card">
+            <button class="btn-close-modal" onclick="cerrarModal('modal-wardrobe')">&times;</button>
+            <div class="badge-titulo">ATUENDO CEREMONIAL</div>
+            <h2>Viste al Indígena con Oro</h2>
+            <p>Equipa las joyas sagradas para que tu personaje las luzca mientras camina por el mapa.</p>
+            
+            <div class="wardrobe-layout">
+                <div class="wardrobe-preview">
+                    <canvas id="previewCanvas" width="180" height="220"></canvas>
+                    <span class="preview-caption">Vista en tiempo real</span>
+                </div>
+                <div id="wardrobe-items" class="wardrobe-items"></div>
+            </div>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn-role btn-gold" onclick="cerrarModal('modal-wardrobe')">Listo, volver al mapa</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VISOR DE ESCULTURA (CASITA SAGRADA / LA BODEGA) -->
+    <div id="modal-artifact" class="modal-overlay hidden">
+        <div class="artifact-card">
+            <button class="btn-close-modal" onclick="cerrarModal('modal-artifact')">&times;</button>
+            <div class="artifact-layout">
+                <div class="artifact-img-box">
+                    <img id="art-img" src="" alt="Escultura">
+                    <div id="art-fallback-svg" class="art-fallback hidden"></div>
+                </div>
+                <div class="artifact-details">
+                    <div id="art-context-badge" class="badge-titulo">CASITA SAGRADA · OBRA EXPUESTA</div>
+                    <h2 id="art-title">Poporo Quimbaya</h2>
+                    <div id="art-meta" class="art-meta">Cultura Quimbaya · Período Temprano · Cera perdida</div>
+                    <p id="art-desc" class="art-description">Descripción de la obra...</p>
+                    
+                    <div class="artifact-audio-bar" id="art-audio-container">
+                        <button id="btn-art-audio" class="btn-role btn-gold" onclick="toggleAudioObra()">
+                            🎵 Escuchar Relato de la Obra
+                        </button>
+                        <span id="art-audio-status" class="audio-status"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="bg-audio"></audio>
+
+    <script src="data/obras.js"></script>
+    <script src="js/minigames.js"></script>
+    <script src="js/engine25d.js"></script>
+</body>
+</html>
