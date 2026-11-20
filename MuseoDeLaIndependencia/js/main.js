@@ -15,8 +15,16 @@ const workView = document.getElementById("work-view");
 const backButton = document.getElementById("back-to-map");
 // Elementos del rompecabezas
 const puzzleView = document.getElementById("puzzle-view");
+// Elementos del Quiz
+const quizView = document.getElementById("quiz-view");
+const backToWorkQuizButton = document.getElementById("back-to-work-quiz");
+//Elementos linea del tiempo
+const timelineView = document.getElementById("timeline-view");
+const backToWorkTimelineButton = document.getElementById("back-to-work-timeline");
 const backToWorkButton = document.getElementById("back-to-work");
 const startGameButton = document.getElementById("start-game");
+
+
 
 // Obra actualmente seleccionada
 let currentWork = null;
@@ -203,11 +211,11 @@ map.addEventListener("click", (event) => {
 // ------------------------------------
 
 
+
 startGameButton.addEventListener("click", () => {
 
     if (!currentWork) return;
 
-    // Iniciar la actividad correspondiente
     const started = startActivity(currentWork, () => {
 
         document.dispatchEvent(
@@ -220,13 +228,27 @@ startGameButton.addEventListener("click", () => {
 
     });
 
-    // Si la actividad no está disponible,
-    // conservar la ficha de la obra
     if (!started) return;
 
-    // Mostrar pantalla del rompecabezas
+    // Ocultar ficha de la obra
     workView.hidden = true;
-    puzzleView.hidden = false;
+
+    // Mostrar la actividad correspondiente
+    if (currentWork.activity === "puzzle") {
+
+        puzzleView.hidden = false;
+        quizView.hidden = true;
+
+    } else if (currentWork.activity === "quiz") {
+
+        puzzleView.hidden = true;
+        quizView.hidden = false;
+
+    } else if (currentWork.activity === "timeline") {
+        puzzleView.hidden = true;
+        quizView.hidden = true;
+        timelineView.hidden = false;
+    }
 
     window.scrollTo(0, 0);
 
@@ -244,6 +266,30 @@ backToWorkButton.addEventListener("click", () => {
 
     window.scrollTo(0, 0);
 
+});
+
+// ------------------------------------
+// REGRESAR A LA OBRA DESDE EL QUIZ
+// ------------------------------------
+
+backToWorkQuizButton.addEventListener("click", () => {
+
+    quizView.hidden = true;
+    workView.hidden = false;
+
+    window.scrollTo(0, 0);
+
+});
+
+
+// ------------------------------------
+// REGRESAR A LA OBRA DESDE LA LINEA DE TIEMPO
+// ------------------------------------
+
+backToWorkTimelineButton.addEventListener("click", () => {
+    timelineView.hidden = true;
+    workView.hidden = false;
+    window.scrollTo(0, 0);
 });
 
 // ------------------------------------

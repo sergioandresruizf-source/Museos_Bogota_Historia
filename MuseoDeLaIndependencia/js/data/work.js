@@ -6,7 +6,7 @@ export const works = [
         author: "Roberto Páramo Tirado",
         date: "1890",
         type: "Pintura",
-        activity: "puzzle",
+        activity: "quiz",
         collection: "Museo de la Independencia Casa del Florero",
 
         description:
@@ -14,7 +14,8 @@ export const works = [
 
         image: "./assets/artworks/policarpa-salavarrieta.jpg",
         music: "./assets/sounds/Soy_Colombiano_Garzon.mp3",
-        coins: null
+        coins: null,
+        quizKey: "policarpa",
     },
 
     {
@@ -23,7 +24,7 @@ export const works = [
         author: "Martínez Hermanos",
         date: "No precisada (registro: 1800)",
         type: "Litografía",
-        activity: "puzzle",
+        activity: "timeline",
         collection: "Museo de la Independencia Casa del Florero",
 
         description:
@@ -33,7 +34,8 @@ export const works = [
 
         image: "./assets/artworks/entrada-ejercito.jpg",
         music: "./assets/sounds/Beethoven_Heroica.mp3",
-        coins: null
+        coins: null,
+        timelineKey: "entradaEjercito"
     },
 
     {

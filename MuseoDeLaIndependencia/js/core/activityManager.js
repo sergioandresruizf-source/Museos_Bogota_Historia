@@ -1,6 +1,10 @@
 
 import { getActivity, validateActivity } from "../data/activities.js";
 import { initializePuzzle } from "../games/puzzle.js";
+import { initializeQuiz } from "../games/quiz.js";
+import { quizQuestions } from "../data/quizQuestions.js";
+import { initializeTimeline } from "../games/timeline.js";
+import { timelineEvents } from "../data/timelineEvents.js";
 
 // ------------------------------------
 // INICIAR ACTIVIDADES
@@ -15,7 +19,6 @@ export function startActivity(work, onComplete) {
 
     const activityId = work.activity;
 
-    // Comprobar que la actividad existe
     if (!validateActivity(activityId)) {
         console.warn(
             `La actividad "${activityId}" no está registrada.`
@@ -34,6 +37,35 @@ export function startActivity(work, onComplete) {
         initializePuzzle(work.image, onComplete);
 
         return true;
+    }
+
+    // ------------------------------------
+    // QUIZ
+    // ------------------------------------
+
+    if (activityId === "quiz") {
+
+        const questions = quizQuestions[work.quizKey];
+
+        if (!questions) {
+            console.warn(
+                `No hay preguntas registradas para ${work.title}.`
+            );
+            return false;
+        }
+
+        return initializeQuiz(questions, onComplete);
+    }
+
+        if (activityId === "timeline") {
+        const events = timelineEvents[work.timelineKey];
+
+        if (!events) {
+            console.warn(`No hay acontecimientos registrados para ${work.title}.`);
+            return false;
+        }
+
+        return initializeTimeline(events, onComplete);
     }
 
     // ------------------------------------
