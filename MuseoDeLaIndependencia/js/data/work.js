@@ -6,6 +6,7 @@ export const works = [
         author: "Roberto Páramo Tirado",
         date: "1890",
         type: "Pintura",
+        activity: "puzzle",
         collection: "Museo de la Independencia Casa del Florero",
 
         description:
@@ -22,6 +23,7 @@ export const works = [
         author: "Martínez Hermanos",
         date: "No precisada (registro: 1800)",
         type: "Litografía",
+        activity: "puzzle",
         collection: "Museo de la Independencia Casa del Florero",
 
         description:
@@ -40,6 +42,7 @@ export const works = [
         author: "José María Espinosa (atribuido)",
         date: "1850",
         type: "Pintura al óleo",
+        activity: "puzzle",
         collection: "Museo de la Independencia Casa del Florero",
 
         description:

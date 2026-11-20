@@ -464,6 +464,7 @@ footer {
 }
 
 
+
 /* ------------------------------------
    FICHAS DE LAS OBRAS
 ------------------------------------ */
@@ -641,5 +642,171 @@ footer {
 
     #work-description {
         text-align: left;
+    }
+}
+
+/* ------------------------------------
+   CELEBRACIÓN DE OBRA COMPLETADA
+------------------------------------ */
+
+.celebration-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+    overflow: hidden;
+
+    background: rgba(48, 37, 29, 0.88);
+    backdrop-filter: blur(6px);
+}
+
+.celebration-overlay[hidden] {
+    display: none;
+}
+
+.celebration-content {
+    position: relative;
+    z-index: 2;
+
+    width: min(100%, 480px);
+    padding: 45px 30px;
+
+    text-align: center;
+
+    background: #f5ecdc;
+    border: 2px solid #d6b77e;
+    border-radius: 8px;
+
+    animation: celebrationAppear 0.6s ease both;
+}
+
+.celebration-subtitle {
+    color: #bd6247;
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    font-weight: bold;
+}
+
+.celebration-content h1 {
+    color: #493b30;
+    font-family: Georgia, serif;
+    font-size: clamp(2rem, 6vw, 3rem);
+    margin: 15px 0;
+}
+
+.celebration-description {
+    color: #796b5b;
+    line-height: 1.6;
+}
+
+.celebration-reward {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    margin: 30px 0;
+
+    color: #9c7130;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.celebration-coin {
+    font-size: 2.5rem;
+    animation: coinShine 1.5s infinite alternate;
+}
+
+#celebration-continue {
+    padding: 14px 30px;
+
+    color: #fffaf0;
+    background: #bd6247;
+    border: none;
+    border-radius: 3px;
+
+    font-size: 1rem;
+    cursor: pointer;
+
+    transition: background 0.2s, transform 0.2s;
+}
+
+#celebration-continue:hover {
+    background: #9e4934;
+    transform: translateY(-2px);
+}
+
+/* PARTICULAS */
+
+.celebration-particles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.celebration-particle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    color: #f3cb72;
+    font-size: var(--size);
+
+    animation: starExplosion var(--duration) ease-out forwards;
+}
+
+/* ANIMACIONES */
+
+@keyframes celebrationAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.75);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes coinShine {
+    from {
+        transform: rotate(-12deg) scale(0.9);
+    }
+    to {
+        transform: rotate(12deg) scale(1.15);
+    }
+}
+
+@keyframes starExplosion {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0);
+    }
+    70% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform:
+            translate(
+                calc(-50% + var(--x)),
+                calc(-50% + var(--y))
+            )
+            rotate(240deg)
+            scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .celebration-content,
+    .celebration-coin,
+    .celebration-particle {
+        animation-duration: 0.01ms !important;
     }
 }

@@ -1,7 +1,11 @@
 
 import { initializeMap } from "./map/map.js";
 import { works } from "./data/work.js";
-import { initializePuzzle } from "./games/puzzle.js";
+import { startActivity } from "./core/activityManager.js";
+import {
+    showCelebration,
+    hideCelebration
+} from "./core/celebration.js";
 
 console.log("Museo interactivo iniciado");
 
@@ -80,9 +84,11 @@ function completeWork(workId) {
     const selectedWork = works.find(work => work.id === workId);
 
     if (!selectedWork) {
-        console.warn("La obra no existe.");
+        console.warn("Esta obra todavía no está disponible.");
         return;
     }
+
+    currentWork = selectedWork;
 
     // Evitar recompensas repetidas
     if (completedWorks.includes(workId)) {
@@ -92,6 +98,9 @@ function completeWork(workId) {
 
     // Registrar obra completada
     completedWorks.push(workId);
+
+    // Mostrar celebración por primera finalización
+    showCelebration();
 
     // Entregar recompensa
     coins += 100;
@@ -193,18 +202,13 @@ map.addEventListener("click", (event) => {
 // INICIAR ROMPECABEZAS
 // ------------------------------------
 
+
 startGameButton.addEventListener("click", () => {
 
     if (!currentWork) return;
 
-    // Ocultar ficha de la obra
-    workView.hidden = true;
-
-    // Mostrar rompecabezas
-    puzzleView.hidden = false;
-
-    // Iniciar actividad
-    initializePuzzle(currentWork.image, () => {
+    // Iniciar la actividad correspondiente
+    const started = startActivity(currentWork, () => {
 
         document.dispatchEvent(
             new CustomEvent("workCompleted", {
@@ -216,9 +220,18 @@ startGameButton.addEventListener("click", () => {
 
     });
 
+    // Si la actividad no está disponible,
+    // conservar la ficha de la obra
+    if (!started) return;
+
+    // Mostrar pantalla del rompecabezas
+    workView.hidden = true;
+    puzzleView.hidden = false;
+
     window.scrollTo(0, 0);
 
 });
+
 
 // ------------------------------------
 // REGRESAR A LA OBRA
@@ -247,4 +260,20 @@ backButton.addEventListener("click", () => {
     map.hidden = false;
 
     window.scrollTo(0, 0);
+});
+
+// ------------------------------------
+// CERRAR CELEBRACIÓN
+// ------------------------------------
+
+const celebrationContinue = document.getElementById(
+    "celebration-continue"
+);
+
+celebrationContinue.addEventListener("click", () => {
+
+    hideCelebration();
+
+    window.scrollTo(0, 0);
+
 });
