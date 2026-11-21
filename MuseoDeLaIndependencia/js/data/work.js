@@ -6,6 +6,7 @@ export const works = [
         author: "Roberto Páramo Tirado",
         date: "1890",
         type: "Pintura",
+        activity: "quiz",
         collection: "Museo de la Independencia Casa del Florero",
 
         description:
@@ -13,7 +14,8 @@ export const works = [
 
         image: "./assets/artworks/policarpa-salavarrieta.jpg",
         music: "./assets/sounds/Soy_Colombiano_Garzon.mp3",
-        coins: null
+        coins: null,
+        quizKey: "policarpa",
     },
 
     {
@@ -22,6 +24,7 @@ export const works = [
         author: "Martínez Hermanos",
         date: "No precisada (registro: 1800)",
         type: "Litografía",
+        activity: "timeline",
         collection: "Museo de la Independencia Casa del Florero",
 
         description:
@@ -31,7 +34,8 @@ export const works = [
 
         image: "./assets/artworks/entrada-ejercito.jpg",
         music: "./assets/sounds/Beethoven_Heroica.mp3",
-        coins: null
+        coins: null,
+        timelineKey: "entradaEjercito"
     },
 
     {
@@ -40,6 +44,7 @@ export const works = [
         author: "José María Espinosa (atribuido)",
         date: "1850",
         type: "Pintura al óleo",
+        activity: "puzzle",
         collection: "Museo de la Independencia Casa del Florero",
 
         description:
@@ -50,3 +55,69 @@ export const works = [
         coins: null
     }
 ];
+
+
+const additionalArtworkFiles = [
+    "Acta de la Revolución del 20 de julio de 1810 .jpeg",
+    "Antonio Morales Galvis.jpeg",
+    "Antonio Narinio.jpeg",
+    "Baile de campesinos.png",
+    "Base del florero del 20 de julio de 1810.png",
+    "Batalla de Calibo.png",
+    "Batalla del Alto Palacio.png",
+    "Billete de manumisión. Segunda clase .jpeg",
+    "Boqueron del rio San Francisco.png",
+    "CArmen Rodriguez de Gaitán.jpeg",
+    "Calle de la Moneda.png",
+    "Capilla del Humilladero.png",
+    "Casa museo del 20 de julio.png",
+    "Documento conmemorativo de la capitulación de Cartagena .jpeg",
+    "El Humilladero, La Veracruz y San Francisco.png",
+    "Escena de la ejecucion de Antonia Santos.png",
+    "Firma del Acta de Independencia.png",
+    "Fotografia del frente de la Casa del Florero.png",
+    "Francisco Jose de Caldas.jpeg",
+    "Guillermo Hernndez de Alba.png",
+    "Himno Nacional de la República de Colombia. Partitura manuscrita .jpeg",
+    "Jorge Tadeo Lozano.jpeg",
+    "Jose Celestino Mutis.jpeg",
+    "Josefa Santander de Bricenio.png",
+    "Juramento del acta.jpeg",
+    "La India de la Libertad.png",
+    "La plaza del desaparecido pueblo de Guatavita.png",
+    "Madre y hermanas de Jose Maria Cordoba.jpeg",
+    "Manuela Saienz.png",
+    "Muerte de Santander.png",
+    "Nariño dirigiendo la impresión de los Derechos del Hombre .jpeg",
+    "Plaza Mayor de Bogota.png",
+    "Plomo sobre carbon (Palacio de justicia).jpeg",
+    "Retrato Francisco Jose de Caldas.jpeg",
+    "Reyerta de aguadores .jpeg",
+    "Reyerta del 20 de julio de 1810.png",
+    "Salida de Policarpa Salavarrieta hacia el pat├¡bulo.png",
+    "Salida del virrey Amar y su esposa del palacio.png",
+    "San Jose.jpeg",
+    "Santa Librada.jpeg",
+    "Simon Bolivar y Santander.jpeg",
+    "Simon Bolivar.jpeg",
+    "Sixta Pontin de Santander.png",
+    "Tipos de muchachos del pueblo.png",
+    "Triptico de Nuestra Seniora de las Angustias.png",
+    "Virgen de la Inmaculada Concepcion.png"
+];
+
+const additionalWorks = additionalArtworkFiles.map((filename, index) => ({
+    id: index + 4,
+    title: filename.replace(/\.[^/.]+$/, "").trim(),
+    author: "No identificado",
+    date: "No precisada",
+    type: "Obra de la colección",
+    activity: "puzzle",
+    collection: "Museo de la Independencia Casa del Florero",
+    description: "Información histórica pendiente de completar.",
+    image: `./assets/artworks/${filename}`,
+    music: null,
+    coins: null
+}));
+
+works.push(...additionalWorks);
