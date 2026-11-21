@@ -218,6 +218,27 @@ function enfocar(){
 }
 
 /* ---------- dibujo ---------- */
+/* estilos del terreno detallado: van aquí para que el mapa se vea bien aunque estilos.css sea una versión anterior */
+{const st=document.createElement('style');st.textContent=`/* ---------- terreno más detallado ---------- */
+.rio-b{fill:none;stroke:#4f7468;stroke-linecap:round;stroke-linejoin:round;opacity:.55}
+.rio{fill:none;stroke:#86b3b3;stroke-linecap:round;stroke-linejoin:round}
+.rio-l{fill:none;stroke:#d6efe9;stroke-linecap:round;opacity:.6;stroke-dasharray:14 22;animation:flujo 5s linear infinite}
+@keyframes flujo{to{stroke-dashoffset:-72}}
+.mar-b{fill:#4f7468;opacity:.6}.mar{fill:#7fb0b6}
+.gh{fill:#6b3a18;stroke:var(--tinta);stroke-width:1.6;stroke-linejoin:round}.gv{fill:#fbf1d6;stroke:var(--tinta);stroke-width:1.2;stroke-linejoin:round}
+.mt{fill:#d3bd86;stroke:var(--tinta);stroke-width:2;stroke-linejoin:round}
+.mt2{fill:#9c8350;opacity:.75}.mt3{fill:#b59b60;opacity:.55}
+.nv{fill:#fbf3dc;stroke:var(--tinta);stroke-width:1.2;stroke-linejoin:round}
+.nivel{fill:none;stroke:#8a6a3a;stroke-width:1;opacity:.28;stroke-dasharray:5 4}
+.cq{fill:#6a8a3f;stroke:#3a4a20;stroke-width:1.6}.cr{fill:#86a24f;stroke:#46582a;stroke-width:1.6}
+.cl2{fill:#b2cb78;opacity:.55}.cs2{fill:#3f5a28;opacity:.35}
+.pn{fill:#4f7a3a;stroke:#2f4a22;stroke-width:1.5;stroke-linejoin:round}.pn2{fill:#38592a;opacity:.55}
+.pa path{fill:none;stroke:#5d8a3a;stroke-width:3.2;stroke-linecap:round}
+.hb{fill:none;stroke:#667d34;stroke-width:1.3;stroke-linecap:round;opacity:.6}
+.ca{fill:none;stroke:#5f7a3c;stroke-width:1.3;stroke-linecap:round;opacity:.75}
+.pu{fill:#a47a45;stroke:#4a3418;stroke-width:1.6}.pu-s{fill:#2a1a0a;opacity:.3}.pu-t{fill:none;stroke:#6b4a26;stroke-width:1.2}.pu-b{fill:none;stroke:#4a3418;stroke-width:2.6;stroke-linecap:round}
+.roca{stroke-width:3}
+`;document.head.appendChild(st)}
 /* gradientes compartidos por las ilustraciones (mapa y medallas) */
 {const g=document.createElement('div');g.innerHTML='<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>'
  +'<linearGradient id="g-cielo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fc6e6"/><stop offset="1" stop-color="#f7ebc6"/></linearGradient>'
