@@ -265,6 +265,7 @@ window.MUSEO = {
           fecha: "200–1600 d. C.",
           descripcion: "Recipientes cerámicos ricamente decorados, incluyendo alcarrazas de doble vertedera y asa de estribo destinados a contener bebidas fermentadas especiales en ceremonias.",
           reflexion: "La forma y el acabado de cada vasija revelan la importancia social y ritual otorgada a la hospitalidad y las celebraciones colectivas.",
+          imagen: "obras/isla5_obra2.jpg",
           removida: false
         },
         {
@@ -273,6 +274,7 @@ window.MUSEO = {
           fecha: "650–1600 d. C.",
           descripcion: "Vasija funeraria de cerámica donde se depositaban los restos óseos exhumados en una segunda ceremonia de la muerte, simbolizando el útero materno y la morada de los ancestros.",
           reflexion: "Para estas sociedades la muerte no era un final definitivo sino un regreso al origen, preservando la memoria colectiva de la familia.",
+          imagen: "obras/isla5_obra3.jpg",
           removida: false
         }
       ]
@@ -359,7 +361,7 @@ window.MUSEO = {
           registro: "Registro 5798",
           descripcion: "Aguafuerte (70 × 99,5 cm) de atmósfera oscura y manchas de tinta vinculado a experiencias homoeróticas y de diversidad sexual en espacios clandestinos. Retirado el 15 de octubre de 2026.",
           reflexion: "Las sombras sugieren los espacios ocultos a los que fue relegada la disidencia sexual cuando no tenía cabida en la esfera pública.",
-          imagen: "obras/isla6_obra7.png",
+          imagen: "obras/isla6_obra7.jpg",
           removida: true
         },
         {
@@ -369,7 +371,7 @@ window.MUSEO = {
           registro: "Registro 8169",
           descripcion: "Par de zapatos de colores elaborados a medida en cuero sintético y PVC cosidos a máquina (9 × 10 × 28 cm) en trabajo colaborativo con la Red Comunitaria Trans. Retirado el 15 de octubre de 2026.",
           reflexion: "El diseño hecho a la medida para cuerpos históricamente excluidos por el mercado se convierte en un acto de dignidad y reconocimiento social.",
-          imagen: "obras/isla6_obra8.png",
+          imagen: "obras/isla6_obra8.jpg",
           removida: true
         }
       ]
@@ -409,7 +411,7 @@ window.MUSEO = {
           registro: "Registro 8166",
           descripcion: "Textil intervenido con la palabra 'MINERÍA' en letras amarillas sobre los colores de la bandera de Colombia, cuestionando el modelo extractivo sobre el territorio. Retirado el 15 de octubre de 2026 y restituido tras orden judicial.",
           reflexion: "Superpone la actividad extractiva al símbolo patrio para preguntar quién se beneficia realmente de los recursos naturales del país.",
-          imagen: "obras/isla8_obra1.jpg",
+          imagen: "obras/isla8_obra1.png",
           removida: true
         },
         {
