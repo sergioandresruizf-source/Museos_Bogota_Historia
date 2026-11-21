@@ -19,7 +19,7 @@ const M=[
 {id:'botero',n:'Museo Botero',s:'Museo Botero',x:138,y:560,a:'Calle 11 #4-41',c:'#d9693f',t:'Capítulo 5 · Un arte propio que muestra la realidad del país.'},
 {id:'mambo',n:'Museo de Arte Moderno de Bogotá',s:'MAMBO',x:455,y:675,a:'Calle 24 #6-00',c:'#e0838f',t:'Capítulo 6 · Nuevas formas de hacer arte y de mirarlo.'},
 {id:'antimuseo',n:'Antimuseo',s:'Antimuseo',x:140,y:790,a:'Ubicación por definir',c:'#b36bff',t:'Capítulo 7 · La revolución contra el museo tradicional.'},
-{id:'minecraft',n:'Museo Minecraft',s:'Museo Minecraft',x:450,y:905,a:'Museo en Minecraft',c:'#8fbf7a',t:'Capítulo 8 · La historia digitalizada y convertida en juego.'},
+{id:'minecraft',n:'Museo sin censura',s:'Museo sin censura',x:450,y:905,a:'Museo en Minecraft',c:'#8fbf7a',t:'Capítulo 8 · La historia digitalizada y convertida en juego.'},
 ];
 
 const L={nacional:'../../MuseoNacional/juego/index.html',
