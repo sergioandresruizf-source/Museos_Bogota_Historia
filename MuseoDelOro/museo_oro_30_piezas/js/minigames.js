@@ -81,6 +81,58 @@ const OroDraw = (() => {
             c.strokeStyle = 'rgba(80,50,6,0.7)'; c.lineWidth = 1;
             for (let i = -3; i <= 3; i++) { c.beginPath(); c.moveTo(i * 5, -6); c.lineTo(i * 5, -1); c.stroke(); }
         },
+        nariguera(c) {
+            rel(c, () => { c.moveTo(-22, -4); c.quadraticCurveTo(0, 22, 22, -4); c.quadraticCurveTo(0, 7, -22, -4); c.closePath(); }, -22, -4, 44, 22);
+            for (let i = -3; i <= 3; i++) rel(c, () => c.rect(i * 5 - 1.5, 8 - Math.abs(i), 3, 9), i * 5 - 2, 8, 4, 9);
+            brillo(c, -8, 2, 2.5);
+        },
+        ave(c) {
+            const e = E(c);
+            rel(c, () => { c.moveTo(-22, -6); c.lineTo(22, -6); c.lineTo(14, 4); c.lineTo(-14, 4); c.closePath(); }, -22, -6, 44, 10);
+            rel(c, () => { c.moveTo(-8, 4); c.lineTo(8, 4); c.lineTo(14, 20); c.lineTo(-14, 20); c.closePath(); }, -14, 4, 28, 16);
+            [-8, 0, 8].forEach(x => rel(c, () => e(x, -12, 3.5, 5), x - 4, -17, 8, 10));
+            brillo(c, -5, 11, 2.5);
+        },
+        ceramica(c) {
+            const e = E(c);
+            rel(c, () => e(0, 6, 13, 15), -13, -9, 26, 30);
+            rel(c, () => c.rect(-9, -18, 18, 13), -9, -18, 18, 13);
+            c.fillStyle = '#4A2E08'; c.fillRect(-5, -13, 3, 2); c.fillRect(2, -13, 3, 2); c.fillRect(-4, -9, 8, 2);
+            brillo(c, -5, 4, 2.8);
+        },
+        collar(c) {
+            c.strokeStyle = grad(c, -20, -20, 40, 40); c.lineWidth = 4.5;
+            c.beginPath(); c.arc(0, -2, 16, 0.25 * Math.PI, 0.75 * Math.PI); c.stroke();
+            const e = E(c);
+            rel(c, () => e(0, 15, 7, 7), -7, 8, 14, 14);
+            brillo(c, -2, 13, 2);
+        },
+        diadema(c) {
+            rel(c, () => c.rect(-20, 4, 40, 8), -20, 4, 40, 8);
+            for (let i = -3; i <= 3; i++) rel(c, () => c.rect(i * 5.5 - 1.8, -16 + Math.abs(i) * 2, 3.6, 20 - Math.abs(i) * 2), i * 5.5 - 2, -16, 4, 20);
+            brillo(c, -10, 7, 2.5);
+        },
+        murcielago(c) {
+            const e = E(c);
+            rel(c, () => { c.moveTo(-24, -4); c.quadraticCurveTo(-10, -14, 0, -6); c.quadraticCurveTo(10, -14, 24, -4); c.quadraticCurveTo(12, 12, 0, 8); c.quadraticCurveTo(-12, 12, -24, -4); c.closePath(); }, -24, -14, 48, 24);
+            rel(c, () => e(0, -5, 4.5, 5.5), -5, -11, 10, 11);
+            brillo(c, -12, -2, 2.2);
+        },
+        baston(c) {
+            const e = E(c);
+            rel(c, () => c.rect(-3, -6, 6, 28), -3, -6, 6, 28);
+            rel(c, () => e(0, -12, 8, 8), -8, -20, 16, 16);
+            rel(c, () => c.rect(-11, -22, 22, 4), -11, -22, 22, 4);
+            brillo(c, -3, -14, 2.2);
+        },
+        disco(c) {
+            const e = E(c);
+            rel(c, () => e(0, 0, 18, 18), -18, -18, 36, 36);
+            c.strokeStyle = 'rgba(80,50,6,0.75)'; c.lineWidth = 1.5;
+            c.beginPath(); c.arc(0, 0, 11, 0, 6.3); c.stroke();
+            c.beginPath(); c.arc(0, 0, 4, 0, 6.3); c.stroke();
+            brillo(c, -7, -7, 3);
+        },
         tairona(c) {
             c.strokeStyle = grad(c, -20, -22, 40, 40); c.lineWidth = 2; c.lineCap = 'round';
             for (let i = -5; i <= 5; i++) { c.beginPath(); c.moveTo(i * 3.4, -4); c.lineTo(i * 5.2, -22 + Math.abs(i) * 1.4); c.stroke(); }
@@ -506,11 +558,13 @@ function abrirVisorObra(obra, contextoTexto) {
         imgEl.src = 'assets/img/' + obra.imagenesPosibles[idx++];
     };
     imgEl.onerror = probar; probar();
-    const a = document.getElementById('bg-audio'); a.pause();
+    const a = document.getElementById('bg-audio'); a.pause(); a.currentTime = 0;
     audioObraActual = obra.audioPosibles || [];
     document.getElementById('btn-art-audio').textContent = '🎵 Escuchar Relato de la Obra';
     document.getElementById('art-audio-status').textContent = '';
     document.getElementById('modal-artifact').classList.remove('hidden');
+    // Reproducción automática al abrir la ficha
+    toggleAudioObra();
 }
 function toggleAudioObra() {
     const a = document.getElementById('bg-audio'), st = document.getElementById('art-audio-status'), bt = document.getElementById('btn-art-audio');
@@ -526,7 +580,12 @@ function toggleAudioObra() {
 }
 function cerrarModal(id) {
     document.getElementById(id).classList.add('hidden');
-    if (id === 'modal-artifact') { document.getElementById('bg-audio').pause(); Sfx.duck(false); }
+    if (id === 'modal-artifact') {
+        const a = document.getElementById('bg-audio');
+        a.pause();
+        a.currentTime = 0;
+        Sfx.duck(false);
+    }
 }
 window.abrirVisorObra = abrirVisorObra; window.toggleAudioObra = toggleAudioObra; window.cerrarModal = cerrarModal;
 

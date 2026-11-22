@@ -13,18 +13,18 @@ const Engine25D = (() => {
     resize(); window.addEventListener('resize', resize);
 
     /* ---------- Geometría del mundo ---------- */
-    const CASITA = { x: 120, y: -250, w: 500, h: 306 };            // piso interior
-    const PUERTA = { x1: 330, x2: 410 };                           // hueco en el muro sur
+    const CASITA = { x: 100, y: -390, w: 940, h: 446 };            // piso interior ampliado para 30 obras
+    const PUERTA = { x1: 530, x2: 610 };                           // hueco en el muro sur
     const TALLER = { x: -420, y: -230, w: 230, h: 160 };           // huella del taller
     const MURO_Y = 56;
     const MUROS = [
-        { x: 108, y: -262, w: 524, h: 12 }, { x: 108, y: -262, w: 12, h: 332 }, { x: 620, y: -262, w: 12, h: 332 },
-        { x: 108, y: MURO_Y, w: PUERTA.x1 - 108, h: 14 }, { x: PUERTA.x2, y: MURO_Y, w: 632 - PUERTA.x2, h: 14 },
+        { x: 88, y: -402, w: 964, h: 12 }, { x: 88, y: -402, w: 12, h: 472 }, { x: 1040, y: -402, w: 12, h: 472 },
+        { x: 88, y: MURO_Y, w: PUERTA.x1 - 88, h: 14 }, { x: PUERTA.x2, y: MURO_Y, w: 1052 - PUERTA.x2, h: 14 },
         { x: TALLER.x, y: TALLER.y, w: TALLER.w, h: TALLER.h }
     ];
     const PIER = { x: -520, y: 236, w: 90, h: 84 };
     const AGUA_Y = 246;
-    const ARBOLES = [{ x: -560, y: -190 }, { x: -600, y: 60 }, { x: 700, y: -190 }, { x: 690, y: 120 }, { x: 20, y: -250 }, { x: 70, y: 200 }, { x: -130, y: 130 }, { x: 560, y: 190 }, { x: -700, y: -60 }];
+    const ARBOLES = [{ x: -560, y: -190 }, { x: -600, y: 60 }, { x: 1120, y: -220 }, { x: 1110, y: 120 }, { x: 20, y: -250 }, { x: 70, y: 200 }, { x: -130, y: 130 }, { x: 860, y: 190 }, { x: -700, y: -60 }];
     const ROCAS = [{ x: 250, y: 150, r: 14 }, { x: -30, y: 20, r: 12 }, { x: 460, y: 110, r: 16 }];
     const SPAWN = { indigena: { x: 20, y: 130 }, espanol: { x: -470, y: 215 } };
 
@@ -48,7 +48,7 @@ const Engine25D = (() => {
     /* ---------- Cinemática del español ---------- */
     const cinematicsEspanol = [
         { badge: 'Capítulo I · Puerto de Sevilla, 1536', title: 'La Ambición por El Dorado', visual: '🏰 📜 💰 ⚔️', text: 'En España se hablaba sin cesar de tierras al otro lado del mar donde un cacique se cubría de polvo de oro. Tú, capitán, obtienes permiso para cruzar el Atlántico. Pero en tierra firme tendrás que decidir qué haces con lo que encuentres: ¿conversar o saquear?', btn: 'Embarcar en el Galeón →' },
-        { badge: 'Capítulo II · Costa de Colombia', title: 'Frente a la Casita Sagrada', visual: '⛵ 🌊 🧭 🌴', text: 'El galeón echa anclas junto a una aldea. En la Casita Sagrada brillan ocho obras de oro bajo la vigilancia de los guardianes. Cada obra te ofrecerá dos caminos: INTERACTUAR con ella o ROBARLA. Lo que elijas cambiará el final.', btn: 'Desembarcar →' }
+        { badge: 'Capítulo II · Costa de Colombia', title: 'Frente a la Casita Sagrada', visual: '⛵ 🌊 🧭 🌴', text: 'El galeón echa anclas junto a una aldea. En la Casita Sagrada brillan treinta obras de oro bajo la vigilancia de los guardianes. Cada obra te ofrecerá dos caminos: INTERACTUAR con ella o ROBARLA. Lo que elijas cambiará el final.', btn: 'Desembarcar →' }
     ];
 
     window.iniciarJuego = r => {
@@ -87,8 +87,13 @@ const Engine25D = (() => {
         Object.assign(S, { respeto: 0, sabiduria: 0, botin: 0, danos: 0, capturas: 0, alerta: 0 });
         window.OBRAS_MUSEO.forEach(o => { delete o._r; const r = rec(o); r.creada = role === 'espanol' ? true : !!o.creadaInicialmente; });
         textos = []; particulas = []; construirPatrones();
-        torchas = [{ x: 150, y: -246 }, { x: 590, y: -246 }, { x: 322, y: 64 }, { x: 418, y: 64 }, { x: -380, y: -64 }, { x: -230, y: -64 }];
-        pedestals = window.OBRAS_MUSEO.map((o, i) => ({ obra: o, x: 195 + (i % 4) * 115, y: i < 4 ? -170 : -60 }));
+        torchas = [{ x: 140, y: -384 }, { x: 570, y: -384 }, { x: 1000, y: -384 }, { x: 522, y: 64 }, { x: 618, y: 64 }, { x: -380, y: -64 }, { x: -230, y: -64 }];
+        const filasY = [-300, -180, -60];
+        pedestals = window.OBRAS_MUSEO.map((o, i) => ({
+            obra: o,
+            x: 155 + (i % 10) * 92,
+            y: filasY[Math.floor(i / 10)] || -60
+        }));
 
         if (role === 'indigena') {
             document.getElementById('hud-role-icon').textContent = '🌞'; document.getElementById('hud-role-name').textContent = 'Orfebre Guardián';
@@ -97,7 +102,7 @@ const Engine25D = (() => {
             npcs = [
                 { id: 'sabio', name: 'Abuelo Sabio', rol: 'Guía Espiritual', x: -60, y: 70, tipo: 'sabio', dialog: 'Las obras no son adornos: guardan la memoria del sol, el agua y la transformación. En la Casita puedes PULIR, RECONSTRUIR o DESCIFRAR cada una. Las que aún no existen se forjan en el Taller, a la izquierda.', accion: 'Ir al Taller', fn: () => teleport(-305, -30) },
                 { id: 'tejedora', name: 'Wayra', rol: 'Guardiana de los Atuendos', x: -250, y: 170, tipo: 'tejedora', dialog: 'El oro ilumina el espíritu de quien lo porta. Puedes vestirte con nuestras narigueras, diademas y pectorales sagrados cuando quieras.', accion: 'Abrir Vestidor de Oro', fn: () => { cerrarModal('modal-dialog'); abrirVestidor(); } },
-                { id: 'guardian', name: 'Bochica', rol: 'Custodio de la Casita', x: 300, y: 112, tipo: 'guardian', dialog: 'Dentro reposan nuestras obras. Si falta alguna, hay un hueco en su pedestal: es una obra que aún debe nacer en la fragua. Cuando todas estén vivas, la Casita brillará entera.' }
+                { id: 'guardian', name: 'Bochica', rol: 'Custodio de la Casita', x: 495, y: 112, tipo: 'guardian', dialog: 'Dentro reposan nuestras treinta obras sagradas. Si falta alguna, hay un hueco en su pedestal: es una obra que aún debe nacer en la fragua. Cuando todas estén vivas, la Casita brillará entera.' }
             ];
             guardias = []; galeon = null;
         } else {
@@ -106,23 +111,24 @@ const Engine25D = (() => {
             document.getElementById('btn-vestidor').classList.add('hidden'); document.getElementById('txt-btn-exposicion').textContent = 'Ir a la Casita';
             npcs = [
                 { id: 'marinero', name: 'Contramaestre Rodrigo', rol: 'Tripulación Española', x: -420, y: 190, tipo: 'marinero', dialog: '¡Capitán! Los guardianes patrullan: dentro y fuera de la Casita. Si te ven, la sospecha sube; si se llena, te atrapan y pierdes lo que lleves. Robar en SILENCIO es lento; la GANZÚA hace ruido; la FUERZA es rápida pero destroza la pieza. También podéis hablar con ellos…', accion: null },
-                { id: 'cacique', name: 'Cacique Anciano', rol: 'Autoridad de la aldea', x: 255, y: 135, tipo: 'cacique', dialog: 'Extranjero… estas piezas no son moneda. Cada una guarda una historia. Si la escuchas con respeto, quizá te dejemos admirarla.', accion: null }
+                { id: 'cacique', name: 'Cacique Anciano', rol: 'Autoridad de la aldea', x: 455, y: 135, tipo: 'cacique', dialog: 'Extranjero… estas treinta piezas no son moneda. Cada una guarda una historia. Si la escuchas con respeto, quizá te dejemos admirarla.', accion: null }
             ];
             guardias = [
-                { x: 190, y: -110, ruta: [[190, -110], [560, -110], [560, -20], [190, -20]], i: 1, a: 0, v: 52, dentro: true },
-                { x: -160, y: 60, ruta: [[-160, 60], [120, 150], [330, 190], [-80, 200]], i: 1, a: 0, v: 58, dentro: false }
+                { x: 160, y: -240, ruta: [[160, -240], [540, -240], [540, -120], [160, -120]], i: 1, a: 0, v: 54, dentro: true },
+                { x: 600, y: -240, ruta: [[600, -240], [980, -240], [980, -120], [600, -120]], i: 1, a: 0, v: 54, dentro: true },
+                { x: -160, y: 60, ruta: [[-160, 60], [220, 150], [530, 190], [-80, 200]], i: 1, a: 0, v: 58, dentro: false }
             ];
         }
     }
     let galeon = null;
     function teleport(x, y) { player.x = x; player.y = y; target = null; cerrarModal('modal-dialog'); }
-    window.teletransportarZonaEspecial = () => { teleport(370, 20); toast('Entraste a la Casita Sagrada', '#F7DC88'); };
+    window.teletransportarZonaEspecial = () => { teleport(570, 20); toast('Entraste a la Casita Sagrada', '#F7DC88'); };
 
     /* ---------- Colisiones ---------- */
     const circRect = (x, y, r, b) => { const cx = Math.max(b.x, Math.min(x, b.x + b.w)), cy = Math.max(b.y, Math.min(y, b.y + b.h)); return (x - cx) ** 2 + (y - cy) ** 2 < r * r; };
     function libre(x, y) {
         const r = 11;
-        if (x < -745 || x > 745 || y < -305 || y > 312) return false;
+        if (x < -745 || x > 1160 || y < -382 || y > 312) return false;
         if (y > AGUA_Y && !(x > PIER.x + 6 && x < PIER.x + PIER.w - 6)) return false;
         for (const b of MUROS) if (circRect(x, y, r, b)) return false;
         for (const t of ARBOLES) if ((x - t.x) ** 2 + (y - t.y) ** 2 < (r + 9) ** 2) return false;
@@ -144,7 +150,7 @@ const Engine25D = (() => {
     canvas.addEventListener('click', e => {
         if (!gameActive || uiAbierta()) return;
         const r = canvas.getBoundingClientRect(), wx = e.clientX - r.left - width / 2 + camera.x, wy = e.clientY - r.top - height / 2 + camera.y;
-        target = { x: Math.max(-740, Math.min(740, wx)), y: Math.max(-300, Math.min(308, wy)) };
+        target = { x: Math.max(-740, Math.min(1150, wx)), y: Math.max(-378, Math.min(308, wy)) };
         if (interactable && Math.hypot(wx - interactable.x, wy - interactable.y) < 70) ejecutarInteraccion();
     });
     // joystick táctil
@@ -288,7 +294,7 @@ const Engine25D = (() => {
         const obras = window.OBRAS_MUSEO, n = obras.length; let titulo_, txt, cls;
         if (role === 'indigena') {
             const est = obras.reduce((a, o) => a + Object.values(rec(o).hecho).reduce((x, y) => x + y, 0), 0);
-            titulo_ = est >= 40 ? 'Maestro de la Memoria' : 'Guardián de la Casita';
+            titulo_ = est >= 120 ? 'Maestro de la Memoria' : 'Guardián de la Casita';
             txt = `Las ${n} obras brillan en la Casita Sagrada. Conocerlas, pulirlas y reconstruirlas es la manera de cuidar un patrimonio: no se guarda solo, se mantiene vivo.`; cls = 'bueno';
             document.getElementById('final-stats').innerHTML = `<div><b>${n}/${n}</b><span>Obras en la Casita</span></div><div><b>${S.sabiduria}</b><span>Sabiduría</span></div><div><b>${est}</b><span>Estrellas</span></div>`;
         } else {
@@ -427,7 +433,7 @@ const Engine25D = (() => {
         if (role === 'espanol') { cielo.addColorStop(0, '#2a1830'); cielo.addColorStop(0.5, '#a3503a'); cielo.addColorStop(1, '#2a1d15'); }
         else { cielo.addColorStop(0, '#2b3f5c'); cielo.addColorStop(0.45, '#e0a45a'); cielo.addColorStop(1, '#2a2417'); }
         ctx.fillStyle = cielo; ctx.fillRect(0, 0, width, height);
-        const hz = height / 2 - (camera.y + 400);                      // línea del horizonte (y mundo = -400)
+        const hz = height / 2 - (camera.y + 520);                      // línea del horizonte (y mundo = -520)
         const capas = [{ p: 0.15, a: 90, c: role === 'espanol' ? '#4a2c3c' : '#4d5c77', f: 0.004, o: 0 }, { p: 0.3, a: 70, c: role === 'espanol' ? '#38212d' : '#37485b', f: 0.007, o: 40 }, { p: 0.5, a: 45, c: role === 'espanol' ? '#25161e' : '#26382f', f: 0.011, o: 90 }];
         capas.forEach(l => {
             ctx.fillStyle = l.c; ctx.beginPath(); ctx.moveTo(0, hz + 20);
@@ -440,12 +446,12 @@ const Engine25D = (() => {
     }
 
     function dibujarSuelo(time) {
-        ctx.fillStyle = pat.pasto; ctx.fillRect(-1600, -400, 3200, 650);
+        ctx.fillStyle = pat.pasto; ctx.fillRect(-1600, -520, 3600, 770);
         // sombra de profundidad en el horizonte
-        const hg = ctx.createLinearGradient(0, -400, 0, -250); hg.addColorStop(0, 'rgba(10,8,4,0.55)'); hg.addColorStop(1, 'rgba(10,8,4,0)'); ctx.fillStyle = hg; ctx.fillRect(-1600, -400, 3200, 150);
+        const hg = ctx.createLinearGradient(0, -520, 0, -370); hg.addColorStop(0, 'rgba(10,8,4,0.55)'); hg.addColorStop(1, 'rgba(10,8,4,0)'); ctx.fillStyle = hg; ctx.fillRect(-1600, -520, 3600, 150);
         // sendero
         ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-        const camino = () => { ctx.beginPath(); ctx.moveTo(-470, 250); ctx.bezierCurveTo(-330, 190, -200, 190, -60, 130); ctx.bezierCurveTo(100, 70, 230, 120, 370, 70); ctx.lineTo(370, 56); };
+        const camino = () => { ctx.beginPath(); ctx.moveTo(-470, 250); ctx.bezierCurveTo(-300, 190, -100, 190, 120, 130); ctx.bezierCurveTo(320, 70, 460, 120, 570, 70); ctx.lineTo(570, 56); };
         ctx.strokeStyle = 'rgba(40,28,14,0.55)'; ctx.lineWidth = 74; camino(); ctx.stroke();
         ctx.strokeStyle = pat.tierra; ctx.lineWidth = 62; camino(); ctx.stroke(); ctx.restore();
         // agua
@@ -470,7 +476,7 @@ const Engine25D = (() => {
         const pg = ctx.createLinearGradient(0, C.y, 0, C.y + C.h); pg.addColorStop(0, 'rgba(0,0,0,0.5)'); pg.addColorStop(0.35, 'rgba(0,0,0,0)'); ctx.fillStyle = pg; ctx.fillRect(C.x, C.y, C.w, C.h);
         // alfombra
         ctx.fillStyle = '#7a2a1f'; ctx.fillRect(PUERTA.x1 + 6, C.y + 10, PUERTA.x2 - PUERTA.x1 - 12, C.h + 10); ctx.strokeStyle = '#D4A63A'; ctx.lineWidth = 2; ctx.strokeRect(PUERTA.x1 + 8, C.y + 12, PUERTA.x2 - PUERTA.x1 - 16, C.h + 6);
-        ctx.fillStyle = 'rgba(212,166,58,0.5)'; for (let y = C.y + 30; y < C.y + C.h; y += 34) { ctx.beginPath(); ctx.moveTo(370, y - 8); ctx.lineTo(378, y); ctx.lineTo(370, y + 8); ctx.lineTo(362, y); ctx.closePath(); ctx.fill(); }
+        ctx.fillStyle = 'rgba(212,166,58,0.5)'; for (let y = C.y + 30; y < C.y + C.h; y += 34) { ctx.beginPath(); ctx.moveTo(570, y - 8); ctx.lineTo(578, y); ctx.lineTo(570, y + 8); ctx.lineTo(562, y); ctx.closePath(); ctx.fill(); }
         // muro de fondo (cara extruida)
         const bh = 84, by = C.y - bh;
         const mg = ctx.createLinearGradient(0, by, 0, C.y); mg.addColorStop(0, '#2a1c10'); mg.addColorStop(1, '#4b3420'); ctx.fillStyle = mg; ctx.fillRect(C.x - 12, by, C.w + 24, bh + 12);
@@ -478,9 +484,9 @@ const Engine25D = (() => {
         for (let x = C.x + 8; x < C.x + C.w - 30; x += 40) { ctx.beginPath(); ctx.moveTo(x, by + 22); ctx.lineTo(x + 10, by + 22); ctx.lineTo(x + 10, by + 34); ctx.lineTo(x + 20, by + 34); ctx.lineTo(x + 20, by + 22); ctx.lineTo(x + 30, by + 22); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x, by + 60); ctx.lineTo(x + 10, by + 60); ctx.lineTo(x + 10, by + 48); ctx.lineTo(x + 20, by + 48); ctx.lineTo(x + 20, by + 60); ctx.lineTo(x + 30, by + 60); ctx.stroke(); }
         ctx.fillStyle = '#D4A63A'; ctx.fillRect(C.x - 12, by, C.w + 24, 4); ctx.fillRect(C.x - 12, C.y - 4, C.w + 24, 4);
         // nichos de luz
-        [190, 310, 430, 550].forEach(x => { const g = ctx.createRadialGradient(x, by + 38, 2, x, by + 38, 34); g.addColorStop(0, 'rgba(255,220,130,0.55)'); g.addColorStop(1, 'rgba(255,220,130,0)'); ctx.fillStyle = g; ctx.fillRect(x - 36, by + 2, 72, 72); ctx.fillStyle = '#17100a'; ctx.fillRect(x - 12, by + 18, 24, 40); ctx.strokeStyle = '#D4A63A'; ctx.lineWidth = 1.5; ctx.strokeRect(x - 12, by + 18, 24, 40); });
+        [200, 340, 480, 620, 760, 900].forEach(x => { const g = ctx.createRadialGradient(x, by + 38, 2, x, by + 38, 34); g.addColorStop(0, 'rgba(255,220,130,0.55)'); g.addColorStop(1, 'rgba(255,220,130,0)'); ctx.fillStyle = g; ctx.fillRect(x - 36, by + 2, 72, 72); ctx.fillStyle = '#17100a'; ctx.fillRect(x - 12, by + 18, 24, 40); ctx.strokeStyle = '#D4A63A'; ctx.lineWidth = 1.5; ctx.strokeRect(x - 12, by + 18, 24, 40); });
         // letrero
-        ctx.fillStyle = '#F7DC88'; ctx.font = '700 15px "Cinzel"'; ctx.textAlign = 'center'; ctx.fillText('CASITA SAGRADA', 370, by - 8);
+        ctx.fillStyle = '#F7DC88'; ctx.font = '700 15px "Cinzel"'; ctx.textAlign = 'center'; ctx.fillText('CASITA SAGRADA · 30 PIEZAS', 570, by - 8);
         // muros laterales (cara visible)
         [C.x - 12, C.x + C.w].forEach(x => { const g = ctx.createLinearGradient(x, 0, x + 12, 0); g.addColorStop(0, '#2a1c10'); g.addColorStop(1, '#4b3420'); ctx.fillStyle = g; ctx.fillRect(x, by + bh, 12, C.h + 26); ctx.fillStyle = '#D4A63A'; ctx.fillRect(x, by + bh, 12, 3); });
     }
@@ -549,7 +555,7 @@ const Engine25D = (() => {
     }
     function vigaPuerta() {
         ctx.fillStyle = '#4a3320'; ctx.fillRect(PUERTA.x1 - 6, MURO_Y - 84, PUERTA.x2 - PUERTA.x1 + 12, 12); ctx.fillStyle = '#D4A63A'; ctx.fillRect(PUERTA.x1 - 6, MURO_Y - 84, PUERTA.x2 - PUERTA.x1 + 12, 3);
-        ctx.fillStyle = '#8c2f22'; ctx.fillRect(PUERTA.x1 + 14, MURO_Y - 72, PUERTA.x2 - PUERTA.x1 - 28, 14); ctx.fillStyle = '#F7DC88'; ctx.font = '700 9px "Cinzel"'; ctx.textAlign = 'center'; ctx.fillText('ENTRADA', 370, MURO_Y - 62);
+        ctx.fillStyle = '#8c2f22'; ctx.fillRect(PUERTA.x1 + 14, MURO_Y - 72, PUERTA.x2 - PUERTA.x1 - 28, 14); ctx.fillStyle = '#F7DC88'; ctx.font = '700 9px "Cinzel"'; ctx.textAlign = 'center'; ctx.fillText('ENTRADA', 570, MURO_Y - 62);
     }
     function muroSur(a, b) { const g = ctx.createLinearGradient(0, MURO_Y - 20, 0, MURO_Y + 14); g.addColorStop(0, '#6a4a2e'); g.addColorStop(1, '#3a2614'); ctx.fillStyle = g; ctx.fillRect(a, MURO_Y - 22, b - a, 36); ctx.fillStyle = '#D4A63A'; ctx.fillRect(a, MURO_Y - 22, b - a, 3); }
 
@@ -583,7 +589,7 @@ const Engine25D = (() => {
         ctx.fillStyle = '#3a2010'; ctx.fillRect(-4, -130, 8, 118); ctx.fillRect(-52, -110, 6, 96);
         ctx.fillStyle = '#F4ECE1'; ctx.beginPath(); ctx.moveTo(-46, -108); ctx.quadraticCurveTo(-76, -64, -46, -26); ctx.lineTo(-46, -108); ctx.fill(); ctx.beginPath(); ctx.moveTo(-26, -124); ctx.quadraticCurveTo(-4, -76, -26, -34); ctx.lineTo(28, -34); ctx.quadraticCurveTo(52, -76, 28, -124); ctx.closePath(); ctx.fill();
         ctx.fillStyle = '#C0392B'; ctx.fillRect(-4, -92, 8, 36); ctx.fillRect(-14, -82, 28, 8);
-        const carg = window.OBRAS_MUSEO.filter(o => rec(o).entregada).length; ctx.fillStyle = '#F7DC88'; ctx.font = '700 12px "Plus Jakarta Sans"'; ctx.textAlign = 'center'; ctx.fillText('Bodega: ' + carg + '/8', 0, 50);
+        const carg = window.OBRAS_MUSEO.filter(o => rec(o).entregada).length; ctx.fillStyle = '#F7DC88'; ctx.font = '700 12px "Plus Jakarta Sans"'; ctx.textAlign = 'center'; ctx.fillText('Bodega: ' + carg + '/' + window.OBRAS_MUSEO.length, 0, 50);
         ctx.restore();
     }
 
@@ -596,7 +602,7 @@ const Engine25D = (() => {
         luz(player.x, player.y - 20, 150 + interior * 20, 0.85);
         torchas.forEach((q, i) => luz(q.x, q.y - 30, 120 + Math.sin(t * 9 + i * 2) * 8, 0.8));
         pedestals.forEach(p => luz(p.x, p.y - 30, 78, 0.55));
-        luz(370, 20, 200, 0.4 * interior);
+        luz(320, -180, 320, 0.45 * interior); luz(570, -180, 320, 0.45 * interior); luz(820, -180, 320, 0.45 * interior);
         lctx.globalCompositeOperation = 'source-over'; ctx.drawImage(lc, 0, 0);
     }
 
@@ -619,7 +625,7 @@ const Engine25D = (() => {
         ARBOLES.forEach(a => lista.push({ y: a.y + 8, f: () => arbol(a, time) }));
         ROCAS.forEach(r => lista.push({ y: r.y, f: () => roca(r) }));
         lista.push({ y: TALLER.y + TALLER.h, f: () => dibujarTaller(time) });
-        lista.push({ y: MURO_Y + 14, f: () => { muroSur(108, PUERTA.x1); muroSur(PUERTA.x2, 632); } });
+        lista.push({ y: MURO_Y + 14, f: () => { muroSur(88, PUERTA.x1); muroSur(PUERTA.x2, 1052); } });
         lista.push({ y: MURO_Y + 6, f: () => columna(PUERTA.x1 - 4, MURO_Y + 6) }); lista.push({ y: MURO_Y + 6, f: () => columna(PUERTA.x2 + 4, MURO_Y + 6) });
         lista.push({ y: MURO_Y + 8, f: vigaPuerta });
         lista.push({ y: player.y, f: () => { const est = role === 'indigena' ? { ropa: '#E5D3B3', faja: '#B83A2D', piel: '#B87A4B', diadema: J('diadema'), nariguera: J('nariguera'), pectoral: J('pectoral') } : { ropa: '#6b7a8c', pantalon: '#3a3a44', piel: '#E2B49A', cruz: true, yelmo: true }; persona(player.x, player.y, Object.assign(est, { facing: player.facing, walk: player.walk, cargado: carrying ? carrying.forma : null }), time, !!(target || keys.w || keys.a || keys.s || keys.d || joy.x || joy.y || keys.arrowup || keys.arrowdown || keys.arrowleft || keys.arrowright)); } });
