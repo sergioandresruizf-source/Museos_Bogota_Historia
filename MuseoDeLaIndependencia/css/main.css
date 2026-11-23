@@ -1418,3 +1418,245 @@ footer {
         height: 37px;
     }
 }
+
+
+/* =================================
+   DETECTIVE DEL MUSEO
+================================= */
+
+.detective-view {
+    min-height: 100vh;
+    padding: 35px 7%;
+    background: #f3eee3;
+}
+
+.detective-content {
+    max-width: 900px;
+    margin: 35px auto;
+}
+
+.detective-heading {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.detective-heading h1 {
+    font-family: Georgia, serif;
+    font-size: 2.5rem;
+    color: #65432f;
+    margin: 12px 0;
+}
+
+.detective-heading > p:last-child {
+    color: #766657;
+}
+
+.detective-game {
+    background: #fffaf0;
+    border: 1px solid #c9b99e;
+    padding: 35px;
+    box-shadow: 0 8px 25px rgba(70, 48, 28, 0.12);
+}
+
+.detective-case-header {
+    text-align: center;
+    border-bottom: 2px solid #b99b6b;
+    padding-bottom: 22px;
+}
+
+.detective-case-header > p {
+    letter-spacing: 3px;
+    color: #a16c45;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.detective-case-header h2 {
+    font-family: Georgia, serif;
+    font-size: 2rem;
+    color: #563a29;
+}
+
+.detective-case-header span {
+    color: #8b765d;
+}
+
+.detective-introduction {
+    background: #f0e7d6;
+    padding: 20px;
+    margin: 25px 0;
+    border-left: 4px solid #a9794e;
+    line-height: 1.7;
+}
+
+.detective-progress {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #815c3c;
+    font-size: 0.85rem;
+    margin: 25px 0 15px;
+    font-weight: bold;
+}
+
+.detective-clue {
+    background: #fffdf7;
+    border: 1px solid #d8c9ae;
+    padding: 20px;
+    margin: 15px 0;
+    animation: detectiveReveal 0.4s ease;
+}
+
+.detective-clue h3 {
+    color: #9a6742;
+    font-family: Georgia, serif;
+}
+
+.detective-clue p {
+    color: #574b3e;
+    line-height: 1.6;
+}
+
+@keyframes detectiveReveal {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.detective-action,
+.detective-question {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.detective-action button,
+.detective-feedback button,
+.detective-resolution button {
+    background: #8c5538;
+    color: #fffaf0;
+    border: none;
+    padding: 13px 25px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    margin-top: 15px;
+    transition: background 0.2s;
+}
+
+.detective-action button:hover,
+.detective-feedback button:hover,
+.detective-resolution button:hover {
+    background: #633a27;
+}
+
+.detective-question h3 {
+    color: #9a6742;
+    letter-spacing: 2px;
+}
+
+.detective-question > p {
+    font-family: Georgia, serif;
+    font-size: 1.3rem;
+    color: #563a29;
+    margin: 20px 0;
+}
+
+.detective-options {
+    display: grid;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.detective-option {
+    padding: 16px;
+    text-align: left;
+    background: #f3ecdf;
+    border: 1px solid #c9b99e;
+    color: #554535;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.detective-option:hover:not(:disabled) {
+    background: #e5d6bd;
+    border-color: #a9794e;
+}
+
+.detective-option:disabled {
+    cursor: default;
+    opacity: 0.75;
+}
+
+.detective-feedback {
+    margin-top: 25px;
+    padding: 20px;
+    background: #f0e7d6;
+}
+
+.detective-feedback p {
+    color: #65432f;
+    line-height: 1.6;
+}
+
+.detective-resolution {
+    margin-top: 30px;
+    padding: 25px;
+    border: 2px solid #b99b6b;
+    text-align: center;
+}
+
+.detective-stamp {
+    display: inline-block;
+    border: 2px solid #8c5538;
+    color: #8c5538;
+    padding: 8px 15px;
+    letter-spacing: 2px;
+    font-weight: bold;
+    transform: rotate(-3deg);
+}
+
+.detective-resolution h3 {
+    font-family: Georgia, serif;
+    color: #65432f;
+    font-size: 1.7rem;
+}
+
+.detective-resolution > p:not(.detective-stamp) {
+    line-height: 1.7;
+    color: #574b3e;
+}
+
+.detective-historical-note {
+    background: #f0e7d6;
+    padding: 20px;
+    margin-top: 25px;
+    text-align: left;
+    line-height: 1.7;
+}
+
+.detective-historical-note h4 {
+    color: #9a6742;
+    letter-spacing: 2px;
+}
+
+@media (max-width: 600px) {
+    .detective-view {
+        padding: 20px 5%;
+    }
+
+    .detective-game {
+        padding: 20px;
+    }
+
+    .detective-heading h1 {
+        font-size: 2rem;
+    }
+
+    .detective-case-header h2 {
+        font-size: 1.6rem;
+    }
+}

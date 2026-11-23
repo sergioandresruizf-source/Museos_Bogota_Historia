@@ -33,6 +33,14 @@ export const activities = {
         module: "hangman.js"
     },
 
+    detective: {
+        id: "detective",
+        name: "Detective del Museo",
+        description: "Investiga documentos y resuelve misterios históricos.",
+        instructions: "Descubre todas las pistas y selecciona la conclusión correcta.",
+        module: "detective.js"
+    },
+
     observation: {
         id: "observation",
         name: "Encuentra los detalles",

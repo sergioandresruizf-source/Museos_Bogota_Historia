@@ -7,6 +7,8 @@ import { initializeTimeline } from "../games/timeline.js";
 import { timelineEvents } from "../data/timelineEvents.js";
 import { initializeHangman } from "../games/hangman.js";
 import { hangmanWords } from "../data/hangmanWords.js";
+import { initializeDetective } from "../games/detective.js";
+import { detectiveCases } from "../data/detectiveCases.js";
 
 // ------------------------------------
 // INICIAR ACTIVIDADES
@@ -79,6 +81,17 @@ export function startActivity(work, onComplete) {
         }
 
         return initializeHangman(wordData, onComplete);
+    }
+        if (activityId === "detective") {
+
+        const caseData = detectiveCases[work.detectiveKey];
+
+        if (!caseData) {
+            console.warn(`No hay expediente registrado para ${work.title}.`);
+            return false;
+        }
+
+        return initializeDetective(caseData, onComplete);
     }
 
     // ------------------------------------

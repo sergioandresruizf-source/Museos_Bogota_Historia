@@ -177,6 +177,42 @@ export const works = [
         image: "./assets/artworks/Batalla del Alto Palacio.png",
         music: "./assets/sounds/Garzon y Collazos - Soy colombiano.mp3",
         coins: null
+    },
+    {
+        id: 11,
+        title: "Billete de manumisión (segunda clase)",
+        author: "Gobierno de la Nueva Granada    ",
+        date: "1853",
+        type: "Documento impreso sobre papel.",
+        activity: "detective",
+        detectiveKey: "billeteManumision",
+        hangmanKey: "batallaAltoPalace",
+        collection: "Museo de la Independencia Casa del Florero",
+
+        description:
+        "Billete emitido por el Gobierno de la Nueva Granada el 27 de junio de 1853. Las juntas de manumisión entregaban estos billetes a los propietarios de las personas esclavizadas que quedaban libres; cada billete indicaba la región y el valor correspondiente a un número determinado de personas, valor que la Nación asumía y reconocía. La ley del 21 de mayo de 1851 dispuso que la libertad se hiciera efectiva desde el 1 de enero de 1852.",
+
+        image: "./assets/artworks/Billete de manumisión. Segunda clase .jpeg",
+        music: "./assets/sounds/Garzon y Collazos - Soy colombiano.mp3",
+        coins: null
+    },
+    {
+        id: 12,
+        title: "Boquerón del río San Francisco",
+        author: "Ramón Torres Méndez",
+        date: "1837",
+        type: "Pintura al óleo",
+        activity: "detective",
+        detectiveKey: "boqueronSanFrancisco",
+        hangmanKey: "batallaAltoPalace",
+        collection: "Museo de la Independencia Casa del Florero",
+
+        description:
+        "Paisaje del río San Francisco, que nace en los cerros orientales y atraviesa el centro de Bogotá; su cauce está hoy canalizado bajo la avenida Jiménez. El autor, Ramón Torres Méndez (Bogotá, 1809 – 1885), fue pintor costumbrista. El registro del museo no lo asocia a un hecho histórico específico.",
+
+        image: "./assets/artworks/Boqueron del rio San Francisco.png",
+        music: "./assets/sounds/Anselmo Duran Plazas - El Sanjuanero.mp3",
+        coins: null
     }
 
     
@@ -185,8 +221,6 @@ export const works = [
 
 const additionalArtworkFiles = [
 
-    "Billete de manumisión. Segunda clase .jpeg",
-    "Boqueron del rio San Francisco.png",
     "CArmen Rodriguez de Gaitán.jpeg",
     "Calle de la Moneda.png",
     "Capilla del Humilladero.png",
@@ -227,7 +261,7 @@ const additionalArtworkFiles = [
 ];
 
 const additionalWorks = additionalArtworkFiles.map((filename, index) => ({
-    id: index + 11,
+    id: index + 13,
     title: filename.replace(/\.[^/.]+$/, "").trim(),
     author: "No identificado",
     date: "No precisada",
