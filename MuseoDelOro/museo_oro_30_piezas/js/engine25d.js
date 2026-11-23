@@ -574,7 +574,7 @@ const Engine25D = (() => {
             if (role === 'espanol' && !r.resuelta) { ctx.fillStyle = 'rgba(170,215,235,0.18)'; ctx.fillRect(p.x - 17, p.y - 66, 34, 52); ctx.strokeStyle = 'rgba(200,235,250,0.55)'; ctx.lineWidth = 1.5; ctx.strokeRect(p.x - 17, p.y - 66, 34, 52); ctx.fillStyle = 'rgba(255,255,255,0.22)'; ctx.fillRect(p.x - 14, p.y - 63, 5, 46); }
             if (r.resuelta) { ctx.fillStyle = '#4ECCA3'; ctx.font = '700 12px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('✔', p.x + 15, p.y - 60); }
         }
-        ctx.font = '600 10px "Plus Jakarta Sans"'; ctx.textAlign = 'center'; ctx.fillStyle = cerca ? '#fff' : '#D9B14A'; ctx.fillText(o.corto || titulo(o), p.x, p.y + 25);
+        { const tx = o.corto || titulo(o); let fs = 10; ctx.font = '600 ' + fs + 'px "Plus Jakarta Sans"'; while (ctx.measureText(tx).width > 88 && fs > 6.5) { fs -= 0.5; ctx.font = '600 ' + fs + 'px "Plus Jakarta Sans"'; } ctx.textAlign = 'center'; ctx.fillStyle = cerca ? '#fff' : '#D9B14A'; ctx.fillText(tx, p.x, p.y + 25); }
     }
 
     function conoGuardia(g) {
