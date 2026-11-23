@@ -22,6 +22,12 @@ const backToWorkQuizButton = document.getElementById("back-to-work-quiz");
 //Elementos linea del tiempo
 const timelineView = document.getElementById("timeline-view");
 const backToWorkTimelineButton = document.getElementById("back-to-work-timeline");
+// Elementos del ahorcado
+const hangmanView = document.getElementById("hangman-view");
+const backToWorkHangmanButton = document.getElementById("back-to-work-hangman");
+// Elementos del Detective del Museo
+const detectiveView = document.getElementById("detective-view");
+const backToWorkDetectiveButton = document.getElementById("back-to-work-detective");
 const backToWorkButton = document.getElementById("back-to-work");
 const startGameButton = document.getElementById("start-game");
 
@@ -253,6 +259,21 @@ startGameButton.addEventListener("click", () => {
         puzzleView.hidden = true;
         quizView.hidden = true;
         timelineView.hidden = false;
+    } else if (currentWork.activity === "hangman") {
+
+        puzzleView.hidden = true;
+        quizView.hidden = true;
+        timelineView.hidden = true;
+        hangmanView.hidden = false;
+
+    } else if (currentWork.activity === "detective") {
+
+        puzzleView.hidden = true;
+        quizView.hidden = true;
+        timelineView.hidden = true;
+        hangmanView.hidden = true;
+        detectiveView.hidden = false;
+
     }
 
     window.scrollTo(0, 0);
@@ -295,6 +316,32 @@ backToWorkTimelineButton.addEventListener("click", () => {
     timelineView.hidden = true;
     workView.hidden = false;
     window.scrollTo(0, 0);
+});
+
+// ------------------------------------
+// REGRESAR A LA OBRA DESDE EL AHORCADO
+// ------------------------------------
+
+backToWorkHangmanButton.addEventListener("click", () => {
+
+    hangmanView.hidden = true;
+    workView.hidden = false;
+
+    window.scrollTo(0, 0);
+
+});
+
+// ------------------------------------
+// REGRESAR A LA OBRA DESDE EL DETECTIVE
+// ------------------------------------
+
+backToWorkDetectiveButton.addEventListener("click", () => {
+
+    detectiveView.hidden = true;
+    workView.hidden = false;
+
+    window.scrollTo(0, 0);
+
 });
 
 // ------------------------------------

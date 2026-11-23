@@ -25,6 +25,22 @@ export const activities = {
         module: "timeline.js"
     },
 
+    hangman: {
+        id: "hangman",
+        name: "Ahorcado histórico",
+        description: "Descubre una palabra relacionada con la obra.",
+        instructions: "Usa la pista para adivinar la palabra antes de perder los seis sellos.",
+        module: "hangman.js"
+    },
+
+    detective: {
+        id: "detective",
+        name: "Detective del Museo",
+        description: "Investiga documentos y resuelve misterios históricos.",
+        instructions: "Descubre todas las pistas y selecciona la conclusión correcta.",
+        module: "detective.js"
+    },
+
     observation: {
         id: "observation",
         name: "Encuentra los detalles",

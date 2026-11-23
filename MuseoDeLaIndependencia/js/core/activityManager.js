@@ -5,6 +5,10 @@ import { initializeQuiz } from "../games/quiz.js";
 import { quizQuestions } from "../data/quizQuestions.js";
 import { initializeTimeline } from "../games/timeline.js";
 import { timelineEvents } from "../data/timelineEvents.js";
+import { initializeHangman } from "../games/hangman.js";
+import { hangmanWords } from "../data/hangmanWords.js";
+import { initializeDetective } from "../games/detective.js";
+import { detectiveCases } from "../data/detectiveCases.js";
 
 // ------------------------------------
 // INICIAR ACTIVIDADES
@@ -68,10 +72,33 @@ export function startActivity(work, onComplete) {
         return initializeTimeline(events, onComplete);
     }
 
+        if (activityId === "hangman") {
+        const wordData = hangmanWords[work.hangmanKey];
+
+        if (!wordData) {
+            console.warn(`No hay palabra registrada para ${work.title}.`);
+            return false;
+        }
+
+        return initializeHangman(wordData, onComplete);
+    }
+        if (activityId === "detective") {
+
+        const caseData = detectiveCases[work.detectiveKey];
+
+        if (!caseData) {
+            console.warn(`No hay expediente registrado para ${work.title}.`);
+            return false;
+        }
+
+        return initializeDetective(caseData, onComplete);
+    }
+
     // ------------------------------------
     // ACTIVIDADES PENDIENTES
     // ------------------------------------
 
+    
     console.warn(
         `La actividad "${activity.name}" todavía no está implementada.`
     );

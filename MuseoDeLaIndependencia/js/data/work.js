@@ -61,7 +61,8 @@ export const works = [
         author: "Desconocido",
         date: "1910",
         type: "Documento impreso sobre papel",
-        activity: "puzzle",
+        activity: "hangman",
+        hangmanKey: "actaRevolucion",
         collection: "Museo de la Independencia Casa del Florero",
 
         description:
@@ -78,7 +79,8 @@ export const works = [
         author: "Desconocido",
         date: "1900",
         type: "Pintura al óleo",
-        activity: "puzzle",
+        activity: "hangman",
+        hangmanKey: "antonioMorales",
         collection: "Museo de la Independencia Casa del Florero",
 
         description:
@@ -95,11 +97,12 @@ export const works = [
         author: "José María Espinosa Prieto (atribuido)",
         date: "1840",
         type: "Pintura al óleo",
-        activity: "puzzle",
+        activity: "hangman",
+        hangmanKey: "antonioNarino",
         collection: "Museo de la Independencia Casa del Florero",
 
         description:
-            "Retrato de Antonio Nariño (Santafé, 1765 – Villa de Leyva, 1823). En 1793 tradujo e imprimió los Derechos del Hombre y del Ciudadano, por lo que fue procesado en 1794. Presidió el Estado de Cundinamarca y comandó la Campaña del Sur (1813–1814), que lo llevó hasta Pasto, donde fue capturado",
+            "Retrato de Antonio Nariño (Santafé, 1765 – Villa de Leyva, 1823). En 1793 tradujo e imprimió los Derechos del Hombre y del Ciudadano, por lo que fue procesado en 1794. Presidió el Estado de Cundinamarca y comandó la Campaña del Sur (1813–1814), que lo llevó hasta Pasto, donde fue capturado.",
 
         image: "./assets/artworks/Antonio Narinio.jpeg",
         music: "./assets/sounds/Luis A. Calvo - Lejano azul (Intermezzo n.┬║ 2).mp3",
@@ -111,7 +114,8 @@ export const works = [
         author: "Ramón Torres Méndez; impresión de Antoine De la Rue ",
         date: "1878",
         type: "Litografía",
-        activity: "puzzle",
+        activity: "hangman",
+        hangmanKey: "baileCampesinos",
         collection: "Museo de la Independencia Casa del Florero",
 
         description:
@@ -125,10 +129,11 @@ export const works = [
     {
         id: 8,
         title: "Base del florero del 20 de julio de 1810",
-        author: "•	Base del florero del 20 de julio de 1810",
+        author: "Fábrica del Buen Retiro",
         date: "1780",
         type: "Objeto de porcelana",
-        activity: "puzzle",
+        activity: "hangman",
+        hangmanKey: "baseFlorero",
         collection: "Museo de la Independencia Casa del Florero",
 
         description:
@@ -145,7 +150,8 @@ export const works = [
         author: "José María Espinosa Prieto   ",
         date: "1845",
         type: "Pintura al óleo",
-        activity: "puzzle",
+        activity: "hangman",
+        hangmanKey: "batallaCalibio",
         collection: "Museo de la Independencia Casa del Florero",
 
         description:
@@ -159,9 +165,10 @@ export const works = [
         id: 10,
         title: "Batalla del Alto Palacé",
         author: "José María Espinosa ",
-        date: "183",
+        date: "1830",
         type: "Pintura al óleo",
-        activity: "puzzle",
+        activity: "hangman",
+        hangmanKey: "batallaAltoPalace",
         collection: "Museo de la Independencia Casa del Florero",
 
         description:
@@ -169,6 +176,42 @@ export const works = [
 
         image: "./assets/artworks/Batalla del Alto Palacio.png",
         music: "./assets/sounds/Garzon y Collazos - Soy colombiano.mp3",
+        coins: null
+    },
+    {
+        id: 11,
+        title: "Billete de manumisión (segunda clase)",
+        author: "Gobierno de la Nueva Granada    ",
+        date: "1853",
+        type: "Documento impreso sobre papel.",
+        activity: "detective",
+        detectiveKey: "billeteManumision",
+        hangmanKey: "batallaAltoPalace",
+        collection: "Museo de la Independencia Casa del Florero",
+
+        description:
+        "Billete emitido por el Gobierno de la Nueva Granada el 27 de junio de 1853. Las juntas de manumisión entregaban estos billetes a los propietarios de las personas esclavizadas que quedaban libres; cada billete indicaba la región y el valor correspondiente a un número determinado de personas, valor que la Nación asumía y reconocía. La ley del 21 de mayo de 1851 dispuso que la libertad se hiciera efectiva desde el 1 de enero de 1852.",
+
+        image: "./assets/artworks/Billete de manumisión. Segunda clase .jpeg",
+        music: "./assets/sounds/Garzon y Collazos - Soy colombiano.mp3",
+        coins: null
+    },
+    {
+        id: 12,
+        title: "Boquerón del río San Francisco",
+        author: "Ramón Torres Méndez",
+        date: "1837",
+        type: "Pintura al óleo",
+        activity: "detective",
+        detectiveKey: "boqueronSanFrancisco",
+        hangmanKey: "batallaAltoPalace",
+        collection: "Museo de la Independencia Casa del Florero",
+
+        description:
+        "Paisaje del río San Francisco, que nace en los cerros orientales y atraviesa el centro de Bogotá; su cauce está hoy canalizado bajo la avenida Jiménez. El autor, Ramón Torres Méndez (Bogotá, 1809 – 1885), fue pintor costumbrista. El registro del museo no lo asocia a un hecho histórico específico.",
+
+        image: "./assets/artworks/Boqueron del rio San Francisco.png",
+        music: "./assets/sounds/Anselmo Duran Plazas - El Sanjuanero.mp3",
         coins: null
     }
 
@@ -178,8 +221,6 @@ export const works = [
 
 const additionalArtworkFiles = [
 
-    "Billete de manumisión. Segunda clase .jpeg",
-    "Boqueron del rio San Francisco.png",
     "CArmen Rodriguez de Gaitán.jpeg",
     "Calle de la Moneda.png",
     "Capilla del Humilladero.png",
@@ -220,7 +261,7 @@ const additionalArtworkFiles = [
 ];
 
 const additionalWorks = additionalArtworkFiles.map((filename, index) => ({
-    id: index + 11,
+    id: index + 13,
     title: filename.replace(/\.[^/.]+$/, "").trim(),
     author: "No identificado",
     date: "No precisada",
