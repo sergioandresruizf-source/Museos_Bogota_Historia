@@ -159,3 +159,36 @@ export function initializeMap({
         </svg>
     `;
 }
+
+
+export function getConnectedWorkIds(workId) {
+    const groupIndex = Math.floor((workId - 1) / 7);
+    const mainId = groupIndex * 7 + 1;
+
+    // Si se completa una ramificación,
+    // su única conexión es la sala principal.
+    if (workId !== mainId) {
+        return [mainId];
+    }
+
+    // Si se completa una sala principal,
+    // desbloquea sus seis ramificaciones.
+    const connectedWorks = [];
+
+    for (let i = 1; i <= 6; i++) {
+        const branchId = mainId + i;
+
+        if (branchId <= works.length) {
+            connectedWorks.push(branchId);
+        }
+    }
+
+    // También conecta con la siguiente sala principal.
+    const nextMainId = mainId + 7;
+
+    if (nextMainId <= works.length) {
+        connectedWorks.push(nextMainId);
+    }
+
+    return connectedWorks;
+}
