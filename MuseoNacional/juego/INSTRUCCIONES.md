@@ -38,7 +38,7 @@ El barco pixel art (tus 8 sprites) ya va incrustado dentro de `index.html`.
 1. Navegas con el barco; al acercarte a un muelle aparece **[A] Atracar**.
 2. Llegada: letrero con el nombre de la exposición; caminas por el muelle hasta la puerta.
 3. Sala: acércate a cada marco y pulsa A. Marco dorado = obra presente; marco negro punteado con "?" = obra removida (solo descripción).
-4. Una isla suma al contador **ISLAS EXPLORADAS** al ver todas sus obras (cámbialo en `config.exigirVerTodas`).
+4. Una isla suma al contador **ISLAS EXPLORADAS** al **pasar cerca de su última obra** (no hace falta abrir cada obra; cámbialo en `config.exigirPasarUltimaObra`: con `false` basta con entrar a la sala).
 5. Con las 10 exploradas la niebla se disipa y puedes entrar a la **Isla Calavera**.
 6. Revisa las obras removidas y abre el cofre: cinemática del barco llevando las obras a cada isla y plantando la bandera.
 
@@ -91,3 +91,23 @@ Cada sala se parece a su isla vista desde fuera: **1** ladrillo rojo con rejas d
 - **En la sala:** donde estaba una obra removida se ve su **espacio vacío** (rectángulo claro con borde punteado, clavos y placa). Si es una escultura, queda el pedestal vacío. Al tocarlo se explica que fue removida y que su rastro está en la Isla Calavera (con `huecoMuestraDescripcion: true` también se lee su descripción ahí).
 - **En la Isla Calavera:** se ven las obras removidas. Con `imagen` aparecen como obra real (marco o escultura) con su imagen y descripción; sin `imagen`, como recuadro negro con "?".
 - **Al restituirlas:** el espacio se llena con la obra, que sale de la Isla Calavera.
+
+
+## 13. Retos de la Isla Calavera (reemplazan los puzzles de las 10 islas)
+Los puzzles de la cinemática de devolución ya no existen: las obras vuelven a sus islas sin pruebas. En su lugar hay **3 retos de dificultad creciente**, todos en la Isla Calavera y con temática de trampas y combate contra guerreros y chamanes de comunidades indígenas de antes de la colonización:
+
+| # | Dónde se activa | Reto | Qué hay que hacer |
+|---|---|---|---|
+| 1 | **Entrada**: al cruzar la puerta de la sala desde el muelle | **La Senda de las Trampas** | Cruzar rocas rodantes, fosos con estacas y dardos de cerbatana. 3 vidas con puntos de control. |
+| 2 | **Durante**: al llegar a la mitad de la sala de obras removidas | **Guerreros de la Memoria** | Combate contra 2 oleadas de guerreros con lanza y cerbatana. Atacar (A) y esquivar (B). 6 corazones. |
+| 3 | **Salida**: al abrir el cofre | **El Chamán del Cofre** | Jefe en 3 fases: anillos, ráfagas, espirales y rayos. Solo recibe daño cuando queda agotado. 5 corazones. |
+
+- Cada reto se juega **una sola vez** (queda guardado). Si pierdes, reintentas; tras `retoOmitirTrasFallos` derrotas (3 por defecto) aparece **OMITIR RETO** (se desactiva con `retosOmitibles: false`).
+- El cofre se abre al pasar cerca de la última obra removida; al abrirlo empieza el reto 3 y, al vencerlo, el barco zarpa con las obras (cinemática de devolución).
+- Con `atajos: true`: **Shift+P** supera el reto actual.
+- Textos de cada reto: constante `RETOS` en `index.html`.
+
+## 14. Sistema de entrega con el saco
+- **Reto 2 (Guerreros de la Memoria):** cada guerrero derrotado suelta una obra. El jugador la recoge caminando sobre ella y la lleva al SACO (abajo a la izquierda). Si lo hieren, la suelta. La siguiente oleada empieza solo cuando todas las obras están guardadas (9 en total).
+- **Cinemática final:** el barco zarpa con el saco y visita solo las islas que tienen obras removidas. En cada una entra a la sala: el pirata camina hasta cada hueco, abre el saco, saca la obra y la cuelga en su marco (o pedestal). Al terminar se iza la bandera de la isla y el barco sigue a la siguiente.
+- Se reutiliza `save.restored[i]`; no hay cambios en `obras.js`.

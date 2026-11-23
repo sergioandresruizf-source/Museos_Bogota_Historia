@@ -4,15 +4,14 @@ window.MUSEO = {
   subtitulo: "Recorre el Museo Nacional y recupera lo que fue removido",
 
   config: {
-    exigirVerTodas: true,
-    exigirVerTodasEnCalavera: true,
+    exigirPasarUltimaObra: true,
     velocidadBarco: 200,
     velocidadCorrer: 1.8,
     museoId: "nacional",
     urlSiguienteMuseo: "",
     huecoMuestraDescripcion: false,
-    puzzlesOmitibles: true,
-    puzzleOmitirSeg: 1,
+    retosOmitibles: true,
+    retoOmitirTrasFallos: 3,
     autoDescubrir: true,
     descripcionAuto: "Descripción pendiente: agrega esta obra en obras.js para ponerle título y texto.",
     atajos: false
