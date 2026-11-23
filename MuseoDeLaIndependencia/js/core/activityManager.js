@@ -5,6 +5,8 @@ import { initializeQuiz } from "../games/quiz.js";
 import { quizQuestions } from "../data/quizQuestions.js";
 import { initializeTimeline } from "../games/timeline.js";
 import { timelineEvents } from "../data/timelineEvents.js";
+import { initializeHangman } from "../games/hangman.js";
+import { hangmanWords } from "../data/hangmanWords.js";
 
 // ------------------------------------
 // INICIAR ACTIVIDADES
@@ -68,10 +70,22 @@ export function startActivity(work, onComplete) {
         return initializeTimeline(events, onComplete);
     }
 
+        if (activityId === "hangman") {
+        const wordData = hangmanWords[work.hangmanKey];
+
+        if (!wordData) {
+            console.warn(`No hay palabra registrada para ${work.title}.`);
+            return false;
+        }
+
+        return initializeHangman(wordData, onComplete);
+    }
+
     // ------------------------------------
     // ACTIVIDADES PENDIENTES
     // ------------------------------------
 
+    
     console.warn(
         `La actividad "${activity.name}" todavía no está implementada.`
     );

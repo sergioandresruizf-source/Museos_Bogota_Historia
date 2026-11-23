@@ -61,7 +61,8 @@ export const works = [
         author: "Desconocido",
         date: "1910",
         type: "Documento impreso sobre papel",
-        activity: "puzzle",
+        activity: "hangman",
+        hangmanKey: "actaRevolucion",
         collection: "Museo de la Independencia Casa del Florero",
 
         description:
@@ -78,7 +79,8 @@ export const works = [
         author: "Desconocido",
         date: "1900",
         type: "Pintura al óleo",
-        activity: "puzzle",
+        activity: "hangman",
+        hangmanKey: "antonioMorales",
         collection: "Museo de la Independencia Casa del Florero",
 
         description:
@@ -95,11 +97,12 @@ export const works = [
         author: "José María Espinosa Prieto (atribuido)",
         date: "1840",
         type: "Pintura al óleo",
-        activity: "puzzle",
+        activity: "hangman",
+        hangmanKey: "antonioNarino",
         collection: "Museo de la Independencia Casa del Florero",
 
         description:
-            "Retrato de Antonio Nariño (Santafé, 1765 – Villa de Leyva, 1823). En 1793 tradujo e imprimió los Derechos del Hombre y del Ciudadano, por lo que fue procesado en 1794. Presidió el Estado de Cundinamarca y comandó la Campaña del Sur (1813–1814), que lo llevó hasta Pasto, donde fue capturado",
+            "Retrato de Antonio Nariño (Santafé, 1765 – Villa de Leyva, 1823). En 1793 tradujo e imprimió los Derechos del Hombre y del Ciudadano, por lo que fue procesado en 1794. Presidió el Estado de Cundinamarca y comandó la Campaña del Sur (1813–1814), que lo llevó hasta Pasto, donde fue capturado.",
 
         image: "./assets/artworks/Antonio Narinio.jpeg",
         music: "./assets/sounds/Luis A. Calvo - Lejano azul (Intermezzo n.┬║ 2).mp3",
@@ -111,7 +114,8 @@ export const works = [
         author: "Ramón Torres Méndez; impresión de Antoine De la Rue ",
         date: "1878",
         type: "Litografía",
-        activity: "puzzle",
+        activity: "hangman",
+        hangmanKey: "baileCampesinos",
         collection: "Museo de la Independencia Casa del Florero",
 
         description:
@@ -125,10 +129,11 @@ export const works = [
     {
         id: 8,
         title: "Base del florero del 20 de julio de 1810",
-        author: "•	Base del florero del 20 de julio de 1810",
+        author: "Fábrica del Buen Retiro",
         date: "1780",
         type: "Objeto de porcelana",
-        activity: "puzzle",
+        activity: "hangman",
+        hangmanKey: "baseFlorero",
         collection: "Museo de la Independencia Casa del Florero",
 
         description:
@@ -145,7 +150,8 @@ export const works = [
         author: "José María Espinosa Prieto   ",
         date: "1845",
         type: "Pintura al óleo",
-        activity: "puzzle",
+        activity: "hangman",
+        hangmanKey: "batallaCalibio",
         collection: "Museo de la Independencia Casa del Florero",
 
         description:
@@ -159,9 +165,10 @@ export const works = [
         id: 10,
         title: "Batalla del Alto Palacé",
         author: "José María Espinosa ",
-        date: "183",
+        date: "1830",
         type: "Pintura al óleo",
-        activity: "puzzle",
+        activity: "hangman",
+        hangmanKey: "batallaAltoPalace",
         collection: "Museo de la Independencia Casa del Florero",
 
         description:

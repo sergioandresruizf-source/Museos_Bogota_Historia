@@ -22,6 +22,9 @@ const backToWorkQuizButton = document.getElementById("back-to-work-quiz");
 //Elementos linea del tiempo
 const timelineView = document.getElementById("timeline-view");
 const backToWorkTimelineButton = document.getElementById("back-to-work-timeline");
+// Elementos del ahorcado
+const hangmanView = document.getElementById("hangman-view");
+const backToWorkHangmanButton = document.getElementById("back-to-work-hangman");
 const backToWorkButton = document.getElementById("back-to-work");
 const startGameButton = document.getElementById("start-game");
 
@@ -253,6 +256,13 @@ startGameButton.addEventListener("click", () => {
         puzzleView.hidden = true;
         quizView.hidden = true;
         timelineView.hidden = false;
+    } else if (currentWork.activity === "hangman") {
+
+        puzzleView.hidden = true;
+        quizView.hidden = true;
+        timelineView.hidden = true;
+        hangmanView.hidden = false;
+
     }
 
     window.scrollTo(0, 0);
@@ -295,6 +305,19 @@ backToWorkTimelineButton.addEventListener("click", () => {
     timelineView.hidden = true;
     workView.hidden = false;
     window.scrollTo(0, 0);
+});
+
+// ------------------------------------
+// REGRESAR A LA OBRA DESDE EL AHORCADO
+// ------------------------------------
+
+backToWorkHangmanButton.addEventListener("click", () => {
+
+    hangmanView.hidden = true;
+    workView.hidden = false;
+
+    window.scrollTo(0, 0);
+
 });
 
 // ------------------------------------
