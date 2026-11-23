@@ -213,7 +213,55 @@ export const works = [
         image: "./assets/artworks/Boqueron del rio San Francisco.png",
         music: "./assets/sounds/Anselmo Duran Plazas - El Sanjuanero.mp3",
         coins: null
-    }
+    },
+    {
+        id: 13,
+        title: "Carmen Rodríguez de Gaitán",
+        author: "Ignacio Castillo",
+        date: "1900",
+        type: "Pintura al óleo",
+        activity: "puzzle",
+        collection: "Museo de la Independencia Casa del Florero",
+
+        description:
+        "Carmen Rodríguez de Gaitán (1777–1852) participó activamente en el movimiento de independencia. Durante la Reconquista española, dirigida por Pablo Morillo, fue desterrada a Tocaima y condenada a muerte; tras la victoria republicana en Boyacá se retiraron los cargos.",
+
+        image: "./assets/artworks/CArmen Rodriguez de Gaitán.jpeg",
+        music: "./assets/sounds/Jose A. Morales - Campesina santandereana.mp3",
+        coins: null
+    },
+    {
+        id: 14,
+        title: "Calle de la Moneda",
+        author: "Desconocido",
+        date: "1850",
+        type: "Pintura al óleo",
+        activity: "puzzle",
+        collection: "Museo de la Independencia Casa del Florero",
+
+        description:
+        "Según el registro del museo, la calle debe su nombre a la Casa de Moneda de Santafé, establecida en 1620 por orden del rey Felipe III para acuñar el oro y la plata del Nuevo Reino de Granada; la acuñación comenzó en 1621. Su edificio, en la calle 11 con carrera 4, en La Candelaria, fue cedido al Banco de la República en 1991 y es hoy el Museo Casa de Moneda.",
+
+        image: "./assets/artworks/Calle de la Moneda.png",
+        music: "./assets/sounds/Soy_Colombiano_Garzon.mp3",
+        coins: null
+    },
+    {
+        id: 15,
+        title: "Capilla del Humilladero",
+        author: "Desconocido",
+        date: "1850",
+        type: "Dibujo (el registro no precisa la técnica)",
+        activity: "puzzle",
+        collection: "Museo de la Independencia Casa del Florero",
+
+        description:
+        "La capilla del Humilladero, considerada la primera iglesia de Bogotá, estaba en la Plaza de las Yerbas (hoy Parque Santander). Fue reedificada en dos ocasiones y demolida en 1877. El dibujo es de 1850, anterior a la demolición. Tras ella, la plaza se convirtió en parque y el 6 de mayo de 1878 se inauguró allí el monumento a Francisco de Paula Santander.",
+
+        image: "./assets/artworks/Capilla del Humilladero.png",
+        music: "./assets/sounds/Oreste Sindici - Himno Nacional de Colombia (instrumental).mp3",
+        coins: null
+    },
 
     
 ];
@@ -221,9 +269,6 @@ export const works = [
 
 const additionalArtworkFiles = [
 
-    "CArmen Rodriguez de Gaitán.jpeg",
-    "Calle de la Moneda.png",
-    "Capilla del Humilladero.png",
     "Casa museo del 20 de julio.png",
     "Documento conmemorativo de la capitulación de Cartagena .jpeg",
     "El Humilladero, La Veracruz y San Francisco.png",
@@ -261,7 +306,7 @@ const additionalArtworkFiles = [
 ];
 
 const additionalWorks = additionalArtworkFiles.map((filename, index) => ({
-    id: index + 13,
+    id: index + 16,
     title: filename.replace(/\.[^/.]+$/, "").trim(),
     author: "No identificado",
     date: "No precisada",
