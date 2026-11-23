@@ -1,6 +1,7 @@
 
 import { initializeMap } from "./map/map.js";
 import { works } from "./data/work.js";
+import { getConnectedWorkIds } from "./map/map.js";
 import { startActivity } from "./core/activityManager.js";
 import {
     showCelebration,
@@ -86,9 +87,8 @@ updateCoinCounter();
 // COMPLETAR UNA OBRA Y ENTREGAR MONEDAS
 // ------------------------------------
 
-function completeWork(workId) {
 
-    // Comprobar que la obra existe
+function completeWork(workId) {
     const selectedWork = works.find(work => work.id === workId);
 
     if (!selectedWork) {
@@ -98,36 +98,41 @@ function completeWork(workId) {
 
     currentWork = selectedWork;
 
-    // Evitar recompensas repetidas
     if (completedWorks.includes(workId)) {
         console.log("Esta obra ya fue completada.");
         return;
     }
 
-    // Registrar obra completada
+    // Marcar la obra como completada.
     completedWorks.push(workId);
 
-    // Mostrar celebración por primera finalización
-    showCelebration();
+    // Obtener las conexiones directas de esta obra.
+    const connectedWorks = getConnectedWorkIds(workId);
 
-    // Entregar recompensa
+    // Desbloquear las obras conectadas.
+    connectedWorks.forEach(connectedId => {
+        if (
+            !completedWorks.includes(connectedId) &&
+            !unlockedWorks.includes(connectedId)
+        ) {
+            unlockedWorks.push(connectedId);
+            console.log(`¡Obra ${connectedId} desbloqueada!`);
+        }
+    });
+
+    // Entregar las monedas.
+    showCelebration();
     coins += 100;
 
-    // Comprobar si se alcanzó la meta
     if (coins >= 300) {
         goalReached = true;
         console.log("¡Meta de monedas alcanzada!");
     }
 
-    // Guardar y actualizar
+    // Guardar y actualizar el progreso.
     saveProgress();
     updateCoinCounter();
-
-    // Actualizar apariencia del mapa
-    initializeMap({
-        completedWorks,
-        unlockedWorks
-    });
+    initializeMap({ completedWorks, unlockedWorks });
 
     console.log(`Obra ${workId} completada. Monedas: ${coins}`);
 }
