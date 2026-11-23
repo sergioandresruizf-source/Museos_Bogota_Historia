@@ -176,8 +176,8 @@
         border: 3px solid var(--ca);
         border-radius: 10px;
         background: rgba(251, 235, 198, 0.9);
-        width: 144px;
-        height: 96px;
+        width: 150px;
+        height: 172px;
       }
       #ctl {
         position: fixed;
@@ -380,6 +380,9 @@
         accent-color: var(--te);
         touch-action: pan-x;
       }
+      .tbs{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+      #tbx p{margin:.55em 0;line-height:1.45}
+      #npl{max-width:230px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.8rem}
       #meta {
         max-width: min(420px, 90vw);
         font-size: 0.8rem;
@@ -391,8 +394,8 @@
     <canvas id="cv"></canvas
     ><canvas
       id="mm"
-      width="144"
-      height="96"
+      width="150"
+      height="172"
       aria-label="Plano del museo"
     ></canvas>
     <div id="hud">
@@ -425,7 +428,7 @@
         aria-label="Música ambiente"
       >
         ♪
-      </button>
+      </button><button id="pl" class="chip" type="button" aria-label="Menú de canciones">♫ Canciones</button><span class="pill" id="npl">♪ …</span>
     </div>
     <div id="ctl">
       <button id="bx" class="chip" type="button">Soltar aire</button
@@ -451,6 +454,7 @@
             <b>ladrón</b> intenta llevarse una obra. ¡Atrápalo antes de que
             escape!
           </p>
+          <p class="lead">Novedades: <b>14 canciones</b> que rotan solas (menú ♫ o tecla M), fichas con la historia, la reflexión y la crítica de cada obra, una <b>Rockola con pista de baile</b> al sur y eventos nuevos: concierto sorpresa, cuadros torcidos y obra del día.</p>
           <form id="bo">
             <label for="nom"><b>Nombre del visitante</b></label
             ><input
@@ -461,7 +465,7 @@
             /><button class="btn">Empezar la visita</button>
           </form>
           <p class="muted">
-            Flechas o WASD para caminar · E o Espacio para mirar y usar · X
+            Flechas o WASD para caminar · E o Espacio para mirar y usar · M canciones · N siguiente · X
             suelta aire · En el celular arrastra el dedo.
           </p>
           <p class="muted">
@@ -470,17 +474,22 @@
           </p>
         </div>
         <div class="wall" aria-hidden="true">
-          <img src="media/t13.jpg" alt="" /><img
-            src="media/t6.jpg"
+          <img src="media/t8.jpg" alt="" /><img
+            src="media/t72.jpg"
             alt=""
-          /><img src="media/t42.jpg" alt="" /><img
-            src="media/t19.jpg"
+          /><img src="media/t58.jpg" alt="" /><img
+            src="media/t9.jpg"
             alt=""
-          /><img src="media/t20.jpg" alt="" /><img src="media/t9.jpg" alt="" />
+          /><img src="media/t73.jpg" alt="" /><img src="media/t10.jpg" alt="" />
         </div>
       </div>
     </div>
     <dialog id="ficha"><div class="in" id="fc"></div></dialog>
+    <dialog id="mus"><div class="in"><h2>♫ Banda sonora</h2><p class="muted" id="mnow"></p>
+      <div class="tbs"><button class="chip" id="mp" type="button">⏮ Anterior</button><button class="chip" id="mt" type="button">⏯ Pausa/Play</button><button class="chip" id="mn" type="button">⏭ Siguiente</button></div>
+      <div class="tbs"><button class="chip" data-m="rot" type="button">Rotar por tiempo</button><button class="chip" data-m="sala" type="button">Una canción por sala</button><button class="chip" data-m="una" type="button">Repetir la elegida</button></div>
+      <label>Cambiar cada <input id="mseg" type="range" min="30" max="240" step="15"><b id="msg"></b></label>
+      <div id="mlist"></div><p><button class="btn" data-x type="button">Cerrar</button></p></div></dialog>
     <dialog id="final">
       <div class="in">
         <h2>Salida del museo</h2>
@@ -506,6 +515,7 @@
         </p>
       </div>
     </dialog>
+    <script src="guiones.js"></script>
     <script>
       "use strict";
       const $ = (s) => document.querySelector(s),
@@ -523,223 +533,219 @@
       };
       const rp = (a, b) => a.repeat(b),
         CO = ["#e0704a", "#5aa67f", "#f0bb52", "#ee9a97", "#5aa3ba"];
-      const NC = 61,
-        NR = 54,
-        W = NC * T,
-        H = NR * T,
-        gv = { w: 1000, h: 640 },
-        IMG = {};
+      const NC = 102, NR = 118, W = NC * T, H = NR * T, gv = { w: 1000, h: 640 }, IMG = {}, NW = 115, MW = 150, MH = 172;
       const M = Array.from({ length: NR }, () => Array(NC).fill("#"));
       const R = (t, a, b, c, d) => {
         for (let j = b; j <= d; j++) for (let i = a; i <= c; i++) M[j][i] = t;
       };
-      R("f", 2, 1, 13, 8);
-      R("c", 16, 1, 31, 8);
-      R("w", 32, 4, 33, 5);
-      R("h", 34, 1, 58, 8);
-      R("a", 2, 11, 15, 24);
-      R("d", 18, 11, 41, 24);
-      R("b", 44, 11, 58, 24);
-      R("d", 16, 17, 17, 18);
-      R("d", 42, 17, 43, 18);
-      R("d", 7, 9, 8, 10);
-      R("d", 23, 9, 24, 10);
-      R("n", 50, 9, 50, 10);
-      R("e", 14, 29, 45, 35);
-      R("e", 14, 25, 15, 28);
-      R("e", 29, 25, 30, 28);
-      R("e", 44, 25, 45, 28);
-      R("g", 29, 36, 30, 36);
-      R("g", 4, 37, 55, 40);
-      [
-        [20, 12],
-        [40, 12],
-        [20, 22],
-        [40, 22],
-        [30, 12],
-      ].forEach(([i, j]) => (M[j][i] = "k"));
-      R("d", 29, 41, 30, 42);
-      R("j", 18, 43, 41, 52);
+      /* Salas amplias: [col0, fila0, col1, fila1] */
+      const RM = {
+        f: [2, 2, 27, 19], c: [30, 2, 55, 19], h: [58, 2, 99, 19],
+        a: [2, 22, 27, 45], d: [30, 22, 61, 45], b: [64, 22, 99, 45],
+        e: [14, 48, 85, 59], g: [2, 62, 99, 71],
+        m: [2, 74, 27, 93], j: [30, 74, 61, 93], p: [64, 74, 99, 93], q: [14, 98, 85, 115],
+      };
+      Object.entries(RM).forEach(([k, [a, b, c, d]]) => R(k, a, b, c, d));
+      R("d", 12, 20, 15, 21); R("d", 40, 20, 43, 21); R("n", 82, 20, 82, 21); R("w", 56, 9, 57, 11);
+      R("d", 28, 32, 29, 35); R("d", 62, 32, 63, 35);
+      R("e", 14, 46, 17, 47); R("e", 44, 46, 47, 47); R("e", 78, 46, 81, 47); R("e", 44, 60, 47, 61);
+      R("d", 12, 72, 15, 73); R("d", 44, 72, 47, 73); R("d", 80, 72, 83, 73); R("d", 44, 94, 47, 97);
+      const COL = [];
+      [[25, [34, 38, 50, 54, 58]], [43, [34, 38, 42, 50, 54, 58]]].forEach(([j, cs]) => cs.forEach((i) => COL.push([i, j])));
+      [51, 58].forEach((j) => [20, 26, 32, 38, 54, 60, 66, 72].forEach((i) => COL.push([i, j])));
+      COL.forEach(([i, j]) => (M[j][i] = "k"));
       const PAL = {
-        j: ["#d7c8ee", "#c3b0e2"],
-        a: ["#f3b9aa", "#eaa090"],
-        b: ["#9ccbad", "#7bb592"],
-        c: ["#b1d8e2", "#86bccd"],
-        d: ["#fff1cf", "#f5e2b3"],
-        e: ["#f2d9a0", "#e8c680"],
-        f: ["#f6c875", "#eab04a"],
-        g: ["#b8d49a", "#a6c785"],
-        h: ["#8a3a20", "#6e2c18"],
+        j: ["#d7c8ee", "#c3b0e2"], a: ["#f3b9aa", "#eaa090"], b: ["#9ccbad", "#7bb592"],
+        c: ["#b1d8e2", "#86bccd"], d: ["#fff1cf", "#f5e2b3"], e: ["#f2d9a0", "#e8c680"],
+        f: ["#f6c875", "#eab04a"], g: ["#b8d49a", "#a6c785"], h: ["#8a3a20", "#6e2c18"],
+        m: ["#dfe3ee", "#c9cfe2"], p: ["#f8e58e", "#efd16a"], q: ["#3b2a5c", "#33244f"],
       };
       const ZN = {
-        j: "Sala de Juegos",
-        a: "Sala Rosa · Retratos",
-        b: "Sala Verde · Vida cotidiana",
-        c: "Sala Azul · Esculturas",
-        d: "Patio central",
-        e: "Vestíbulo",
-        f: "Inicios y dibujos",
-        g: "Plaza de esculturas",
-        h: "Fuera del museo",
-        n: "Fuera del museo",
-        w: "Fuera del museo",
+        j: "Sala de Juegos", a: "Sala Rosa · Retratos", b: "Sala Verde · Vida cotidiana",
+        c: "Sala Azul · Esculturas", d: "Patio central", e: "Vestíbulo", f: "Inicios y vanguardia",
+        g: "Plaza de esculturas", h: "Fuera del museo", n: "Fuera del museo", w: "Fuera del museo",
+        m: "Sala de Dibujos", p: "Sala Amarilla · Naturalezas y paisajes", q: "Salón de la Rockola",
       };
       const SA = {
-          f: "Inicios y dibujos",
-          a: "Sala Rosa",
-          b: "Sala Verde",
-          c: "Sala Azul",
-          g: "Plaza de esculturas",
+          f: "Inicios y vanguardia", a: "Sala Rosa", b: "Sala Verde", c: "Sala Azul",
+          g: "Plaza de esculturas", m: "Sala de Dibujos", p: "Sala Amarilla",
         },
-        HID = [57, 30, 33, 27, 56],
-        VER = [6, 13, 23, 27, 57];
+        HID = [32, 43, 44, 48, 75, 107, 108, 110, 111, 112, 113, 114, 115],
+        VER = [8, 72, 92, 110, 112, 113, 114, 44];
+      const rg = (a, b) => Array.from({ length: b - a + 1 }, (_, i) => a + i);
       const RN = {
-        f: [1, 2, 3, 5, 41, 44, 46, 47, 48, 32],
-        a: [4, 13, 15, 6, 7, 8, 9, 10, 20, 45, 53, 26],
-        b: [19, 34, 43, 51, 54, 55, 49, 42, 31, 22, 17, 16, 35],
-        c: [14, 11, 12, 28, 36, 37, 38, 39, 40, 50, 52, 58, 59],
-        g: [18, 21, 23, 24, 25, 29, 60],
-      };
-      const RC = {
-        f: [2, 1, 13, 8, 2, 0],
-        a: [2, 11, 15, 24, 2, 0],
-        b: [44, 11, 58, 24, 2, 0],
-        c: [16, 1, 31, 8, 2, 0],
-        g: [4, 37, 55, 40, 7, 1],
+        f: [1, 2, 47, 50, 51, 52, 53, 54, 55, 56, 57, 69, 105],
+        m: [11, 18, 19, 21, 22, 23, 26, 30, 35, 42, 49],
+        a: [3, 4, 5, 8, 9, 10, 12, 16, 20, 29, 31, 33, 34, 38, 65, 67, 71, 72, 73, 74, 106],
+        b: [6, 13, 14, 15, 17, 24, 25, 27, 28, 36, 37, 39, 40, 62, 78, 109],
+        p: [7, 41, 45, 46, 58, 59, 60, 61, 63, 64, 66, 68, 70, 76, 77],
+        c: rg(79, 91), g: rg(92, 104), h: HID.slice(),
       };
       const D = {};
-      `1|Mástiles y figuras|Obra temprana de color suave y figuras alargadas, aún lejos del volumen.
-2|Retrato de joven|Rostro sereno con flequillo, de trazo sobrio, de sus primeros años.
-3|Composición geométrica|Formas planas y color oscuro: su etapa de exploración cubista.
-4|Mona Lisa, variación|Versión de trazo suelto y rostro verdoso: Botero conversa con Leonardo.
-5|Figuras en movimiento|Diagonales y colores intensos, antes de que llegara el volumen.
-6|La familia presidencial|Sátira del poder: militares, clero y familia posan con ternura grotesca.
-7|Militar de uniforme verde|Autoridad inflada hasta el humor, con gorra y charreteras.
-8|Hombre de sombrero|Figura de traje oscuro con una fruta en la mano, entre follaje.
-9|Mujer de vestido verde|Figura voluminosa de cabello pelirrojo y mirada serena.
-10|Policía sobre caballito|Un policía enorme sobre un caballo de juguete: juego y autoridad.
-11|La mano|Mano monumental en bronce, de dedos redondeados.
-12|Hombre con bastón|Pequeño bronce de figura con sombrero y bastón.
-13|Mona Lisa a los doce años|Reinterpretación famosa de Leonardo: volumen, ironía y cariño.
-14|Esqueleto músico|La muerte toca la guitarra frente a una cortina roja.
-15|Infanta de vestido rojo|Homenaje a Velázquez con rostro serio y mejillas rosadas.
-16|Plaza de toros|Picadores, caballos y público en la arena: tema taurino recurrente.
-17|Pareja bailando|Dos figuras voluminosas en pleno baile, ella de azul.
-18|Mujer reclinada|Bronce de cuerpo redondo recostado en una calle de ciudad.
-19|Ramo de flores|Un ramo gigante y colorido sostenido por una mano.
-20|Familia en el campo|Padre de sombrero, madre, hijos y un gato bajo los árboles.
-21|Figuras reclinadas|Bronce de cuerpos redondeados tendidos en una plaza urbana.
-22|El pintor y su modelo|Mujer desnuda de espaldas frente al caballete.
-23|El gato|Felino de bronce enorme y sonriente en plena calle.
-24|Pájaro|Ave de bronce de formas rotundas ante un edificio.
-25|Caballo|Caballo monumental de patas macizas en un espacio público.
-26|Madre con bebé|Madre voluminosa con su hijo junto a una cortina rosa.
-28|Mujer y cisne|Mujer reclinada con un cisne: mito clásico en bronce.
-29|Maternidad|Madre con niños sobre un pedestal, en una plaza.
-31|Mujer en la playa|Figura recostada sobre una toalla rosa frente al mar.
-32|Hombre a caballo|Hombre de traje oscuro cabalga bajo un cielo azul.
-34|Libros y partitura|Naturaleza muerta con libros apilados y un lápiz sobre el escritorio.
-35|Bote a la deriva|Personas dormidas o agotadas en un bote sobre mar verde.
-36|Caballo blanco|Caballo pequeño en mármol blanco de formas redondas.
-37|Jinete|Figura sobre un caballo, en bronce negro.
-38|Mano de bronce|Otra mano de pulgar y dedos abultados.
-39|Mujer reclinada en mármol|Figura blanca recostada, con el brazo sobre la cabeza.
-40|Mujer reclinada en bronce|Cuerpo oscuro tendido, de formas suaves.
-41|Escena expresionista|Cuerpos retorcidos en rojos y ocres, dentro de un marco dorado.
-42|Mujer en la cama|Mujer desnuda con naranjas sobre una cama roja.
-43|Jarrón con rosas|Dibujo suave de rosas blancas en un jarrón.
-44|Bailarina|Dibujo en sanguina de una mujer de lunares en pose de baile.
-45|Hombre con bananos|Figura de traje oscuro entre hojas de banano, con un perro.
-46|Pareja sentada|Dibujo a lápiz de dos figuras desnudas en una cama.
-47|Rostro en sanguina|Una figura se cubre la boca con la mano.
-48|Crucifixión|Dibujo a lápiz de Cristo en la cruz sobre un paisaje de montañas.
-49|El baño|Interior de baño: pies en la bañera y una figura en el espejo.
-50|Pareja de espaldas|Relieve de dos figuras abrazadas, vistas desde atrás.
-51|Frutas y guitarra|Dibujo de frutas y guitarra frente a una ventana con tejados.
-52|Mujer sentada|Bronce de una mujer sentada con una pierna recogida.
-53|Dos mujeres|Mujer de vestido rojo y compañera de negro junto a una puerta.
-54|Naranjas y cuchillo|Naranjas y un vaso de jugo sobre la mesa; una mano sostiene un cuchillo.
-55|Violín y jarra|Naturaleza muerta con violín, jarra y paño rojo ante una ventana.
-56|Soldado|Combatiente de camuflaje con fusil entre árboles: la violencia en Colombia.
-57|Abu Ghraib|Serie de 2005 sobre las torturas en una prisión de Irak; fue muy debatida.
-58|Hombre de pie|Bronce de un hombre desnudo en pose erguida.
-59|Mujer de pie|Bronce de una mujer desnuda con la mano en la frente.
-30|Masacre|Fiesta interrumpida por hombres armados: memoria de la violencia en Colombia.
-33|Coche bomba|Auto destrozado tras un atentado: el terror en las calles colombianas.
-27|Pájaros de San Antonio|Pájaro herido y Pájaro de la Paz en Medellín tras la bomba de 1995.`
+      `1|Guitarra cubista|Guitarra de planos oscuros sobre fondo magenta: etapa de exploración cubista.
+2|Escena expresionista|Cuerpos retorcidos en rojos y ocres, dentro de un marco dorado.
+3|Militar de uniforme verde|Autoridad inflada hasta el humor, con gorra y charreteras.
+4|Hombre de sombrero|Figura de traje oscuro con una fruta en la mano, entre follaje.
+5|Mujer de vestido verde|Figura voluminosa de cabello pelirrojo y mirada serena.
+6|Mujer en la cama|Mujer desnuda con naranjas sobre una cama roja.
+7|Rosas blancas|Un ramo de rosas blancas en una jarra de formas redondeadas.
+8|Mona Lisa a los doce años|Reinterpretación famosa de Leonardo: volumen, ironía y cariño.
+9|Esqueleto músico|La muerte toca la guitarra frente a una cortina roja.
+10|Infanta de vestido rojo|Homenaje a Velázquez con rostro serio y mejillas rosadas.
+11|Bailarina en sanguina|Dibujo rojizo de una mujer de lunares en pose de baile.
+12|Pareja bailando|Dos figuras voluminosas en pleno baile, ella de azul.
+13|Figuras dormidas|Cuerpos voluminosos descansan entre árboles en plena siesta.
+14|Ramo de flores|Un ramo gigante y colorido sostenido por una mano.
+15|Familia en el campo|Padre de sombrero, madre, hijos y un gato bajo los árboles.
+16|Hombre con bananos|Figura de traje oscuro entre hojas de banano, con un perro.
+17|El pintor y su modelo|Mujer desnuda de espaldas frente al caballete.
+18|Pareja sentada|Dibujo a lápiz de dos figuras desnudas sentadas juntas.
+19|Rostro en sanguina|Una figura se cubre la boca con la mano.
+20|Mujer en la ventana|Mujer desnuda de espaldas junto a una ventana verde.
+21|Hombre con máquina de coser|Dibujo a lápiz de un hombre robusto sentado junto a una máquina.
+22|Frutas y piña|Dibujo de naturaleza muerta con frutas y una piña sobre la mesa.
+23|Crucifixión|Dibujo a lápiz de Cristo en la cruz sobre un paisaje de montañas.
+24|Madre con bebé|Madre voluminosa con su hijo junto a una cortina rosa.
+25|El baño|Interior de baño: pies en la bañera y una figura en el espejo.
+26|Frutas y guitarra|Dibujo de frutas y guitarra frente a una ventana con tejados.
+27|Idilio en el campo|Una pareja descansa sobre el pasto, con guitarra, bajo un cielo claro.
+28|Músico campestre|Hombre tocando guitarra entre figuras reclinadas bajo los árboles.
+29|Mujer de pie|Figura femenina de vestido claro, con la mano en la cadera.
+30|Hombre barbado|Dibujo de un hombre con sombrero, barba y mochila.
+31|Hombre en el bosque|Figura de traje oscuro entre árboles, con un perro a su lado.
+32|Masacre|Fiesta interrumpida por hombres armados: memoria de la violencia en Colombia.
+33|Hombre de gala|Retrato de un hombre de traje y banda ante cortinas verdes.
+34|Dama de gala|Mujer de vestido rojo con banda azul y moño en el cabello.
+35|Hombre con guitarra|Acuarela de un hombre de camisa azul con una guitarra.
+36|Mujer en la playa|Figura recostada sobre una toalla rosa frente al mar.
+37|Hombre a caballo|Hombre de traje oscuro cabalga bajo un cielo azul.
+38|Dos mujeres|Mujer de vestido rojo y compañera de negro junto a una puerta.
+39|Naranjas y cuchillo|Naranjas y un vaso de jugo sobre la mesa; una mano sostiene un cuchillo.
+40|Mujer leyendo|Mujer desnuda recostada con un libro en un paisaje verde.
+41|Naturaleza muerta con jarras|Jarras grises y rojas, un pepino y una naranja sobre un mantel.
+42|Hombre sentado|Dibujo suave de un hombre sentado en una banca entre árboles.
+43|Soldado|Combatiente de camuflaje con fusil entre árboles: la violencia en Colombia.
+44|Coche bomba|Auto destrozado tras un atentado: el terror en las calles colombianas.
+45|Libros y partitura|Naturaleza muerta con libros apilados y un lápiz sobre el escritorio.
+46|Violín y jarra|Naturaleza muerta con violín, jarra y paño ante una ventana.
+47|Pueblo cubista|Casas y cúpulas desordenadas en planos geométricos.
+48|Campesinos y aves negras|Dos campesinos con palas bajo bandadas de aves oscuras.
+49|Mujer con brazos cruzados|Dibujo en sanguina de una mujer redonda de brazos cruzados.
+50|Campesinos y mujer con canasta|Obra temprana enmarcada: figuras de campo en planos de color.
+51|Mujer de espaldas|Obra temprana de tonos grises: mujer inclinada, vista desde atrás.
+52|Mujer de perfil|Retrato temprano de mujer de perfil con chaqueta roja.
+53|Flores abstractas|Flores en pinceladas gruesas de colores intensos.
+54|Rostro expresionista|Figura pintada con trazos intensos en rojos y azules.
+55|Guitarra en el lienzo|Fragmentos de guitarra en planos de color, de estilo cubista.
+56|Composición cubista|Figuras y objetos fragmentados en rojos, negros y morados.
+57|Composición roja|Franja de manchas rojas y negras con ritmo de movimiento.
+58|La naranja|Una naranja enorme que ocupa todo el cuadro.
+59|Árbol|Árbol de copa redonda y verde, con tronco grueso bajo cielo claro.
+60|Tejados|Vista desde lo alto de tejados rojizos.
+61|Paisaje verde|Montañas y vegetación en tonos verdes suaves.
+62|Escena de calle|Personajes de barrio y una mujer de azul en una calle con banderas.
+63|Guitarra sobre silla|Guitarra clara apoyada en una silla de madera.
+64|Naturaleza muerta con silla|Frutas, botella y una silla negra ante una cortina morada.
+65|Mujer de amarillo|Mujer de vestido amarillo con las manos en el regazo.
+66|Mujer entre rocas|Mujer de espaldas junto a una cascada gris.
+67|Pareja con paraguas|Hombre de negro y mujer de rosa caminan juntos.
+68|Bote a la deriva|Personas dormidas o agotadas en un bote sobre mar verde.
+69|Ruinas|Columnas y arcos derrumbados en un interior fragmentado.
+70|Guitarra y cómoda|Guitarra de madera sobre una cómoda con cajón.
+71|Mona Lisa, variación|Versión de trazo suelto y rostro verdoso: Botero conversa con Leonardo.
+72|La familia presidencial|Sátira del poder: militares, clero y familia posan con ternura grotesca.
+73|Policía sobre caballito|Un policía enorme sobre un caballo de juguete: juego y autoridad.
+74|La orquesta|Músicos de formas redondas tocan juntos en un cuadro dorado.
+75|Torero muerto|Un torero yace sobre el toro, entre capote verde y rojo.
+76|Pueblo con iglesia|Techos y una iglesia blanca ante montañas, en tonos amarillos.
+77|Sandía y frutas|Naturaleza muerta con sandía abierta y frutero sobre una mesa.
+78|Retrato de familia|Una familia posa con perros grandes frente a su casa.
+79|La mano|Mano monumental en bronce, de dedos redondeados.
+80|Hombre con bastón|Pequeño bronce de figura con sombrero y bastón.
+81|Mujer reclinada|Bronce de cuerpo redondo recostado en una calle de ciudad.
+82|Figuras reclinadas|Bronce de cuerpos redondeados tendidos en una plaza urbana.
+83|Figura en la plaza|Escultura rotunda de bronce ante un edificio de cristal.
+84|Caballo|Caballo monumental de patas macizas en un espacio público.
+85|Pareja de espaldas|Relieve de dos figuras abrazadas, vistas desde atrás.
+86|Leda y el cisne|Mujer reclinada con un cisne: mito clásico en bronce.
+87|Maternidad|Madre con niños sobre un pedestal, en una plaza.
+88|Mujer sentada|Bronce de una mujer sentada con una pierna recogida.
+89|Mujer y pájaro|Figura verde reclinada con un pájaro sobre su cuerpo.
+90|Mano de bronce|Otra mano de pulgar y dedos abultados.
+91|Mujer sobre pedestal|Figura recostada sobre un pedestal frente a una terraza.
+92|El gato|Felino de bronce enorme y sonriente en plena calle.
+93|El gato, otro ángulo|El mismo felino de bronce visto en una calle europea.
+94|Caballo blanco|Caballo pequeño en mármol blanco de formas redondas.
+95|Jinete|Figura sobre un caballo, en bronce negro.
+96|Mujer reclinada en mármol|Figura blanca recostada, con el brazo sobre la cabeza.
+97|Mujer reclinada en bronce|Cuerpo oscuro tendido, de formas suaves.
+98|Hombre de pie|Bronce de un hombre desnudo en pose erguida.
+99|Mujer de pie en bronce|Bronce de una mujer desnuda con la mano en la frente.
+100|Torso|Torso monumental de bronce brillante, sin cabeza ni brazos.
+101|Gato pequeño|Pequeño felino de bronce de cuerpo macizo y cola larga.
+102|Figura sobre figura|Una figura de pie sobre otra tendida, en bronce verdoso.
+103|Escultura con paño|Figura de bronce envuelta en paños sobre fondo azul oscuro.
+104|Torso masculino|Torso oscuro iluminado dramáticamente sobre un pedestal.
+105|Retrato de joven|Rostro sereno con flequillo, de trazo sobrio, de sus primeros años.
+106|Las Meninas, variación|Figuras de colores apagados que recuerdan la obra de Velázquez.
+107|Cuerpos amontonados|Figuras apiladas en colores oscuros: dolor y violencia.
+108|Pila de figuras|Cuerpos de formas redondas apilados en tonos fríos.
+109|Plaza de toros|Picadores, caballos y público en la arena: tema taurino recurrente.
+110|Pájaro de la Paz|Ave de bronce en Medellín, junto al pájaro herido por la bomba de 1995.
+111|Escena en el tejado|Hombre armado sobre un tejado rodeado de aves: violencia en Colombia.
+112|Abu Ghraib (tríptico)|Serie de 2005 sobre las torturas en una prisión de Irak; fue muy debatida.
+113|Abu Ghraib|Cuerpos encerrados tras barrotes: la crueldad en la prisión de Irak.
+114|Abu Ghraib, cuerpos apilados|Figuras maniatadas y amontonadas, de la misma serie.
+115|Muerte en el tejado|Un hombre yace sobre un tejado mientras otros lo señalan.`
         .split("\n")
         .forEach((l) => {
           const [a, b, c] = l.split("|");
           D[a] = [b, c];
         });
       const fr = [];
-      const slots = (a, b, c, d, s, st) => {
-        const o = [];
-        for (const [r, dr] of [
-          [b, -1],
-          [d, 1],
-        ])
-          for (let i = a + st; i <= c; i += s)
-            if (
-              M[r + dr] &&
-              M[r + dr][i] === "#" &&
-              "abcdefg".includes(M[r][i])
-            )
-              o.push([i, r]);
-        return o;
-      };
-      const mk = (n, i, j, k) =>
-        fr.push({
-          n,
-          x: (i + 0.5) * T,
-          y: (j + 0.5) * T,
-          k,
-          ti: D[n] ? D[n][0] : "Espacio libre",
-        });
-      Object.keys(RN).forEach((k) => {
-        const [a, b, c, d, s, st] = RC[k],
-          sl = slots(a, b, c, d, s, st);
-        RN[k].forEach((n, q) => mk(n, sl[q][0], sl[q][1], k));
-      });
-      [57, 30, 33, 27, 56].forEach((n, q) => mk(n, 36 + q * 5, 1, "h"));
-      const t2 = (a) => a.map(([c, r]) => ({ x: c * T, y: r * T })),
-        PU = t2([
-          [4.5, 4],
-          [4.5, 20],
-          [22, 20],
-          [20, 32],
-          [55, 20],
-          [10, 38.5],
-        ]),
-        CA = t2([
-          [10, 6],
-          [11, 22],
-          [36, 20],
-          [27, 6],
-          [20, 14],
-          [22, 33],
-          [52, 20],
-          [50, 39],
-        ]),
-        PI = [26, 28, 30, 32, 34].map((c, i) => ({
-          x: (c + 0.5) * T,
-          y: 14.5 * T,
-          f: [261.6, 293.7, 329.6, 392, 440][i],
-          g: 0,
-        })),
-        EX = { x: 30 * T, y: 34.6 * T },
-        SC = { x: 30 * T, y: 21 * T, r: 66 };
-      const FL = [];
-      M.forEach((r, j) =>
-        r.forEach((t, i) => "abcdefg".includes(t) && FL.push([i, j])),
-      );
-      const FR = Array.from({ length: 90 }, () => {
-        const [i, j] = FL[(rnd() * FL.length) | 0];
-        return {
-          x: (i + 0.2 + rnd() * 0.6) * T,
-          y: (j + 0.2 + rnd() * 0.6) * T,
-          t: 0,
+      /* Marcos en anillos a lo largo de los muros, con 4 casillas entre obras (sin solaparse) */
+      const slots = (K, [a, b, c, d], n) => {
+        const ok = (i, j) => {
+          for (let y = j - 2; y <= j + 2; y++)
+            for (let x = i - 2; x <= i + 2; x++) {
+              const t = (M[y] || [])[x];
+              if (t && t !== "#" && t !== K) return 0;
+            }
+          return 1;
         };
+        const out = [];
+        for (let k = 0; out.length < n && k <= 12; k += 5) {
+          const x0 = a + k, y0 = b + k, x1 = c - k, y1 = d - k;
+          if (x1 - x0 < 8 || y1 - y0 < 6) break;
+          const r = [];
+          for (let i = x0 + 2; i <= x1 - 2; i += 4) r.push([i, y0], [i, y1]);
+          for (let j = y0 + 4; j <= y1 - 4; j += 4) r.push([x0, j], [x1, j]);
+          const g = r.filter(([i, j]) => ok(i, j)), need = Math.min(n - out.length, g.length);
+          const ord = Array.from({ length: need }, (_, q) => Math.floor((q * g.length) / need)),
+            cf = (p) => out.some(([x, y]) => Math.abs(p[0] - p[1] - (x - y)) * 32 < 112 && Math.abs(p[0] + p[1] - (x + y)) * 16 < 124);
+          g.forEach((_, q) => ord.includes(q) || ord.push(q));
+          const tope = out.length + need;
+          ord.forEach((q) => out.length < tope && !cf(g[q]) && out.push(g[q]));
+        }
+        return out;
+      };
+      const mk = (n, i, j, k) => fr.push({ n, x: (i + 0.5) * T, y: (j + 0.5) * T, k, ti: D[n] ? D[n][0] : "Espacio libre" });
+      Object.keys(RN).forEach((k) => {
+        const sl = slots(k, RM[k], RN[k].length);
+        RN[k].forEach((n, q) => sl[q] && mk(n, sl[q][0], sl[q][1], k));
+      });
+      const t2 = (a) => a.map(([c, r]) => ({ x: c * T, y: r * T })),
+        PU = t2([[5, 17], [5, 44], [33, 44], [20, 55], [96, 44], [8, 66], [96, 90], [5, 90]]),
+        CA = t2([[20, 10], [44, 14], [14, 34], [36, 36], [80, 34], [62, 55], [48, 67], [14, 86], [46, 80], [84, 84], [88, 12]]),
+        PI = [42, 44, 46, 48, 50].map((c, i) => ({ x: (c + 0.5) * T, y: 29.5 * T, f: [261.6, 293.7, 329.6, 392, 440][i], g: 0 })),
+        EX = { x: 46 * T, y: 56.2 * T },
+        SC = { x: 38 * T, y: 37 * T, r: 66 },
+        TH0 = [46, 66];
+      const FL = [];
+      M.forEach((r, j) => r.forEach((t, i) => "abcdefgmp".includes(t) && FL.push([i, j])));
+      const FR = Array.from({ length: 170 }, () => {
+        const [i, j] = FL[(rnd() * FL.length) | 0];
+        return { x: (i + 0.2 + rnd() * 0.6) * T, y: (j + 0.2 + rnd() * 0.6) * T, t: 0 };
       });
       const LN = [
         "¿Una grieta en la Sala Verde? Solo caben los delgados.",
@@ -749,61 +755,30 @@
         "Las obras más grandes están en la plaza, al sur.",
         "Hay un ala fuera del museo. Se llega sin que te vea el guardia.",
         "Mira los dibujos del taller: Botero empezó dibujando.",
-        "Las esculturas de la plaza se pueden tocar. Las pinturas, no.",
+        "Al sur de la Sala de Juegos hay una Rockola: pon música y baila.",
         "Hay obras que no están en las salas. Algunas generaron debate.",
       ];
-      const NP = [
-        [6, 14],
-        [52, 14],
-        [22, 5],
-        [8, 4],
-        [28, 14],
-        [30, 32],
-        [12, 40],
-        [48, 40],
-        [38, 20],
-      ].map(([c, r], i) => ({
-        x: c * T,
-        y: r * T,
-        a: rnd() * 6.28,
-        tm: 0,
-        c: CO[i % 5],
-        l: LN[i],
+      const NP = [[12, 38], [90, 30], [44, 10], [10, 10], [40, 34], [50, 54], [10, 67], [90, 67], [54, 44]].map(([c, r], i) => ({
+        x: c * T, y: r * T, a: rnd() * 6.28, tm: 0, c: CO[i % 5], l: LN[i],
       }));
-      const G = { x: 22 * T, y: 13 * T, w: 0, cd: 0 },
-        WP = [
-          [22, 13],
-          [38, 13],
-          [38, 22],
-          [22, 22],
-        ];
-      const DEC = [];
-      [
-        ["f", 2, 1, 13, 8, "#f6c875"],
-        ["a", 2, 11, 15, 24, "#ee9a97"],
-        ["b", 44, 11, 58, 24, "#7bb592"],
-        ["c", 16, 1, 31, 8, "#86bccd"],
-      ].forEach(([k, a, b, c, d, col]) => {
-        const mx = ((a + c + 1) / 2) * T,
-          my = ((b + d + 1) / 2) * T;
-        DEC.push(
-          ["r", mx, my, col],
-          ["b", mx, my],
-          ["p", (a + 0.5) * T, my],
-          ["p", (c + 0.5) * T, my],
-        );
+      const G = { x: 36 * T, y: 29 * T, w: 0, cd: 0 },
+        WP = [[36, 29], [56, 29], [56, 43], [36, 43]];
+      const LOWS = new Set();
+      M.forEach((r, j) => r.forEach((t, i) => {
+        if (t === "#" && [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => (M[j + b] || [])[i + a] === "g")) LOWS.add(i + "," + j);
+      }));
+      /* Decoración: alfombras grandes, bancas, plantas, árboles y estanques */
+      const DEC = [],
+        RUG = { f: "#f6c875", a: "#ee9a97", b: "#7bb592", c: "#86bccd", m: "#b9c3d8", p: "#efd16a", j: "#8e6bc4", d: "#c9512f", e: "#c9512f", q: "#7a5bb0" };
+      Object.keys(RUG).forEach((k) => {
+        const [a, b, c, d] = RM[k], mx = ((a + c + 1) / 2) * T, my = ((b + d + 1) / 2) * T;
+        DEC.push(["r", mx, my, RUG[k], (c - a - 8) * T, (d - b - 8) * T]);
+        if (k !== "d" && k !== "e") DEC.push(["b", mx - 3 * T, my], ["b", mx + 3 * T, my]);
+        [[a + 0.6, b + 1.3], [c + 0.4, b + 1.3], [a + 0.6, d + 0.2], [c + 0.4, d + 0.2]].forEach(([x, y]) => DEC.push(["p", x * T, y * T]));
       });
-      DEC.push(
-        ["r", 30 * T, 32 * T, "#c9512f"],
-        ["b", 26 * T, 32 * T],
-        ["b", 34 * T, 32 * T],
-        ["l", 15 * T, 30 * T],
-        ["l", 45 * T, 30 * T],
-        ["l", 15 * T, 34 * T],
-        ["l", 45 * T, 34 * T],
-        ["o", 38 * T, 18 * T],
-      );
-      [8, 16, 24, 36, 44, 52].forEach((c) => DEC.push(["t", c * T, 39.6 * T]));
+      DEC.push(["o", 54 * T, 36 * T], ["o", 46 * T, 67 * T], ["b", 46 * T, 54 * T], ["l", 16 * T, 50 * T], ["l", 84 * T, 50 * T], ["l", 16 * T, 58 * T], ["l", 84 * T, 58 * T]);
+      for (let c = 10; c < 96; c += 12) DEC.push(["t", c * T, 67 * T]);
+
       const ST = [
         ["vol", "Infla", "#c9512f"],
         ["bod", "Bodegón", "#3f7d5c"],
@@ -817,14 +792,17 @@
         ["tri", "Trivia", "#7a5bb0"],
         ["mem", "Memoria", "#3f7d5c"],
         ["deb", "Debate", "#8a3a20"],
+        ["mus", "Melómano", "#7a5bb0"],
+        ["lec", "Lector", "#5aa3ba"],
+        ["bai", "Bailarín", "#d22"],
       ];
       let got = new Set(L("sellos") || []),
         pts = L("pts") || 0,
         vis = new Set(L("vis") || []),
         chk = L("chk") || {},
         nombre = "visitante";
-      let X = 30 * T,
-        Y = 33.5 * T,
+      let X = 46 * T,
+        Y = 54.5 * T,
         v = 1.2,
         go = 0,
         burst = 0,
@@ -957,7 +935,7 @@
           nt += 0.3;
         }
       }
-      async function musica(on) {
+      async function musicaSynth(on) {
         aud();
         if (!ctx) return;
         if (on && !amb) {
@@ -972,7 +950,7 @@
         }
         $("#son").setAttribute("aria-pressed", !!amb);
       }
-      $("#son").onclick = () => musica(!amb);
+      
       $("#vol").value = vol;
       $("#vol").oninput = (e) => {
         vol = +e.target.value;
@@ -1018,18 +996,21 @@
         else if (near.k === "q") trivia();
         else if (near.k === "y") memo();
         else if (near.k === "i") infla();
+        else if (near.k === "r") menuMus();
       }
       function ficha(f) {
+        if (f.cr > 0) { f.cr = 0; suma(25); puff(X, Y, "#eab04a", 14); tono(740, 0.3, 0.15); say("¡Cuadro enderezado! +25"); return; }
+        if (f.n === od) { od = 0; suma(40); say("🌟 Obra del día: +40"); }
         chkMis(f.n);
         const n = f.n,
-          e = n > 59,
+          e = n > NW,
           d = D[n] || [
             "Espacio libre",
             "Aquí cabe la obra número 60. Reemplaza este espacio cuando la tengan.",
           ],
           h = HID.includes(n);
-        $("#fc").innerHTML =
-          `${e ? "" : `<img class="ob" src="media/${n}.jpg" alt="${d[0]}">`}<h2>${d[0]}</h2><p class="muted">${h ? "Fuera del museo · obra polémica o censurada" : "Museo Botero · " + SA[f.k]}</p><p>${d[1]}</p>${h ? `<p class="aviso">Contenido sensible. Se muestra con fines educativos para discutir los límites entre libertad de expresión, censura y apología.</p>` : ""}${e || VER.includes(n) ? "" : `<p class="aviso">Título y descripción provisionales: confírmalos con fuentes.</p>`}${h ? DEB(n) : ""}<button class="btn" data-x type="button">Cerrar</button>`;
+        $("#fc").innerHTML = fichaHTML(f, n, e, d, h);
+        fichaTabs(n);
         $("#ficha").showModal();
         if (!vis.has(n)) {
           vis.add(n);
@@ -1067,7 +1048,7 @@
       }
       /* Minijuegos */
       const PM = RN.f
-          .concat(RN.a, RN.b, RN.c, RN.g)
+          .concat(RN.m, RN.a, RN.b, RN.p, RN.c, RN.g)
           .filter((n) => !HID.includes(n) && D[n]),
         zonaDe = (n) => SA[fr.find((f) => f.n === n).k];
       function hablar() {
@@ -1189,7 +1170,7 @@
         };
       }
       /* Más minijuegos */
-      const TA = { x: 22 * T, y: 32 * T };
+      const TA = { x: 28 * T, y: 54 * T };
       const DQ = [
           "Sí: la memoria necesita verse",
           "Sí, con aviso y contexto",
@@ -1304,13 +1285,7 @@
       }
       /* Visual */
       PAL.k = PAL.d;
-      const COL = [
-        [20, 12],
-        [40, 12],
-        [20, 22],
-        [40, 22],
-        [30, 12],
-      ];
+      
       const hs = (i, j) => (((i * 73856093) ^ (j * 19349663)) >>> 0) % 100,
         WC = {
           j: ["#b9a6dd", "#9d86cc"],
@@ -1321,23 +1296,9 @@
           e: ["#ecc983", "#cfa55a"],
           f: ["#f1bd63", "#d4963a"],
           g: ["#5f9a5a", "#437a43"],
-          h: ["#7a3f26", "#5a2d17"],
+          h: ["#7a3f26", "#5a2d17"], q: ["#5a468a", "#46346f"],
         };
-      [
-        [2, 1, 13, 8],
-        [16, 1, 31, 8],
-        [34, 1, 58, 8],
-        [2, 11, 15, 24],
-        [44, 11, 58, 24],
-        [18, 11, 41, 24],
-      ].forEach(([a, b, c2, d]) =>
-        DEC.push(
-          ["p", (a + 0.6) * T, (b + 1.3) * T],
-          ["p", (c2 + 0.4) * T, (b + 1.3) * T],
-          ["p", (a + 0.6) * T, (d + 0.2) * T],
-          ["p", (c2 + 0.4) * T, (d + 0.2) * T],
-        ),
-      );
+      
       function pared(i, j, px, py) {
         const z = (M[j + 1] || [])[i];
         if (!z || z === "#") {
@@ -1387,7 +1348,7 @@
       }
       function suelo(t, i, j, px, py) {
         const h = hs(i, j);
-        if ("abcef".includes(t)) {
+        if ("abcefmp".includes(t)) {
           c.fillStyle = "rgba(58,29,18,.08)";
           for (let k = 1; k < 4; k++) c.fillRect(px, py + k * 16, T, 1);
           for (let k = 0; k < 4; k++)
@@ -1443,16 +1404,16 @@
         c.fillRect(x - 26, y - 128, 52, 5);
       }
       function fuente(now) {
-        const x = 38 * T,
-          y = 18 * T;
-        for (let k = 0; k < 3; k++) {
-          const r = (now / 45 + k * 20) % 56;
-          c.strokeStyle = `rgba(255,255,255,${0.6 * (1 - r / 56)})`;
-          c.lineWidth = 3;
-          c.beginPath();
-          c.arc(x, y, r, 0, 7);
-          c.stroke();
-        }
+        [[54 * T, 36 * T], [46 * T, 67 * T]].forEach(([x, y]) => {
+          for (let k = 0; k < 3; k++) {
+            const r = (now / 45 + k * 20) % 56;
+            c.strokeStyle = `rgba(255,255,255,${0.6 * (1 - r / 56)})`;
+            c.lineWidth = 3;
+            c.beginPath();
+            c.arc(x, y, r, 0, 7);
+            c.stroke();
+          }
+        });
       }
       function luz(dpr, VW, VH, now) {
         c.globalCompositeOperation = "lighter";
@@ -1644,7 +1605,7 @@
           dy /= m;
         }
         const r = rr(),
-          sp = 400 - v * 14;
+          sp = 460 - v * 14;
         mv(
           {
             get x() {
@@ -1719,6 +1680,7 @@
           near = { k: "q", t: "E · Trivia: ¿qué obra es?" };
         if (Math.hypot(ME.x - X, ME.y - Y) < 80)
           near = { k: "y", t: "E · Memoria Botero" };
+        if (Math.hypot(JK.x - X, JK.y - Y) < 80) near = { k: "r", t: "E · Rockola: elegir canción" };
         if (Math.hypot(TA.x - X, TA.y - Y) < 70)
           near = { k: "i", t: "E · Taller de inflado" };
         NP.forEach((n) => {
@@ -1746,7 +1708,7 @@
                   ? "Hablar"
                   : near.k === "s"
                     ? "Restaurar"
-                    : "miqy".includes(near.k)
+                    : "miqyr".includes(near.k)
                       ? "Jugar"
                       : "Ver";
         CA.forEach((p) => {
@@ -1833,6 +1795,7 @@
           tono(220, 0.3, 0.2);
         }
         ladronTick(dt, r);
+        nuevoTick(dt, r);
         guia();
         pf.forEach((p) => {
           p.l -= dt;
@@ -1905,7 +1868,7 @@
       }
       function mark(f) {
         const g = near && near.o === f,
-          e = f.n > 59 || !!f.rb;
+          e = f.n > NW || !!f.rb;
         let im = null;
         if (!e)
           im =
@@ -1915,6 +1878,7 @@
             }));
         c.save();
         c.translate(f.x, f.y);
+        if (f.cr > 0) c.rotate(0.15 + 0.08 * Math.sin(performance.now() / 150));
         c.fillStyle = "rgba(58,29,18,.3)";
         c.beginPath();
         c.ellipse(0, 26, 54, 12, 0, 0, 7);
@@ -1948,7 +1912,7 @@
         c.fillStyle = "#f5ecd6";
         c.fillRect(-26, 16, 52, 15);
         tx(
-          f.rb ? "ROBADA" : (vis.has(f.n) ? "✓ " : "") + (e ? "60" : f.n),
+          f.rb ? "ROBADA" : (vis.has(f.n) ? "✓ " : "") + (e ? "" : f.n),
           0,
           28,
           11,
@@ -1956,16 +1920,20 @@
         c.restore();
       }
       function decor(fl, one) {
-        (one ? [one] : DEC).forEach(([k, x, y, col]) => {
+        (one ? [one] : DEC).forEach(([k, x, y, col, rw = 300, rh = 160]) => {
           if (fl && !fl(k)) return;
           if (k === "r") {
             c.fillStyle = col;
             c.globalAlpha = 0.35;
-            c.fillRect(x - 150, y - 80, 300, 160);
+            c.fillRect(x - rw / 2, y - rh / 2, rw, rh);
             c.globalAlpha = 0.6;
             c.strokeStyle = col;
             c.lineWidth = 6;
-            c.strokeRect(x - 136, y - 66, 272, 132);
+            c.strokeRect(x - rw / 2 + 14, y - rh / 2 + 14, rw - 28, rh - 28);
+            c.lineWidth = 2;
+            c.setLineDash([14, 10]);
+            c.strokeRect(x - rw / 2 + 32, y - rh / 2 + 32, rw - 64, rh - 64);
+            c.setLineDash([]);
             c.globalAlpha = 1;
           } else if (k === "b") {
             c.fillStyle = "#5a2d17";
@@ -2027,22 +1995,14 @@
       /* ===== Isométrico, ladrón, juegos y guía ===== */
       const Pt = (x, y) => [(x - y) * 0.5, (x + y) * 0.25],
         WH = 84,
-        TR = { x: 24 * T, y: 47 * T },
-        ME = { x: 36 * T, y: 47 * T },
+        TR = { x: 38 * T, y: 88 * T },
+        ME = { x: 54 * T, y: 88 * T },
         mez = (a) => [...a].sort(() => rnd() - 0.5);
       let th = null,
         cap = L("cap") || 0,
         MT = null,
         metaT = "";
-      DEC.push(
-        ["r", 30 * T, 48 * T, "#8e6bc4"],
-        ["p", 19.5 * T, 44 * T],
-        ["p", 40.5 * T, 44 * T],
-        ["p", 19.5 * T, 51.5 * T],
-        ["p", 40.5 * T, 51.5 * T],
-        ["l", 21 * T, 50 * T],
-        ["l", 39 * T, 50 * T],
-      );
+      
       const up = (x, y, f) => {
         const [a, b] = Pt(x, y);
         c.save();
@@ -2066,7 +2026,8 @@
           B = Pt(x + T, y),
           C = Pt(x + T, y + T),
           D = Pt(x, y + T),
-          U = (p) => [p[0], p[1] - WH];
+          wh = LOWS.has(i + "," + j) ? 36 : WH,
+          U = (p) => [p[0], p[1] - wh];
         let z = "h";
         for (const [a, b] of [
           [1, 0],
@@ -2091,7 +2052,7 @@
         c.globalAlpha = al;
         if (fl(i + 1, j)) po([B, C, U(C), U(B)], q[1]);
         if (fl(i, j + 1)) po([D, C, U(C), U(D)], q[0]);
-        po([U(A), U(B), U(C), U(D)], col ? "#c99a32" : "#5a2d17");
+        po([U(A), U(B), U(C), U(D)], col ? "#c99a32" : wh < WH ? "#4f8f5c" : "#5a2d17");
         c.strokeStyle = "rgba(255,246,220,.5)";
         c.lineWidth = 2;
         c.beginPath();
@@ -2132,7 +2093,7 @@
           return { x: f.x, y: f.y, t: "Encargo: busca la obra pedida" };
         }
         const f = fr
-          .filter((f) => f.n < 60 && !vis.has(f.n) && !HID.includes(f.n))
+          .filter((f) => f.n <= NW && !vis.has(f.n) && !HID.includes(f.n))
           .sort(
             (a, b) =>
               Math.hypot(a.x - X, a.y - Y) - Math.hypot(b.x - X, b.y - Y),
@@ -2191,16 +2152,16 @@
       }
       function ladron() {
         if (th) return;
-        const cs = fr.filter((f) => "fabc".includes(f.k) && !f.rb);
+        const cs = fr.filter((f) => "fmabpc".includes(f.k) && !f.rb);
         if (!cs.length) return;
         const f = cs[(rnd() * cs.length) | 0];
         th = {
-          x: 30.5 * T,
-          y: 39.5 * T,
+          x: TH0[0] * T + T / 2,
+          y: TH0[1] * T + T / 2,
           f,
           fase: 0,
           w: 0,
-          p: ruta([30, 39], [(f.x / T) | 0, (f.y / T) | 0]),
+          p: ruta(TH0, [(f.x / T) | 0, (f.y / T) | 0]),
         };
         ev.sir = 0;
         sh = 0.4;
@@ -2227,7 +2188,7 @@
           if (th.w <= 0) {
             th.f.rb = 1;
             th.fase = 2;
-            th.p = ruta([(th.x / T) | 0, (th.y / T) | 0], [30, 39]);
+            th.p = ruta([(th.x / T) | 0, (th.y / T) | 0], TH0);
             tono(150, 0.5, 0.3);
             say(
               `¡Se llevó «${th.f.ti}»! Corre tras él: suelta aire con X para ser más rápida.`,
@@ -2290,7 +2251,7 @@
         "Su donación en 2000 dio origen al Museo Botero.",
       ];
       function evento() {
-        const k = ev.n++ % 2 === 0 && !th ? 9 : (rnd() * 5) | 0;
+        const k = ev.n++ % 2 === 0 && !th ? 9 : (rnd() * 8) | 0;
         if (k === 9) ladron();
         else if (k === 0) {
           for (let i = 0; i < 15; i++) {
@@ -2309,8 +2270,9 @@
           ev.rush = 14;
           say("¡El guardia sale a toda prisa! Aléjate.", 5000);
         } else if (k === 3) hablar();
+        else if (k > 4) evNuevo(k);
         else {
-          say("📢 Dato del museo: " + FD[(rnd() * 3) | 0], 7000);
+          say("📢 Dato del museo: " + datoGuion(), 7000);
           suma(10);
         }
         tono(330, 0.3, 0.2);
@@ -2450,7 +2412,7 @@
           e = -cx * k + ox * dpr,
           f = -cy * k + oy * dpr;
         c.setTransform(1, 0, 0, 1, 0, 0);
-        c.fillStyle = "#2a120a";
+        c.fillStyle = "#1d4a3a";
         c.fillRect(0, 0, cv.width, cv.height);
         const co = [
             [cx, cy],
@@ -2502,6 +2464,15 @@
                         : 1,
                     ),
                 });
+              else {
+                c.fillStyle = (i + j) & 1 ? "#3f8a5a" : "#4a9a64";
+                c.fillRect(x, y, T, T);
+                if (hs(i, j) < 9)
+                  es.push({
+                    d: dd + T / 2,
+                    f: () => up(x + T / 2, y + T / 2, () => decor(0, ["t", x + T / 2, y + T / 2])),
+                  });
+              }
               continue;
             }
             c.fillStyle =
@@ -2518,6 +2489,7 @@
           }
         decor((q) => q === "r" || q === "o");
         fuente(now);
+        pista(now);
         PI.forEach((p) => {
           c.fillStyle = `rgba(255,246,220,${0.35 + p.g * 0.65})`;
           c.fillRect(p.x - 26, p.y - 26, 52, 52);
@@ -2552,6 +2524,7 @@
         E(G.x, G.y, () => fig(G.x, G.y, 34, "#1f4a3a", "#3a1d12", 1));
         es.push(
           { d: TA.x + TA.y, f: () => est(TA, "INFLAR", "#c9512f") },
+          { d: JK.x + JK.y, f: () => est(JK, "ROCKOLA", "#7a5bb0") },
           { d: TR.x + TR.y, f: () => est(TR, "TRIVIA", "#7a5bb0") },
           { d: ME.x + ME.y, f: () => est(ME, "MEMORIA", "#3f7d5c") },
         );
@@ -2602,6 +2575,7 @@
               c.fill();
             });
         });
+        nuevoDraw(E, now);
         E(SC.x, SC.y + SC.r, () =>
           tx("obra por restaurar", SC.x, SC.y + SC.r + 22, 13),
         );
@@ -2716,17 +2690,17 @@
         if (th) {
           mm.fillStyle = "#e22";
           mm.fillRect(
-            (th.x / T) * (144 / NC) - 2.5,
-            (th.y / T) * (96 / NR) - 2.5,
+            (th.x / T) * (MW / NC) - 2.5,
+            (th.y / T) * (MH / NR) - 2.5,
             6,
             6,
           );
         }
       }
       function mapa() {
-        mm.clearRect(0, 0, 144, 96);
-        const s = 144 / NC,
-          s2 = 96 / NR;
+        mm.clearRect(0, 0, MW, MH);
+        const s = MW / NC,
+          s2 = MH / NR;
         for (let j = 0; j < NR; j++)
           for (let i = 0; i < NC; i++)
             if (seen[j * NC + i]) {
@@ -2758,6 +2732,199 @@
         draw(dt);
         requestAnimationFrame(loop);
       }
+      /* ===== MÓDULO NUEVO: canciones, guiones dinámicos, Rockola y eventos ===== */
+      const SG = [
+        ["01","Bomba Estéreo","Soy yo","e"],["02","Residente ft. Ibeyi","This Is Not America","h"],
+        ["03","Aterciopelados","Untados","c"],["04","ChocQuibTown ft. Alexis Play","Somos los prietos","b"],
+        ["05","La Etnnia","La vida en el ghetto","d"],["06","La Etnnia","Pasaporte sello morgue",""],
+        ["07","Alcolirykoz","El salón de la injusticia","g"],["08","Peret ft. Marina","El muerto vivo","p"],
+        ["09","Los Prisioneros","El baile de los que sobran","a"],["10","Joe Arroyo","Rebelión","q"],
+        ["11","Molotov","Gimme tha Power","j"],["12","Calle 13","Querido FBI",""],
+        ["14","Charly García","Los dinosaurios","f"],["15","Ana Tijoux","Shock","m"]];
+      const ZS = {};
+      SG.forEach((s, i) => s[3] && (ZS[s[3]] = i));
+      ZS.n = ZS.w = ZS.h; ZS.k = ZS.d;
+      const A = new Audio(), av = () => Math.pow(vol / 100, 1.6);
+      let cur = -1, MON = 0, modo = L("modo") || "rot", seg = L("seg") || 90, t0 = 0, zl = "e", fad = 0,
+        oyo = new Set(L("oyo") || []), od = 0, dn = L("dn") || 0, dtm = 1;
+      const NT = [];
+      function fin() {
+        clearInterval(fad);
+        let q = 0;
+        A.volume = 0;
+        fad = setInterval(() => {
+          q += 0.06;
+          A.volume = Math.min(1, q) * av();
+          if (q >= 1) clearInterval(fad);
+        }, 60);
+      }
+      function cargar(i) {
+        cur = (i + SG.length) % SG.length;
+        const s = SG[cur];
+        A.src = "audio/" + s[0] + ".mp3";
+        t0 = performance.now();
+        if (MON) { A.play().catch(() => {}); fin(); }
+        oyo.add(s[0]);
+        L("oyo", [...oyo]);
+        if (oyo.size >= 5) sello("mus", "¡Melómano! Ya escuchaste 5 canciones.");
+        $("#npl").textContent = "♪ " + s[1] + " – " + s[2];
+        pintaMenu();
+      }
+      const sig = () => cargar(cur + 1);
+      A.onended = () => { if (modo === "una") { A.currentTime = 0; A.play().catch(() => {}); } else sig(); };
+      A.onerror = () => { if (MON && !amb) musicaSynth(1); };
+      async function musica(on) {
+        MON = !!on;
+        if (MON) {
+          aud();
+          if (amb) musicaSynth(0);
+          if (cur < 0) cargar(modo === "sala" && ZS[zon] != null ? ZS[zon] : 0);
+          else { A.play().catch(() => {}); fin(); }
+        } else { A.pause(); if (amb) musicaSynth(0); }
+        $("#son").setAttribute("aria-pressed", MON);
+      }
+      $("#son").onclick = () => musica(!MON);
+      $("#vol").addEventListener("input", () => (A.volume = av()));
+      setInterval(() => {
+        if (!go) return;
+        if (zon !== zl) { zl = zon; if (MON && modo === "sala" && ZS[zon] != null && ZS[zon] !== cur) cargar(ZS[zon]); }
+        if (MON && modo === "rot" && performance.now() - t0 > seg * 1000 && !document.querySelector("dialog[open]")) sig();
+      }, 1000);
+      function pintaMenu() {
+        const m = $("#mus");
+        if (!m) return;
+        $("#mlist").innerHTML = SG.map((s, i) =>
+          `<button type="button" class="chip" data-i="${i}" aria-pressed="${i === cur}" style="display:block;width:100%;text-align:left;margin:5px 0">${String(i + 1).padStart(2, "0")} · ${s[1]} — ${s[2]}${s[3] ? ` <small>(${ZN[s[3]]})</small>` : ""}</button>`).join("");
+        m.querySelectorAll("[data-m]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.m === modo));
+        $("#msg").textContent = " " + seg + " s";
+        $("#mseg").value = seg;
+        $("#mnow").textContent = cur < 0 ? "Aún no suena nada. Pulsa ⏯." : "Suena: " + SG[cur][1] + " — " + SG[cur][2];
+      }
+      function menuMus() { pintaMenu(); $("#mus").showModal(); }
+      $("#pl").onclick = menuMus;
+      $("#mlist").onclick = (e) => {
+        const b = e.target.closest("[data-i]");
+        if (!b) return;
+        if (modo === "sala") modo = "una";
+        L("modo", modo);
+        MON = 1;
+        $("#son").setAttribute("aria-pressed", true);
+        aud();
+        cargar(+b.dataset.i);
+      };
+      $("#mp").onclick = () => { MON = 1; cargar(cur < 0 ? 0 : cur - 1); $("#son").setAttribute("aria-pressed", true); };
+      $("#mn").onclick = () => { MON = 1; sig(); $("#son").setAttribute("aria-pressed", true); };
+      $("#mt").onclick = () => (MON ? musica(0) : musica(1));
+      $("#mus").querySelectorAll("[data-m]").forEach((b) => (b.onclick = () => { modo = b.dataset.m; L("modo", modo); t0 = performance.now(); pintaMenu(); }));
+      $("#mseg").oninput = (e) => { seg = +e.target.value; L("seg", seg); pintaMenu(); };
+      addEventListener("keydown", (e) => {
+        if (!go || e.repeat || document.querySelector("dialog[open]") || /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+        const k = e.key.toLowerCase();
+        if (k === "m") menuMus();
+        if (k === "n" && MON) sig();
+      });
+      /* --- Fichas con guion dinámico --- */
+      function fichaHTML(f, n, e, d, h) {
+        const g = GU[n];
+        if (!g || e) return `<h2>${d[0]}</h2><p>${d[1]}</p><button class="btn" data-x type="button">Cerrar</button>`;
+        const TB = [["h", "Chela cuenta"], ["r", "Mira conmigo"], ["c", "Don Pacho opina"], ["x", "¿Rechazo?"]];
+        return `<img class="ob" src="media/${n}.jpg" alt="${g.t}"><h2>${g.t}</h2><p class="muted">${g.f} · ${h ? "Fuera del museo · obra polémica o censurada" : "Museo Botero · " + SA[f.k]}</p><div class="tbs">${TB.map(([k, t], i) => `<button class="chip" type="button" data-tb="${k}" aria-pressed="${i === 0}">${t}</button>`).join("")}</div><div id="tbx"></div>${h ? `<p class="aviso">Contenido sensible. Se muestra con fines educativos para discutir los límites entre libertad de expresión, censura y apología.</p>` : ""}<div id="rq"></div>${h ? DEB(n) : ""}<button class="btn" data-x type="button">Cerrar</button>`;
+      }
+      function fichaTabs(n) {
+        const g = GU[n];
+        if (!g || !$("#tbx")) return;
+        const vistos = new Set(),
+          show = (k) => {
+            $("#tbx").innerHTML = (g[k] || "").split(/\n+/).filter(Boolean).map((p) => `<p>${p}</p>`).join("") || "<p>Sin texto.</p>";
+            document.querySelectorAll("#fc [data-tb]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.tb === k));
+            vistos.add(k);
+            if (vistos.size === 4) {
+              const l = L("lei") || [];
+              if (!l.includes(n)) {
+                l.push(n); L("lei", l); suma(15); tono(784, 0.3, 0.15);
+                say("Leíste toda la ficha: +15", 3000);
+                if (l.length >= 8) sello("lec", "¡Lector! 8 fichas leídas completas.");
+              }
+            }
+          };
+        document.querySelectorAll("#fc [data-tb]").forEach((b) => (b.onclick = () => show(b.dataset.tb)));
+        show("h");
+        const yr = (o) => (o.f.match(/\b(1[89]\d\d|20\d\d)\b/) || [])[1], y = yr(g);
+        if (!y) return;
+        const ys = [...new Set(Object.values(GU).map(yr).filter((v) => v && v !== y))],
+          op = mez([y, ...mez(ys).slice(0, 2)]);
+        $("#rq").innerHTML = `<p><b>Reto de Don Pacho:</b> ¿de qué año es esta obra?</p>${op.map((o) => `<button class="chip" type="button" data-y="${o}" style="margin:3px">${o}</button>`).join("")}<p class="muted" id="rr"></p>`;
+        $("#rq").querySelectorAll("[data-y]").forEach((b) => (b.onclick = () => {
+          const ok = b.dataset.y === y, r = L("ry") || [];
+          document.querySelectorAll("#rq [data-y]").forEach((x) => (x.disabled = 1));
+          b.style.background = ok ? "#5aa67f" : "#c9512f";
+          $("#rr").textContent = ok ? (r.includes(n) ? "¡Correcto!" : "¡Correcto! +10 puntos") : "Era " + y + ".";
+          tono(ok ? 880 : 200, 0.2);
+          if (ok && !r.includes(n)) { r.push(n); L("ry", r); suma(10); }
+        }));
+      }
+      Object.keys(GU).forEach((n) => D[n] && (D[n][0] = GU[n].t));
+      const datoGuion = () => {
+        const n = PM[(rnd() * PM.length) | 0], g = GU[n];
+        if (!g) return FD[0];
+        const ps = g.h.split(/\n+/).filter(Boolean);
+        return `«${g.t}» (${g.f.split(" (")[0]}): ${(ps[1] || ps[0]).split(/(?<=\.)\s/)[0]}`;
+      };
+      /* --- Rockola, pista de baile y eventos nuevos --- */
+      const JK = { x: 50 * T, y: 100.5 * T }, DF = [];
+      for (let a = 0; a < 6; a++) for (let b = 0; b < 3; b++) DF.push({ x: (38 + a * 4 + 2) * T, y: (103 + b * 4 + 2) * T, l: 0, k: 0 });
+      function pista(now) {
+        const bt = MON ? 0.5 + 0.5 * Math.sin(now / 230) : 0.1;
+        DF.forEach((d, i) => {
+          c.fillStyle = d.l > 0 ? (d.k ? "#c9a45a" : "#f6c875") : `hsl(${260 + i * 7},45%,${24 + bt * 12}%)`;
+          c.fillRect(d.x - 1.7 * T, d.y - 1.7 * T, 3.4 * T, 3.4 * T);
+        });
+      }
+      function nuevoTick(dt, r) {
+        if (zon === "q") {
+          dtm -= dt;
+          if (dtm <= 0) { dtm = MON ? 0.9 : 2; const d = DF[(rnd() * DF.length) | 0]; d.l = 2.2; d.k = 0; }
+          DF.forEach((d) => {
+            if (d.l <= 0) return;
+            d.l -= dt;
+            if (!d.k && Math.abs(d.x - X) < 1.7 * T && Math.abs(d.y - Y) < 1.7 * T) {
+              d.k = 1;
+              if (MON) {
+                dn++; L("dn", dn); suma(8); puff(d.x, d.y, "#f6c875", 14); tono(520 + (dn % 7) * 70, 0.2, 0.12);
+                if (dn >= 15) sello("bai", "¡Bailarín! 15 baldosas pisadas a tiempo.");
+              } else say("Pon música (♪ o la Rockola) para sumar al bailar.", 2500);
+            }
+          });
+        }
+        NT.forEach((n) => {
+          if (!n.t && Math.hypot(n.x - X, n.y - Y) < r + 24) { n.t = 1; suma(10); puff(n.x, n.y, "#7a5bb0", 8); tono(900, 0.15, 0.12); }
+        });
+        if (ev.con > 0 && (ev.con -= dt) <= 0) { NT.length = 0; say("Terminó el concierto sorpresa."); }
+        fr.forEach((f) => {
+          if (f.cr > 0 && (f.cr -= dt) <= 0) { f.cr = 0; suma(-10); say(`«${f.ti}» se descolgó por quedar torcido (-10).`); }
+        });
+      }
+      function nuevoDraw(E, now) {
+        NT.forEach((n) => { if (!n.t) E(n.x, n.y, () => tx("♪", n.x, n.y - 16 + Math.sin(now / 200 + n.x) * 6, 34, "#7a5bb0")); });
+      }
+      function evNuevo(k) {
+        if (k === 5) {
+          ev.con = 22; NT.length = 0;
+          for (let i = 0; i < 16; i++) { const [a, b] = FL[(rnd() * FL.length) | 0]; NT.push({ x: (a + 0.5) * T, y: (b + 0.5) * T, t: 0 }); }
+          if (MON) sig();
+          say("🎶 ¡Concierto sorpresa! Recoge las notas ♪ antes de que termine.", 5500);
+        } else if (k === 6) {
+          const q = fr.filter((f) => f.n <= NW && !f.rb && !f.cr), f = q[(rnd() * q.length) | 0];
+          f.cr = 28;
+          say(`¡«${f.ti}» se torció! Acércate y pulsa E para enderezarlo (${SA[f.k] || "Plaza"}).`, 6500);
+        } else {
+          const q = fr.filter((f) => f.n <= NW && !HID.includes(f.n) && !f.rb), f = q[(rnd() * q.length) | 0];
+          od = f.n;
+          say(`🌟 Obra del día: «${f.ti}» en ${SA[f.k] || "Plaza"}. ¡Puntos dobles!`, 6500);
+        }
+      }
+      $(".cartela").insertAdjacentHTML("beforeend", `<details><summary><b>Referencias de los guiones</b></summary><div style="font-size:.75rem;max-height:200px;overflow:auto">${REFS.map((r) => `<p style="margin:4px 0">${r.replace(/(https?:\/\/\S+)/g, '<a href="$1" target="_blank" rel="noopener">enlace</a>')}</p>`).join("")}</div></details>`);
+      
       hud();
       requestAnimationFrame(loop);
     </script>
