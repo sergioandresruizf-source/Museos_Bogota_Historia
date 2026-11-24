@@ -84,30 +84,43 @@ El progreso se guarda en el navegador (botón NUEVO JUEGO lo reinicia).
 ## 13. Pantalla de llegada
 Ya no es un templo griego recoloreado: al atracar ves **la misma isla de cerca** (el Panóptico, las estatuas de San Agustín, la estación con la locomotora, el Capitolio, las terrazas de Ciudad Perdida, la iglesia de Villa de Leyva, el puente colgante, la mina, la ranchería Wayuu, Las Lajas y, en la Isla Calavera, la entrada por la boca de la calavera). La entrada se marca con una flecha que parpadea. El nombre de la exposición cuelga en un cartel arriba.
 
-## 14. Salas con interior temático
-Cada sala se parece a su isla vista desde fuera: **1** ladrillo rojo con rejas de celda y lámparas de gas · **2** piedra megalítica con musgo y relieves · **3** estación con zócalo de madera, relojes y rieles · **4** mármol blanco, piso de ajedrez y alfombra tricolor con estandartes · **5** muros de piedra con techo de paja y antorchas · **6** muros blancos con vigas, piso de terracota y ventanas con postigos · **7** tablones, cuerdas y faroles · **8** roca con puntales de madera, vía y faroles · **9** tejido Wayuu de colores, piso de arena y techo de paja · **10** sillería azulada, vitrales y velas. La Isla Calavera mantiene su sala oscura con llamas verdes. Los colores y la decoración están en `salas.js` (dentro del juego: tabla `HI`).
+## 14. Sistema de entrega con el saco
+- **Reto 2 (Tambores de la Memoria, juego de ritmo):** se juega dentro de la sala de la Isla Calavera. El pirata camina solo con el saco a la espalda y las obras removidas cuelgan de las paredes; el jugador pulsa A / Espacio / Enter / E (o toca) cuando una obra queda sobre la zona dorada, al golpe del tambor, y la obra vuela al saco (cada acierto suena como una nota). 3 secciones con ritmo cada vez más rápido y sincopado, 37 obras; cada obra que se escapa quita un corazón (5). La música de fondo baja durante el reto.
+  - Ajustes en `gameDurante()`: `secs` (BPM y patrones), `WIN` (ventanas perfecto/bien/regular en segundos), `SPD` (velocidad al caminar).
+- **Cinemática final con puzzles:** el cofre de la Isla Calavera dispara el *embarque* de cajas al barco; el barco navega isla por isla y en cada una el jugador resuelve un puzzle (faroles de memoria, cartas, faroles del muelle, torre de cajas, candado con pistas, mapa deslizante). Al resolverlo, las obras removidas de esa isla **regresan a la sala** como "OBRA RESTITUIDA" y se planta la bandera. El progreso queda guardado. Si una obra removida tiene `imagen`, se muestra al regresar.
+  - Botón OMITIR PUZZLE tras 45 s (`puzzlesOmitibles`, `puzzleOmitirSeg` en `obras.js`).
+  - Con `atajos: true`: Shift+P resuelve el puzzle actual.
+- **Música:** en `obras.js` → `musica` (navegación, título, calavera, cinemática, volumen) y `musica: "musica/islaN.mp3"` dentro de cada isla. Pon los archivos en la carpeta `musica/` (ver `musica/LEAME.txt`). Si un archivo no existe, no suena. Los navegadores solo reproducen audio después del primer clic/toque (el botón ZARPAR).
 
-## 15. Obras removidas: espacio vacío y obra en la Isla Calavera
-- **En la sala:** donde estaba una obra removida se ve su **espacio vacío** (rectángulo claro con borde punteado, clavos y placa). Si es una escultura, queda el pedestal vacío. Al tocarlo se explica que fue removida y que su rastro está en la Isla Calavera (con `huecoMuestraDescripcion: true` también se lee su descripción ahí).
-- **En la Isla Calavera:** se ven las obras removidas. Con `imagen` aparecen como obra real (marco o escultura) con su imagen y descripción; sin `imagen`, como recuadro negro con "?".
-- **Al restituirlas:** el espacio se llena con la obra, que sale de la Isla Calavera.
+## 10. Islas temáticas, cierre con el oro y orfebrería
+- **Islas con identidad propia:** 1 Panóptico (Museo Nacional) · 2 San Agustín · 3 Ferrocarril · 4 Capitolio y Puente de Boyacá · 5 Ciudad Perdida (Tayrona) · 6 Villa de Leyva · 7 Puente colgante sobre el río · 8 Mina y café · 9 Ranchería Wayuu · 10 Santuario de Las Lajas. Cada una cambia paleta, edificio, vegetación y detalles, y su pantalla de llegada tiene fachada y emblema propios.
+- **Objeto de cierre:** al terminar la cinemática de los puzzles y pulsar SEGUIR NAVEGANDO aparece una **botella con un mensaje** (se ve un haz de luz y un punto en el minimapa). Al leerla empieza la cinemática: un **galeón español** carga el oro de «Tierra como recurso» y el **barco pirata** lo persigue; el galeón deja caer **6 piezas de orfebrería indígena** (poporo Quimbaya, balsa Muisca, tunjo Muisca, pectoral Tairona, diadema Calima, nariguera Zenú) que quedan flotando y se pueden examinar con A.
+- **Redirección:** al terminar esa cinemática se envía `{ tipo: "museo-completo", museo: "nacional" }` a la página contenedora (`config.museoId`). La botella pasa a ser una **boya**: al interactuar de nuevo se vuelve a enviar el aviso. Si el juego se abre solo, `config.urlSiguienteMuseo` puede redirigir a otra dirección.
+- **Textos de la orfebrería y de la botella:** `obras.js` → `orfebreria` y `textos.botellaMensaje`.
+- **Esculturas anchas** (por ejemplo una espada horizontal): `ancho: 90` en la obra permite más ancho que el límite de 64.
 
+## 11. Correr y banderas
+- **Correr en los museos (y en la llegada a cada isla):** mantén **Shift** (PC) o el botón **B** (celular). La velocidad se cambia con `velocidadCorrer` en `obras.js` (1.8 = 80 % más rápido). Con `atajos: true`, Shift+E y Shift+C siguen siendo atajos de prueba, así que para jugar normal déjalo en `false`.
+- **Banderas al devolver las obras:** durante la entrega ya no aparece ninguna bandera en las islas pendientes. La de cada isla se iza una sola vez, cuando las cajas llegan, después de resolver el puzzle.
 
-## 13. Retos de la Isla Calavera (reemplazan los puzzles de las 10 islas)
-Los puzzles de la cinemática de devolución ya no existen: las obras vuelven a sus islas sin pruebas. En su lugar hay **3 retos de dificultad creciente**, todos en la Isla Calavera y con temática de trampas y combate contra guerreros y chamanes de comunidades indígenas de antes de la colonización:
+## 12. Obras removidas: dónde se ven
+- **En la sala de su isla:** NO se ven mientras estén removidas.
+- **En la Isla Calavera:** sí, como marcos negros con su título y descripción (y desaparecen de ahí al restituirlas).
+- **Después de devolverlas:** aparecen en su sala como obras presentes ("OBRA RESTITUIDA"), con su imagen si la agregaste.
+- Las obras removidas no cuentan para marcar una isla como explorada; solo las presentes.
+- Si una isla solo tiene obras removidas, su sala queda vacía hasta que las restituyas (cuenta como explorada al entrar).
 
-| # | Dónde se activa | Reto | Qué hay que hacer |
-|---|---|---|---|
-| 1 | **Entrada**: al cruzar la puerta de la sala desde el muelle | **La Senda de las Trampas** | Cruzar rocas rodantes, fosos con estacas y dardos de cerbatana. 3 vidas con puntos de control. |
-| 2 | **Durante**: al llegar a la mitad de la sala de obras removidas | **Guerreros de la Memoria** | Combate contra 2 oleadas de guerreros con lanza y cerbatana. Atacar (A) y esquivar (B). 6 corazones. |
-| 3 | **Salida**: al abrir el cofre | **El Chamán del Cofre** | Jefe en 3 fases: anillos, ráfagas, espirales y rayos. Solo recibe daño cuando queda agotado. 5 corazones. |
-
-- Cada reto se juega **una sola vez** (queda guardado). Si pierdes, reintentas; tras `retoOmitirTrasFallos` derrotas (3 por defecto) aparece **OMITIR RETO** (se desactiva con `retosOmitibles: false`).
-- El cofre se abre al pasar cerca de la última obra removida; al abrirlo empieza el reto 3 y, al vencerlo, el barco zarpa con las obras (cinemática de devolución).
-- Con `atajos: true`: **Shift+P** supera el reto actual.
-- Textos de cada reto: constante `RETOS` en `index.html`.
+## 13. Pantalla de llegada
+Ya no es un templo griego recoloreado: al atracar ves **la misma isla de cerca** (el Panóptico, las estatuas de San Agustín, la estación con la locomotora, el Capitolio, las terrazas de Ciudad Perdida, la iglesia de Villa de Leyva, el puente colgante, la mina, la ranchería Wayuu, Las Lajas y, en la Isla Calavera, la entrada por la boca de la calavera). La entrada se marca con una flecha que parpadea. El nombre de la exposición cuelga en un cartel arriba.
 
 ## 14. Sistema de entrega con el saco
-- **Reto 2 (Guerreros de la Memoria):** cada guerrero derrotado suelta una obra. El jugador la recoge caminando sobre ella y la lleva al SACO (abajo a la izquierda). Si lo hieren, la suelta. La siguiente oleada empieza solo cuando todas las obras están guardadas (9 en total).
-- **Cinemática final:** el barco zarpa con el saco y visita solo las islas que tienen obras removidas. En cada una entra a la sala: el pirata camina hasta cada hueco, abre el saco, saca la obra y la cuelga en su marco (o pedestal). Al terminar se iza la bandera de la isla y el barco sigue a la siguiente.
+- **Reto 2 (Tambores de la Memoria, juego de ritmo):** las obras removidas avanzan por un pasillo de piedra al compás de un tambor. El jugador pulsa A / Espacio / Enter / E (o toca la pantalla) cuando la obra está sobre la zona dorada y el pirata la echa al SACO. Hay 3 secciones con ritmo cada vez más rápido y sincopado; cada obra que se cae quita un corazón (5 en total). La música de fondo baja mientras dura el reto.
+  - Ajustes en `gameDurante()`: `secs` (BPM y patrones por compás), `WIN` (ventanas de acierto en segundos: perfecto/bien/regular), `SPD` (velocidad de las obras).
+- **Cinemática final:** el barco zarpa con el saco y visita solo las islas con obras removidas. En cada una entra a la sala: el pirata camina hasta cada hueco, abre el saco, saca la obra y la cuelga en su marco (o pedestal). Al terminar se iza la bandera y el barco sigue.
 - Se reutiliza `save.restored[i]`; no hay cambios en `obras.js`.
+
+## 15. Ambientación (mejoras de calidad)
+- **Interior de la Isla Calavera** ahora hace juego con la calavera de piedra de la fachada: muros de la misma piedra gris-azulada, friso y osario de calaveras, columnas de vértebras, antorchas con calavera de ojos verdes, costillas/columna vertebral entre cuadros, alfombra con calaveras, bancas de hueso, huesos y telarañas, puerta con dientes, niebla verde baja, luciérnagas y fantasmas.
+- **Todas las salas:** polvo flotando y viñeta suave en los bordes.
+- **Llegada a cada isla:** aves (murciélagos en la Calavera), espuma en la orilla y destellos en el agua; se eliminaron las sombras rectangulares que ensuciaban las fachadas.
+- **Título:** el barco ya no queda debajo del texto.
