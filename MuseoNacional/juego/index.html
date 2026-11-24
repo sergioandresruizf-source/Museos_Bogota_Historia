@@ -29,9 +29,9 @@ html,body{margin:0;height:100%;background:#0b1522;color:#fff;overflow:hidden;
   box-shadow:0 0 0 calc(var(--u)*1) #000, calc(var(--u)*2) calc(var(--u)*2) 0 rgba(0,0,0,.5);
   font-family:var(--px);color:#fff;line-height:1.5}
 #hud{position:absolute;left:calc(var(--u)*6);top:calc(var(--u)*6);padding:calc(var(--u)*4) calc(var(--u)*6);
-  font-size:calc(var(--u)*6.4);display:none}
+  font-size:calc(var(--u)*5.4);display:none;max-width:calc(var(--u)*134)}
 #hud .n{color:var(--gold)}
-#hud .p{display:block;font-size:calc(var(--u)*5);color:#bcd;margin-top:calc(var(--u)*2);max-width:calc(var(--u)*200);
+#hud .p{display:block;font-size:calc(var(--u)*4.4);color:#bcd;margin-top:calc(var(--u)*2);max-width:calc(var(--u)*120);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #mini{position:absolute;right:calc(var(--u)*6);top:calc(var(--u)*6);width:calc(var(--u)*50);height:calc(var(--u)*61);
   border:calc(var(--u)*1.5) solid #f0c24a;box-shadow:0 0 0 calc(var(--u)*1) #000;image-rendering:pixelated;display:none;background:#1d5f8f}
@@ -95,6 +95,40 @@ html,body{margin:0;height:100%;background:#0b1522;color:#fff;overflow:hidden;
 #pzMsg{font-family:var(--px);font-size:calc(var(--u)*5.2);color:#9fd3ff;line-height:1.5}
 .pzbtn:active{transform:translateY(calc(var(--u)*1))}
 
+/* ---- Diálogo de historia (estilo Undertale) ---- */
+#vn{position:absolute;left:calc(var(--u)*8);right:calc(var(--u)*8);bottom:calc(var(--u)*8);height:calc(var(--u)*74);display:none;gap:calc(var(--u)*8);
+  background:#000;border:calc(var(--u)*3) solid #fff;padding:calc(var(--u)*7) calc(var(--u)*9);font-family:var(--px);color:#fff;cursor:pointer;z-index:6}
+#vnFaceWrap{flex:0 0 calc(var(--u)*44);height:calc(var(--u)*44);align-self:center;border:calc(var(--u)*1.5) solid #fff;display:none;align-items:center;justify-content:center;background:#0b0b14}
+#vnFace{width:100%;height:100%;image-rendering:pixelated}
+#vnBody{flex:1;min-width:0;display:flex;flex-direction:column}
+#vnWho{font-size:calc(var(--u)*5);color:var(--gold);margin-bottom:calc(var(--u)*3);min-height:calc(var(--u)*7)}
+#vnTxt{font-size:calc(var(--u)*6.4);line-height:1.7;white-space:pre-wrap;flex:1;overflow:hidden}
+#vnTxt.sys{color:#9fd3ff}
+#vnOpts{display:flex;gap:calc(var(--u)*14);justify-content:center;font-size:calc(var(--u)*6.4)}
+#vnOpts span{color:#fff}#vnOpts span.sel{color:var(--gold)}
+#vnOpts span.sel::before{content:'♥ ';color:#e33}
+#vnArrow{position:absolute;right:calc(var(--u)*8);bottom:calc(var(--u)*4);font-size:calc(var(--u)*6);color:#fff;visibility:hidden;animation:vnb .6s steps(2) infinite}
+@keyframes vnb{50%{transform:translateY(calc(var(--u)*2))}}
+/* ---- El saco ---- */
+#sack{position:absolute;inset:calc(var(--u)*8);display:none;flex-direction:column;background:#1b1a24;border:calc(var(--u)*3) solid #f0c24a;
+  box-shadow:0 0 0 calc(var(--u)*1.5) #000,0 0 0 calc(var(--u)*100) rgba(0,0,0,.62);padding:calc(var(--u)*6);color:#fff;font-family:var(--px);z-index:5}
+#sack .sk-head{display:flex;justify-content:space-between;font-size:calc(var(--u)*6);color:var(--gold);margin-bottom:calc(var(--u)*4)}
+#sack .sk-main{flex:1 1 auto;min-height:0;display:flex;gap:calc(var(--u)*6)}
+#skGrid{flex:0 0 58%;display:grid;grid-template-columns:repeat(4,1fr);gap:calc(var(--u)*4);align-content:start;overflow:auto;padding:calc(var(--u)*2)}
+.skc{position:relative;aspect-ratio:1;background:#000;border:calc(var(--u)*1.5) solid #555;overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.skc img{width:100%;height:100%;object-fit:cover;display:block}
+.skc .ph{font-size:calc(var(--u)*3.4);text-align:center;padding:calc(var(--u)*2);color:#9aa;line-height:1.4}
+.skc.sel{border-color:var(--gold);box-shadow:0 0 0 calc(var(--u)*1.5) #000,0 0 calc(var(--u)*6) var(--gold)}
+.skc.done{opacity:.38}
+.skc .tick{position:absolute;right:calc(var(--u)*1);top:calc(var(--u)*0.5);font-size:calc(var(--u)*6);color:#39d66a}
+#skInfo{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden}
+#skName{font-size:calc(var(--u)*5.8);color:var(--gold);margin:0 0 calc(var(--u)*3);line-height:1.45}
+#skOrig{font-family:var(--txt);font-weight:bold;font-size:calc(var(--u)*5.4);color:#9fd3ff;margin:0 0 calc(var(--u)*3)}
+#skDesc{font-family:var(--txt);font-weight:bold;font-size:calc(var(--u)*5.6);line-height:1.4;overflow:auto;background:rgba(0,0,0,.35);padding:calc(var(--u)*4);flex:1 1 auto;min-height:0}
+#skMsg{min-height:calc(var(--u)*13);font-size:calc(var(--u)*4.4);line-height:1.5;color:#ff8a7a;margin-top:calc(var(--u)*3)}
+#sack .sk-bot{display:flex;justify-content:space-between;align-items:center;margin-top:calc(var(--u)*4);gap:calc(var(--u)*4)}
+#skHint{font-size:calc(var(--u)*4.2);color:#9fd3ff;line-height:1.5}
+#btnSack{position:absolute;left:calc(var(--u)*6);bottom:calc(var(--u)*6);display:none;font-size:calc(var(--u)*5);padding:calc(var(--u)*3) calc(var(--u)*6);margin:0}
 /* ---- Final ---- */
 #finale{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;
   background:rgba(5,10,22,.72);padding:calc(var(--u)*10)}
@@ -137,6 +171,15 @@ body.touch #pad{display:block}
       <div id="prompt" class="box"></div>
       <div id="toast" class="box"></div>
       <div id="caption" class="box"></div>
+      <button id="btnSack" class="btn">SACO</button>
+      <div id="sack">
+        <div class="sk-head"><span id="skTitle">EL SACO</span><span id="skCount"></span></div>
+        <div class="sk-main"><div id="skGrid"></div>
+          <div id="skInfo"><h4 id="skName"></h4><p id="skOrig"></p><div id="skDesc"></div><div id="skMsg"></div></div></div>
+        <div class="sk-bot"><span id="skHint"></span><span style="display:flex;gap:calc(var(--u)*3)"><button id="skPlace" class="btn">COLOCAR AQUÍ</button><button id="skClose" class="btn alt">CERRAR</button></span></div>
+      </div>
+      <div id="vn"><div id="vnFaceWrap"><canvas id="vnFace" width="44" height="44"></canvas></div>
+        <div id="vnBody"><div id="vnWho"></div><div id="vnTxt"></div><div id="vnOpts"></div></div><span id="vnArrow">▼</span></div>
       <button id="btnSkip" class="btn alt">SALTAR ▶▶</button>
       <button id="btnMute" class="btn alt" title="Sonido (M)">♪</button>
 
@@ -224,7 +267,7 @@ const ctx = canvas.getContext('2d');
 ctx.imageSmoothingEnabled = false;
 
 /* ------------------------------ guardado ------------------------------ */
-function defaultSave() { return { viewed: {}, entered: {}, reached: {}, retos: {}, restored: {}, cineDone: false, oroDone: false, oroItems: [], oroSeen: {} }; }
+function defaultSave() { return { viewed: {}, entered: {}, reached: {}, retos: {}, restored: {}, placed: {}, recovered: false, cineDone: false, oroDone: false, oroItems: [], oroSeen: {} }; }
 function loadSave() {
   try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); if (s && s.viewed) return Object.assign(defaultSave(), s); } catch (e) { /* sin almacenamiento */ }
   return defaultSave();
@@ -801,6 +844,7 @@ window.addEventListener('keydown', (e) => {
   if (!keys[e.code]) pressed[e.code] = true;
   keys[e.code] = true; audioInit();
   if (e.code === 'KeyM') toggleMute();
+  if (e.code === 'KeyI' && !e.repeat) toggleSack();
   if (CFG.atajos && e.shiftKey && e.code === 'KeyE') cheatExploreAll();
   if (CFG.atajos && e.shiftKey && e.code === 'KeyC') cheatCine();
   if (CFG.atajos && e.shiftKey && e.code === 'KeyP' && cur && cur.name === 'reto') reto.skip();
@@ -845,8 +889,8 @@ function endFrameInput() { for (const k in pressed) delete pressed[k]; padEdge.a
 /* ======================================================================
    INTERFAZ (HUD, avisos, diálogo)
    ====================================================================== */
-const ui = { dialog: false, fading: false, title: false, finale: false, puzzle: false, dialogCb: null };
-const isBlocked = () => ui.dialog || ui.fading || ui.title || ui.finale || ui.puzzle;
+const ui = { dialog: false, fading: false, title: false, finale: false, puzzle: false, dialogCb: null, vn: false, sack: false };
+const isBlocked = () => ui.dialog || ui.fading || ui.title || ui.finale || ui.puzzle || ui.vn || ui.sack;
 let promptTxt = null;
 function setPrompt(t) {
   if (t === promptTxt) return; promptTxt = t; const el = $('prompt');
@@ -878,9 +922,122 @@ function updateHUD(place) {
   if (place !== undefined) $('hudPlace').textContent = place || '';
 }
 function removedList() {
-  const out = [];
+  const out = []; if (save.recovered) return out;   // ya van en el saco
   for (let i = 0; i < N_ISL; i++) islandWorks(i).forEach((o, j) => { if (o.removida && !save.restored[i]) out.push({ i, j, o }); });
   return out;
+}
+
+/* ======================================================================
+   DIÁLOGOS DE HISTORIA (estilo Undertale): caja abajo, texto que se escribe y una tecla para continuar
+   ====================================================================== */
+const vn = { lines: [], i: 0, txt: '', pos: 0, acc: 0, typed: false, opts: null, sel: 0, cb: null, tap: false, cd: 0 };
+const VN_VOICE = { 'Capitán': 520, 'Chamán': 170, 'Narrador': 330 };
+function vnFace(who) {
+  const wrap = $('vnFaceWrap'), cv = $('vnFace'), g = cv.getContext('2d'); g.clearRect(0, 0, 44, 44); g.imageSmoothingEnabled = false;
+  if (who === 'Capitán') { drawPirate(g, 22, 40, 'd', 0, true); wrap.style.display = 'flex'; }
+  else if (who === 'Chamán') { g.fillStyle = '#12241c'; g.fillRect(0, 0, 44, 44); skullGlyph(g, 6, 8, 4, ['#cfc9b2', '#a8a28c', '#14111c']); g.fillStyle = '#39ff9c'; g.fillRect(10, 16, 4, 4); g.fillRect(26, 16, 4, 4); wrap.style.display = 'flex'; }
+  else wrap.style.display = 'none';
+}
+function vnLine() {
+  const L = vn.lines[vn.i]; vn.txt = L.txt; vn.pos = 0; vn.acc = 0; vn.typed = false; vn.opts = L.opts || null; vn.sel = 0;
+  $('vnWho').textContent = L.who || ''; $('vnTxt').textContent = ''; $('vnTxt').className = L.sys ? 'sys' : ''; $('vnOpts').innerHTML = ''; $('vnArrow').style.visibility = 'hidden'; vnFace(L.who);
+}
+function dialogue(lines, cb) {
+  vn.lines = lines; vn.i = 0; vn.cb = cb || null; vn.tap = false; ui.vn = true; $('vn').style.display = 'flex'; vnLine();
+}
+function vnClose() { ui.vn = false; $('vn').style.display = 'none'; }
+function vnFinishTyping() {
+  vn.pos = vn.txt.length; vn.typed = true; $('vnTxt').textContent = vn.txt;
+  if (vn.opts) { const o = $('vnOpts'); o.innerHTML = ''; vn.opts.forEach((q, k) => { const sp = document.createElement('span'); sp.textContent = q.t; sp.className = k === vn.sel ? 'sel' : ''; sp.addEventListener('click', (e) => { e.stopPropagation(); vn.sel = k; vnChoose(); }); o.appendChild(sp); }); }
+  else $('vnArrow').style.visibility = 'visible';
+}
+function vnChoose() { const q = vn.opts[vn.sel]; sfx.ok(); vnClose(); vn.cb = null; if (q && q.f) q.f(); }
+function vnAdvance() {
+  if (vn.i < vn.lines.length - 1) { vn.i++; vnLine(); sfx.open(); }
+  else { const cb = vn.cb; vn.cb = null; vnClose(); if (cb) cb(); }
+}
+function vnUpdate(dt) {
+  const act = actionPressed() || vn.tap; vn.tap = false;
+  if (!vn.typed) {
+    vn.acc += dt * 42; const n = Math.min(vn.txt.length, Math.floor(vn.acc));
+    if (n > vn.pos) { const ch = vn.txt[n - 1]; if (ch !== ' ' && n % 2 === 0) { const L = vn.lines[vn.i]; beep((VN_VOICE[L.who] || 400) + (n % 3) * 18, 0.03, 'square', 0.022); } vn.pos = n; $('vnTxt').textContent = vn.txt.slice(0, n); }
+    if (vn.pos >= vn.txt.length) vnFinishTyping(); else if (act || backPressed()) vnFinishTyping();
+    return;
+  }
+  if (vn.opts) {
+    vn.cd -= dt; const a = axis();
+    if (vn.cd <= 0 && Math.abs(a.x) > 0.5) { vn.sel = (vn.sel + (a.x > 0 ? 1 : vn.opts.length - 1)) % vn.opts.length; vn.cd = 0.22; sfx.bump(); [...$('vnOpts').children].forEach((el, k) => { el.className = k === vn.sel ? 'sel' : ''; }); }
+    if (act) vnChoose(); return;
+  }
+  if (act) vnAdvance();
+}
+$('vn').addEventListener('click', () => { audioInit(); if (ui.vn && !vn.opts) vn.tap = true; });
+
+/* ======================================================================
+   EL SACO: las obras recuperadas. Se eligen una a una y solo se aceptan en su espacio.
+   ====================================================================== */
+const sk = { ctx: null, items: [], sel: 0, cd: 0 };
+function sackItems() {
+  const out = [];
+  for (let i = 0; i < N_ISL; i++) islandWorks(i).forEach((o, j) => { if (o.removida) { const key = i + ':' + j; out.push({ i, j, o, key, placed: !!(save.restored[i] || save.placed[key]) }); } });
+  return out;
+}
+const sackPending = () => sackItems().filter((it) => !it.placed);
+const islandDone = (i) => islandWorks(i).every((o, j) => !o.removida || save.placed[i + ':' + j] || save.restored[i]);
+const allDelivered = () => { for (let i = 0; i < N_ISL; i++) if (!save.restored[i] && islandWorks(i).some((o) => o.removida)) return false; return true; };
+function skShow() {
+  const it = sk.items[sk.sel]; if (!it) return;
+  $('skName').textContent = it.o.titulo || 'Sin título';
+  $('skOrig').textContent = 'Se la llevaron de: ' + placeName(it.i) + (it.placed ? ' · YA ENTREGADA' : '');
+  $('skDesc').textContent = it.o.descripcion || 'Sin descripción.'; $('skDesc').scrollTop = 0; $('skMsg').textContent = '';
+  [...$('skGrid').children].forEach((el, k) => { el.classList.toggle('sel', k === sk.sel); if (k === sk.sel) el.scrollIntoView({ block: 'nearest' }); });
+  $('skPlace').style.display = sk.ctx && !it.placed ? 'inline-block' : 'none';
+}
+function openSack(ctx) {
+  if (!save.recovered || ui.sack) return;
+  sk.ctx = ctx || null; sk.items = sackItems(); sk.cd = 0.25;
+  const first = sk.items.findIndex((it) => !it.placed); sk.sel = first >= 0 ? first : 0;
+  const grid = $('skGrid'); grid.innerHTML = '';
+  sk.items.forEach((it, k) => {
+    const el = document.createElement('div'); el.className = 'skc' + (it.placed ? ' done' : '');
+    const ph = () => { el.innerHTML = ''; const d = document.createElement('div'); d.className = 'ph'; d.textContent = it.o.titulo || 'Obra'; el.appendChild(d); if (it.placed) { const t = document.createElement('div'); t.className = 'tick'; t.textContent = '✓'; el.appendChild(t); } };
+    if (it.o.imagen) { const im = new Image(); im.onerror = ph; im.src = it.o.imagen; el.appendChild(im); if (it.placed) { const t = document.createElement('div'); t.className = 'tick'; t.textContent = '✓'; el.appendChild(t); } } else ph();
+    el.addEventListener('click', () => { sk.sel = k; skShow(); sfx.bump(); });
+    grid.appendChild(el);
+  });
+  const pend = sk.items.filter((it) => !it.placed).length;
+  $('skTitle').textContent = 'EL SACO · OBRAS RECUPERADAS'; $('skCount').textContent = 'POR ENTREGAR ' + pend + '/' + sk.items.length;
+  $('skHint').textContent = ctx ? 'Flechas: elegir · A: colocar en este espacio · B: cerrar' : 'Flechas: ver · B: cerrar · Para entregar, acércate a un espacio vacío de una sala';
+  $('sack').style.display = 'flex'; ui.sack = true; sfx.open(); skShow();
+}
+function closeSack() { if (!ui.sack) return; ui.sack = false; $('sack').style.display = 'none'; sk.ctx = null; sfx.close(); }
+function skTryPlace() {
+  const it = sk.items[sk.sel]; if (!it || !sk.ctx) return;
+  const r = sk.ctx.tryPlace(it);
+  if (r && r.ok) { closeSack(); } else { sfx.bump(); $('skMsg').textContent = (r && r.msg) || 'Esa obra no va aquí.'; }
+}
+function sackUpdate(dt) {
+  sk.cd -= dt; const a = axis();
+  if (sk.cd <= 0 && (Math.abs(a.x) > 0.5 || Math.abs(a.y) > 0.5)) {
+    let n = sk.sel; if (Math.abs(a.x) >= Math.abs(a.y)) n += a.x > 0 ? 1 : -1; else n += a.y > 0 ? 4 : -4;
+    n = clamp(n, 0, sk.items.length - 1); if (n !== sk.sel) { sk.sel = n; skShow(); sfx.bump(); } sk.cd = 0.18;
+  }
+  if (actionPressed()) skTryPlace(); else if (backPressed()) closeSack();
+}
+$('skPlace').addEventListener('click', () => { audioInit(); skTryPlace(); });
+$('skClose').addEventListener('click', () => { audioInit(); closeSack(); });
+function toggleSack() {
+  if (ui.sack) { closeSack(); return; }
+  if (!save.recovered || save.cineDone || isBlocked() || !cur || !['sea', 'arrival', 'museum'].includes(cur.name)) return;
+  if (cur.name === 'museum' && cur.entrega) return;
+  openSack(null);
+}
+$('btnSack').addEventListener('click', () => { audioInit(); toggleSack(); });
+let sackBtnTxt = '';
+function refreshSackBtn() {
+  const b = $('btnSack'), show = save.recovered && !save.cineDone && cur && ['sea', 'arrival', 'museum'].includes(cur.name) && !ui.title && !ui.finale;
+  const txt = show ? 'SACO ' + sackPending().length + ' (I)' : '';
+  if (txt === sackBtnTxt) return; sackBtnTxt = txt; b.style.display = show ? 'block' : 'none'; if (show) b.textContent = txt;
 }
 
 /* diálogo de obra */
@@ -1123,6 +1280,17 @@ const sea = {
     drawWorld(g, cam, gt);
     this.wake.forEach((w) => { g.fillStyle = 'rgba(235,250,255,' + (w.l * 0.8).toFixed(2) + ')'; const z = 2 + Math.round((1 - w.l) * 4); g.fillRect(Math.round(w.x - cam.x - z / 2), Math.round(w.y - cam.y), z, 2); });
     drawShip(g, s.dir, s.x - cam.x, s.y - cam.y + (this.demo ? -108 : 0), 0.75, Math.round(Math.sin(gt * 3) * 1));
+    if (save.recovered && !save.cineDone) {
+      for (let i = 0; i < N_ISL; i++) {
+        if (save.restored[i] || !islandWorks(i).some((o) => o.removida)) continue;
+        const n = islandWorks(i).filter((o, j) => o.removida && !save.placed[i + ':' + j]).length; if (!n) continue;
+        const q = PLACES[i].pos, x = Math.round(q.x - cam.x), y = Math.round(q.y - cam.y - 44 + Math.sin(gt * 4 + i) * 3);
+        if (x < -20 || x > VW + 20 || y < -20 || y > VH + 20) continue;
+        g.fillStyle = '#000'; g.fillRect(x - 6, y - 2, 12, 5); g.fillRect(x - 4, y + 3, 8, 3); g.fillRect(x - 2, y + 6, 4, 2);
+        g.fillStyle = '#ffd24a'; g.fillRect(x - 5, y - 1, 10, 3); g.fillRect(x - 3, y + 2, 6, 2); g.fillRect(x - 1, y + 4, 2, 2);
+        retoText(g, String(n), x, y - 8, '#ffe9a8', 'center', 7);
+      }
+    }
     drawFog(g, cam, gt);
     if (this.flash > 0) { g.fillStyle = 'rgba(210,225,255,' + (this.flash / 0.2 * 0.32).toFixed(2) + ')'; g.fillRect(0, 0, VW, VH); drawBolt(g, this.bolt); }
     if (Math.floor(gt * 8) % 4 === 0) drawMini(s, gt); else if (!this._m) { drawMini(s, gt); this._m = 1; }
@@ -1195,13 +1363,13 @@ const arrival = {
     const r = mulberry32(3); this.clouds = []; for (let i = 0; i < 4; i++) this.clouds.push({ x: r() * VW, y: 14 + r() * 70, v: i % 3, s: 4 + r() * 6 });
     const sg = $('sign'), nm = placeName(this.idx); sg.style.display = 'flex';
     // letrero: una línea si cabe; si no, se parte en dos por el espacio más cercano al centro
-    let lines = [nm], fs = Math.min(7.5, 100 / Math.max(1, nm.length));
+    let lines = [nm], fs = Math.min(7.5, 90 / Math.max(1, nm.length));
     if (fs < 5.5) {
       const mid = Math.floor(nm.length / 2); let cut = -1;
       for (let i = 0; i < nm.length; i++) if (nm[i] === ' ' && (cut === -1 || Math.abs(i - mid) < Math.abs(cut - mid))) cut = i;
       if (cut === -1) cut = mid;
       lines = [nm.slice(0, cut).trim(), nm.slice(cut).trim()];
-      fs = clamp(100 / Math.max(lines[0].length, lines[1].length), 3.4, 6.5);
+      fs = clamp(88 / Math.max(lines[0].length, lines[1].length), 3.4, 6.2);
     }
     sg.textContent = lines.join('\n');
     sg.style.fontSize = 'calc(var(--u) * ' + fs + ')';
@@ -1236,7 +1404,7 @@ const arrival = {
     // flecha que marca la entrada
     { const b = Math.round(Math.sin(gt * 5) * 2); g.fillStyle = '#fff7b0'; g.fillRect(199, 139 + b, 2, 2); g.fillRect(197, 141 + b, 6, 2); g.fillRect(195, 143 + b, 10, 2); g.fillStyle = '#7a5a10'; g.fillRect(195, 145 + b, 10, 1); }
     if (this.skull) { const al = 0.16 + 0.14 * Math.sin(gt * 3); g.fillStyle = 'rgba(57,255,156,' + al.toFixed(2) + ')'; g.fillRect(158, 76, 32, 28); g.fillRect(210, 76, 32, 28); }
-    drawShip(g, 0, 200, 303 + Math.round(Math.sin(gt * 2.2) * 1), 0.75, 0);
+    drawShip(g, 0, 200, 283 + Math.round(Math.sin(gt * 2.2) * 1), 0.75, 0);
     const p = this.pl; drawPirate(g, p.x, p.y, p.dir, p.fr, this.skull);
     if (this.skull) {
       g.fillStyle = 'rgba(10,10,30,.25)'; g.fillRect(0, 0, VW, VH);
@@ -1613,6 +1781,25 @@ function gameSalida() {
 }
 
 /* ============================ ESCENA «RETO» ============================ */
+RETOS.entrada.derrota = 'Las trampas no perdonan… ¿Lo intentamos otra vez?';
+RETOS.durante.derrota = 'Se nos escaparon demasiadas obras. ¿Probamos de nuevo?';
+RETOS.salida.derrota = 'El Chamán es poderoso… ¿Seguimos?';
+RETOS.entrada.dialogo = [
+  { who: 'Capitán', txt: 'Esta es la Isla Calavera. Aquí quedaron guardadas las obras que removieron de los museos.' },
+  { who: 'Narrador', txt: 'Antes de la Colonia, los pueblos que habitaban estas tierras protegían sus lugares sagrados con trampas: rocas rodantes, fosos con estacas y dardos de cerbatana.' },
+  { who: 'Capitán', txt: 'Mucho cuidado donde pisas. Los fosos se avisan antes de cerrarse… si estás atento.' }
+];
+RETOS.durante.dialogo = [
+  { who: 'Capitán', txt: 'Estas son las salas de la isla. Las obras removidas cuelgan de sus paredes, esperando volver a casa.' },
+  { who: 'Narrador', txt: 'Las comunidades indígenas guardaban su memoria al ritmo de los tambores.' },
+  { who: 'Capitán', txt: 'Caminaré con el saco a la espalda. Cuando una obra quede justo sobre mí, ¡la tomo al compás del tambor!' }
+];
+RETOS.salida.dialogo = [
+  { who: 'Narrador', txt: 'Junto al cofre, entre la niebla verde, aparece una sombra: el Chamán Guardián de la isla.' },
+  { who: 'Chamán', txt: 'Quienes se llevaron las obras nunca pidieron permiso… ¿Y tú, forastero?' },
+  { who: 'Capitán', txt: 'Venimos a devolverlas al lugar al que pertenecen.' },
+  { who: 'Chamán', txt: 'Entonces demuéstralo. ¡Soporta mi magia!' }
+];
 const reto = {
   id: null, G: null, state: 'card', fails: 0, onWin: null, info: null,
   enter(p) {
@@ -1621,21 +1808,21 @@ const reto = {
     this.card('intro');
   },
   leave() { $('puzzle').style.display = 'none'; ui.puzzle = false; setCaption(null); if (this.G && this.G.cleanup) this.G.cleanup(); this.G = null; },
+  lines(kind) {
+    const i = this.info, L = [];
+    if (kind === 'intro') { (i.dialogo || []).forEach((l) => L.push(l)); L.push({ who: '', txt: '[ ' + i.ctrl + ' ]', sys: true }); }
+    else L.push({ who: 'Narrador', txt: i.ok });
+    return L;
+  },
   card(kind) {
-    const i = this.info; this.state = 'card'; this.kind = kind; ui.puzzle = true; clearTimeout(this.skT);
-    $('pzTitle').textContent = 'RETO ' + i.n + '/3 · ' + i.titulo.toUpperCase();
-    $('pzHelp').innerHTML = '';
-    if (kind === 'win') { $('pzHelp').textContent = i.ok; $('pzMsg').textContent = 'Reto superado.'; $('pzGo').textContent = this.id === 'salida' ? 'ZARPAR ▶' : 'CONTINUAR ▶'; $('pzSkip').style.display = 'none'; }
+    const i = this.info; this.state = 'card'; this.kind = kind; $('puzzle').style.display = 'none'; ui.puzzle = false; clearTimeout(this.skT);
+    if (kind === 'intro') dialogue(this.lines('intro'), () => this.start());
+    else if (kind === 'win') dialogue(this.lines('win'), () => { this.state = 'done'; const f = this.onWin; if (f) f(); });
     else {
-      const h = document.createElement('div'); h.textContent = (kind === 'lose' ? (this.id === 'durante' ? 'Se te escaparon demasiadas obras. ' : 'Caíste en combate. ') : '') + i.historia; const c = document.createElement('div'); c.textContent = i.ctrl; c.style.cssText = 'margin-top:calc(var(--u)*3);color:#9fd3ff';
-      $('pzHelp').appendChild(h); $('pzHelp').appendChild(c);
-      $('pzMsg').textContent = i.lugar + ' · ' + i.vidas + (this.fails ? ' · Intentos: ' + this.fails : '');
-      $('pzGo').textContent = kind === 'lose' ? 'REINTENTAR ▶' : 'COMENZAR ▶';
-      const omit = CFG.retosOmitibles !== false && this.fails >= (CFG.retoOmitirTrasFallos || 3);
-      $('pzSkip').style.display = omit ? 'inline-block' : 'none';
+      const opts = [{ t: 'REINTENTAR', f: () => this.start() }];
+      if (CFG.retosOmitibles !== false && this.fails >= (CFG.retoOmitirTrasFallos || 3)) opts.push({ t: 'OMITIR RETO', f: () => this.skip() });
+      dialogue([{ who: 'Capitán', txt: (i.derrota || '¡Nos derrotaron!') + (this.fails ? '  (Intentos: ' + this.fails + ')' : ''), opts }], null);
     }
-    $('pzArea').innerHTML = ''; { const cv = document.createElement('canvas'); cv.width = VW; cv.height = VH; cv.style.cssText = 'width:calc(var(--u)*118);height:calc(var(--u)*88);image-rendering:pixelated;border:calc(var(--u)*1.5) solid #000'; const pg = cv.getContext('2d'); pg.imageSmoothingEnabled = false; this.preview(pg); $('pzArea').appendChild(cv); }
-    $('puzzle').style.display = 'flex';
   },
   preview(g) {
     g.drawImage(retoBackground(this.id === 'entrada' ? 'senda' : this.id === 'durante' ? 'arena' : 'laguna'), 0, 0);
@@ -1643,26 +1830,28 @@ const reto = {
     else if (this.id === 'durante') { if (!this._ph) this._ph = ritHall(416); g.fillStyle = '#0b0a14'; g.fillRect(0, 0, VW, VH); g.drawImage(this._ph, 0, 0, VW, HALL_H, 0, 46, VW, HALL_H); g.save(); g.translate(0, 46); [90, 150, 210, 290].forEach((x, i) => ritFrame(g, x, RIT_FMT[i], i === 0 ? { hueco: true } : null)); drawSack(g, 191, 120, 1, 0.5, true); drawPirate(g, 200, 126, 'r', 1, true); g.restore(); g.fillStyle = 'rgba(20,0,40,.18)'; g.fillRect(0, 0, VW, VH); }
     else { drawShaman(g, { x: 200, y: 110, vis: 1, hurt: 0, st: 'tired', shield: false }); drawPirate(g, 200, 240, 'u', 0, true); }
   },
-  start() { this.G = this.info.make(); this.state = 'play'; $('puzzle').style.display = 'none'; ui.puzzle = false; sfx.open(); },
-  cardAction() {
-    if (this.state !== 'card') return; audioInit();
-    if (this.kind === 'win') { this.state = 'done'; $('puzzle').style.display = 'none'; ui.puzzle = false; const f = this.onWin; if (f) f(); }
-    else this.start();
-  },
+  start() { this.G = this.info.make(); this.state = 'play'; sfx.open(); },
   skip() { if (this.state === 'card' || this.state === 'play') this.win(); },
   win() { this.state = 'card'; sfx.win(); this.card('win'); },
   update(dt) {
-    if (this.state === 'card') { if (actionPressed()) this.cardAction(); return; }
+    if (this.state === 'card' || this.state === 'done') return;
     if (this.state !== 'play' || !this.G) return;
     this.G.update(dt);
     if (this.G.result === 'win') { if (this.G.cleanup) this.G.cleanup(); this.G = null; this.win(); }
     else if (this.G.result === 'lose') { this.fails++; if (this.G.cleanup) this.G.cleanup(); this.G = null; this.card('lose'); }
   },
-  draw() { const g = ctx; g.fillStyle = '#000'; g.fillRect(0, 0, VW, VH); if (this.G) this.G.draw(g); else if (this.id) g.drawImage(retoBackground(this.id === 'entrada' ? 'senda' : this.id === 'durante' ? 'arena' : 'laguna'), 0, 0); }
+  draw() { const g = ctx; g.fillStyle = '#000'; g.fillRect(0, 0, VW, VH); if (this.G) this.G.draw(g); else if (this.id) this.preview(g); }
 };
 scenes.reto = reto;
-$('pzGo').addEventListener('click', () => reto.cardAction());
 $('pzSkip').addEventListener('click', () => { audioInit(); reto.skip(); });
+function llevarSaco() {
+  save.retos.salida = true; save.recovered = true; persist(); const n = sackItems().length;
+  dialogue([
+    { who: 'Narrador', txt: 'El Chamán se desvanece. El cofre se abre y las ' + n + ' obras quedan guardadas en el saco del pirata.' },
+    { who: 'Capitán', txt: 'Ahora a navegar. Cada obra tiene su lugar: busca los espacios vacíos de las islas y devuélvelas una por una.' },
+    { who: '', txt: '[ Abre el saco con el botón SACO o la tecla I · Elige la obra y colócala en su espacio · Si no va ahí, no se deja ]', sys: true }
+  ], () => go('sea', { from: SKULL_I }));
+}
 function lanzarReto(id, onWin) { sfx.thud(); go('reto', { id, onWin }); }
 
 /* ======================================================================
@@ -2045,7 +2234,7 @@ function buildSlots(kind, idx) {
   if (kind === 'isla') {   // las obras removidas NO se ven en la sala hasta que se restituyen (solo están en la Isla Calavera)
     const out = [];
     islandWorks(idx).forEach((o, j) => {
-      if (o.removida && !save.restored[idx]) { out.push(mkSlot(o, idx + ':' + j, { hueco: true })); return; }   // espacio vacío de la obra que falta
+      if (o.removida && !save.restored[idx] && !save.placed[idx + ':' + j]) { out.push(mkSlot(o, idx + ':' + j, { hueco: true })); return; }   // espacio vacío de la obra que falta
       out.push(o.removida ? mkSlot(Object.assign({}, o, { removida: false }), idx + ':' + j, { restituida: true, origen: 'Regresó de la Isla Calavera' }) : mkSlot(o, idx + ':' + j));
     });
     return out;
@@ -2204,7 +2393,7 @@ const museum = {
   slotCenter(i) { const s = this.slots[i], cx = 88 + 80 * i; if (s.tipo === 'escultura') return { cx, cy: PED_TOP - 22, stand: { x: cx + 30, y: 104 } }; const d = FRAME[s.fmt] || FRAME.horizontal; return { cx, cy: 50 - d.h / 2, stand: { x: cx + 30, y: 104 } }; },
   updEnt(dt) {
     const E = this.entrega, p = this.pl; E.t += dt; if (E.flash > 0) E.flash -= dt; p.t += dt;
-    if (E.ph === 'walk' && E.k >= E.n) { E.ph = 'end'; E.t = 0; setCaption('¡Todas las obras volvieron a «' + placeName(this.idx) + '»!'); sfx.win(); }
+    if (E.ph === 'walk' && E.k >= E.n && !E.manual) { E.ph = 'end'; E.t = 0; setCaption('¡Todas las obras volvieron a «' + placeName(this.idx) + '»!'); sfx.win(); }
     const walkTo = (tx, ty) => { const dx = tx - p.x, dy = ty - p.y, d = Math.hypot(dx, dy); if (d < 1.5) return true; const st = Math.min(d, 78 * dt); p.x += dx / d * st; p.y += dy / d * st; p.dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'r' : 'l') : (dy > 0 ? 'd' : 'u'); p.fr = Math.floor(p.t * 8) % 4; return false; };
     if (E.ph === 'walk') {
       const i = E.targets[E.k], c = this.slotCenter(i), st = c.stand;
@@ -2215,8 +2404,8 @@ const museum = {
         if (s2.imagen) { const im = new Image(); im.onload = () => { if (s2.tipo === 'cuadro' && s2.formato === 'auto') { const r = im.naturalWidth / im.naturalHeight; s2.fmt = r > 1.25 ? 'horizontal' : r < 0.8 ? 'vertical' : 'cuadrado'; } this.dirty = true; }; im.onerror = () => { s2.imErr = true; }; im.src = s2.imagen; s2.im = im; }
         E.work = s2; sfx.flag(); }
     } else if (E.ph === 'rise') { if (E.t > 0.9) { E.ph = 'fly'; E.t = 0; } }
-    else if (E.ph === 'fly') { if (E.t > 1.0) { const i = E.targets[E.k]; this.slots[i] = E.work; this.dirty = true; E.flash = 0.7; E.ph = 'place'; E.t = 0; E.done++; sfx.ok(); beep(880, 0.12, 'triangle', 0.05, 0.05); } }
-    else if (E.ph === 'place') { if (E.t > 1.1) { E.k++; E.ph = 'walk'; E.t = 0; E.work = null; } }
+    else if (E.ph === 'fly') { if (E.t > 1.0) { const i = E.targets[E.k]; save.placed[this.slots[i].key] = true; persist(); this.slots[i] = E.work; this.dirty = true; E.flash = 0.7; E.ph = 'place'; E.t = 0; E.done++; sfx.ok(); beep(880, 0.12, 'triangle', 0.05, 0.05); } }
+    else if (E.ph === 'place') { if (E.t > 1.1) { if (E.manual) this.finishPlace(); else { E.k++; E.ph = 'walk'; E.t = 0; E.work = null; } } }
     else if (E.ph === 'end') { if (E.t > 1.8 && !E.fin) { E.fin = true; const from = this.idx; save.restored[from] = true; persist(); go('cine', { resume: true, from }); } }
     this.cam += (clamp(p.x - VW / 2, 0, this.WW - VW) - this.cam) * Math.min(1, 6 * dt);
   },
@@ -2226,7 +2415,7 @@ const museum = {
     const showSack = E.ph !== 'end';
     // saco: en la espalda mientras camina; abierto en el suelo al sacar la obra
     if (E.ph === 'walk') drawSack(g, p.x + (p.dir === 'r' ? -8 : 8), p.y - 6, 1, left / Math.max(1, E.n), false);
-    else if (showSack) drawSack(g, E.sack.x, E.sack.y, 1.1, Math.max(0.15, (left - (E.ph === 'place' ? 0 : 0)) / Math.max(1, E.n)), E.ph !== 'place' || E.t < 0.4);
+    else if (showSack) drawSack(g, E.sack.x, E.sack.y, 1.1, E.fill != null ? E.fill : Math.max(0.15, left / Math.max(1, E.n)), E.ph !== 'place' || E.t < 0.4);
     if (E.work) {
       const i = E.targets[E.k], c = this.slotCenter(i), w = E.work, d = FRAME[w.fmt] || FRAME.horizontal;
       let px, py, k;
@@ -2263,14 +2452,39 @@ const museum = {
     if (this.chest && Math.hypot(p.x - (this.chest.x + 12), p.y - (this.chest.y + 18)) < 34) tgt = { type: 'cofre' };
     this.near = tgt;
     if (!tgt) { setPrompt(null); return; }
-    if (tgt.type === 'obra') {
+    if (tgt.type === 'obra' && tgt.s.hueco && save.recovered && !this.entrega && sackPending().length) {
+      const si = this.slots.indexOf(tgt.s);
+      setPrompt('[A] Colocar una obra del saco aquí');
+      if (actionPressed()) { setPrompt(null); openSack({ idx: this.idx, tryPlace: (it) => this.tryPlace(it, si) }); }
+    } else if (tgt.type === 'obra') {
       setPrompt('[A] Ver ' + (tgt.s.tipo === 'escultura' ? 'escultura' : 'obra') + (tgt.s.removida ? ' removida' : '') + ': ' + (tgt.s.titulo || 'Sin título'));
       if (actionPressed()) this.openSlot(tgt.s);
     } else {
-      if (!this.slots.length) { setPrompt('El cofre está vacío'); if (actionPressed()) toast('Todas las obras ya regresaron a sus salas.', 2600); return; }
+      if (!this.slots.length) { setPrompt('El cofre está vacío'); if (actionPressed()) toast(save.recovered ? 'Ya llevas las obras en el saco. ¡Devuélvelas a sus salas!' : 'Todas las obras ya regresaron a sus salas.', 2800); return; }
       if (CFG.exigirPasarUltimaObra && !save.reached.calavera) { setPrompt('[A] Cofre cerrado: recorre primero las obras removidas'); if (actionPressed()) { sfx.bump(); toast('Pasa cerca de la última obra removida para que el cofre se abra.', 2600); } }
-      else { setPrompt('[A] Cargar las obras en el barco'); if (actionPressed()) { setPrompt(null); lanzarReto('salida', () => { save.retos.salida = true; persist(); go('cine', {}); }); } }
+      else { setPrompt(save.retos.salida ? '[A] Cofre abierto' : '[A] Abrir el cofre'); if (actionPressed()) { setPrompt(null); lanzarReto('salida', llevarSaco); } }
     }
+  },
+  tryPlace(it, si) {
+    const s = this.slots[si], t = '«' + (it.o.titulo || 'La obra') + '»';
+    if (!s || !s.hueco) return { ok: false, msg: 'Este espacio ya está ocupado.' };
+    if (it.placed) return { ok: false, msg: t + ' ya regresó a su sala.' };
+    if (it.key === s.key) { setTimeout(() => this.startPlace(si), 200); return { ok: true }; }
+    if (it.i !== this.idx) return { ok: false, msg: t + ' no pertenece a esta sala. Se la llevaron de: ' + placeName(it.i) + '.' };
+    return { ok: false, msg: t + ' sí es de esta sala, pero no va en este espacio. Prueba en otro hueco.' };
+  },
+  startPlace(si) {
+    const p = this.pl, pend = sackPending().length, tot = sackItems().length;
+    this.entrega = { manual: true, targets: [si], k: 0, ph: 'open', t: 0, n: 1, done: 0, sack: { x: p.x + 16, y: p.y + 4 }, work: null, flash: 0, fill: Math.max(0.15, pend / Math.max(1, tot)) };
+    p.dir = 'u'; p.fr = 0; sfx.thud(); setCaption('Sacando del saco: ' + (this.slots[si].titulo || 'obra')); setPrompt(null);
+  },
+  finishPlace() {
+    this.entrega = null; setCaption(null); const idx = this.idx;
+    if (islandDone(idx)) {
+      save.restored[idx] = true; persist(); sfx.win(); toast('¡' + placeName(idx) + ' recuperó todas sus obras!', 3600);
+      if (allDelivered()) setTimeout(() => { if (cur === museum) go('cine', { resume: true, from: idx }); }, 2400);
+    } else { const left = this.slots.filter((q) => q.hueco).length; toast('¡Obra devuelta a su lugar! Faltan ' + left + ' en esta sala.', 2600); }
+    updateHUD(); sackBtnTxt = '';
   },
   markReached() {
     if (this.skull) { if (!save.reached.calavera) { save.reached.calavera = true; persist(); toast('Recorriste las obras removidas. El cofre te espera al fondo.', 3200); } return; }
@@ -2283,7 +2497,7 @@ const museum = {
   },
   openSlot(s) {
     const o = { titulo: s.titulo, descripcion: s.descripcion, imagen: s.imagen, removida: s.removida, origen: s.origen, tipo: s.tipo, restituida: s.restituida, guardada: s.guardada, formato: s.formato, fmt: s.fmt };
-    if (s.hueco) { o.descripcion = CFG.huecoMuestraDescripcion ? s.descripcion : 'Aquí colgaba una obra que fue removida del museo. Su rastro se conserva en la Isla Calavera.'; o.origen = 'Espacio vacío en la sala'; o.imagen = ''; }
+    if (s.hueco) { o.descripcion = CFG.huecoMuestraDescripcion ? s.descripcion : 'Aquí colgaba una obra que fue removida del museo. ' + (save.recovered ? 'La llevas en el saco: si le corresponde este espacio, podrás colocarla aquí.' : 'Su rastro se conserva en la Isla Calavera.'); o.origen = 'Espacio vacío en la sala'; o.imagen = ''; }
     openDialog(o, () => {
       const first = !save.viewed[s.key]; save.viewed[s.key] = true; persist(); updateHUD();
         });
@@ -2340,10 +2554,7 @@ const cine = {
       const pl = PLACES[p.from]; this.ship.x = pl.dock.tip.x; this.ship.y = pl.dock.tip.y; this.ship.dir = dirIndex(pl.dock.ux, pl.dock.uy);
       this.cam.x = clamp(this.ship.x - VW / 2, 0, WORLD_W - VW); this.cam.y = clamp(this.ship.y - VH / 2, 0, WORLD_H - VH);
       cineFlags[p.from] = 0; this._fl = false; this.flagIsl = p.from; this.phase = 'flag'; this.pt = 0; this.oi = 0; this.order = [];
-      const left = []; for (let i = 0; i < N_ISL; i++) { if (save.restored[i]) continue; if (islandWorks(i).some((o) => o.removida)) left.push(i); else { save.restored[i] = true; if (cineFlags) cineFlags[i] = 1; } }
-      let pos = { x: this.ship.x, y: this.ship.y };
-      while (left.length) { let bi = 0, bd = 1e9; left.forEach((k, ii) => { const d = Math.hypot(PLACES[k].dock.tip.x - pos.x, PLACES[k].dock.tip.y - pos.y); if (d < bd) { bd = d; bi = ii; } }); const k = left.splice(bi, 1)[0]; this.order.push(k); pos = PLACES[k].dock.tip; }
-      this.remaining = this.order.reduce((n, i) => n + islandWorks(i).filter((o) => o.removida).length, 0);
+      this.order = []; this.remaining = 0;
       setCaption('¡«' + placeName(p.from) + '» recuperó sus obras!'); return;
     }
     cineFlags = {}; this.done = false; this.delivered = 0; this.loaded = 0; this.flying = []; this.spawnT = 0; this.nSpawn = 0; this.hold = 0; this.lastLoaded = -1; this.oi = 0; this.crate = null; this.wake = [];
@@ -2504,7 +2715,10 @@ let last = 0;
 function frame(ts) {
   const dt = Math.min(0.05, (ts - last) / 1000 || 0.016); last = ts; gt += dt; musicTick(dt);
   if (ui.dialog && (actionPressed() || backPressed())) closeDialog();
+  else if (ui.vn) vnUpdate(dt);
+  else if (ui.sack) sackUpdate(dt);
   else if (cur) { if (cur.update) cur.update(dt); }
+  refreshSackBtn();
   if (cur) cur.draw();
   endFrameInput();
   requestAnimationFrame(frame);

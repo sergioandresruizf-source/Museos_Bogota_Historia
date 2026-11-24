@@ -124,3 +124,17 @@ Ya no es un templo griego recoloreado: al atracar ves **la misma isla de cerca**
 - **Todas las salas:** polvo flotando y viñeta suave en los bordes.
 - **Llegada a cada isla:** aves (murciélagos en la Calavera), espuma en la orilla y destellos en el agua; se eliminaron las sombras rectangulares que ensuciaban las fachadas.
 - **Título:** el barco ya no queda debajo del texto.
+
+## 16. Diálogos de historia y entrega manual de obras
+
+**Diálogos estilo Undertale.** Antes de cada reto (y al ganar/perder) aparece una caja negra abajo con el texto escribiéndose letra a letra, retrato del personaje (Capitán, Chamán) y una flecha ▼. Se avanza con A / Espacio / Enter / E o tocando la caja; pulsar mientras escribe completa la línea. Los textos se editan en `index.html`: `RETOS.entrada.dialogo`, `RETOS.durante.dialogo`, `RETOS.salida.dialogo` (lista de `{ who, txt }`), `RETOS.*.derrota` (frase al perder) y `ok` (frase al ganar). `{ who:'', txt:'…', sys:true }` muestra una línea de controles en azul.
+
+**El saco y la entrega manual.** Al vencer al Chamán el barco ya NO entrega nada solo: todas las obras quedan en el saco (`save.recovered = true`) y el jugador navega libremente.
+- Botón **SACO** (abajo-izquierda) o tecla **I**: muestra todas las obras recuperadas, con imagen, título, descripción y de qué isla se las llevaron.
+- Para entregar: entrar a una sala, acercarse a un **espacio vacío** y pulsar A; se abre el saco, se elige la obra y **COLOCAR AQUÍ**.
+- Solo se acepta si la obra corresponde exactamente a ese espacio (`item.key === slot.key`). Si es de otra isla o de otro hueco de la misma sala, aparece un mensaje y no se deja colocar.
+- Al colocar, el pirata saca la obra del saco y la cuelga con animación. Al completar una sala se iza su bandera; al entregar todas, arranca la cinemática final.
+- En el mar, las islas con obras pendientes muestran una flecha dorada con el número que falta.
+- El progreso se guarda (`save.placed`, `save.recovered`).
+
+**Ajustes visuales.** HUD más compacto, carteles de isla con texto más pequeño (no se salen) y barco de llegada más abajo.
