@@ -151,3 +151,12 @@ Ya no es un templo griego recoloreado: al atracar ves **la misma isla de cerca**
 
 ## 18. Atajo de prueba: ir a la Isla Calavera
 Con `atajos: true` en `obras.js`: **Shift + K** marca todas las islas como exploradas, quita la niebla y deja el barco junto a la Isla Calavera (pulsa A para atracar). Otros atajos: Shift+E (explorar todo), Shift+C (cinemática final), Shift+P (omitir reto). **Antes de publicar, pon `atajos: false`.**
+
+## 19. Nuevo orden en la Isla Calavera
+1. **Entrada:** reto de las trampas (sin cambios).
+2. **Recorrido:** el jugador camina por el pasillo y ve las obras removidas colgadas (con sus imágenes).
+3. **Final del pasillo:** junto al cofre pulsa A → empieza el **juego de ritmo** (la vista previa de las instrucciones ya muestra las obras reales). Al ganar, las obras van al saco (`save.recovered`) y **las paredes de la sala quedan vacías**.
+4. **Al salir de la sala** (la puerta del inicio) aparece el **Chamán**: pelea final de **5 fases**. Desde la 3.ª se fatiga (sudor, aura más débil, jadeos entre hechizos en las fases 3 y 4). Tras la 5.ª queda agotado ~3,6 s: un solo golpe lo deshace. Si se agota la ventana, repite las fases 4 y 5.
+5. Tras vencerlo, el barco zarpa con las obras en el saco y comienza la entrega manual (sección 16).
+
+Ajustes en `gameSalida`: `S.casts >= 5` (fases), `S.ts = 3.6` (ventana de golpe), `S.ts = S.casts === 3 ? 1.1 : 1.5` (jadeos).

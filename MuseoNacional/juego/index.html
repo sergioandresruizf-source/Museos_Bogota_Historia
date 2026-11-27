@@ -1472,12 +1472,12 @@ const RETOS = {
     n: 2, titulo: 'Tambores de la Memoria', lugar: 'Sala de las obras removidas', vidas: '5 corazones',
     historia: 'Las comunidades indígenas guardaban su memoria al ritmo de los tambores. El pirata recorre la sala de la Isla Calavera con un saco a la espalda. Las obras removidas cuelgan de las paredes: tómalas justo cuando pases bajo cada una, al ritmo del tambor. Si una se te escapa, pierdes un corazón.',
     ctrl: 'El pirata camina solo. Pulsa A / Espacio / Enter / E (o toca la pantalla) cuando una obra quede sobre la zona dorada: cada pulsación toca una nota de la melodía, al compás del tambor.',
-    ok: '¡Todas las obras están a salvo en el saco! Puedes seguir hacia el cofre.', make: gameDurante
+    ok: '¡Todas las obras están a salvo en el saco!', make: gameDurante
   },
   salida: {
     n: 3, titulo: 'El Chamán del Cofre', lugar: 'El cofre de la Isla Calavera', vidas: '5 corazones',
-    historia: 'Al tocar el cofre despierta el chamán custodio de la memoria. Cree que el pirata es un colono español. Sobrevive a sus tres hechizos y golpéalo una sola vez cuando quede agotado.',
-    ctrl: 'MOVER: flechas / WASD.  ATACAR: A / Espacio / E.  ESQUIVAR: B / Esc. Sobrevive a sus 3 hechizos: cuando su escudo cae y brilla, solo podrás golpearlo UNA vez.',
+    historia: 'Al tocar el cofre despierta el chamán custodio de la memoria. Cree que el pirata es un colono español. Sobrevive a sus cinco fases (desde la tercera se fatiga) y golpéalo una sola vez cuando quede agotado.',
+    ctrl: 'MOVER: flechas / WASD.  ATACAR: A / Espacio / E.  ESQUIVAR: B / Esc. Sobrevive a sus 5 fases (desde la 3.ª se fatiga): cuando su escudo cae y brilla, solo podrás golpearlo UNA vez.',
     ok: 'El chamán baja su bastón y deja que el saco con las obras zarpe contigo.', make: gameSalida
   }
 };
@@ -1652,14 +1652,14 @@ function drawWarrior(g, e, tx, ty) {
 function drawShaman(g, S) {
   const al = clamp(S.vis, 0, 1); if (al <= 0.02) return;
   const x = Math.round(S.x), t = gt, tired = S.st === 'tired', cast = S.st === 'cast';
-  const by = Math.round(Math.sin(t * 2.4) * 2), flash = S.hurt > 0 && Math.floor(gt * 20) % 2, sw = Math.round(Math.sin(t * 3));
+  const fat = S.fat || 0, by = Math.round(Math.sin(t * (2.4 + fat * 2.2)) * (2 + fat * 1.5)), flash = S.hurt > 0 && Math.floor(gt * 20) % 2, sw = Math.round(Math.sin(t * 3));
   const eye = tired ? '#ffe27a' : cast ? '#ff3b2e' : '#b36bff', glow = tired ? 'rgba(255,220,90,' : cast ? 'rgba(255,60,40,' : 'rgba(140,80,255,';
   const C = (c) => (flash ? '#fff' : c), BONE = '#e8e2c8', BONE2 = '#c9c2a4';
   g.save(); g.globalAlpha = al;
   g.fillStyle = 'rgba(0,0,0,.45)'; g.beginPath(); g.ellipse(x, S.y + 14, 28 - by, 6, 0, 0, 6.3); g.fill();
-  for (let r = 44; r > 10; r -= 6) { g.fillStyle = glow + (0.05 + (44 - r) * 0.0042).toFixed(3) + ')'; g.beginPath(); g.arc(x, S.y - 14 + by, r, 0, 6.3); g.fill(); }
+  for (let r = Math.round(44 - fat * 10); r > 10; r -= 6) { g.fillStyle = glow + ((0.05 + (44 - r) * 0.0042) * (1 - fat * 0.35)).toFixed(3) + ')'; g.beginPath(); g.arc(x, S.y - 14 + by, r, 0, 6.3); g.fill(); }
   for (let k = 0; k < 9; k++) { const an = t * 1.5 + k * 0.7, rr = 36 + Math.sin(t * 3 + k) * 5; Rr(g, x + Math.cos(an) * rr, S.y - 12 + by + Math.sin(an) * rr * 0.62, 3, 3 + ((k + Math.floor(t * 8)) % 3), eye); }
-  g.translate(x, S.y + 12 + by); g.scale(2, 2);
+  g.translate(x, S.y + 12 + by + Math.round(fat * 2)); g.scale(2, 2);
   for (let r = 0; r < 16; r++) { const w = 7 + r * 0.55, o = Math.round(Math.sin(t * 3 + r * 0.45) * (r / 9)); Rr(g, -w + o, -16 + r, Math.round(w * 2), 1, C(r % 6 === 0 ? '#4a0f22' : '#2a0a16')); }          // capa raída
   for (let k = -12; k <= 12; k += 4) Rr(g, k + sw, -1 + ((k / 4) % 2 ? 0 : 2), 3, 3, C('#2a0a16'));
   [-3, -2, -1, 0, 1, 2, 3].forEach((i) => { const h = 9 - Math.abs(i); Rr(g, i * 3 - 1, -24 - h + Math.abs(i), 3, h, C(['#c0392b', '#2b6ab0', '#2f9a4a', '#e0b030', '#2f9a4a', '#2b6ab0', '#c0392b'][i + 3])); });   // abanico de plumas
@@ -1675,6 +1675,7 @@ function drawShaman(g, S) {
   Rr(g, -4, -17, 8, 2, '#0a0612'); for (let k = -3; k <= 3; k += 2) Rr(g, k, -17, 1, 1, C(BONE)); Rr(g, -5, -20, 2, 1, '#c0392b'); Rr(g, 3, -20, 2, 1, '#c0392b'); Rr(g, -5, -16, 1, 1, '#c0392b'); Rr(g, 4, -16, 1, 1, '#c0392b');
   [[6, -30, 2, 7], [8, -33, 2, 4], [10, -36, 2, 4], [6, -35, 2, 2]].forEach((q) => { Rr(g, q[0], q[1], q[2], q[3], C('#7a6a48')); Rr(g, -q[0] - q[2], q[1], q[2], q[3], C('#7a6a48')); });   // astas
   for (let k = 0; k < 5; k++) Rr(g, -10 + k * 5, 2 + (Math.floor(t * 6) + k) % 2, 2, 3, eye);
+  if (fat > 0) { for (let k = 0; k < 2 + Math.round(fat * 2); k++) { const u = ((t * 1.3 + k * 0.37) % 1); Rr(g, -6 + k * 4 + (k % 2) * 6, -22 + u * 14, 1, 2, '#9fd3ff'); } if (fat >= 0.6 && Math.floor(t * 5) % 3 === 0) Rr(g, -2, -19, 4, 1, '#0a0612'); }   // gotas de sudor y boca jadeante
   g.restore();
 }
 
@@ -1782,29 +1783,31 @@ function gameSalida() {
   const G = { name: 'salida', hp: 5, max: 5, result: null, time: 0, inv: 0, flash: 0, atk: 0, atkCd: 0, dash: 0, dashCd: 0, dashV: [0, -1], hit: null, bl: [], strikes: [], end: 0, P: { x: 200, y: 240, dir: 'u', fr: 0, t: 0 },
     S: { x: 200, y: 96, hp: 1, max: 1, casts: 0, st: 'tele', ts: 0.6, shield: true, vis: 1, hurt: 0, pat: [], pt: 0, dur: 0, fired: {}, acc: 0, moved: false, hitDone: false } };
   const BX0 = 28, BX1 = 372, BY0 = 64, BY1 = 272, S = G.S, P = G.P;
-  const phase = () => Math.min(3, S.casts + 1);   // 3 hechizos seguidos, cada uno más fuerte; solo entonces baja el escudo
-  const PATS = { 1: [['anillo'], ['apunta']], 2: [['espiral'], ['rayos'], ['anillo', 'apunta']], 3: [['espiral', 'rayos'], ['anillo', 'apunta'], ['rayos', 'espiral']] };
+  const phase = () => Math.min(5, S.casts + 1);   // 5 fases, cada hechizo más fuerte; desde la 3.ª se fatiga; tras la 5.ª baja el escudo
+  const PATS = { 1: [['anillo'], ['apunta']], 2: [['espiral'], ['rayos'], ['anillo', 'apunta']], 3: [['espiral', 'rayos'], ['anillo', 'apunta']], 4: [['rayos', 'anillo'], ['espiral', 'apunta']], 5: [['espiral', 'rayos', 'apunta'], ['anillo', 'rayos', 'espiral']] };
   const SPOTS = [[200, 96], [90, 120], [310, 120], [140, 90], [260, 90]];
   function hurtP() { if (G.inv > 0 || G.result) return; if (G.carry) { G.items.push({ x: clamp(G.P.x + 14, 40, 372), y: clamp(G.P.y, 70, 272), t: 0 }); G.carry = null; } G.hp--; G.inv = 1.0; G.flash = 0.28; sfx.bump(); beep(90, 0.25, 'sawtooth', 0.08); if (G.hp <= 0) G.result = 'lose'; }
   const orb = (x, y, a, sp, col) => G.bl.push({ x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, c: col || '#b36bff' });
-  const nStr = () => (phase() === 2 ? 4 : 6), nVol = () => (phase() === 1 ? 4 : 5);
+  const nStr = () => (phase() === 2 ? 4 : 6), nVol = () => (phase() === 1 ? 4 : 5), pw = () => Math.min(phase(), 4);
   function durOf(list) { return Math.max(...list.map((p) => (p === 'anillo' ? (phase() === 1 ? 2.2 : 2.9) : p === 'apunta' ? 0.4 + 0.55 * nVol() + 0.4 : p === 'espiral' ? 2.9 : 0.3 + 0.5 * nStr() + 1.1))); }
   function startCast() { S.st = 'cast'; S.shield = true; const L = PATS[phase()]; S.pat = L[Math.floor(Math.random() * L.length)]; S.pt = 0; S.fired = {}; S.acc = 0; S.dur = durOf(S.pat); }
   function castTick(dt) {
     const ph = phase(), t0 = S.pt; S.pt += dt; const t1 = S.pt, cx = S.x + 2, cy = S.y - 6;
     S.pat.forEach((p) => {
-      if (p === 'anillo') { [0.3, 1.2, 2.1, 2.9].slice(0, ph === 1 ? 2 : 3).forEach((tt, k) => { const key = 'a' + k; if (!S.fired[key] && t1 >= tt) { S.fired[key] = 1; const off = Math.random() * 6.28, N = ph === 3 ? 14 : 12; for (let i = 0; i < N; i++) orb(cx, cy, off + i * 6.2832 / N, 58 + ph * 9, '#b36bff'); beep(200, 0.12, 'sine', 0.05); } }); }
-      else if (p === 'apunta') { for (let k = 0; k < nVol(); k++) { const key = 'v' + k; if (!S.fired[key] && t1 >= 0.4 + 0.55 * k) { S.fired[key] = 1; const a0 = Math.atan2((P.y - 8) - cy, P.x - cx), n = ph === 3 ? 5 : 3, sp = 0.3; for (let i = 0; i < n; i++) orb(cx, cy, a0 + (i - (n - 1) / 2) * sp * (ph === 3 ? 0.75 : 1), 84 + ph * 4, '#ff9a4a'); beep(420, 0.08, 'square', 0.04); } } }
-      else if (p === 'espiral') { if (t1 > 0.2 && t1 < 2.7) { S.acc += dt; while (S.acc >= 0.09) { S.acc -= 0.09; const an = S.pt * 5.2; orb(cx, cy, an, 56 + ph * 3, '#7affd8'); orb(cx, cy, an + Math.PI, 56 + ph * 3, '#7affd8'); } } }
+      if (p === 'anillo') { [0.3, 1.2, 2.1, 2.9].slice(0, ph === 1 ? 2 : 3).forEach((tt, k) => { const key = 'a' + k; if (!S.fired[key] && t1 >= tt) { S.fired[key] = 1; const off = Math.random() * 6.28, N = ph >= 3 ? 14 : 12; for (let i = 0; i < N; i++) orb(cx, cy, off + i * 6.2832 / N, 58 + pw() * 8, '#b36bff'); beep(200, 0.12, 'sine', 0.05); } }); }
+      else if (p === 'apunta') { for (let k = 0; k < nVol(); k++) { const key = 'v' + k; if (!S.fired[key] && t1 >= 0.4 + 0.55 * k) { S.fired[key] = 1; const a0 = Math.atan2((P.y - 8) - cy, P.x - cx), n = ph >= 3 ? 5 : 3, sp = 0.3; for (let i = 0; i < n; i++) orb(cx, cy, a0 + (i - (n - 1) / 2) * sp * (ph >= 3 ? 0.75 : 1), 84 + pw() * 4, '#ff9a4a'); beep(420, 0.08, 'square', 0.04); } } }
+      else if (p === 'espiral') { if (t1 > 0.2 && t1 < 2.7) { S.acc += dt; while (S.acc >= 0.09) { S.acc -= 0.09; const an = S.pt * 5.2; orb(cx, cy, an, 56 + pw() * 3, '#7affd8'); orb(cx, cy, an + Math.PI, 56 + pw() * 3, '#7affd8'); } } }
       else if (p === 'rayos') { for (let k = 0; k < nStr(); k++) { const key = 'r' + k; if (!S.fired[key] && t1 >= 0.3 + 0.5 * k) { S.fired[key] = 1; G.strikes.push({ x: clamp(P.x + (Math.random() * 20 - 10), BX0, BX1), y: clamp(P.y - 4, BY0, BY1), t: 0 }); } } }
     });
     if (S.pt >= S.dur) {
       S.casts++; sfx.thud();
-      if (S.casts >= 3) { S.st = 'tired'; S.shield = false; S.ts = 3.4; S.hitDone = false; G.openMsg = 1; }
+      if (S.casts >= 5) { S.st = 'tired'; S.shield = false; S.ts = 3.6; S.hitDone = false; }
+      else if (S.casts >= 3) { S.st = 'gasp'; S.ts = S.casts === 3 ? 1.1 : 1.5; S.shield = true; }   // fases 3 y 4: se fatiga y jadea antes de seguir
       else { S.st = 'tele'; S.ts = 0.7; S.shield = true; }
     }
   }
   G.update = (dt) => {
+    S.fat = clamp((S.casts - 1) / 3, 0, 1) * (S.st === 'dead' ? 0 : 1); if (S.st === 'tired') S.fat = 1;
     G.time += dt; ['inv', 'flash', 'atk', 'atkCd', 'dashCd', 'pulse'].forEach((k) => { if (G[k] > 0) G[k] -= dt; }); if (S.hurt > 0) S.hurt -= dt;
     if (G.result === 'lose') return;
     if (G.end > 0) { G.end -= dt; S.vis = clamp(G.end / 1.1, 0, 1); G.bl = []; G.strikes = []; if (G.end <= 0) G.result = 'win'; return; }
@@ -1823,7 +1826,8 @@ function gameSalida() {
     // máquina de estados del chamán
     if (S.st === 'tele') { S.ts -= dt; S.vis = S.ts > 0.3 ? (S.ts - 0.3) / 0.3 : 1 - S.ts / 0.3 * 0 ; if (S.ts <= 0.3 && !S.moved) { S.moved = true; const opts = SPOTS.filter((s) => Math.hypot(s[0] - P.x, s[1] - P.y) > 80); const s = opts[Math.floor(Math.random() * opts.length)] || SPOTS[0]; S.x = s[0]; S.y = s[1]; } if (S.ts <= 0) { S.vis = 1; S.moved = false; startCast(); } if (S.ts <= 0.3) S.vis = 1 - S.ts / 0.3; }
     else if (S.st === 'cast') castTick(dt);
-    else if (S.st === 'tired') { S.ts -= dt; if (S.ts <= 0) { S.st = 'tele'; S.ts = 0.6; S.shield = true; S.casts = 1; } }
+    else if (S.st === 'tired') { S.ts -= dt; if (S.ts <= 0) { S.st = 'tele'; S.ts = 0.6; S.shield = true; S.casts = 3; } }
+    else if (S.st === 'gasp') { S.ts -= dt; if (S.ts <= 0) { S.st = 'tele'; S.ts = 0.6; } }
     G.bl.forEach((b) => { b.x += b.vx * dt; b.y += b.vy * dt; if (G.inv <= 0 && Math.hypot(b.x - P.x, b.y - (P.y - 8)) < 7.5) { b.dead = true; hurtP(); } });
     G.bl = G.bl.filter((b) => !b.dead && b.x > 4 && b.x < 396 && b.y > 30 && b.y < 292);
     G.strikes.forEach((s) => { s.t += dt; if (s.t >= 0.8 && s.t < 1.0 && !s.hit && G.inv <= 0 && Math.hypot(s.x - P.x, s.y - (P.y - 4)) < 15) { s.hit = true; hurtP(); } if (s.t >= 0.8 && !s.snd) { s.snd = 1; sfx.thunder(); } });
@@ -1841,8 +1845,9 @@ function gameSalida() {
     G.bl.forEach((b) => { g.fillStyle = 'rgba(255,255,255,.25)'; g.fillRect(Math.round(b.x - 4), Math.round(b.y - 4), 8, 8); Rr(g, b.x - 3, b.y - 3, 6, 6, b.c); Rr(g, b.x - 1, b.y - 1, 2, 2, '#fff'); });
     if (G.flash > 0) { g.fillStyle = 'rgba(200,30,30,' + (G.flash * 1.1).toFixed(2) + ')'; g.fillRect(0, 0, VW, VH); }
     drawHearts(g, 6, 5, G.hp, G.max);
-    for (let k = 0; k < 3; k++) { const on = k < S.casts || S.st === 'dead' && false; g.fillStyle = '#000'; g.fillRect(166 + k * 24, 6, 20, 9); g.fillStyle = on ? (S.st === 'tired' ? '#ffe27a' : '#ff4a3a') : '#3a1a1a'; g.fillRect(168 + k * 24, 8, 16, 5); }
-    retoText(g, 'RETO 3/3 · EL CHAMÁN · SOBREVIVE A SUS 3 HECHIZOS', 200, 26, '#ffe9a8', 'center', 5);
+    for (let k = 0; k < 5; k++) { const on = k < S.casts; g.fillStyle = '#000'; g.fillRect(142 + k * 24, 6, 20, 9); g.fillStyle = on ? (S.st === 'tired' ? '#ffe27a' : k >= 2 ? '#ff9a3a' : '#ff4a3a') : '#3a1a1a'; g.fillRect(144 + k * 24, 8, 16, 5); }
+    retoText(g, 'RETO 3/3 · EL CHAMÁN · FASE ' + Math.min(5, S.casts + 1) + '/5' + (S.casts >= 2 ? ' · SE FATIGA' : ''), 200, 26, '#ffe9a8', 'center', 5);
+    if (S.st === 'gasp' && Math.floor(gt * 4) % 2) retoText(g, 'EL CHAMÁN JADEA… ¡RESISTE!', 200, 282, '#9fd3ff', 'center', 7);
     if (S.st === 'tired' && Math.floor(gt * 6) % 2) retoText(g, '¡AGOTADO! ¡UN SOLO GOLPE!', 200, 282, '#ffe27a', 'center', 8);
     if (G.dashCd > 0) { g.fillStyle = '#333'; g.fillRect(6, 17, 30, 3); g.fillStyle = '#6ab0ff'; g.fillRect(6, 17, Math.round(30 * (1 - G.dashCd / 0.85)), 3); }
   };
@@ -1859,12 +1864,12 @@ RETOS.entrada.dialogo = [
   { who: 'Capitán', txt: 'Mucho cuidado donde pisas. Los fosos se avisan antes de cerrarse… si estás atento.' }
 ];
 RETOS.durante.dialogo = [
-  { who: 'Capitán', txt: 'Estas son las salas de la isla. Las obras removidas cuelgan de sus paredes, esperando volver a casa.' },
+  { who: 'Capitán', txt: 'Ya recorrimos la sala y vimos las obras removidas. Ahora toca llevárnoslas, una por una, en el saco.' },
   { who: 'Narrador', txt: 'Las comunidades indígenas guardaban su memoria al ritmo de los tambores.' },
   { who: 'Capitán', txt: 'Caminaré con el saco a la espalda. Cuando una obra quede justo sobre mí, ¡la tomo al compás del tambor!' }
 ];
 RETOS.salida.dialogo = [
-  { who: 'Narrador', txt: 'Junto al cofre, entre la niebla y los árboles antiguos, una sombra enorme se alza: el Chamán, guardián de la isla.' },
+  { who: 'Narrador', txt: 'Justo cuando el pirata cruza la puerta de salida, entre la niebla y los árboles antiguos, una sombra enorme se alza: el Chamán, guardián de la isla.' },
   { who: 'Chamán', txt: '¡Un colono español! Otra vez llegan por el mar, con sus botas, sus espadas y su codicia.' },
   { who: 'Capitán', txt: '¡Espera! No soy español. Soy un pirata, y vengo a devolver las obras que se llevaron.' },
   { who: 'Chamán', txt: 'Mentiras. Ya conozco esas palabras… las mismas con las que nos quitaron la tierra, el oro y hasta los nombres.' },
@@ -1903,7 +1908,12 @@ const reto = {
   preview(g) {
     g.drawImage(retoBackground(this.id === 'entrada' ? 'senda' : this.id === 'durante' ? 'arena' : 'claro'), 0, 0);
     if (this.id === 'entrada') { blob(g, 120, 232, 9, '#6e6e78'); blob(g, 118, 230, 6, '#8a8a96'); blob(g, 290, 108, 9, '#6e6e78'); drawPirate(g, 200, 276, 'u', 0, true); }
-    else if (this.id === 'durante') { if (!this._ph) this._ph = ritHall(416); g.fillStyle = '#0b0a14'; g.fillRect(0, 0, VW, VH); g.drawImage(this._ph, 0, 0, VW, HALL_H, 0, 46, VW, HALL_H); g.save(); g.translate(0, 46); [90, 150, 210, 290].forEach((x, i) => ritFrame(g, x, RIT_FMT[i], i === 0 ? { hueco: true } : null)); drawSack(g, 191, 120, 1, 0.5, true); drawPirate(g, 200, 126, 'r', 1, true); g.restore(); g.fillStyle = 'rgba(20,0,40,.18)'; g.fillRect(0, 0, VW, VH); }
+    else if (this.id === 'durante') {
+      if (!this._ph) this._ph = ritHall(416); if (!this._pw) this._pw = ritWorks();
+      g.fillStyle = '#0b0a14'; g.fillRect(0, 0, VW, VH); g.drawImage(this._ph, 0, 0, VW, HALL_H, 0, 46, VW, HALL_H); g.save(); g.translate(0, 46);
+      [90, 150, 210, 290].forEach((x, i) => { const w = this._pw[i % this._pw.length]; ritFrame(g, x, w.fmt, ritEx(w)); });
+      drawSack(g, 191, 120, 1, 0.5, true); drawPirate(g, 200, 126, 'r', 1, true); g.restore(); g.fillStyle = 'rgba(20,0,40,.18)'; g.fillRect(0, 0, VW, VH);
+    }
     else { drawShaman(g, { x: 200, y: 120, vis: 1, hurt: 0, st: 'cast', shield: true }); drawPirate(g, 200, 244, 'u', 0, true); }
   },
   start() { this.G = this.info.make(); this.state = 'play'; sfx.open(); },
@@ -1921,9 +1931,9 @@ const reto = {
 scenes.reto = reto;
 $('pzSkip').addEventListener('click', () => { audioInit(); reto.skip(); });
 function llevarSaco() {
-  save.retos.salida = true; save.recovered = true; persist(); const n = sackItems().length;
+  save.retos.salida = true; save.recovered = true; persist(); const n = sackItems().length; sackBtnTxt = '';
   dialogue([
-    { who: 'Narrador', txt: 'Con el Chamán ya desvanecido, el cofre se abre y las ' + n + ' obras quedan guardadas en el saco del pirata.' },
+    { who: 'Narrador', txt: 'Con el Chamán desvanecido, el camino al mar queda libre. En el saco del pirata viajan las ' + n + ' obras recuperadas.' },
     { who: 'Capitán', txt: 'Ahora a navegar. Cada obra tiene su lugar: busca los espacios vacíos de las islas y devuélvelas una por una.' },
     { who: '', txt: '[ Abre el saco con el botón SACO o la tecla I · Elige la obra y colócala en su espacio · Si no va ahí, no se deja ]', sys: true }
   ], () => go('sea', { from: SKULL_I }));
@@ -2315,6 +2325,7 @@ function buildSlots(kind, idx) {
     });
     return out;
   }
+  if (save.recovered) return sackItems().map((it) => ({ vacio: true, tipo: 'cuadro', fmt: 'horizontal', formato: 'horizontal', key: 'v:' + it.key, titulo: '' }));   // las obras ya van en el saco: quedan las paredes vacías
   return removedList().map((r) => { const withImg = !!r.o.imagen; return mkSlot(Object.assign({}, r.o, { removida: !withImg }), 'k:' + r.i + ':' + r.j, { origen: 'Pertenecía a: ' + placeName(r.i), guardada: withImg }); });
 }
 function drawFrame(g, cx, slot) {
@@ -2404,7 +2415,7 @@ function buildHall(slots, skull, WW, benches, idx) {
     g.fillStyle = H.bench[2]; g.fillRect(b.x + 2, b.y + 12, 3, 3); g.fillRect(b.x + b.w - 5, b.y + 12, 3, 3);
   });
   // marcos
-  slots.forEach((s, i) => { if (s.tipo !== 'escultura') drawFrame(g, 88 + 80 * i, s); });
+  slots.forEach((s, i) => { if (s.vacio) return; if (s.tipo !== 'escultura') drawFrame(g, 88 + 80 * i, s); });
   return c;
 }
 function drawCheck(g, cx) { g.fillStyle = '#39d66a'; g.fillRect(cx + 8, 51, 2, 2); g.fillRect(cx + 10, 49, 2, 2); g.fillRect(cx + 12, 47, 2, 2); g.fillStyle = '#0c5a28'; g.fillRect(cx + 8, 53, 2, 1); }
@@ -2442,6 +2453,13 @@ const museum = {
     this.hall = buildHall(this.slots, this.skull, this.WW, this.benches, this.skull ? -1 : this.idx); this.dirty = false;
     this.pl = { x: 48, y: 186, dir: 'u', fr: 0, t: 0 }; this.reachedMarked = false;
     if (p.spawn) { this.pl.x = p.spawn.x; this.pl.y = p.spawn.y; }
+    if (p.fin && this.chest) {   // regreso del juego de ritmo: junto al cofre, con las paredes ya vacías
+      this.pl.x = this.chest.x - 34; this.pl.y = this.chest.y + 30; this.pl.dir = 'l';
+      setTimeout(() => { if (cur === museum && !ui.vn) dialogue([
+        { who: 'Narrador', txt: 'Las paredes quedaron vacías: todas las obras removidas van ahora en el saco del pirata.' },
+        { who: 'Capitán', txt: 'Hecho. Salgamos de aquí antes de que el dueño de esta isla note que faltan sus tesoros…' }
+      ]); }, 500);
+    }
     if (p.kind === 'isla') { save.entered[p.idx] = true; persist(); this.wasExplored = isExplored(p.idx); }
     if (p.entrega) {
       const targets = []; this.slots.forEach((s, i) => { if (s.hueco) targets.push(i); });
@@ -2511,19 +2529,17 @@ const museum = {
     if (isBlocked()) return;
     const p = this.pl; movePlayer(p, axis(), dt, 74, (x, y) => this.canGo(x, y));   // Shift / mantener B = correr
     this.cam += (clamp(p.x - VW / 2, 0, this.WW - VW) - this.cam) * Math.min(1, 8 * dt);
-    if (p.y >= 205 && p.x >= 36 && p.x <= 60) { sfx.ok(); go('arrival', { idx: this.skull ? SKULL_I : this.idx }); return; }
+    if (p.y >= 205 && p.x >= 36 && p.x <= 60) {
+      if (this.skull && save.recovered && !save.retos.salida && !save.cineDone) { setPrompt(null); lanzarReto('salida', llevarSaco); return; }   // al salir aparece el Chamán
+      sfx.ok(); go('arrival', { idx: this.skull ? SKULL_I : this.idx }); return;
+    }
     // la sala se da por recorrida al pasar cerca de su última obra
     if (!this.reachedMarked) { const n = this.slots.length; if (n === 0 || Math.abs(p.x - (88 + 80 * (n - 1))) <= 44) { this.reachedMarked = true; this.markReached(); } }
-    // reto del medio: guerreros de la memoria (una sola vez, a la mitad de la sala)
-    if (this.skull && !save.cineDone && !save.retos.durante && p.x >= this.WW * 0.5) {
-      const spawn = { x: Math.round(this.WW * 0.5) - 24, y: Math.round(p.y) };
-      lanzarReto('durante', () => { save.retos.durante = true; persist(); go('museum', { kind: 'calavera', idx: SKULL_I, spawn }); }); return;
-    }
     // objetivo de interacción
     let tgt = null, best = 1e9;
     this.slots.forEach((s, i) => {
       const cx = 88 + 80 * i, dx = Math.abs(p.x - cx), est = s.tipo === 'escultura';
-      if (dx <= (est ? 34 : 36) && (est ? p.y <= PED_TOP + 40 : p.y <= WALL_H + 40) && dx < best) { best = dx; tgt = { type: 'obra', s, i, cx }; }
+      if (!s.vacio && dx <= (est ? 34 : 36) && (est ? p.y <= PED_TOP + 40 : p.y <= WALL_H + 40) && dx < best) { best = dx; tgt = { type: 'obra', s, i, cx }; }
     });
     if (this.chest && Math.hypot(p.x - (this.chest.x + 12), p.y - (this.chest.y + 18)) < 34) tgt = { type: 'cofre' };
     this.near = tgt;
@@ -2536,9 +2552,9 @@ const museum = {
       setPrompt('[A] Ver ' + (tgt.s.tipo === 'escultura' ? 'escultura' : 'obra') + (tgt.s.removida ? ' removida' : '') + ': ' + (tgt.s.titulo || 'Sin título'));
       if (actionPressed()) this.openSlot(tgt.s);
     } else {
-      if (!this.slots.length) { setPrompt('El cofre está vacío'); if (actionPressed()) toast(save.recovered ? 'Ya llevas las obras en el saco. ¡Devuélvelas a sus salas!' : 'Todas las obras ya regresaron a sus salas.', 2800); return; }
+      if (save.recovered || !this.slots.length) { setPrompt('El cofre está vacío'); if (actionPressed()) toast(save.recovered ? 'Las obras ya van en el saco. Es hora de salir de la sala.' : 'Todas las obras ya regresaron a sus salas.', 2800); return; }
       if (CFG.exigirPasarUltimaObra && !save.reached.calavera) { setPrompt('[A] Cofre cerrado: recorre primero las obras removidas'); if (actionPressed()) { sfx.bump(); toast('Pasa cerca de la última obra removida para que el cofre se abra.', 2600); } }
-      else { setPrompt(save.retos.salida ? '[A] Cofre abierto' : '[A] Abrir el cofre'); if (actionPressed()) { setPrompt(null); lanzarReto('salida', llevarSaco); } }
+      else { setPrompt('[A] Abrir el cofre y llevarse las obras en el saco'); if (actionPressed()) { setPrompt(null); lanzarReto('durante', () => { save.retos.durante = true; save.recovered = true; persist(); go('museum', { kind: 'calavera', idx: SKULL_I, fin: true }); }); } }
     }
   },
   tryPlace(it, si) {
@@ -2563,7 +2579,7 @@ const museum = {
     updateHUD(); sackBtnTxt = '';
   },
   markReached() {
-    if (this.skull) { if (!save.reached.calavera) { save.reached.calavera = true; persist(); toast('Recorriste las obras removidas. El cofre te espera al fondo.', 3200); } return; }
+    if (this.skull) { if (!save.reached.calavera) { save.reached.calavera = true; persist(); toast('Recorriste las obras removidas. Al fondo está el cofre para llevártelas.', 3200); } return; }
     if (this.kind !== 'isla') return;
     const was = isExplored(this.idx); save.reached[this.idx] = true; persist(); updateHUD();
     if (!was && isExplored(this.idx)) {
