@@ -1,0 +1,1899 @@
+/* =====================================================================
+   MINIJUEGOS · estilos compartidos (todo con prefijo .mg-)
+   Estética: papel antiguo, crema y terracota, títulos en serif.
+   ===================================================================== */
+
+.mg-root {
+    --mg-crema: #f5ead5;
+    --mg-crema-clara: #f8f0e1;
+    --mg-terracota: #b6533c;
+    --mg-durazno: #efa47f;
+    --mg-oscuro: #403326;
+    --mg-gris: #786b5c;
+    --mg-arena: #d8c6a3;
+    --mg-linea: #cbb994;
+    --mg-verde: #2c3a35;
+    --mg-oro: #d9a441;
+    --mg-ok: #4f7a4a;
+    --mg-serif: Georgia, "Times New Roman", serif;
+
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    container-type: inline-size;
+    container-name: mg;
+    font-family: Arial, sans-serif;
+    color: var(--mg-oscuro);
+    background:
+        radial-gradient(ellipse at 15% 10%, rgba(255, 255, 255, 0.55), transparent 55%),
+        radial-gradient(ellipse at 90% 95%, rgba(203, 185, 148, 0.35), transparent 60%),
+        repeating-linear-gradient(0deg, rgba(120, 107, 92, 0.025) 0 2px, transparent 2px 5px),
+        var(--mg-crema-clara);
+    border-radius: 12px;
+    box-sizing: border-box;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.mg-root *,
+.mg-root *::before,
+.mg-root *::after {
+    box-sizing: border-box;
+}
+
+:where(.mg-root) button {
+    font: inherit;
+    color: inherit;
+}
+
+.mg-root :focus-visible {
+    outline: 3px solid var(--mg-terracota);
+    outline-offset: 2px;
+}
+
+.mg-root kbd {
+    display: inline-block;
+    min-width: 1.6em;
+    padding: 1px 5px;
+    margin: 0 1px;
+    border: 1px solid var(--mg-linea);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    background: #fff;
+    font: 600 0.8em Arial, sans-serif;
+    text-align: center;
+    color: var(--mg-oscuro);
+}
+
+/* ---------- Cabecera y HUD ---------- */
+
+.mg-cabecera {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: linear-gradient(180deg, var(--mg-crema), rgba(245, 234, 213, 0.6));
+    border-bottom: 2px dotted rgba(182, 83, 60, 0.55);
+    position: relative;
+    z-index: 35; /* por encima de las capas: "Salir" siempre disponible */
+}
+
+.mg-titulo {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.mg-sello {
+    flex: none;
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #cf6c52, var(--mg-terracota) 55%, #8e3c29);
+    color: var(--mg-crema-clara);
+    font: italic 700 17px var(--mg-serif);
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.2), 0 2px 4px rgba(64, 51, 38, 0.3);
+}
+
+.mg-titulo-textos {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.15;
+}
+
+.mg-titulo-textos strong {
+    font: 700 17px var(--mg-serif);
+    white-space: nowrap;
+}
+
+.mg-titulo-textos small {
+    font-size: 12px;
+    color: var(--mg-gris);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-style: italic;
+}
+
+.mg-hud {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: none;
+}
+
+.mg-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 30px;
+    padding: 0 10px;
+    border: 1px solid var(--mg-linea);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.mg-chip-contador {
+    display: inline-block;
+    line-height: 28px;
+}
+
+.mg-chip[hidden] {
+    display: none;
+}
+
+.mg-chip b {
+    font-size: 15px;
+    color: var(--mg-terracota);
+    font-variant-numeric: tabular-nums;
+}
+
+.mg-chip-tiempo b {
+    color: var(--mg-oscuro);
+    min-width: 2.6em;
+}
+
+.mg-reloj-ico {
+    width: 14px;
+    height: 14px;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    position: relative;
+    opacity: 0.75;
+}
+
+.mg-reloj-ico::after {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 2px;
+    height: 5px;
+    background: currentColor;
+    transform-origin: bottom;
+    animation: mg-girar 4s steps(8) infinite;
+}
+
+.mg-chip-tiempo.mg-urgente {
+    border-color: var(--mg-terracota);
+    background: #fbe3d8;
+    animation: mg-latido 1s ease-in-out infinite;
+}
+
+.mg-chip-tiempo.mg-urgente b {
+    color: var(--mg-terracota);
+}
+
+.mg-chip-tiempo.mg-extra b {
+    color: var(--mg-gris);
+}
+
+.mg-chip.mg-pulso {
+    animation: mg-pop 0.35s ease;
+}
+
+.mg-chip-estrellas {
+    padding: 0 7px;
+}
+
+.mg-chip-estrellas.mg-pierde {
+    animation: mg-sacudida 0.4s ease;
+}
+
+.mg-estrellas {
+    display: inline-flex;
+    gap: 1px;
+}
+
+.mg-estrella svg {
+    width: 16px;
+    height: 16px;
+    display: block;
+    fill: rgba(203, 185, 148, 0.55);
+    transition: fill 0.3s, transform 0.3s;
+}
+
+.mg-estrella.mg-llena svg {
+    fill: var(--mg-oro);
+    filter: drop-shadow(0 1px 0 #9a6f1f);
+}
+
+/* ---------- Botones ---------- */
+
+.mg-btn {
+    cursor: pointer;
+    border: 1px solid var(--mg-oscuro);
+    border-radius: 999px;
+    padding: 7px 16px;
+    background: transparent;
+    font-size: 14px;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+    touch-action: manipulation;
+}
+
+.mg-btn:hover {
+    transform: translateY(-1px);
+}
+
+.mg-btn:active {
+    transform: translateY(1px);
+}
+
+.mg-btn-salir {
+    flex: none;
+    height: 32px;
+    padding: 0 14px;
+    border-color: var(--mg-linea);
+    background: rgba(255, 255, 255, 0.6);
+    color: var(--mg-gris);
+    font-size: 13px;
+}
+
+.mg-btn-salir:hover {
+    color: var(--mg-terracota);
+    border-color: var(--mg-terracota);
+}
+
+.mg-btn-principal {
+    background: var(--mg-terracota);
+    border-color: var(--mg-terracota);
+    color: var(--mg-crema-clara) !important;
+    font-weight: 700;
+    padding: 11px 26px;
+    box-shadow: 0 3px 0 #8e3c29, 0 6px 14px rgba(182, 83, 60, 0.3);
+}
+
+.mg-btn-principal:hover {
+    background: #c25d45;
+}
+
+.mg-btn-secundario {
+    background: rgba(255, 255, 255, 0.75);
+    border-color: var(--mg-linea);
+    color: var(--mg-oscuro);
+}
+
+.mg-btn-secundario:hover {
+    border-color: var(--mg-terracota);
+    color: var(--mg-terracota);
+}
+
+/* ---------- Escena ---------- */
+
+.mg-escena {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.mg-lienzo {
+    display: block;
+    touch-action: none;
+}
+
+/* ---------- Capas: inicio y cierre ---------- */
+
+.mg-capa {
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    display: grid;
+    place-items: center;
+    padding: 14px;
+    background: rgba(64, 51, 38, 0.38);
+    backdrop-filter: blur(3px);
+    animation: mg-aparecer 0.3s ease both;
+    overflow: auto;
+}
+
+.mg-capa.mg-saliendo {
+    animation: mg-desaparecer 0.26s ease both;
+}
+
+.mg-tarjeta {
+    position: relative;
+    width: min(100%, 560px);
+    max-height: 100%;
+    overflow: auto;
+    padding: 22px 24px;
+    border-radius: 14px;
+    background:
+        radial-gradient(ellipse at top left, rgba(255, 255, 255, 0.8), transparent 60%),
+        var(--mg-crema-clara);
+    border: 1px solid var(--mg-linea);
+    box-shadow:
+        0 0 0 6px rgba(248, 240, 225, 0.55),
+        0 0 0 7px rgba(217, 164, 65, 0.45),
+        0 18px 40px rgba(64, 51, 38, 0.35);
+    animation: mg-subir 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+
+.mg-eyebrow {
+    margin: 0 0 4px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--mg-terracota);
+}
+
+.mg-eyebrow::before {
+    content: "— ";
+}
+
+.mg-tarjeta h2 {
+    margin: 0 0 8px;
+    font: 700 26px/1.15 var(--mg-serif);
+    color: var(--mg-oscuro);
+}
+
+.mg-intro {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.mg-intro-img {
+    flex: none;
+    width: 150px;
+    height: 190px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 6px solid #fff;
+    outline: 1px solid var(--mg-linea);
+    box-shadow: 0 8px 18px rgba(64, 51, 38, 0.3);
+    transform: rotate(-3deg);
+}
+
+.mg-intro-texto {
+    min-width: 0;
+}
+
+.mg-instrucciones {
+    margin: 0 0 10px;
+    line-height: 1.5;
+    font-size: 15px;
+}
+
+.mg-controles {
+    margin: 0 0 16px;
+    padding: 8px 10px;
+    border-left: 3px solid var(--mg-durazno);
+    background: rgba(239, 164, 127, 0.12);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--mg-gris);
+}
+
+.mg-cierre {
+    text-align: center;
+}
+
+.mg-cierre h2 {
+    font-size: 28px;
+}
+
+.mg-estrellas-grandes {
+    gap: 8px;
+    margin: 4px 0 8px;
+}
+
+.mg-estrellas-grandes .mg-estrella svg {
+    width: 48px;
+    height: 48px;
+}
+
+.mg-estrellas-grandes .mg-estrella {
+    animation: mg-estrella-entra 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.4) both;
+}
+
+.mg-estrellas-grandes .mg-estrella:nth-child(2) {
+    animation-delay: 0.18s;
+    transform: translateY(-8px);
+}
+
+.mg-estrellas-grandes .mg-estrella:nth-child(3) {
+    animation-delay: 0.36s;
+}
+
+.mg-resumen {
+    margin: 0 0 12px;
+    font-size: 14px;
+    color: var(--mg-gris);
+}
+
+.mg-resumen b {
+    color: var(--mg-oscuro);
+}
+
+.mg-dato {
+    margin: 0 0 16px;
+    padding: 12px 14px;
+    text-align: left;
+    border: 1px dashed var(--mg-terracota);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.mg-dato span {
+    display: block;
+    margin-bottom: 4px;
+    font: italic 700 15px var(--mg-serif);
+    color: var(--mg-terracota);
+}
+
+.mg-dato p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.mg-botones {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.mg-botones .mg-btn-secundario {
+    padding: 11px 20px;
+}
+
+/* ---------- Cartel breve ---------- */
+
+.mg-cartel {
+    position: absolute;
+    left: 50%;
+    top: var(--mg-cartel-top, 10px);
+    z-index: 20;
+    max-width: min(92%, 560px);
+    padding: 8px 16px;
+    border-radius: 10px;
+    background: rgba(64, 51, 38, 0.9);
+    color: var(--mg-crema-clara);
+    font-size: 14px;
+    line-height: 1.4;
+    text-align: center;
+    box-shadow: 0 6px 16px rgba(64, 51, 38, 0.3);
+    opacity: 0;
+    transform: translate(-50%, -12px);
+    transition: opacity 0.25s, transform 0.25s;
+    pointer-events: none;
+}
+
+.mg-cartel.mg-visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+.mg-cartel b {
+    color: #ffd9c4;
+}
+
+.mg-cartel-ok {
+    background: rgba(60, 92, 56, 0.92);
+}
+
+.mg-cartel-error {
+    background: rgba(142, 60, 41, 0.94);
+}
+
+.mg-cartel-aviso {
+    background: rgba(154, 111, 31, 0.94);
+}
+
+.mg-cartel-dato {
+    background: var(--mg-crema-clara);
+    color: var(--mg-oscuro);
+    border: 1px solid var(--mg-linea);
+    border-left: 5px solid var(--mg-terracota);
+    text-align: left;
+    font-size: 15px;
+    padding: 10px 16px;
+}
+
+.mg-car-num {
+    display: inline-block;
+    margin-right: 8px;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--mg-terracota);
+    color: var(--mg-crema-clara);
+    font-size: 12px;
+    font-weight: 700;
+    vertical-align: 1px;
+}
+
+/* ---------- Efectos ---------- */
+
+.mg-chispa {
+    position: absolute;
+    z-index: 40;
+    width: 8px;
+    height: 8px;
+    margin: -4px 0 0 -4px;
+    border-radius: 2px;
+    pointer-events: none;
+    animation: mg-chispa 0.75s cubic-bezier(0.15, 0.7, 0.35, 1) forwards;
+}
+
+.mg-chispa-estrella {
+    width: 11px;
+    height: 11px;
+    clip-path: polygon(50% 0, 61% 38%, 100% 50%, 61% 62%, 50% 100%, 39% 62%, 0 50%, 39% 38%);
+    border-radius: 0;
+}
+
+.mg-sacudir {
+    animation: mg-sacudida 0.42s ease !important;
+}
+
+.mg-destello {
+    position: absolute;
+    inset: 0;
+    z-index: 15;
+    pointer-events: none;
+    animation: mg-destello 0.5s ease-out forwards;
+}
+
+.mg-destello-ok {
+    background: radial-gradient(circle, rgba(255, 226, 150, 0.55), transparent 70%);
+}
+
+.mg-destello-error {
+    background: radial-gradient(circle, transparent 40%, rgba(182, 83, 60, 0.45));
+}
+
+/* ---------- Animaciones ---------- */
+
+@keyframes mg-chispa {
+    0% { transform: translate(0, 0) rotate(0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--dx), calc(var(--dy) + 18px)) rotate(var(--rot)) scale(0.3); opacity: 0; }
+}
+
+@keyframes mg-sacudida {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-7px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(3px); }
+}
+
+@keyframes mg-pop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.18); }
+    100% { transform: scale(1); }
+}
+
+@keyframes mg-latido {
+    50% { transform: scale(1.06); }
+}
+
+@keyframes mg-girar {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes mg-aparecer {
+    from { opacity: 0; }
+}
+
+@keyframes mg-desaparecer {
+    to { opacity: 0; }
+}
+
+@keyframes mg-subir {
+    from { opacity: 0; transform: translateY(24px) scale(0.96); }
+}
+
+@keyframes mg-destello {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes mg-estrella-entra {
+    0% { opacity: 0; transform: scale(0.2) rotate(-60deg); }
+    100% { opacity: 1; }
+}
+
+@keyframes mg-caer {
+    0% { opacity: 0; transform: translateY(-120px) rotate(-8deg); }
+    70% { opacity: 1; transform: translateY(6px) rotate(1deg); }
+    100% { transform: translateY(0) rotate(0); }
+}
+
+@keyframes mg-sello-golpe {
+    0% { transform: scale(2.2) rotate(-12deg); opacity: 0; }
+    60% { transform: scale(0.92) rotate(2deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0); }
+}
+
+@keyframes mg-brillo {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(217, 164, 65, 0.7); }
+    50% { box-shadow: 0 0 0 10px rgba(217, 164, 65, 0); }
+}
+
+/* =====================================================================
+   OJO DE CURADOR
+   ===================================================================== */
+
+.mg-cur-zona {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.mg-cur-marco {
+    position: absolute;
+    cursor: crosshair;
+    touch-action: none;
+    box-shadow:
+        0 0 0 5px #fff8ea,
+        0 0 0 8px #c9a560,
+        0 0 0 9px #8f6d33,
+        0 10px 24px rgba(64, 51, 38, 0.35);
+    border-radius: 1px;
+}
+
+.mg-cur-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    -webkit-user-drag: none;
+}
+
+.mg-cur-capa {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.mg-cur-anillo,
+.mg-cur-pista {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+}
+
+.mg-cur-anillo {
+    border: 3px solid var(--mg-oro);
+    box-shadow: 0 0 0 2px rgba(64, 51, 38, 0.5), inset 0 0 0 2px rgba(64, 51, 38, 0.35), 0 0 18px rgba(255, 220, 140, 0.8);
+    animation: mg-sello-golpe 0.45s ease both;
+}
+
+.mg-cur-anillo span {
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    margin-top: 4px;
+    transform: translateX(-50%);
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--mg-oscuro);
+    color: var(--mg-crema-clara);
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.mg-cur-pista {
+    background: radial-gradient(circle, rgba(255, 226, 150, 0.45), rgba(255, 226, 150, 0.1) 60%, transparent 70%);
+    border: 2px dashed rgba(255, 240, 200, 0.9);
+    animation: mg-pista 1s ease-in-out infinite;
+}
+
+@keyframes mg-pista {
+    50% { transform: translate(-50%, -50%) scale(1.08); opacity: 0.7; }
+}
+
+.mg-cur-fallo {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font: 700 30px/1 Arial, sans-serif;
+    text-shadow: 0 0 4px var(--mg-terracota), 0 0 2px #000;
+    animation: mg-fallo 0.7s ease forwards;
+}
+
+@keyframes mg-fallo {
+    0% { transform: translate(-50%, -50%) scale(0.4); opacity: 0; }
+    25% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+    100% { transform: translate(-50%, -70%) scale(1); opacity: 0; }
+}
+
+.mg-cur-lupa {
+    position: absolute;
+    width: 110px;
+    height: 110px;
+    margin: -55px 0 0 -55px;
+    border-radius: 50%;
+    border: 4px solid #fff8ea;
+    box-shadow: 0 0 0 2px #8f6d33, 0 8px 18px rgba(0, 0, 0, 0.35);
+    background-repeat: no-repeat;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.6);
+    transition: opacity 0.15s, transform 0.15s;
+}
+
+.mg-cur-lupa.mg-visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.mg-cur-barra {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px 10px;
+    border-top: 1px solid rgba(203, 185, 148, 0.6);
+    background: rgba(245, 234, 213, 0.7);
+}
+
+.mg-cur-lista {
+    flex: 1 1 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.mg-cur-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 11px 5px 7px;
+    border: 1px solid var(--mg-linea);
+    border-radius: 999px;
+    background: #fff;
+    font-size: 13px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.mg-cur-check {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--mg-linea);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    transition: all 0.3s;
+}
+
+.mg-cur-item.mg-hecho {
+    background: var(--mg-verde);
+    border-color: var(--mg-verde);
+    color: var(--mg-crema-clara);
+    animation: mg-pop 0.4s ease;
+}
+
+.mg-cur-item.mg-hecho .mg-cur-check {
+    border-color: var(--mg-oro);
+    background: var(--mg-oro);
+}
+
+.mg-cur-item.mg-hecho .mg-cur-check::after {
+    content: "";
+    width: 4px;
+    height: 8px;
+    margin-top: -2px;
+    border: solid var(--mg-verde);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.mg-cur-item.mg-pista-activa {
+    border-color: var(--mg-oro);
+    animation: mg-brillo 1s ease infinite;
+}
+
+.mg-cur-btn-pista {
+    flex: none;
+}
+
+/* =====================================================================
+   GALERÍA DE PAREJAS
+   ===================================================================== */
+
+.mg-gal-tablero {
+    flex: 1 1 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    margin: 0 auto;
+    padding: 12px;
+}
+
+.mg-gal-carta {
+    position: relative;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    perspective: 700px;
+    touch-action: manipulation;
+    animation: mg-caer 0.5s ease both;
+}
+
+.mg-gal-carta:focus-visible {
+    outline-offset: 3px;
+}
+
+.mg-gal-giro {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transition: transform 0.45s cubic-bezier(0.3, 0.7, 0.3, 1.2);
+}
+
+.mg-gal-carta.mg-volteada .mg-gal-giro {
+    transform: rotateY(180deg);
+}
+
+.mg-gal-carta:not(.mg-volteada):hover .mg-gal-giro {
+    transform: translateY(-3px) rotate(-1deg);
+}
+
+.mg-gal-cara {
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 4px 10px rgba(64, 51, 38, 0.22);
+}
+
+.mg-gal-reverso {
+    background:
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.07) 0 6px, transparent 6px 12px),
+        radial-gradient(circle at center, #c86a51, var(--mg-terracota) 60%, #933f2b);
+    border: 3px solid #f8f0e1;
+    outline: 1px solid var(--mg-linea);
+}
+
+.mg-gal-sello {
+    width: 54%;
+    max-width: 70px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    border: 2px dashed rgba(248, 240, 225, 0.7);
+    color: var(--mg-crema-clara);
+    font: italic 700 clamp(11px, 3.2cqw, 17px) var(--mg-serif);
+    background: rgba(64, 51, 38, 0.18);
+}
+
+.mg-gal-frente {
+    transform: rotateY(180deg);
+    background: var(--mg-crema-clara);
+    border: 2px solid var(--mg-linea);
+    padding: 8px;
+}
+
+.mg-gal-con-img {
+    padding: 0;
+    background: var(--mg-oscuro);
+}
+
+.mg-gal-con-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.mg-gal-pie {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 14px 6px 5px;
+    background: linear-gradient(transparent, rgba(40, 30, 20, 0.85));
+    color: #fff;
+    font-size: 10px;
+    line-height: 1.2;
+    text-align: center;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.mg-gal-texto {
+    font: 700 15px/1.25 var(--mg-serif);
+    text-align: center;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+}
+
+.mg-gal-texto.mg-medio {
+    font-size: 13.5px;
+}
+
+.mg-gal-texto.mg-largo {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.mg-gal-compacto .mg-gal-texto {
+    font-size: 12px;
+}
+
+.mg-gal-compacto .mg-gal-texto.mg-medio,
+.mg-gal-compacto .mg-gal-texto.mg-largo {
+    font-size: 10.5px;
+}
+
+.mg-gal-carta.mg-pareja .mg-gal-frente {
+    border-color: var(--mg-oro);
+    box-shadow: 0 0 0 3px rgba(217, 164, 65, 0.55), 0 4px 10px rgba(64, 51, 38, 0.2);
+}
+
+.mg-gal-carta.mg-pareja .mg-gal-giro {
+    animation: mg-pareja 0.5s ease;
+}
+
+.mg-gal-carta.mg-pareja {
+    cursor: default;
+}
+
+.mg-gal-carta.mg-pareja::after {
+    content: "";
+    position: absolute;
+    right: -5px;
+    top: -5px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #e6b95a, var(--mg-oro) 60%, #9a6f1f);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+}
+
+@keyframes mg-pareja {
+    0% { transform: rotateY(180deg) scale(1); }
+    50% { transform: rotateY(180deg) scale(1.08); }
+    100% { transform: rotateY(180deg) scale(1); }
+}
+
+/* =====================================================================
+   CÓDIGO SECRETO
+   ===================================================================== */
+
+.mg-codigo .mg-escena {
+    padding: 10px 12px 12px;
+    gap: 8px;
+}
+
+.mg-cod-pista {
+    flex: none;
+    margin: 0 auto;
+    max-width: 620px;
+    padding: 7px 14px;
+    border: 1px dashed var(--mg-terracota);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.6);
+    font: italic 15px/1.35 var(--mg-serif);
+    text-align: center;
+}
+
+.mg-cod-pista span {
+    display: inline-block;
+    margin-right: 8px;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--mg-terracota);
+    color: var(--mg-crema-clara);
+    font: 700 11px Arial, sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    vertical-align: 2px;
+}
+
+.mg-cod-mensaje {
+    --mg-celda: 40px;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    gap: calc(var(--mg-celda) * 0.3) calc(var(--mg-celda) * 0.5);
+    padding: 4px;
+}
+
+.mg-cod-palabra {
+    display: flex;
+    gap: 4px;
+}
+
+.mg-cod-celda {
+    width: calc(var(--mg-celda) * 0.82);
+    height: calc(var(--mg-celda) * 1.45);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 3px 0 4px;
+    border: 1px solid var(--mg-linea);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.75);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+    touch-action: manipulation;
+}
+
+.mg-cod-cifra {
+    font: 700 calc(var(--mg-celda) * 0.36) / 1 var(--mg-serif);
+    color: var(--mg-terracota);
+}
+
+.mg-cod-letra {
+    width: 72%;
+    min-height: calc(var(--mg-celda) * 0.62);
+    border-bottom: 2px solid var(--mg-oscuro);
+    font: 700 calc(var(--mg-celda) * 0.56) / 1.1 var(--mg-serif);
+    text-align: center;
+    color: var(--mg-oscuro);
+}
+
+.mg-cod-signo {
+    align-self: flex-end;
+    font: 700 calc(var(--mg-celda) * 0.56) var(--mg-serif);
+    padding-bottom: 4px;
+}
+
+.mg-cod-celda.mg-seleccionada {
+    background: #fde6d9;
+    border-color: var(--mg-terracota);
+    box-shadow: 0 0 0 2px var(--mg-terracota);
+    transform: translateY(-3px);
+}
+
+.mg-cod-celda.mg-resuelta {
+    background: #eef1e4;
+    border-color: #a9bb99;
+    cursor: default;
+}
+
+.mg-cod-celda.mg-resuelta .mg-cod-letra {
+    border-color: var(--mg-ok);
+    color: var(--mg-verde);
+}
+
+.mg-cod-celda.mg-revelada {
+    background: #f6ecd3;
+    border-color: var(--mg-oro);
+}
+
+.mg-cod-celda.mg-pop {
+    animation: mg-pop 0.45s ease;
+}
+
+.mg-cod-completo .mg-cod-celda {
+    background: var(--mg-verde);
+    border-color: var(--mg-verde);
+    transition-delay: calc(var(--i, 0) * 30ms);
+}
+
+.mg-cod-completo .mg-cod-letra {
+    color: var(--mg-crema-clara) !important;
+    border-color: var(--mg-oro) !important;
+}
+
+.mg-cod-completo .mg-cod-cifra {
+    color: var(--mg-oro);
+}
+
+.mg-cod-teclado {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.mg-cod-fila {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    width: 100%;
+}
+
+.mg-cod-tecla {
+    flex: 0 1 40px;
+    min-width: 0;
+    height: 40px;
+    border: 1px solid var(--mg-linea);
+    border-bottom: 3px solid #b9a57d;
+    border-radius: 6px;
+    background: #fff;
+    font: 700 16px var(--mg-serif);
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    touch-action: manipulation;
+}
+
+.mg-cod-tecla:hover {
+    background: #fdf1e8;
+}
+
+.mg-cod-tecla:active {
+    transform: translateY(2px);
+    border-bottom-width: 1px;
+}
+
+.mg-cod-tecla.mg-usada {
+    background: #ece3cf;
+    color: #a89a85;
+}
+
+.mg-cod-tecla.mg-mal {
+    background: var(--mg-terracota);
+    color: #fff;
+    animation: mg-sacudida 0.4s ease;
+}
+
+.mg-cod-tecla-pista {
+    flex: 0 1 84px;
+    background: var(--mg-oscuro);
+    border-color: var(--mg-oscuro);
+    border-bottom-color: #231b14;
+    color: var(--mg-crema-clara);
+    font: 700 13px Arial, sans-serif;
+}
+
+.mg-cod-tecla-pista:hover {
+    background: var(--mg-verde);
+}
+
+/* =====================================================================
+   LÍNEA DE TIEMPO VIVA
+   ===================================================================== */
+
+.mg-lin {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 14px 14px;
+}
+
+.mg-lin-eje-caja {
+    flex: none;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mg-lin-rotulo {
+    flex: none;
+    width: 58px;
+    font: italic 12px/1.2 var(--mg-serif);
+    color: var(--mg-gris);
+    text-align: center;
+}
+
+.mg-lin-eje {
+    flex: 1 1 auto;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--mg-n), 1fr);
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* La línea del tiempo, con flecha */
+.mg-lin-eje::before {
+    content: "";
+    position: absolute;
+    left: -4px;
+    right: -4px;
+    top: 13px;
+    height: 0;
+    border-top: 2px dashed var(--mg-terracota);
+}
+
+.mg-lin-eje::after {
+    content: "";
+    position: absolute;
+    right: -10px;
+    top: 8px;
+    border: 6px solid transparent;
+    border-left: 9px solid var(--mg-terracota);
+}
+
+.mg-lin-paso {
+    position: relative;
+    min-width: 0;
+}
+
+.mg-lin-hueco {
+    position: relative;
+    height: 150px;
+    padding-top: 30px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s;
+}
+
+.mg-lin-anio {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    z-index: 2;
+    min-width: 54px;
+    height: 28px;
+    padding: 0 8px;
+    transform: translateX(-50%);
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--mg-crema);
+    border: 2px solid var(--mg-linea);
+    font: 700 14px var(--mg-serif);
+    color: var(--mg-gris);
+}
+
+.mg-lin-hueco.mg-lleno .mg-lin-anio {
+    background: var(--mg-terracota);
+    border-color: #8e3c29;
+    color: var(--mg-crema-clara);
+    animation: mg-sello-golpe 0.45s ease both;
+}
+
+.mg-lin-destino {
+    flex: 1 1 auto;
+    width: 100%;
+    border: 2px dashed var(--mg-linea);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.35);
+    color: rgba(120, 107, 92, 0.6);
+    font: italic 700 22px var(--mg-serif);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.mg-lin-eligiendo .mg-lin-destino,
+.mg-lin-arrastrando .mg-lin-destino {
+    border-color: var(--mg-durazno);
+    background: rgba(239, 164, 127, 0.1);
+}
+
+.mg-lin-hueco.mg-encima .mg-lin-destino {
+    border-color: var(--mg-terracota);
+    border-style: solid;
+    background: rgba(239, 164, 127, 0.25);
+    transform: scale(1.04);
+}
+
+.mg-lin-mazo {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 8px 8px 4px;
+    border-top: 1px dotted var(--mg-linea);
+}
+
+.mg-lin-tarjeta {
+    position: relative;
+    width: clamp(120px, calc((100cqw - 150px) / var(--mg-n)), 190px);
+    min-height: 96px;
+    padding: 10px 10px 10px 14px;
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--mg-linea);
+    border-radius: 8px;
+    background:
+        linear-gradient(90deg, rgba(182, 83, 60, 0.85) 0 4px, transparent 4px),
+        #fffaf0;
+    box-shadow: 0 3px 8px rgba(64, 51, 38, 0.18);
+    font: 14px/1.3 var(--mg-serif);
+    text-align: left;
+    cursor: grab;
+    touch-action: none;
+    animation: mg-caer 0.6s ease both;
+    transition: box-shadow 0.2s;
+}
+
+.mg-lin-tarjeta:hover {
+    box-shadow: 0 6px 14px rgba(64, 51, 38, 0.25);
+}
+
+.mg-lin-tarjeta.mg-arrastrando {
+    z-index: 25;
+    cursor: grabbing;
+    animation: none;
+    box-shadow: 0 14px 28px rgba(64, 51, 38, 0.35);
+    pointer-events: none;
+}
+
+.mg-lin-tarjeta.mg-volviendo {
+    transition: transform 0.28s ease;
+}
+
+.mg-lin-tarjeta.mg-seleccionada {
+    animation: none;
+    outline: 3px solid var(--mg-terracota);
+    transform: translateY(-4px);
+}
+
+.mg-lin-tarjeta.mg-puesta {
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+    font-size: 13px;
+    cursor: default;
+    background:
+        linear-gradient(90deg, var(--mg-oro) 0 4px, transparent 4px),
+        #fffdf6;
+    border-color: var(--mg-oro);
+    animation: mg-pop 0.35s ease;
+}
+
+.mg-lin-completa .mg-lin-tarjeta.mg-puesta {
+    box-shadow: 0 0 0 2px rgba(217, 164, 65, 0.5), 0 3px 8px rgba(64, 51, 38, 0.18);
+}
+
+.mg-linea .mg-cartel {
+    top: auto;
+    bottom: 10px;
+}
+
+/* Celular / contenedor angosto: eje vertical a la izquierda, mazo a la derecha */
+@container mg (max-width: 600px) {
+    .mg-lin {
+        flex-direction: row;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .mg-lin-eje-caja {
+        flex: 0 0 47%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+    }
+
+    .mg-lin-rotulo {
+        width: auto;
+        text-align: left;
+        padding-left: 52px;
+    }
+
+    .mg-lin-eje {
+        flex: 1 1 auto;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(var(--mg-n), 1fr);
+        gap: 6px;
+    }
+
+    .mg-lin-eje::before {
+        left: 22px;
+        right: auto;
+        top: -4px;
+        bottom: -4px;
+        border-top: 0;
+        border-left: 2px dashed var(--mg-terracota);
+    }
+
+    .mg-lin-eje::after {
+        right: auto;
+        left: 17px;
+        top: auto;
+        bottom: -12px;
+        border: 6px solid transparent;
+        border-top: 9px solid var(--mg-terracota);
+    }
+
+    .mg-lin-hueco {
+        height: 100%;
+        padding: 0 0 0 52px;
+    }
+
+    .mg-lin-anio {
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        min-width: 46px;
+        height: 24px;
+        padding: 0 4px;
+        font-size: 12px;
+    }
+
+    .mg-lin-hueco.mg-lleno .mg-lin-anio {
+        animation: none;
+    }
+
+    .mg-lin-destino {
+        font-size: 16px;
+    }
+
+    .mg-lin-mazo {
+        flex: 1 1 auto;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        gap: 6px;
+        padding: 0 0 0 10px;
+        border-top: 0;
+        border-left: 1px dotted var(--mg-linea);
+        overflow: hidden;
+    }
+
+    .mg-lin-tarjeta {
+        width: 100%;
+        min-height: 0;
+        flex: 0 1 auto;
+        padding: 6px 8px 6px 11px;
+        font-size: 12px;
+    }
+
+    .mg-lin-tarjeta.mg-puesta {
+        font-size: 11.5px;
+        padding: 4px 6px 4px 10px;
+    }
+}
+
+/* =====================================================================
+   TALLER DEL RESTAURADOR
+   ===================================================================== */
+
+.mg-res-zona {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.mg-res-marco {
+    position: absolute;
+    box-shadow:
+        0 0 0 5px #fff8ea,
+        0 0 0 8px #c9a560,
+        0 0 0 9px #8f6d33,
+        0 10px 24px rgba(64, 51, 38, 0.35);
+}
+
+.mg-res-marco img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    -webkit-user-drag: none;
+    pointer-events: none;
+}
+
+.mg-res-polvo {
+    position: absolute;
+    inset: 0;
+    cursor: grab;
+    transition: opacity 0.9s ease;
+}
+
+.mg-res-polvo:active {
+    cursor: grabbing;
+}
+
+.mg-res-polvo.mg-desvanecer {
+    opacity: 0;
+}
+
+.mg-res-progreso {
+    position: absolute;
+    left: 50%;
+    bottom: 12px;
+    width: min(80%, 360px);
+    height: 26px;
+    transform: translateX(-50%);
+    border: 1px solid var(--mg-linea);
+    border-radius: 999px;
+    background: #fff;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+}
+
+.mg-res-relleno {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    background: linear-gradient(90deg, var(--mg-durazno), var(--mg-terracota));
+    transition: width 0.25s ease;
+}
+
+.mg-res-progreso b {
+    position: relative;
+    font-size: 12px;
+    color: var(--mg-oscuro);
+    text-shadow: 0 0 4px #fff, 0 0 2px #fff;
+}
+
+.mg-res-mota {
+    position: absolute;
+    z-index: 12;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #bfa47a;
+    pointer-events: none;
+    animation: mg-mota 0.7s ease-out forwards;
+}
+
+@keyframes mg-mota {
+    to { transform: translate(var(--dx), 40px) scale(0.3); opacity: 0; }
+}
+
+.mg-res-tablero {
+    position: absolute;
+    background-size: 100% 100%;
+    box-shadow: 0 0 0 4px #fff8ea, 0 0 0 6px #c9a560, 0 8px 20px rgba(64, 51, 38, 0.3);
+    animation: mg-aparecer 0.4s ease both;
+}
+
+/* Imagen guía tenue debajo de las casillas */
+.mg-res-tablero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(248, 240, 225, 0.86);
+}
+
+.mg-res-hueco {
+    position: absolute;
+    padding: 0;
+    border: 1px dashed rgba(182, 83, 60, 0.45);
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.mg-res-eligiendo .mg-res-hueco:hover,
+.mg-res-hueco.mg-encima {
+    background: rgba(239, 164, 127, 0.35);
+    border-style: solid;
+    border-color: var(--mg-terracota);
+}
+
+.mg-res-pieza {
+    position: absolute;
+    z-index: 3;
+    padding: 0;
+    border: 2px solid #fff8ea;
+    border-radius: 3px;
+    background-repeat: no-repeat;
+    box-shadow: 0 3px 8px rgba(64, 51, 38, 0.35);
+    cursor: grab;
+    touch-action: none;
+    transition: left 0.25s ease, top 0.25s ease, width 0.25s ease, height 0.25s ease, box-shadow 0.2s;
+    animation: mg-caer 0.5s ease both;
+}
+
+.mg-res-pieza.mg-arrastrando {
+    z-index: 20;
+    cursor: grabbing;
+    transition: width 0.15s, height 0.15s;
+    box-shadow: 0 14px 28px rgba(64, 51, 38, 0.45);
+    transform: rotate(-2deg) scale(1.04);
+    animation: none;
+}
+
+.mg-res-pieza.mg-seleccionada {
+    outline: 3px solid var(--mg-terracota);
+    outline-offset: 1px;
+    animation: mg-brillo 1s ease infinite;
+}
+
+.mg-res-pieza.mg-puesta {
+    z-index: 2;
+    border-color: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    cursor: default;
+    animation: none;
+}
+
+.mg-res-tablero.mg-res-completo {
+    animation: mg-pop 0.5s ease;
+}
+
+/* =====================================================================
+   CARRERA, MENSAJERO E IMPRENTA (lienzos)
+   ===================================================================== */
+
+.mg-car-zona,
+.mg-men-zona,
+.mg-imp-zona {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.mg-car-zona .mg-lienzo,
+.mg-men-zona .mg-lienzo,
+.mg-imp-zona .mg-lienzo {
+    position: absolute;
+    left: 0;
+    top: 0;
+    cursor: pointer;
+}
+
+.mg-imp-pliego {
+    flex: none;
+    position: relative;
+    z-index: 2;
+    margin: 10px auto 6px;
+    max-width: calc(100% - 20px);
+    padding: 10px 18px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 16px;
+    background:
+        repeating-linear-gradient(0deg, transparent 0 22px, rgba(203, 185, 148, 0.25) 22px 23px),
+        #fffaf0;
+    border: 1px solid var(--mg-linea);
+    box-shadow: 0 4px 10px rgba(64, 51, 38, 0.15);
+    clip-path: polygon(0 4%, 3% 0, 20% 3%, 45% 0, 70% 2%, 100% 0, 99% 50%, 100% 100%, 75% 97%, 50% 100%, 22% 97%, 0 100%, 1% 50%);
+}
+
+.mg-imp-palabra {
+    display: flex;
+    gap: 2px;
+}
+
+.mg-imp-letra,
+.mg-imp-signo {
+    min-width: 0.78em;
+    font: 700 clamp(17px, 4.2cqw, 26px) / 1.2 var(--mg-serif);
+    text-align: center;
+    color: rgba(120, 107, 92, 0.3);
+    border-bottom: 2px solid rgba(203, 185, 148, 0.7);
+    transition: color 0.2s;
+}
+
+.mg-imp-letra.mg-siguiente {
+    color: var(--mg-terracota);
+    border-bottom-color: var(--mg-terracota);
+    animation: mg-latido 0.9s ease-in-out infinite;
+}
+
+.mg-imp-letra.mg-impreso,
+.mg-imp-signo.mg-impreso {
+    color: var(--mg-oscuro);
+    border-bottom-color: transparent;
+}
+
+.mg-imp-letra.mg-golpe {
+    animation: mg-sello-golpe 0.4s ease;
+}
+
+.mg-imp-completo {
+    animation: mg-pop 0.5s ease;
+}
+
+.mg-imp-completo .mg-imp-letra {
+    color: var(--mg-terracota);
+}
+
+/* =====================================================================
+   CONTENEDORES PEQUEÑOS (celular)
+   ===================================================================== */
+
+@container mg (max-width: 600px) {
+    .mg-cabecera {
+        gap: 6px;
+        padding: 6px 8px;
+    }
+
+    .mg-sello {
+        width: 26px;
+        height: 26px;
+        font-size: 14px;
+    }
+
+    .mg-titulo-textos strong {
+        font-size: 14px;
+        white-space: normal;
+    }
+
+    .mg-titulo-textos small {
+        display: none;
+    }
+
+    .mg-chip {
+        height: 26px;
+        padding: 0 7px;
+        font-size: 11px;
+        gap: 3px;
+    }
+
+    .mg-chip b {
+        font-size: 13px;
+    }
+
+    .mg-reloj-ico {
+        display: none;
+    }
+
+    .mg-estrella svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    .mg-btn-salir {
+        height: 28px;
+        padding: 0 10px;
+        font-size: 12px;
+    }
+
+    .mg-tarjeta {
+        padding: 16px 16px 18px;
+    }
+
+    .mg-tarjeta h2 {
+        font-size: 21px;
+    }
+
+    .mg-intro {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .mg-intro-img {
+        width: 96px;
+        height: 110px;
+        border-width: 4px;
+    }
+
+    .mg-instrucciones {
+        font-size: 14px;
+    }
+
+    .mg-controles {
+        font-size: 12px;
+        text-align: left;
+    }
+
+    .mg-estrellas-grandes .mg-estrella svg {
+        width: 38px;
+        height: 38px;
+    }
+
+    .mg-dato p {
+        font-size: 13px;
+    }
+
+    .mg-cartel {
+        font-size: 13px;
+        max-width: 94%;
+    }
+
+    .mg-cartel-dato {
+        font-size: 13.5px;
+    }
+
+    .mg-cur-barra {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+        padding: 6px 8px 8px;
+    }
+
+    .mg-cur-lista {
+        justify-content: center;
+        gap: 4px;
+    }
+
+    .mg-cur-item {
+        font-size: 11.5px;
+        padding: 3px 8px 3px 5px;
+    }
+
+    .mg-cur-btn-pista {
+        align-self: center;
+        padding: 5px 22px;
+    }
+
+    .mg-codigo .mg-escena {
+        padding: 8px 6px 8px;
+    }
+
+    .mg-cod-pista {
+        font-size: 13px;
+        padding: 6px 10px;
+    }
+
+    .mg-cod-fila {
+        gap: 3px;
+    }
+
+    .mg-cod-tecla {
+        height: 40px;
+        font-size: 15px;
+    }
+
+    .mg-imp-pliego {
+        padding: 8px 10px;
+        gap: 2px 10px;
+    }
+}
+
+@container mg (max-width: 420px) {
+    .mg-hud {
+        gap: 4px;
+    }
+
+    /* En pantallas muy angostas basta el sello: el nombre ya se vio al empezar */
+    .mg-titulo-textos {
+        display: none;
+    }
+
+    .mg-titulo {
+        flex: 0 0 auto;
+        margin-right: auto;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mg-root *,
+    .mg-root *::before,
+    .mg-root *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
