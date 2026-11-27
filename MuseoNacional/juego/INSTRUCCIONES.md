@@ -165,3 +165,10 @@ Ajustes en `gameSalida`: `S.casts >= 5` (fases), `S.ts = 3.6` (ventana de golpe)
 - **Puerta al final del pasillo** de la Isla Calavera, junto al cofre (`drawDoor`). Cerrada con barrotes hasta llevarse las obras; después brilla en verde con el rótulo SALIDA. Acercarse y pulsar A: aparece el Chamán (primera vez) o se vuelve al muelle. La puerta del inicio sigue funcionando.
 - **Animación de colocar obras** reducida de ~4 s a ~1,5 s (`updEnt`: abrir 0,3 s, subir 0,3 s, volar 0,4 s, colocar 0,45 s).
 - Tras el juego de ritmo, el fondo del mensaje «todas las obras están a salvo» ya no muestra cuadros.
+
+## 21. Reporte final real
+Al terminar la cinemática final aparece, bajo el mensaje de cierre, el **REPORTE FINAL** con datos reales de la partida:
+- **Obras que miraste:** obras/esculturas abiertas con A (`save.viewed`) sobre el total de las 10 islas (incluye las que se detectan automáticamente en `obras/`).
+- **Obras devueltas a su sala:** las colocadas manualmente en su espacio (`save.placed`/`save.restored`) sobre las que se llevó el saco.
+- **Veces que moriste en los minijuegos:** cada derrota cuenta (`save.deaths`), con desglose Trampas · Ritmo · Chamán. Omitir un reto no cuenta como muerte.
+Los datos se guardan en el progreso (`save.deaths`, `save.report`), así que sobreviven si se recarga la página a mitad de partida. «Empezar de nuevo» los reinicia.

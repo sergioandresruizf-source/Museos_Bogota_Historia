@@ -133,6 +133,11 @@ html,body{margin:0;height:100%;background:#0b1522;color:#fff;overflow:hidden;
 #finale{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;
   background:rgba(5,10,22,.72);padding:calc(var(--u)*10)}
 #finale h2{font-family:var(--px);font-size:calc(var(--u)*11);color:var(--gold);margin:0 0 calc(var(--u)*8);line-height:1.4;text-shadow:calc(var(--u)*1.5) calc(var(--u)*1.5) 0 #000}
+#finReport{width:78%;max-width:calc(var(--u)*300);margin:0 0 calc(var(--u)*8);border:calc(var(--u)*1.5) solid var(--gold);background:rgba(0,0,0,.55);padding:calc(var(--u)*5) calc(var(--u)*8);font-family:var(--px);text-align:left}
+#finReport .ttl{font-size:calc(var(--u)*5.6);color:var(--gold);text-align:center;margin-bottom:calc(var(--u)*4)}
+#finReport .row{display:flex;justify-content:space-between;gap:calc(var(--u)*6);font-size:calc(var(--u)*5);line-height:1.9;color:#fff}
+#finReport .row b{color:#9fe070;font-weight:normal;white-space:nowrap}
+#finReport .sub{font-size:calc(var(--u)*4);color:#9fd3ff;line-height:1.7;text-align:right}
 #finale p{font-family:var(--txt);font-weight:bold;font-size:calc(var(--u)*8);max-width:84%;margin:0 0 calc(var(--u)*10);line-height:1.5}
 #btnSkip{position:absolute;right:calc(var(--u)*6);top:calc(var(--u)*6);display:none;font-size:calc(var(--u)*5.5);padding:calc(var(--u)*3) calc(var(--u)*6)}
 #btnMute{position:absolute;right:calc(var(--u)*6);bottom:calc(var(--u)*6);width:calc(var(--u)*16);height:calc(var(--u)*16);padding:0;font-size:calc(var(--u)*6);opacity:.85;display:none;margin:0}
@@ -206,6 +211,7 @@ body.touch #pad{display:block}
       <div id="finale">
         <h2 id="finTitle"></h2>
         <p id="finText"></p>
+        <div id="finReport"></div>
         <button id="btnKeep" class="btn">SEGUIR NAVEGANDO</button>
       </div>
 
@@ -267,7 +273,7 @@ const ctx = canvas.getContext('2d');
 ctx.imageSmoothingEnabled = false;
 
 /* ------------------------------ guardado ------------------------------ */
-function defaultSave() { return { viewed: {}, entered: {}, reached: {}, retos: {}, restored: {}, placed: {}, recovered: false, cineDone: false, oroDone: false, oroItems: [], oroSeen: {} }; }
+function defaultSave() { return { viewed: {}, entered: {}, reached: {}, retos: {}, restored: {}, placed: {}, deaths: {}, report: null, recovered: false, cineDone: false, oroDone: false, oroItems: [], oroSeen: {} }; }
 function loadSave() {
   try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); if (s && s.viewed) return Object.assign(defaultSave(), s); } catch (e) { /* sin almacenamiento */ }
   return defaultSave();
@@ -921,6 +927,21 @@ const allExplored = () => exploredCount() === N_ISL;
 function updateHUD(place) {
   $('hudCount').textContent = exploredCount() + '/' + N_ISL;
   if (place !== undefined) $('hudPlace').textContent = place || '';
+}
+/* ---------- reporte final (datos reales del jugador) ---------- */
+function reportStats() {
+  let seen = 0, total = 0;
+  for (let i = 0; i < N_ISL; i++) islandWorks(i).forEach((o, j) => { total++; if (save.viewed[i + ':' + j]) seen++; });
+  const its = sackItems(), back = its.filter((it) => it.placed).length, d = save.deaths || {};
+  return { seen, total, back, taken: its.length, d1: d.entrada || 0, d2: d.durante || 0, d3: d.salida || 0 };
+}
+function showReport(r) {
+  const deaths = r.d1 + r.d2 + r.d3;
+  $('finReport').innerHTML = '<div class="ttl">REPORTE FINAL</div>'
+    + '<div class="row"><span>Obras que miraste</span><b>' + r.seen + ' / ' + r.total + '</b></div>'
+    + '<div class="row"><span>Obras devueltas a su sala</span><b>' + r.back + ' / ' + r.taken + '</b></div>'
+    + '<div class="row"><span>Veces que moriste en los minijuegos</span><b>' + deaths + '</b></div>'
+    + '<div class="sub">Trampas: ' + r.d1 + ' · Ritmo: ' + r.d2 + ' · Chamán: ' + r.d3 + '</div>';
 }
 function removedList() {
   const out = []; if (save.recovered) return out;   // ya van en el saco
@@ -1925,7 +1946,7 @@ const reto = {
     if (this.state !== 'play' || !this.G) return;
     this.G.update(dt);
     if (this.G.result === 'win') { if (this.G.cleanup) this.G.cleanup(); this.G = null; this.win(); }
-    else if (this.G.result === 'lose') { this.fails++; if (this.G.cleanup) this.G.cleanup(); this.G = null; this.card('lose'); }
+    else if (this.G.result === 'lose') { this.fails++; save.deaths = save.deaths || {}; save.deaths[this.id] = (save.deaths[this.id] || 0) + 1; persist(); if (this.G.cleanup) this.G.cleanup(); this.G = null; this.card('lose'); }
   },
   draw() { const g = ctx; g.fillStyle = '#000'; g.fillRect(0, 0, VW, VH); if (this.G) this.G.draw(g); else if (this.id) this.preview(g); }
 };
@@ -2711,6 +2732,7 @@ const cine = {
   },
   finish() {
     if (this.done) return; this.done = true;
+    const rp = reportStats(); save.report = rp; showReport(rp);   // se calcula ANTES de marcar todo como restaurado
     for (let i = 0; i < N_ISL; i++) { cineFlags[i] = 1; save.restored[i] = true; }
     save.cineDone = true; persist(); cineFlags = null; setCaption(null); $('btnSkip').style.display = 'none';
     $('finTitle').textContent = TXT.finalTitulo; $('finText').textContent = TXT.finalTexto;
@@ -2841,7 +2863,7 @@ function boot() {
   requestAnimationFrame((t) => { last = t; frame(t); });
 }
 window.__art = { mk, buildArrivalBG, buildHall, drawFrame, drawCheck, drawPirate, WATER, CLOUD, FLAG };
-window.__juego = { flagFor, isRunning, oro, GOAL, ORO_DEF, completarJuego, oroInteract, openDialog, closeDialog, music, MUS, reto, RETOS, lanzarReto, get cur() { return cur; }, scenes, go, save: () => save, setScene, sea, museum, arrival, cine, ui, PLACES, FLAG, cheatExploreAll, cheatCalavera };
+window.__juego = { flagFor, isRunning, oro, GOAL, ORO_DEF, completarJuego, oroInteract, openDialog, closeDialog, music, MUS, reto, RETOS, lanzarReto, get cur() { return cur; }, scenes, go, save: () => save, setScene, sea, museum, arrival, cine, ui, PLACES, FLAG, cheatExploreAll, cheatCalavera, reportStats, islandWorks };
 if (SHIP.length && SHIP.every((im) => im.complete)) boot();
 else { let n = 0; SHIP.forEach((im) => { const done = () => { if (++n === SHIP.length) boot(); }; if (im.complete) done(); else { im.onload = done; im.onerror = done; } }); }
 })();
