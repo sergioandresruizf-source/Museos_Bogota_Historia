@@ -1,4 +1,4 @@
-<!doctype html> 
+<!doctype html>
 <html lang="es">
   <head>
     <meta charset="utf-8" />
@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width,initial-scale=1,viewport-fit=cover"
     />
-    <title>Más allá de Botero · Museo jugable</title>
+    <title>Más allá de Botero · Barrio-museo jugable</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,900,0..100,0..1&family=Nunito:wght@400;800&display=swap"
       rel="stylesheet"
@@ -388,6 +388,97 @@
         font-size: 0.8rem;
         line-height: 1.25;
       }
+
+      /* ===== Progresión ===== */
+      #prog{flex-basis:100%;order:-1;display:grid;gap:6px;padding:8px 14px 10px;border-radius:20px;background:rgba(255,246,220,.96);box-shadow:inset 0 -3px 5px rgba(58,29,18,.18),0 4px 0 rgba(58,29,18,.5)}
+      #pr1{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+      #rkw{display:grid;line-height:1.15;min-width:150px}
+      #rk{font:900 1rem var(--t)}
+      #rp{font-size:.7rem;color:var(--mu);font-weight:800}
+      #rb{height:5px;border-radius:5px;background:rgba(58,29,18,.15);overflow:hidden;margin-top:3px}
+      #rb i{display:block;height:100%;width:0;background:var(--oc);transition:width .4s}
+      #pw{flex:1;min-width:150px;display:grid;gap:3px}
+      #pn{font-size:.8rem;font-weight:800}
+      #pbar{height:14px;border-radius:9px;background:rgba(58,29,18,.18);overflow:hidden}
+      #pbi{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--te),var(--oc));transition:width .4s}
+      #ps{display:flex;flex-wrap:wrap;gap:6px}
+      #prog.col #ps{display:none}
+      .sp{position:relative;overflow:hidden;font-size:.72rem;font-weight:800;padding:3px 9px 7px;border-radius:10px;background:rgba(58,29,18,.09);white-space:nowrap}
+      .sp i{position:absolute;left:0;bottom:0;height:4px;background:var(--te)}
+      .sp.ok{background:#bfe3cc}.sp.ok i{background:#3f7d5c}
+      .sp.cur{outline:2px solid var(--ca)}
+      .sp.opt{border:1px dashed var(--mu);background:transparent}
+      /* ===== Pantallas completas: introducción y estadísticas ===== */
+      .ov{position:fixed;inset:0;z-index:19;overflow:auto;touch-action:pan-y;user-select:text;display:grid;justify-items:center;align-content:start;padding:20px;background:radial-gradient(circle at 70% 18%,#f7d588,transparent 55%),var(--oc);transition:transform .9s cubic-bezier(.65,0,.25,1)}
+      .ov.fuera{transform:translateY(-105%)}
+      #res{z-index:30}
+      .ibox{width:100%;max-width:880px;background:var(--c2);border-radius:26px;padding:26px 28px;box-shadow:0 8px 0 rgba(58,29,18,.35)}
+      .ibox h2{margin-bottom:6px}
+      .ibox h3{font:900 1.15rem var(--t);margin:22px 0 8px}
+      .ibox p{margin:.4em 0}
+      .nums,.kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:14px 0}
+      .nm,.k{background:var(--cr);border-radius:16px;padding:10px 12px;text-align:center}
+      .nm b,.k b{display:block;font:900 1.9rem/1.05 var(--t);color:var(--td)}
+      .nm span,.k span{display:block;line-height:1.25;margin-top:3px;font-size:.78rem;font-weight:800;color:var(--mu)}
+      .isal{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px}
+      .is{border-radius:14px;padding:9px 12px;border-left:8px solid var(--c);background:var(--cr);font-size:.85rem;line-height:1.3}
+      .is b{font-family:var(--t)}
+      .how{padding-left:20px;margin:6px 0}
+      .how li{margin:5px 0}
+      .rks{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+      .rks span{background:var(--cr);border-radius:99px;padding:3px 12px;font-size:.78rem;font-weight:800}
+      .bar{height:12px;border-radius:9px;background:rgba(58,29,18,.15);overflow:hidden}
+      .bar i{display:block;height:100%;background:var(--c,var(--te))}
+      .row{display:grid;grid-template-columns:150px 1fr 70px;gap:10px;align-items:center;margin:6px 0;font-size:.85rem;font-weight:800}
+      .row em{font-style:normal;text-align:right}
+      .big{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:10px 0}
+      .badge{font:900 1.5rem var(--t);background:var(--te);color:var(--c2);border-radius:99px;padding:6px 20px;box-shadow:0 4px 0 var(--td)}
+      .tg{display:inline-block;margin:3px;padding:3px 12px;border-radius:99px;font-size:.78rem;font-weight:800;color:#fff;background:var(--c)}
+      .tg.no{filter:grayscale(1) opacity(.35)}
+      .ibox .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+      .note{white-space:pre-wrap;background:var(--cr);border-radius:12px;padding:10px 14px;font-size:.9rem}
+      @media (max-width:640px){.row{grid-template-columns:96px 1fr 56px;gap:6px}.ibox{padding:18px}#hud{gap:6px}.sp{font-size:.66rem;padding:2px 7px 6px}}
+      @media print{html,body{overflow:visible;height:auto;background:#fff}canvas,#hud,#mm,#ctl,#por,#intro{display:none!important}.ov{position:static;overflow:visible;background:#fff;padding:0}.ibox{box-shadow:none}.btns{display:none}}
+
+      /* ===== HUD compacto y plegable ===== */
+      #hud{align-items:flex-start}
+      #hud .chip,#hud .pill{font-size:.82rem}
+      #pgb{display:flex;align-items:center;gap:6px}
+      #pgi{display:inline-block;position:relative;width:42px;height:8px;border-radius:6px;background:rgba(58,29,18,.2);overflow:hidden}
+      #pgi b{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--te);transition:width .4s}
+      #hud .panel{position:absolute;top:44px;z-index:8;display:grid;gap:8px;max-height:calc(100vh - 140px);overflow:auto;padding:10px 14px 12px;border-radius:20px;background:rgba(255,246,220,.97);box-shadow:inset 0 -3px 5px rgba(58,29,18,.18),0 6px 0 rgba(58,29,18,.5);touch-action:pan-y;font-size:.85rem}
+      #hud #prog{left:0;width:min(440px,calc(100vw - 20px));order:0;flex-basis:auto}
+      #hud #evp{left:0;width:min(330px,calc(100vw - 20px))}
+      #hud #mup{left:0;width:min(330px,calc(100vw - 20px));display:flex;flex-wrap:wrap;align-items:center}
+      .prow{display:flex;gap:8px;flex-wrap:wrap}
+      #hud #sl{margin-left:0;flex-wrap:wrap}
+      #meta:empty{display:none}
+      #mi{max-width:min(320px,70vw)}
+      #meta{max-width:min(300px,70vw)}
+      #npl{max-width:180px}
+      /* ===== Ficha: imagen con zoom, etiquetas ===== */
+      .obw{position:relative;margin-bottom:12px}
+      .obw .ob{margin:0;cursor:zoom-in}
+      .zoomb{position:absolute;right:10px;bottom:10px;border:0;border-radius:99px;padding:6px 14px;font-weight:800;color:var(--c2);background:rgba(58,29,18,.82);box-shadow:0 3px 0 rgba(0,0,0,.35)}
+      .bds{margin:4px 0 8px;line-height:1.9}
+      #fc .tg{margin:2px 4px 2px 0}
+      /* ===== Zoom a pantalla completa ===== */
+      #zm{max-width:none;width:100vw;height:100vh;max-height:none;margin:0;border-radius:0;background:#1a0d08;color:var(--c2);overflow:hidden;user-select:none;touch-action:none}
+      #zm::backdrop{background:#000}
+      #zmv{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab}
+      #zmv.mov{cursor:grabbing}
+      #zmi{position:absolute;left:0;top:0;transform-origin:0 0;max-width:none;max-height:none;will-change:transform;-webkit-user-drag:none}
+      #zmt{position:absolute;top:12px;left:16px;right:16px;font:900 1.05rem var(--t);text-shadow:0 2px 6px #000;pointer-events:none}
+      #zmc{position:absolute;left:0;right:0;bottom:max(34px,env(safe-area-inset-bottom));display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;pointer-events:none}
+      #zmc>*{pointer-events:auto}
+      #zmc .chip{min-width:52px;font-size:1.15rem}
+      #zmh{position:absolute;left:0;right:0;bottom:8px;margin:0;text-align:center;font-size:.72rem;opacity:.75;pointer-events:none}
+      @media (max-width:640px){#hud .chip,#hud .pill{padding:4px 10px}}
+    #dock{position:fixed;z-index:6;left:50%;bottom:6px;transform:translateX(-50%);display:flex;gap:5px;padding:5px 8px;border-radius:99px;background:rgba(255,246,220,.94);box-shadow:inset 0 -3px 5px rgba(58,29,18,.18),0 4px 0 rgba(58,29,18,.5);max-width:calc(100vw - 20px)}
+      .dk{display:grid;line-height:1.05;text-align:center;padding:3px 9px 4px;border-radius:12px;font-size:.68rem;font-weight:800;background:linear-gradient(0deg,var(--c) var(--p),rgba(58,29,18,.1) var(--p));transition:background .5s}
+      .dk em{font-style:normal;font-size:.62rem}.dk.cur{outline:2px solid var(--ca)}
+      .dk.ok{color:#fff;background:var(--c);animation:dkg 1.4s infinite alternate}@keyframes dkg{to{box-shadow:0 0 12px 2px #ffd23f}}
+      @media(max-width:700px){#dock{left:auto;right:10px;transform:none;bottom:76px;flex-wrap:wrap;border-radius:16px;justify-content:flex-end}}
     </style>
   </head>
   <body>
@@ -399,37 +490,30 @@
       aria-label="Plano del museo"
     ></canvas>
     <div id="hud">
-      <b class="pill" id="zn">Vestíbulo</b><span class="pill" id="pts">● 0</span
-      ><span class="pill" id="mi" hidden></span
-      ><span class="pill" id="meta"></span>
-      <span
-        class="pill"
-        id="vm"
-        title="Delgada: cabes por las grietas. Pesada: rompes las puertas macizas."
-        ><span>Inflado</span>
-        <div>
-          <i id="vb"></i><u style="left: 18%"></u><u style="left: 65%"></u></div
-      ></span>
-      <div id="sl"></div>
-      <label class="pill" id="vo" title="Volumen de la música"
-        >🔊
-        <input
-          id="vol"
-          type="range"
-          min="0"
-          max="100"
-          value="80"
-          aria-label="Volumen de la música" /></label
-      ><button
-        id="son"
-        class="chip"
-        type="button"
-        aria-pressed="false"
-        aria-label="Música ambiente"
-      >
-        ♪
-      </button><button id="pl" class="chip" type="button" aria-label="Menú de canciones">♫ Canciones</button><span class="pill" id="npl">♪ …</span>
+      <button id="pgb" class="chip" type="button" aria-expanded="false" aria-controls="prog" title="Mostrar u ocultar el progreso"><span id="pgs">📊 0%</span> <span id="pgi"><b></b></span> <small id="pga">▾</small></button>
+      <b class="pill" id="zn">Calle Real</b>
+      <span class="pill" id="vm" title="Delgada: cabes por las grietas. Pesada: rompes las puertas macizas."><span>Inflado</span><div><i id="vb"></i><u style="left: 18%"></u><u style="left: 65%"></u></div></span>
+      <button id="mub" class="chip" type="button" aria-expanded="false" aria-controls="mup" title="Música y sonido">🎵 <small id="mua">▾</small></button>
+      <button id="evb" class="chip" type="button" aria-expanded="false" aria-controls="evp" title="Menú de eventos (con contraseña)">🎭 <small id="eva">▾</small></button>
+      <div id="evp" class="panel" hidden aria-label="Menú de eventos"><div id="evl"><label class="pill">🔒 <input id="evpw" type="password" placeholder="Contraseña" autocomplete="off" style="border:0;background:transparent;width:120px;font-weight:800"></label> <button id="evok" class="chip" type="button">Entrar</button></div><div id="evm" hidden><select id="evs" aria-label="Evento" style="padding:6px 10px;border-radius:12px;border:2px solid var(--ca);background:var(--c2);color:var(--ca);font-weight:800;max-width:100%"></select> <button id="evgo" class="chip" type="button">▶ Lanzar</button></div><small class="muted" id="evmsg"></small></div>
+      <span class="pill" id="mi" hidden></span><span class="pill" id="meta"></span>
+      <div id="prog" class="panel" hidden aria-label="Progreso del recorrido">
+        <div id="pr1">
+          <div id="rkw"><b id="rk">Visitante curioso</b><span id="rp"></span><div id="rb"><i></i></div></div>
+          <div id="pw"><span id="pn"></span><div id="pbar"><i id="pbi"></i></div></div>
+        </div>
+        <div class="prow"><button id="pt" class="chip" type="button" aria-label="Mostrar u ocultar casas">Casas ▾</button><button id="bfin" class="chip" type="button">🏁 Finalizar recorrido</button></div>
+        <div id="ps"></div>
+        <div id="sl"></div>
+      </div>
+      <div id="mup" class="panel" hidden aria-label="Música">
+        <label class="pill" id="vo" title="Volumen de la música">🔊 <input id="vol" type="range" min="0" max="100" value="80" aria-label="Volumen de la música" /></label>
+        <button id="son" class="chip" type="button" aria-pressed="false" aria-label="Música ambiente">♪</button>
+        <button id="pl" class="chip" type="button" aria-label="Menú de canciones">♫ Canciones</button>
+        <span class="pill" id="npl">♪ …</span>
+      </div>
     </div>
+    <div id="dock" aria-label="Progreso por casas"></div>
     <div id="ctl">
       <button id="bx" class="chip" type="button">Soltar aire</button
       ><button id="bi" class="btn" type="button" hidden>Ver</button>
@@ -437,24 +521,26 @@
     <div id="por">
       <div class="hero">
         <div>
-          <p class="muted"><b>Museo jugable · Trabajo final · Grupo 4</b></p>
+          <p class="muted"><b>Barrio-museo jugable · Trabajo final · Grupo 4</b></p>
           <h1>Más allá<br />del volumen</h1>
           <p class="lead">
             Fernando Botero (Medellín, 1932 – Mónaco, 2023) hizo célebres a las
-            figuras de volúmenes enormes. Este museo te muestra lo que hay
-            detrás: sus primeros ensayos, la donación que en 2000 dio origen al
-            Museo Botero en Bogotá y las obras que provocaron debate por mostrar
-            la violencia.
+            figuras de volúmenes enormes. Este barrio de casas de colores te
+            muestra lo que hay detrás: sus primeros ensayos, la donación que en
+            2000 dio origen al Museo Botero en Bogotá, las obras que viven
+            fuera del museo y las que provocaron rechazo o polémica.
           </p>
           <p class="lead">
-            Eres <b>Chela, guardiana del museo</b>. Recorre las salas en vista
-            isométrica, aprende de cada obra, juega en la
-            <b>Sala de Juegos</b> (trivia y memoria), restaura cuadros e infla
-            figuras… y cuidado: cada tanto suena la alarma y un
-            <b>ladrón</b> intenta llevarse una obra. ¡Atrápalo antes de que
-            escape!
+            Eres <b>Chela, vecina y guardiana del barrio</b>. Cada casa es una
+            sala: la <b>Casa Rosa</b>, la <b>Verde</b>, la <b>Amarilla</b>...
+            Aprende de cada obra, infla o desinfla a Chela para colarte por grietas y puertas macizas… y cuidado: cada tanto suena la alarma y un
+            <b>ladrón</b> intenta llevarse una obra. ¡Atrápalo! Y si cae la noche, el vigilante hace su <b>ronda</b>: escóndete en las cajas. Y ojo: de vez en cuando se cuela un <b>monstruo de volumen</b> (¡los cactus lo desinflan!), se va la luz, escapa un gato gordo o un curador te deja un reto.
           </p>
-          <p class="lead">Novedades: <b>14 canciones</b> que rotan solas (menú ♫ o tecla M), fichas con la historia, la reflexión y la crítica de cada obra, una <b>Rockola con pista de baile</b> al sur y eventos nuevos: concierto sorpresa, cuadros torcidos y obra del día.</p>
+          <p class="lead">Las obras llevan una <b>etiqueta de color</b> según el Word del proyecto:
+            Museo Botero, Museo Nacional, otros museos, esculturas públicas y
+            obras rechazadas o polémicas. El panel <b>📊 Progreso</b> se
+            despliega o se esconde cuando quieras, y en cada ficha puedes
+            <b>🔍 ampliar</b> la imagen.</p>
           <form id="bo">
             <label for="nom"><b>Nombre del visitante</b></label
             ><input
@@ -484,6 +570,35 @@
         </div>
       </div>
     </div>
+    <div id="intro" class="ov" hidden>
+      <div class="ibox">
+        <p class="muted"><b>Antes de entrar</b></p>
+        <h2 id="in-t"></h2>
+        <p id="in-ctx"></p>
+        <div class="nums" id="in-num"></div>
+        <h3>Las casas del barrio</h3>
+        <div class="isal" id="in-salas"></div>
+        <h3>Cómo se mide tu progreso</h3>
+        <ol class="how" id="in-how"></ol>
+        <p class="muted"><b>Rangos que puedes alcanzar:</b></p>
+        <div class="rks" id="in-rk"></div>
+        <p class="aviso" id="in-prev" hidden></p>
+        <div class="btns"><button class="btn" id="in-go" type="button">Entrar al museo</button><button class="btn s" id="in-reset" type="button" hidden>Empezar de cero</button></div>
+      </div>
+    </div>
+    <div id="res" class="ov" hidden><div class="ibox" id="res-in"></div></div>
+    <dialog id="conf"><div class="in"><h2>¿Finalizar el recorrido?</h2><p id="conf-t"></p><p><button class="btn" id="cfin" type="button">Sí, ver mis estadísticas</button> <button class="btn s" data-x type="button">Seguir visitando</button></p></div></dialog>
+    <dialog id="zm" aria-label="Ampliar obra">
+      <div id="zmv"><img id="zmi" alt="" draggable="false" /></div>
+      <div id="zmt"></div>
+      <div id="zmc">
+        <button class="chip" id="zmm" type="button" aria-label="Alejar">−</button>
+        <button class="chip" id="zmr" type="button" aria-label="Ajustar a la pantalla">100%</button>
+        <button class="chip" id="zmp" type="button" aria-label="Acercar">+</button>
+        <button class="btn" data-x type="button">Cerrar</button>
+      </div>
+      <p id="zmh">Rueda del ratón o pellizca para acercar · arrastra para mover · doble clic para ampliar</p>
+    </dialog>
     <dialog id="ficha"><div class="in" id="fc"></div></dialog>
     <dialog id="mus"><div class="in"><h2>♫ Banda sonora</h2><p class="muted" id="mnow"></p>
       <div class="tbs"><button class="chip" id="mp" type="button">⏮ Anterior</button><button class="chip" id="mt" type="button">⏯ Pausa/Play</button><button class="chip" id="mn" type="button">⏭ Siguiente</button></div>
@@ -492,7 +607,7 @@
       <div id="mlist"></div><p><button class="btn" data-x type="button">Cerrar</button></p></div></dialog>
     <dialog id="final">
       <div class="in">
-        <h2>Salida del museo</h2>
+        <h2>Salida del barrio-museo</h2>
         <p id="resu"></p>
         <h3>Tu libreta</h3>
         <textarea
@@ -511,7 +626,8 @@
           fuentes de cada obra, procedencia de imágenes y permisos.
         </div>
         <p>
-          <button class="btn" data-x type="button">Seguir visitando</button>
+          <button class="btn" id="fin2" type="button">🏁 Finalizar recorrido</button>
+          <button class="btn s" data-x type="button">Seguir visitando</button>
         </p>
       </div>
     </dialog>
@@ -540,13 +656,13 @@
       };
       /* Salas amplias: [col0, fila0, col1, fila1] */
       const RM = {
-        f: [2, 2, 27, 19], c: [30, 2, 55, 19], h: [58, 2, 99, 19],
+        f: [2, 2, 27, 19], c: [30, 2, 55, 19], h: [58, 2, 77, 19], r: [80, 2, 99, 19],
         a: [2, 22, 27, 45], d: [30, 22, 61, 45], b: [64, 22, 99, 45],
         e: [14, 48, 85, 59], g: [2, 62, 99, 71],
         m: [2, 74, 27, 93], j: [30, 74, 61, 93], p: [64, 74, 99, 93], q: [14, 98, 85, 115],
       };
       Object.entries(RM).forEach(([k, [a, b, c, d]]) => R(k, a, b, c, d));
-      R("d", 12, 20, 15, 21); R("d", 40, 20, 43, 21); R("n", 82, 20, 82, 21); R("w", 56, 9, 57, 11);
+      R("d", 12, 20, 15, 21); R("d", 40, 20, 43, 21); R("n", 82, 20, 82, 21); R("w", 56, 9, 57, 11); R("h", 78, 9, 79, 12);
       R("d", 28, 32, 29, 35); R("d", 62, 32, 63, 35);
       R("e", 14, 46, 17, 47); R("e", 44, 46, 47, 47); R("e", 78, 46, 81, 47); R("e", 44, 60, 47, 61);
       R("d", 12, 72, 15, 73); R("d", 44, 72, 47, 73); R("d", 80, 72, 83, 73); R("d", 44, 94, 47, 97);
@@ -555,31 +671,56 @@
       [51, 58].forEach((j) => [20, 26, 32, 38, 54, 60, 66, 72].forEach((i) => COL.push([i, j])));
       COL.forEach(([i, j]) => (M[j][i] = "k"));
       const PAL = {
-        j: ["#d7c8ee", "#c3b0e2"], a: ["#f3b9aa", "#eaa090"], b: ["#9ccbad", "#7bb592"],
-        c: ["#b1d8e2", "#86bccd"], d: ["#fff1cf", "#f5e2b3"], e: ["#f2d9a0", "#e8c680"],
-        f: ["#f6c875", "#eab04a"], g: ["#b8d49a", "#a6c785"], h: ["#8a3a20", "#6e2c18"],
-        m: ["#dfe3ee", "#c9cfe2"], p: ["#f8e58e", "#efd16a"], q: ["#3b2a5c", "#33244f"],
+        j: ["#e6cdf7", "#d8b6f0"], a: ["#ffc6d6", "#ffb3c8"], b: ["#b9ebc8", "#a2dfb5"],
+        c: ["#bde6fc", "#a3d7f6"], d: ["#ffeab8", "#ffdf9c"], e: ["#ead3ad", "#dfc497"],
+        f: ["#ffd5a3", "#ffc582"], g: ["#c9e5a4", "#b9db92"], h: ["#9fe6dc", "#86d9cd"],
+        r: ["#7c3a4d", "#6a2f40"], m: ["#f6f1e6", "#e8ecf6"], p: ["#fff2a8", "#ffe874"],
+        q: ["#5a3a8c", "#4b2f78"],
       };
       const ZN = {
-        j: "Sala de Juegos", a: "Sala Rosa · Retratos", b: "Sala Verde · Vida cotidiana",
-        c: "Sala Azul · Esculturas", d: "Patio central", e: "Vestíbulo", f: "Inicios y vanguardia",
-        g: "Plaza de esculturas", h: "Fuera del museo", n: "Fuera del museo", w: "Fuera del museo",
-        m: "Sala de Dibujos", p: "Sala Amarilla · Naturalezas y paisajes", q: "Salón de la Rockola",
+        j: "Depósito del museo", a: "Casa Rosa · Retratos", b: "Casa Verde · Vida cotidiana",
+        c: "Casa Azul · Esculturas del museo", d: "Plazoleta del barrio", e: "Calle Real",
+        f: "Casa Naranja · Inicios y memoria", g: "Plaza de esculturas públicas",
+        h: "Casa Turquesa · Otros museos", r: "Casa del Rechazo · Obras polémicas",
+        n: "Casa del Rechazo · Obras polémicas", w: "Casa Turquesa · Otros museos",
+        m: "Casa Blanca · Dibujos", p: "Casa Amarilla · Museo Nacional", q: "La Rockola",
       };
       const SA = {
-          f: "Inicios y vanguardia", a: "Sala Rosa", b: "Sala Verde", c: "Sala Azul",
-          g: "Plaza de esculturas", m: "Sala de Dibujos", p: "Sala Amarilla",
+          f: "Casa Naranja", a: "Casa Rosa", b: "Casa Verde", c: "Casa Azul", g: "Plaza de esculturas",
+          m: "Casa Blanca", p: "Casa Amarilla", h: "Casa Turquesa", r: "Casa del Rechazo",
         },
-        HID = [32, 43, 44, 48, 75, 107, 108, 110, 111, 112, 113, 114, 115],
-        VER = [8, 72, 92, 110, 112, 113, 114, 44];
-      const rg = (a, b) => Array.from({ length: b - a + 1 }, (_, i) => a + i);
+        rg = (a, b) => Array.from({ length: b - a + 1 }, (_, i) => a + i),
+        /* Categorías del Word: Parte 1 (Museo Botero / Museo Nacional / otros museos), Parte 2 (esculturas), Parte 3 (rechazo o polémica) */
+        HID = rg(70, 78).concat(rg(105, 115)),
+        SENS = [32, 43, 44, 48, 75, 107, 108, 110, 111, 112, 113, 114, 115];
       const RN = {
-        f: [1, 2, 47, 50, 51, 52, 53, 54, 55, 56, 57, 69, 105],
+        f: [1, 2, 47, 13, 32, 43, 44, 48],
         m: [11, 18, 19, 21, 22, 23, 26, 30, 35, 42, 49],
-        a: [3, 4, 5, 8, 9, 10, 12, 16, 20, 29, 31, 33, 34, 38, 65, 67, 71, 72, 73, 74, 106],
-        b: [6, 13, 14, 15, 17, 24, 25, 27, 28, 36, 37, 39, 40, 62, 78, 109],
-        p: [7, 41, 45, 46, 58, 59, 60, 61, 63, 64, 66, 68, 70, 76, 77],
-        c: rg(79, 91), g: rg(92, 104), h: HID.slice(),
+        a: [3, 4, 5, 8, 9, 10, 12, 16, 20, 29, 31, 33, 34, 38],
+        b: [6, 14, 15, 17, 24, 25, 27, 28, 36, 37, 39, 40, 7, 41, 45, 46],
+        p: rg(50, 69),
+        c: [85, 86, 88, 89, 90, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104],
+        g: [79, 80, 81, 82, 83, 84, 87, 91, 92, 93],
+        h: rg(70, 78), r: rg(105, 115),
+      };
+      const CAT = {
+        f: ["Museo Botero · Bogotá", "#e07a05"], m: ["Museo Botero · Bogotá", "#5a7fc7"], a: ["Museo Botero · Bogotá", "#e0558a"],
+        b: ["Museo Botero · Bogotá", "#2fa862"], c: ["Museo Botero · Esculturas", "#1f8fd0"],
+        p: ["Museo Nacional de Colombia", "#c99a0e"], g: ["Escultura pública · fuera del museo", "#2e9b5b"],
+        h: ["Otro museo o colección · fuera del Museo Botero", "#1a9e92"], r: ["Obra rechazada o polémica", "#a8324f"],
+      };
+      /* Tipo de rechazo documentado en el Word (campo «Rechazo») */
+      const RJ = {
+        84: "Vandalizada con grafitis", 105: "Exposición criticada (1955)", 106: "Rechazada por el jurado (1958)",
+        107: "Impacto: sátira a la Iglesia", 108: "Impacto: sátira a la Iglesia", 109: "Tema taurino cuestionado",
+        110: "Atacada con una bomba (1995)", 111: "Polémica: ¿engrandece al narco?",
+        112: "Rechazada por museos de EE. UU.", 113: "Rechazada por museos de EE. UU.", 114: "Rechazada por museos de EE. UU.",
+        115: "Polémica: Escobar muerto",
+      };
+      const FCOL = {
+        f: ["#ffd08a", "#e07a05", "#ffb55c"], m: ["#cdd9f5", "#5a7fc7", "#9db6ea"], a: ["#ffc0d4", "#e0558a", "#ff9ebd"],
+        b: ["#a5eebd", "#2fa862", "#7fdc9e"], c: ["#a9defa", "#1f8fd0", "#7cc8f2"], p: ["#fff09a", "#c99a0e", "#ffe15c"],
+        g: ["#b5e39a", "#2e9b5b", "#8fd17a"], h: ["#8ff0e3", "#1a9e92", "#5fe0d0"], r: ["#e58aa0", "#a8324f", "#c9546f"],
       };
       const D = {};
       `1|Guitarra cubista|Guitarra de planos oscuros sobre fondo magenta: etapa de exploración cubista.
@@ -730,9 +871,26 @@
         return out;
       };
       const mk = (n, i, j, k) => fr.push({ n, x: (i + 0.5) * T, y: (j + 0.5) * T, k, ti: D[n] ? D[n][0] : "Espacio libre" });
+      const WART = new Set(), FWm = new Map(), FRW = 2 * T, wl = (a, b) => (M[b] || [])[a];
       Object.keys(RN).forEach((k) => {
-        const sl = slots(k, RM[k], RN[k].length);
-        RN[k].forEach((n, q) => sl[q] && mk(n, sl[q][0], sl[q][1], k));
+        const [a, b, c2, d] = RM[k], ns = RN[k].length, cand = [];
+        if (k === "c") for (const y of [5, 9, 13, 17]) for (const x of [34, 40, 46, 52]) cand.push({ fx: (x + 0.5) * T, fy: (y + 0.5) * T });
+        else if (k === "g") for (let q = 0; q < 10; q++) cand.push({ fx: ((q % 2 ? 17 : 8) + (q >> 1) * 18.5 + 0.5) * T, fy: (q % 2 ? 69.5 : 64.5) * T });
+        else {
+          for (let xc = a + 1.2; xc + 1 <= c2 + 0.9; xc += 2.4) {
+            const ts = []; for (let i = Math.floor(xc - 1); i <= Math.floor(xc + 0.999); i++) ts.push([i, b - 1, i, b]);
+            if (ts.every(([i, j, p, q]) => wl(i, j) === "#" && wl(p, q) === k)) cand.push({ o: "n", ax: xc * T, ay: b * T, fx: xc * T, fy: (b + 0.5) * T, ts });
+          }
+          for (let yc = b + 2.4; yc + 1 <= d + 0.9; yc += 2.4) {
+            const ts = []; for (let j = Math.floor(yc - 1); j <= Math.floor(yc + 0.999); j++) ts.push([a - 1, j, a, j]);
+            if (ts.every(([i, j, p, q]) => wl(i, j) === "#" && wl(p, q) === k)) cand.push({ o: "w", ax: a * T, ay: yc * T, fx: (a + 0.5) * T, fy: yc * T, ts });
+          }
+        }
+        RN[k].forEach((n, q) => {
+          const sl = cand[Math.floor((q * cand.length) / ns)]; if (!sl) return;
+          fr.push({ n, x: sl.fx, y: sl.fy, k, ti: D[n] ? D[n][0] : "Espacio libre", o: sl.o, ax: sl.ax, ay: sl.ay });
+          if (sl.ts) { sl.ts.forEach(([i, j]) => WART.add(i + "," + j)); const l = sl.ts[sl.ts.length - 1], key = l[0] + "," + l[1]; (FWm.get(key) || FWm.set(key, []).get(key)).push(fr[fr.length - 1]); }
+        });
       });
       const t2 = (a) => a.map(([c, r]) => ({ x: c * T, y: r * T })),
         PU = t2([[5, 17], [5, 44], [33, 44], [20, 55], [96, 44], [8, 66], [96, 90], [5, 90]]),
@@ -748,15 +906,15 @@
         return { x: (i + 0.2 + rnd() * 0.6) * T, y: (j + 0.2 + rnd() * 0.6) * T, t: 0 };
       });
       const LN = [
-        "¿Una grieta en la Sala Verde? Solo caben los delgados.",
+        "¿Una grieta en la Casa Verde? Solo caben los delgados.",
         "Dicen que una Chela muy inflada abre las puertas macizas.",
         "El cactus del taller desinfla. Con cariño, pero desinfla.",
         "Las baldosas del patio suenan. Pisa las cinco rápido.",
         "Las obras más grandes están en la plaza, al sur.",
-        "Hay un ala fuera del museo. Se llega sin que te vea el guardia.",
+        "La Casa Turquesa guarda obras de otros museos. Tiene una puerta maciza.",
         "Mira los dibujos del taller: Botero empezó dibujando.",
-        "Al sur de la Sala de Juegos hay una Rockola: pon música y baila.",
-        "Hay obras que no están en las salas. Algunas generaron debate.",
+        "Al sur del Depósito hay una Rockola: pon música y baila.",
+        "Al fondo está la Casa del Rechazo: obras censuradas o polémicas.",
       ];
       const NP = [[12, 38], [90, 30], [44, 10], [10, 10], [40, 34], [50, 54], [10, 67], [90, 67], [54, 44]].map(([c, r], i) => ({
         x: c * T, y: r * T, a: rnd() * 6.28, tm: 0, c: CO[i % 5], l: LN[i],
@@ -768,8 +926,12 @@
         if (t === "#" && [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => (M[j + b] || [])[i + a] === "g")) LOWS.add(i + "," + j);
       }));
       /* Decoración: alfombras grandes, bancas, plantas, árboles y estanques */
+      const BAN = [];
+      for (let q = 20; q < 84; q += 12) BAN.push([q * T, 48 * T, q * T, 60 * T]);
+      for (let q = 10; q < 98; q += 16) BAN.push([q * T, 62 * T, q * T, 72 * T]);
+      for (let q = 34; q < 60; q += 8) BAN.push([q * T, 22 * T, q * T, 46 * T]);
       const DEC = [],
-        RUG = { f: "#f6c875", a: "#ee9a97", b: "#7bb592", c: "#86bccd", m: "#b9c3d8", p: "#efd16a", j: "#8e6bc4", d: "#c9512f", e: "#c9512f", q: "#7a5bb0" };
+        RUG = { f: "#f6c875", a: "#ee9a97", b: "#7bb592", c: "#86bccd", m: "#b9c3d8", p: "#efd16a", j: "#8e6bc4", d: "#c9512f", e: "#c9512f", q: "#7a5bb0", h: "#1a9e92", r: "#a8324f" };
       Object.keys(RUG).forEach((k) => {
         const [a, b, c, d] = RM[k], mx = ((a + c + 1) / 2) * T, my = ((b + d + 1) / 2) * T;
         DEC.push(["r", mx, my, RUG[k], (c - a - 8) * T, (d - b - 8) * T]);
@@ -796,8 +958,39 @@
         ["lec", "Lector", "#5aa3ba"],
         ["bai", "Bailarín", "#d22"],
       ];
+      /* ===== Progresión: categorías de puntos, rangos y avance por sala ===== */
+      const CATS = {
+          obs: ["Observación", "#eab04a", "Mirar obras, completar casas, enderezar cuadros"],
+          apr: ["Aprendizaje", "#5aa3ba", "Leer fichas, retos de año, debates y encargos"],
+          jue: ["Eventos", "#7a5bb0", "Rondas, sigilo y sorpresas del museo"],
+          vig: ["Vigilancia", "#c9512f", "Atrapar ladrones (y cuidar las obras)"],
+          des: ["Descubrimientos", "#3f7d5c", "Frutas, notas, baile y datos del museo"],
+        },
+        CAPS = { jue: 700, des: 450 },
+        RK = [[0, "Visitante curioso"], [150, "Aprendiz de sala"], [400, "Ojo atento"], [800, "Curaduría junior"], [1400, "Curaduría experta"], [2200, "Guardián del museo"]],
+        SALAS = ["f", "m", "a", "b", "p", "c", "g"],
+        OPC = ["h", "r"],
+        SN = { f: "Naranja", m: "Blanca", a: "Rosa", b: "Verde", p: "Nacional", c: "Azul", g: "Plaza", h: "Turquesa", r: "Rechazo" },
+        SD = {
+          f: "Museo Botero: primeros ensayos y obras sobre la memoria de Colombia.",
+          m: "Museo Botero: dibujos en sanguina y lápiz; Botero empezó dibujando.",
+          a: "Museo Botero: retratos, personajes y homenajes a la historia del arte.",
+          b: "Museo Botero: familia, campo, vida cotidiana y naturalezas muertas.",
+          p: "Museo Nacional de Colombia: pinturas de sus donaciones de 1984 y 2004.",
+          c: "Museo Botero: esculturas en bronce y mármol de la colección.",
+          g: "Fuera del museo: esculturas en plazas y calles de Medellín, Madrid, Londres, Singapur...",
+          h: "Fuera del Museo Botero: Museo de Antioquia, MoMA y otras colecciones (opcional).",
+          r: "Obras rechazadas, atacadas o muy debatidas (opcional, contenido sensible).",
+        },
+        OB = fr.filter((f) => f.n <= NW && D[f.n]),
+        OBV = OB.filter((f) => !HID.includes(f.n)),
+        OBH = OB.filter((f) => HID.includes(f.n)),
+        rango = (p) => RK.reduce((a, [m], j) => (p >= m ? j : a), 0),
+        fmtT = (s) => (s >= 3600 ? `${(s / 3600) | 0} h ${((s % 3600) / 60) | 0} min` : `${(s / 60) | 0} min ${s % 60} s`);
+      let tms = L("tms") || 0;
       let got = new Set(L("sellos") || []),
-        pts = L("pts") || 0,
+        pc = L("pc") || { obs: 0, apr: 0, jue: 0, vig: 0, des: 0 },
+        pts = Object.values(pc).reduce((a, b) => a + b, 0),
         vis = new Set(L("vis") || []),
         chk = L("chk") || {},
         nombre = "visitante";
@@ -823,6 +1016,7 @@
         cv = $("#cv"),
         c = cv.getContext("2d"),
         mm = $("#mm").getContext("2d");
+      ST.splice(0, ST.length, ...ST.filter((q) => !["rit","res","tri","mem","bai","inf"].includes(q[0])), ["sig","Sigilo","#2b2b3a"], ["mon","Domador","#a8324f"], ["gat","Gatero","#e07a05"], ["rel","Relámpago","#7a5bb0"]);
       $("#sl").innerHTML = ST.map(
         ([k, n, col]) =>
           `<i class="st" id="s-${k}" style="--c:${col}" title="${n}"></i>`,
@@ -836,15 +1030,99 @@
         $("#mi").hidden = !mis;
         if (mis) $("#mi").textContent = "Encargo: " + D[mis.n][1];
         ST.forEach(([k]) => $("#s-" + k).classList.toggle("on", got.has(k)));
-        $("#pts").textContent = "● " + pts;
+        prog();
         $("#vb").style.width = (v / 9.5) * 100 + "%";
       }
       const say = (t, ms = 3800) => (bub = { t, u: performance.now() + ms });
-      function suma(n) {
-        pts = Math.max(0, pts + n);
+      const nVis = (a) => a.filter((f) => vis.has(f.n)).length,
+        porSala = (k) => {
+          const t = OBV.filter((f) => f.k === k);
+          return [nVis(t), t.length];
+        };
+      function suma(n, cat = "des") {
+        const ant = rango(pts);
+        if (n > 0 && CAPS[cat] != null) n = Math.max(0, Math.min(n, CAPS[cat] - (pc[cat] || 0)));
+        pc[cat] = Math.max(0, (pc[cat] || 0) + n);
+        pts = Object.values(pc).reduce((a, b) => a + b, 0);
+        L("pc", pc);
         L("pts", pts);
         hud();
+        if (rango(pts) > ant) {
+          say(`🏅 ¡Nuevo rango: ${RK[rango(pts)][1]}!`, 5500);
+          tono(784, 0.4, 0.15);
+          setTimeout(() => tono(1047, 0.5, 0.15), 160);
+        }
       }
+      const DONE = new Set(); let d0 = 0;
+      function casaDone() {
+        SALAS.forEach((k) => {
+          const [a, b] = porSala(k);
+          if (b && a === b && !DONE.has(k)) {
+            DONE.add(k);
+            if (d0) { say(`🏠 ¡${SN[k]} completa! Las luces de la casa se encienden. +60`, 5500); puff(X, Y, "#ffd23f", 40); sh = 0.3; suma(60, "obs"); tono(880, 0.4, 0.15); setTimeout(() => tono(1175, 0.5, 0.15), 160); }
+          }
+        });
+        d0 = 1;
+      }
+      let psig = "";
+      function prog() {
+        const vv = nVis(OBV), tt = OBV.length, pct = tt ? Math.round((vv / tt) * 100) : 0,
+          i = rango(pts), nx = RK[i + 1], hv = nVis(OBH),
+          sig = [vv, hv, pts, zon, got.size].join();
+        if (sig === psig) return;
+        psig = sig;
+        casaDone();
+        $("#pgs").textContent = `📊 ${pct}%`;
+        $("#pgi b").style.width = pct + "%";
+        $("#pgb").title = `${vv} de ${tt} obras vistas · ${RK[i][1]} · ${pts} pts`;
+        $("#rk").textContent = RK[i][1];
+        $("#rp").textContent = nx ? `${pts} pts · próximo: ${nx[1]} a los ${nx[0]}` : `${pts} pts · rango máximo`;
+        $("#rb i").style.width = (nx ? ((pts - RK[i][0]) / (nx[0] - RK[i][0])) * 100 : 100) + "%";
+        $("#pn").textContent = `${vv} de ${tt} obras vistas · ${pct}% del recorrido · ${got.size}/${ST.length} sellos`;
+        $("#pbi").style.width = pct + "%";
+        $("#dock").innerHTML = SALAS.map((k) => { const [a, b] = porSala(k), ok = b && a === b; return `<span class="dk${ok ? " ok" : ""}${zon === k ? " cur" : ""}" style="--c:${FCOL[k][1]};--p:${b ? (a / b) * 100 : 0}%" title="${ZN[k]}: ${a} de ${b}"><b>${SN[k]}</b><em>${a}/${b}${ok ? " ★" : ""}</em></span>`; }).join("");
+        $("#ps").innerHTML =
+          SALAS.map((k) => {
+            const [a, b] = porSala(k), ok = b && a === b;
+            return `<span class="sp${ok ? " ok" : ""}${zon === k ? " cur" : ""}" title="${ZN[k]}: ${a} de ${b} obras"><b>${SN[k]}</b> ${a}/${b}${ok ? " ✓" : ""}<i style="width:${b ? (a / b) * 100 : 0}%"></i></span>`;
+          }).join("") +
+          OPC.map((k) => {
+            const t = OBH.filter((f) => f.k === k), a = nVis(t), b = t.length;
+            return `<span class="sp opt${zon === k || (k === "r" && zon === "n") || (k === "h" && zon === "w") ? " cur" : ""}" title="${ZN[k]} (opcional): ${a} de ${b} obras"><b>${SN[k]}</b> ${a}/${b}<i style="width:${b ? (a / b) * 100 : 0}%"></i></span>`;
+          }).join("");
+      }
+      setInterval(() => go && hud(), 1000);
+      setInterval(() => {
+        if (go) { tms++; if (tms % 5 === 0) L("tms", tms); }
+      }, 1000);
+      $("#pt").onclick = () => {
+        const c = $("#prog").classList.toggle("col");
+        $("#pt").textContent = c ? "Casas ▾" : "Casas ▴";
+      };
+      $("#prog").classList.add("col");
+      const panel = (id, btn, ar, open) => {
+        $(id).hidden = !open;
+        $(btn).setAttribute("aria-expanded", open);
+        $(ar).textContent = open ? "▴" : "▾";
+      };
+      $("#pgb").onclick = () => {
+        const o = $("#prog").hidden;
+        panel("#prog", "#pgb", "#pga", o);
+        if (o) panel("#mup", "#mub", "#mua", false);
+        L("pg", o ? 1 : 0);
+      };
+      $("#mub").onclick = () => {
+        const o = $("#mup").hidden;
+        panel("#mup", "#mub", "#mua", o);
+        if (o) panel("#prog", "#pgb", "#pga", false);
+      };
+      if (L("pg") === 1) panel("#prog", "#pgb", "#pga", true);
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && (!$("#prog").hidden || !$("#mup").hidden)) {
+          panel("#prog", "#pgb", "#pga", false);
+          panel("#mup", "#mub", "#mua", false);
+        }
+      });
       function sello(k, t) {
         if (got.has(k)) return;
         got.add(k);
@@ -997,10 +1275,12 @@
         else if (near.k === "y") memo();
         else if (near.k === "i") infla();
         else if (near.k === "r") menuMus();
+        else if (near.k === "h") HD = HD ? 0 : near.o;
+        else if (near.k === "N") nxReto();
       }
       function ficha(f) {
-        if (f.cr > 0) { f.cr = 0; suma(25); puff(X, Y, "#eab04a", 14); tono(740, 0.3, 0.15); say("¡Cuadro enderezado! +25"); return; }
-        if (f.n === od) { od = 0; suma(40); say("🌟 Obra del día: +40"); }
+        if (f.cr > 0) { f.cr = 0; suma(25, "obs"); puff(X, Y, "#eab04a", 14); tono(740, 0.3, 0.15); say("¡Cuadro enderezado! +25"); return; }
+        if (f.n === od) { od = 0; suma(40, "obs"); say("🌟 Obra del día: +40"); }
         chkMis(f.n);
         const n = f.n,
           e = n > NW,
@@ -1008,18 +1288,28 @@
             "Espacio libre",
             "Aquí cabe la obra número 60. Reemplaza este espacio cuando la tengan.",
           ],
-          h = HID.includes(n);
+          h = SENS.includes(n);
         $("#fc").innerHTML = fichaHTML(f, n, e, d, h);
         fichaTabs(n);
         $("#ficha").showModal();
         if (!vis.has(n)) {
           vis.add(n);
           L("vis", [...vis]);
-          suma(20);
-          v = Math.min(9.3, v + 0.8);
+          suma(20, "obs");  v = Math.min(9.3, v + 0.8);
           hud();
           say("¡Esa obra te infló!");
           puff(X, Y, "#eab04a", 14);
+          const [sa, st] = porSala(f.k);
+          if (SALAS.includes(f.k) && st && sa === st) {
+            suma(50, "obs");
+            tono(988, 0.4, 0.15);
+            say(
+              nVis(OBV) === OBV.length
+                ? "🏆 ¡Recorrido completo! Pulsa «Finalizar recorrido» para ver tus estadísticas."
+                : `🏛️ ¡Casa completada: ${SA[f.k]}! +50`,
+              6000,
+            );
+          }
         }
         if (vis.size >= 10)
           sello("gal", "¡Diez obras vistas! Investigar también es recorrer.");
@@ -1042,8 +1332,9 @@
       nt_.oninput = guarda;
       guarda();
       function final() {
+        const vv = nVis(OBV), tt = OBV.length;
         $("#resu").textContent =
-          `${nombre}, llevas ${pts} puntos y ${got.size} de ${ST.length} sellos.${got.size >= ST.length ? " ¡Visita completa!" : " Aún quedan rincones: el museo no tiene un solo camino."}`;
+          `${nombre}, llevas ${vv} de ${tt} obras vistas (${Math.round((vv / tt) * 100)}%), ${pts} puntos (${RK[rango(pts)][1]}) y ${got.size} de ${ST.length} sellos.${vv >= tt ? " ¡Recorrido completo!" : " Aún quedan obras por ver: puedes seguir visitando o finalizar aquí."}`;
         $("#final").showModal();
       }
       /* Minijuegos */
@@ -1063,7 +1354,7 @@
             20,
             80 - (((performance.now() - mis.t) / 1000) | 0),
           );
-          suma(b);
+          suma(b, "apr");
           mok++;
           L("mok", mok);
           say(`¡Era esa! +${b} puntos`, 4500);
@@ -1162,7 +1453,7 @@
             if (!rs.includes(n)) {
               rs.push(n);
               L("rest", rs);
-              suma(60);
+              suma(60, "jue");
               $("#pm").innerHTML += " +60 puntos";
             }
             sello("res", "¡Restaurador del museo!");
@@ -1190,7 +1481,7 @@
         if (!d.includes(n)) {
           d.push(n);
           L("deb", d);
-          suma(15);
+          suma(15, "apr");
           if (d.length >= 3)
             sello("deb", "¡Debatiente! Opinar también es visitar.");
         }
@@ -1234,7 +1525,7 @@
               if ($("#ficha").open) nueva();
             }, 1100);
           else {
-            suma(tot);
+            suma(tot, "jue");
             if (ex >= 2) sello("inf", "¡Maestro del aire!");
             $("#im").textContent += ` · Total ${tot}`;
             b.textContent = "Jugar otra vez";
@@ -1288,16 +1579,15 @@
       
       const hs = (i, j) => (((i * 73856093) ^ (j * 19349663)) >>> 0) % 100,
         WC = {
-          j: ["#b9a6dd", "#9d86cc"],
-          a: ["#e9a392", "#cf8272"],
-          b: ["#8fbfa3", "#6ea083"],
-          c: ["#a7cfdd", "#7fb0c4"],
-          d: ["#f2dfae", "#d9c088"],
-          e: ["#ecc983", "#cfa55a"],
-          f: ["#f1bd63", "#d4963a"],
-          g: ["#5f9a5a", "#437a43"],
-          h: ["#7a3f26", "#5a2d17"], q: ["#5a468a", "#46346f"],
-        };
+          j: ["#c58bf0", "#a566d6"], a: ["#ff7da3", "#e0558a"], b: ["#4cc97f", "#2fa862"],
+          c: ["#3ab0f0", "#1f8fd0"], d: ["#ffb627", "#e08f10"], e: ["#ff8f3a", "#e06d1c"],
+          f: ["#ff9f1c", "#e07a05"], g: ["#2e9b5b", "#1f7a45"], h: ["#2ec4b6", "#1a9e92"],
+          r: ["#a8324f", "#7e2139"], m: ["#fff0d4", "#e5cf9f"], p: ["#ffd23f", "#e8ac0e"],
+          q: ["#e63946", "#b82432"],
+        },
+        BC = ["#ff7da3", "#ffd23f", "#4cc97f", "#3ab0f0", "#ff9f1c", "#c58bf0", "#2ec4b6", "#e63946"],
+        SHUT = ["#e63946", "#2a9df4", "#2fa862", "#7a3fa8", "#ff8c1a"],
+        ACC = { a: "#e0558a", b: "#2fa862", c: "#1f8fd0", f: "#e07a05", m: "#5a7fc7", p: "#d9a50c", h: "#1a9e92", r: "#d4af37", j: "#8f56bd" };
       
       function pared(i, j, px, py) {
         const z = (M[j + 1] || [])[i];
@@ -1348,31 +1638,45 @@
       }
       function suelo(t, i, j, px, py) {
         const h = hs(i, j);
-        if ("abcefmp".includes(t)) {
-          c.fillStyle = "rgba(58,29,18,.08)";
-          for (let k = 1; k < 4; k++) c.fillRect(px, py + k * 16, T, 1);
-          for (let k = 0; k < 4; k++)
-            c.fillRect(px + ((h * 7 + k * 23) % T), py + k * 16, 1, 16);
-        } else if (t === "d" || t === "k") {
+        if (ACC[t]) {
+          /* baldosa hidráulica de casa colombiana */
+          c.fillStyle = ACC[t];
+          c.globalAlpha = 0.3;
+          c.beginPath();
+          if ((i + j) & 1) {
+            c.moveTo(px + T / 2, py + 6);
+            c.lineTo(px + T - 6, py + T / 2);
+            c.lineTo(px + T / 2, py + T - 6);
+            c.lineTo(px + 6, py + T / 2);
+          } else c.rect(px + 14, py + 14, T - 28, T - 28);
+          c.fill();
+          c.globalAlpha = 0.5;
+          c.strokeStyle = ACC[t];
+          c.lineWidth = 2;
+          c.strokeRect(px + 4, py + 4, T - 8, T - 8);
+          c.globalAlpha = 1;
           c.fillStyle = "rgba(255,255,255,.35)";
           c.fillRect(px, py, T, 2);
           c.fillRect(px, py, 2, T);
-          if (h < 30) {
-            c.fillStyle = "rgba(150,110,60,.12)";
-            c.beginPath();
-            c.moveTo(px + (h % 40), py);
-            c.lineTo(px + (h % 40) + 20, py + T);
-            c.lineTo(px + (h % 40) + 23, py + T);
-            c.lineTo(px + (h % 40) + 3, py);
-            c.fill();
-          }
+        } else if (t === "d" || t === "k" || t === "e") {
+          /* adoquín de calle */
+          for (let r = 0; r < 3; r++)
+            for (let q = 0; q < 3; q++) {
+              const hh = (h * 7 + r * 31 + q * 17) % 100,
+                ox = r & 1 ? 11 + q * 22 : q * 22;
+              if (ox + 20 > T) continue;
+              c.fillStyle = `hsla(${28 + (hh % 18)},34%,${56 + (hh % 14)}%,.5)`;
+              c.beginPath();
+              c.roundRect(px + ox + 1, py + r * 22 + 1, 20, 20, 6);
+              c.fill();
+            }
         } else if (t === "g") {
           c.fillStyle = "rgba(40,90,40,.25)";
           if (h < 60) c.fillRect(px + (h % 50), py + ((h * 3) % 50), 3, 8);
           c.fillStyle = "rgba(255,255,255,.12)";
           c.fillRect(px + ((h * 5) % 60), py + ((h * 9) % 60), 5, 3);
-          if (h > 93) {
-            c.fillStyle = CO[h % 5];
+          if (h > 90) {
+            c.fillStyle = BC[h % BC.length];
             c.beginPath();
             c.arc(px + ((h * 11) % 56) + 4, py + ((h * 7) % 56) + 4, 4, 0, 7);
             c.fill();
@@ -1386,22 +1690,97 @@
           c.fillRect(px, py, T, 30);
         }
       }
+      /* Palma de cera (árbol nacional de Colombia): reemplaza a las columnas */
       function columna(x, y) {
         c.fillStyle = "rgba(58,29,18,.3)";
         c.beginPath();
         c.ellipse(x, y, 30, 10, 0, 0, 7);
         c.fill();
-        const gg = c.createLinearGradient(x - 18, 0, x + 18, 0);
-        gg.addColorStop(0, "#d9c088");
-        gg.addColorStop(0.4, "#fff6dc");
-        gg.addColorStop(1, "#c9a45a");
+        const gg = c.createLinearGradient(x - 8, 0, x + 8, 0);
+        gg.addColorStop(0, "#cdbf9f");
+        gg.addColorStop(0.5, "#f2e9d2");
+        gg.addColorStop(1, "#b9a984");
         c.fillStyle = gg;
-        c.fillRect(x - 17, y - 110, 34, 110);
-        c.fillStyle = "#c9a45a";
-        c.fillRect(x - 26, y - 12, 52, 12);
-        c.fillRect(x - 24, y - 124, 48, 16);
-        c.fillStyle = "#e8c25a";
-        c.fillRect(x - 26, y - 128, 52, 5);
+        c.beginPath();
+        c.moveTo(x - 9, y);
+        c.lineTo(x - 6, y - 150);
+        c.lineTo(x + 6, y - 150);
+        c.lineTo(x + 9, y);
+        c.fill();
+        c.strokeStyle = "rgba(90,70,40,.35)";
+        c.lineWidth = 2;
+        for (let k = 1; k < 8; k++) {
+          c.beginPath();
+          c.moveTo(x - 8, y - k * 19);
+          c.lineTo(x + 8, y - k * 19);
+          c.stroke();
+        }
+        c.lineCap = "round";
+        for (let k = 0; k < 10; k++) {
+          const a = (k * Math.PI) / 5, ex = x + Math.cos(a) * 58, ey = y - 134 + Math.sin(a) * 20;
+          c.strokeStyle = k & 1 ? "#2f8f4e" : "#3fae63";
+          c.lineWidth = 6;
+          c.beginPath();
+          c.moveTo(x, y - 152);
+          c.quadraticCurveTo(x + Math.cos(a) * 30, y - 178 + Math.sin(a) * 6, ex, ey);
+          c.stroke();
+        }
+        c.lineCap = "butt";
+      }
+      /* Casita de colores y banderines (ambiente de barrio) */
+      function casita(x, y, h) {
+        const col = BC[h % BC.length];
+        c.fillStyle = "rgba(58,29,18,.25)";
+        c.beginPath();
+        c.ellipse(x, y + 6, 44, 12, 0, 0, 7);
+        c.fill();
+        c.fillStyle = col;
+        c.fillRect(x - 34, y - 46, 68, 50);
+        c.fillStyle = "rgba(0,0,0,.14)";
+        c.fillRect(x + 10, y - 46, 24, 50);
+        c.fillStyle = "#c4572b";
+        c.beginPath();
+        c.moveTo(x - 42, y - 44);
+        c.lineTo(x, y - 80);
+        c.lineTo(x + 42, y - 44);
+        c.closePath();
+        c.fill();
+        c.fillStyle = "#e07a4a";
+        c.beginPath();
+        c.moveTo(x - 42, y - 44);
+        c.lineTo(x, y - 80);
+        c.lineTo(x, y - 70);
+        c.lineTo(x - 30, y - 44);
+        c.fill();
+        c.fillStyle = "#7a3f1d";
+        c.fillRect(x - 22, y - 26, 16, 30);
+        c.fillStyle = "#bfe9ff";
+        c.fillRect(x + 2, y - 36, 20, 18);
+        c.fillStyle = SHUT[h % SHUT.length];
+        c.fillRect(x - 2, y - 36, 4, 18);
+        c.fillRect(x + 22, y - 36, 4, 18);
+      }
+      function bandera(x1, y1, x2, y2) {
+        const [a1, b1] = Pt(x1, y1), [a2, b2] = Pt(x2, y2), n = 12, hg = 98;
+        const at = (u) => [a1 + (a2 - a1) * u, b1 + (b2 - b1) * u - hg + Math.sin(u * Math.PI) * 16];
+        c.strokeStyle = "#3a1d12";
+        c.lineWidth = 1.5;
+        c.beginPath();
+        for (let q = 0; q <= n; q++) {
+          const [a, b] = at(q / n);
+          q ? c.lineTo(a, b) : c.moveTo(a, b);
+        }
+        c.stroke();
+        for (let q = 1; q < n; q++) {
+          const [a, b] = at(q / n);
+          c.fillStyle = BC[q % BC.length];
+          c.beginPath();
+          c.moveTo(a - 7, b);
+          c.lineTo(a + 7, b);
+          c.lineTo(a, b + 15);
+          c.closePath();
+          c.fill();
+        }
       }
       function fuente(now) {
         [[54 * T, 36 * T], [46 * T, 67 * T]].forEach(([x, y]) => {
@@ -1443,7 +1822,7 @@
           Math.max(VW, VH) * 0.75,
         );
         vg.addColorStop(0, "rgba(40,12,4,0)");
-        vg.addColorStop(1, "rgba(40,12,4,.5)");
+        vg.addColorStop(1, "rgba(60,20,4,.28)");
         c.fillStyle = vg;
         c.fillRect(0, 0, VW, VH);
         for (let k = 0; k < 34; k++) {
@@ -1565,12 +1944,16 @@
         nombre = $("#nom").value.trim() || "visitante";
         aud();
         musica(1);
+        intro();
+        $("#intro").hidden = false;
+        $("#intro").scrollTop = 0;
         $("#por").classList.add("fuera");
+      };
+      $("#in-go").onclick = () => {
+        $("#intro").classList.add("fuera");
+        setTimeout(() => ($("#intro").hidden = true), 950);
         go = 1;
-        say(
-          `Bienvenido, ${nombre}. Eres la guardiana: cuida las obras y atrapa ladrones.`,
-          5000,
-        );
+        say(`Bienvenido, ${nombre}. Tu meta: ver las ${OBV.length} obras de las ${SALAS.length} casas.`, 6000);
       };
       /* Actualización */
       function upd(dt) {
@@ -1578,7 +1961,7 @@
         ev.ap -= dt;
         ev.rush -= dt;
         if (ev.t <= 0) {
-          ev.t = 26 + rnd() * 20;
+          ev.t = 14 + rnd() * 14;
           evento();
         }
         let dx =
@@ -1604,6 +1987,7 @@
           dx /= m;
           dy /= m;
         }
+        if (HD && m > 0.1) HD = 0;
         const r = rr(),
           sp = 460 - v * 14;
         mv(
@@ -1674,15 +2058,7 @@
         });
         if (Math.hypot(EX.x - X, EX.y - Y) < 110)
           near = { k: "x", t: "E · Salir y escribir en la libreta" };
-        if (Math.hypot(SC.x - X, SC.y - Y) < SC.r + 50)
-          near = { k: "s", t: "E · Restaurar la obra" };
-        if (Math.hypot(TR.x - X, TR.y - Y) < 80)
-          near = { k: "q", t: "E · Trivia: ¿qué obra es?" };
-        if (Math.hypot(ME.x - X, ME.y - Y) < 80)
-          near = { k: "y", t: "E · Memoria Botero" };
         if (Math.hypot(JK.x - X, JK.y - Y) < 80) near = { k: "r", t: "E · Rockola: elegir canción" };
-        if (Math.hypot(TA.x - X, TA.y - Y) < 70)
-          near = { k: "i", t: "E · Taller de inflado" };
         NP.forEach((n) => {
           const d = Math.hypot(n.x - X, n.y - Y);
           if (d < 70 && (!near || (near.k === "f" && d < bd)))
@@ -1708,8 +2084,7 @@
                   ? "Hablar"
                   : near.k === "s"
                     ? "Restaurar"
-                    : "miqyr".includes(near.k)
-                      ? "Jugar"
+                    : near.k === "h" ? (HD ? "Salir" : "Esconderse") : "miqyrN".includes(near.k) ? "Jugar"
                       : "Ver";
         CA.forEach((p) => {
           if (p.cd > 0) p.cd -= dt;
@@ -1725,25 +2100,11 @@
           if (!f.t && Math.hypot(f.x - X, f.y - Y) < r + 14) {
             f.t = 1;
             fru++;
-            suma(5);
+            suma(5, "des");
             v = Math.min(9.3, v + 0.12);
             puff(f.x, f.y, "#eab04a", 6);
             tono(700 + (fru % 5) * 90, 0.15, 0.1);
             if (fru >= 20) sello("bod", "¡Bodegón completo! 20 frutas.");
-          }
-        });
-        PI.forEach((p, i) => {
-          p.g = Math.max(0, p.g - dt * 2);
-          if (Math.hypot(p.x - X, p.y - Y) < 34 && p.g < 0.5) {
-            p.g = 1;
-            tono(p.f, 0.7, 0.2);
-            const n = performance.now();
-            if (n - pi.t0 > 9000) {
-              pi.s.clear();
-              pi.t0 = n;
-            }
-            pi.s.add(i);
-            if (pi.s.size === 5) sello("rit", "¡Tocaste el patio completo!");
           }
         });
         NP.forEach((n) => {
@@ -1796,6 +2157,9 @@
         }
         ladronTick(dt, r);
         nuevoTick(dt, r);
+        nxTick(dt, r);
+        ronTick(dt);
+        CAJ.forEach((p) => { if ((ron || MO) && Math.hypot(p.x - X, p.y - Y) < 95) near = { k: "h", o: p, t: HD ? "E · Salir del escondite" : "E · Esconderte en la caja" }; });
         guia();
         pf.forEach((p) => {
           p.l -= dt;
@@ -1806,7 +2170,7 @@
         pf = pf.filter((p) => p.l > 0);
         sh = Math.max(0, sh - dt);
         dk +=
-          ((zon === "h" || zon === "n" || zon === "w" || ev.ap > 0 ? 1 : 0) -
+          ((zon === "r" || zon === "n" || ev.ap > 0 ? 1 : 0) -
             dk) *
           Math.min(1, dt * 3);
         hud();
@@ -1866,16 +2230,24 @@
         c.stroke();
         ls.forEach((l, i) => tx(l.trim(), x, y - bh + 22 + i * 18, 14));
       }
+      function getImg(n) {
+        return (
+          IMG[n] ||
+          (IMG[n] = Object.assign(new Image(), {
+            src: "media/t" + n + ".jpg",
+            onerror() {
+              this.onerror = null;
+              this.src = "media/" + n + ".jpg";
+            },
+          }))
+        );
+      }
       function mark(f) {
         const g = near && near.o === f,
           e = f.n > NW || !!f.rb;
         let im = null;
         if (!e)
-          im =
-            IMG[f.n] ||
-            (IMG[f.n] = Object.assign(new Image(), {
-              src: "media/t" + f.n + ".jpg",
-            }));
+          im = getImg(f.n);
         c.save();
         c.translate(f.x, f.y);
         if (f.cr > 0) c.rotate(0.15 + 0.08 * Math.sin(performance.now() / 150));
@@ -1892,13 +2264,14 @@
         }
         {
           const gg = c.createLinearGradient(-48, -98, 48, 14);
-          gg.addColorStop(0, "#f6dd86");
-          gg.addColorStop(0.5, "#c99a32");
-          gg.addColorStop(1, "#f0cf6a");
+          const fc = FCOL[f.k] || FCOL.f;
+          gg.addColorStop(0, fc[0]);
+          gg.addColorStop(0.5, fc[1]);
+          gg.addColorStop(1, fc[2]);
           c.fillStyle = gg;
           c.fillRect(-48, -98, 96, 112);
           c.shadowBlur = 0;
-          c.fillStyle = "#7a5418";
+          c.fillStyle = "rgba(58,29,18,.55)";
           c.fillRect(-44, -94, 88, 104);
         }
         c.fillStyle = e ? "#f5ecd6" : "#fff6dc";
@@ -1909,6 +2282,14 @@
             h = im.naturalHeight * r;
           c.drawImage(im, -w / 2, -42 - h / 2, w, h);
         } else tx(f.rb ? "vacío" : e ? "libre" : "…", 0, -38, 14, "#6b4a3a");
+        if (!f.rb && "hrgp".includes(f.k)) {
+          const tg = { h: "OTRO MUSEO", r: "POLÉMICA", g: "PLAZA", p: "M. NACIONAL" }[f.k];
+          c.fillStyle = (CAT[f.k] || [0, "#c9512f"])[1];
+          c.beginPath();
+          c.roundRect(-40, -116, 80, 16, 8);
+          c.fill();
+          tx(tg, 0, -104, 10, "#fff");
+        }
         c.fillStyle = "#f5ecd6";
         c.fillRect(-26, 16, 52, 15);
         tx(
@@ -1957,11 +2338,21 @@
               c.fill();
             });
           } else if (k === "l") {
-            c.fillStyle = "#e8c680";
-            c.fillRect(x - 16, y - 44, 32, 70);
-            c.fillStyle = "#c9a45a";
-            c.fillRect(x - 20, y - 48, 40, 8);
-            c.fillRect(x - 20, y + 22, 40, 8);
+            c.fillStyle = "rgba(58,29,18,.25)";
+            c.beginPath();
+            c.ellipse(x, y + 26, 22, 8, 0, 0, 7);
+            c.fill();
+            c.fillStyle = "#3a1d12";
+            c.fillRect(x - 3, y - 70, 6, 96);
+            c.fillStyle = "#ffd23f";
+            c.beginPath();
+            c.arc(x, y - 78, 13, 0, 7);
+            c.fill();
+            c.strokeStyle = "#3a1d12";
+            c.lineWidth = 3;
+            c.stroke();
+            c.fillStyle = "#e63946";
+            c.fillRect(x - 16, y - 96, 32, 6);
           } else if (k === "o") {
             c.fillStyle = "#86bccd";
             c.beginPath();
@@ -2019,6 +2410,26 @@
             for (let a = -1; a < 2; a++) if (fl(i + a, j + b)) return 1;
           return 0;
         };
+      function marco(f) {
+        const nt = f.o === "n", [ox, oy] = Pt(f.ax, f.ay), g = near && near.o === f, fc = FCOL[f.k] || FCOL.f, im = f.rb ? null : getImg(f.n), now = performance.now(), w = FRW, h = 58;
+        c.save();
+        c.translate(ox, oy - 14);
+        c.transform(nt ? 0.5 : -0.5, 0.25, 0, 1, 0, 0);
+        if (f.cr > 0) { c.translate(0, -h / 2); c.rotate(0.14 * Math.sin(now / 150)); c.translate(0, h / 2); }
+        c.fillStyle = "rgba(58,29,18,.38)"; c.fillRect(-w / 2 + 7, -h + 7, w, h);
+        if (g) { c.shadowColor = "#ffd678"; c.shadowBlur = 26; }
+        c.fillStyle = fc[1]; c.fillRect(-w / 2, -h, w, h); c.shadowBlur = 0;
+        c.fillStyle = fc[0]; c.fillRect(-w / 2 + 5, -h + 4, w - 10, h - 8);
+        c.fillStyle = f.rb ? "#3a1d12" : "#fff6dc"; c.fillRect(-w / 2 + 9, -h + 8, w - 18, h - 16);
+        if (im && im.complete && im.naturalWidth) {
+          const r = Math.min(60 / im.naturalWidth, 40 / im.naturalHeight), dw = (im.naturalWidth * r) / 0.559, dh = im.naturalHeight * r;
+          c.drawImage(im, -dw / 2, -h / 2 - dh / 2, dw, dh);
+        } else tx(f.rb ? "ROBADA" : "…", 0, -h / 2 + 4, 12, f.rb ? "#ff8a7a" : "#6b4a3a");
+        if (vis.has(f.n)) { c.fillStyle = "#3f7d5c"; c.beginPath(); c.arc(w / 2 - 6, -h + 6, 9, 0, 7); c.fill(); tx("✓", w / 2 - 6, -h + 10, 12, "#fff"); }
+        else { c.fillStyle = `rgba(255,214,90,${0.45 + 0.4 * Math.sin(now / 280 + f.ax)})`; c.beginPath(); c.arc(w / 2 - 6, -h + 6, 6, 0, 7); c.fill(); }
+        c.fillStyle = "#f5ecd6"; c.fillRect(-16, 3, 32, 11); tx(String(f.n), 0, 12, 9);
+        c.restore();
+      }
       function paredIso(i, j, al, col) {
         const x = i * T,
           y = j * T,
@@ -2026,7 +2437,8 @@
           B = Pt(x + T, y),
           C = Pt(x + T, y + T),
           D = Pt(x, y + T),
-          wh = LOWS.has(i + "," + j) ? 36 : WH,
+          low = LOWS.has(i + "," + j),
+          wh = low ? 36 : WH,
           U = (p) => [p[0], p[1] - wh];
         let z = "h";
         for (const [a, b] of [
@@ -2037,7 +2449,7 @@
         ]) {
           const t = (M[j + b] || [])[i + a];
           if (t && t !== "#") {
-            z = t === "k" ? "d" : t === "n" ? "h" : t === "w" ? "c" : t;
+            z = t === "k" ? "d" : t === "n" ? "r" : t === "w" ? "c" : t;
             break;
           }
         }
@@ -2048,25 +2460,76 @@
             p.forEach(([a, b], n) => (n ? c.lineTo(a, b) : c.moveTo(a, b)));
             c.closePath();
             c.fill();
+          },
+          fp = (P, Q, u, v) => [P[0] + (Q[0] - P[0]) * u, P[1] + (Q[1] - P[1]) * u - v],
+          qd = (P, Q, u0, u1, v0, v1, f) => po([fp(P, Q, u0, v0), fp(P, Q, u1, v0), fp(P, Q, u1, v1), fp(P, Q, u0, v1)], f),
+          dot = (P, Q, u, v, r, f) => {
+            const [a, b] = fp(P, Q, u, v);
+            c.fillStyle = f;
+            c.beginPath();
+            c.arc(a, b, r, 0, 7);
+            c.fill();
+          },
+          cara = (P, Q, base, sd) => {
+            po([P, Q, U(Q), U(P)], base);
+            if (col || low) return;
+            qd(P, Q, 0, 1, 0, 9, "rgba(58,29,18,.28)");
+            qd(P, Q, 0, 1, wh - 12, wh - 9, "rgba(255,255,255,.35)");
+            qd(P, Q, 0, 1, wh - 9, wh, "#fff6dc");
+            if (WART.has(i + "," + j)) return;
+            const sh = SHUT[(i * 3 + j) % SHUT.length];
+            if (sd < 30 || (sd >= 44 && sd < 56)) {
+              const bal = sd >= 44;
+              qd(P, Q, 0.1, 0.22, 22, 64, sh);
+              qd(P, Q, 0.78, 0.9, 22, 64, sh);
+              qd(P, Q, 0.22, 0.78, 22, 64, "#fff6dc");
+              qd(P, Q, 0.27, 0.73, 27, 59, "#bfe9ff");
+              qd(P, Q, 0.48, 0.52, 27, 59, "#fff6dc");
+              if (bal) {
+                qd(P, Q, 0.08, 0.92, 16, 20, "#3a1d12");
+                for (let u = 0.12; u < 0.9; u += 0.14) qd(P, Q, u, u + 0.03, 8, 16, "#3a1d12");
+              }
+              qd(P, Q, 0.2, 0.8, 14, 22, "#8a3a20");
+              [0.3, 0.45, 0.6, 0.72].forEach((u, k) => dot(P, Q, u, 26, 3.6, BC[(k + i + j) % BC.length]));
+            } else if (sd < 42) {
+              qd(P, Q, 0.2, 0.8, 0, 56, "#fff6dc");
+              qd(P, Q, 0.25, 0.75, 0, 51, "#7a3f1d");
+              qd(P, Q, 0.28, 0.48, 4, 47, "#93501f");
+              qd(P, Q, 0.52, 0.72, 4, 47, "#93501f");
+              dot(P, Q, 0.62, 26, 2.6, "#ffd23f");
+            }
           };
         c.globalAlpha = al;
-        if (fl(i + 1, j)) po([B, C, U(C), U(B)], q[1]);
-        if (fl(i, j + 1)) po([D, C, U(C), U(D)], q[0]);
-        po([U(A), U(B), U(C), U(D)], col ? "#c99a32" : wh < WH ? "#4f8f5c" : "#5a2d17");
-        c.strokeStyle = "rgba(255,246,220,.5)";
-        c.lineWidth = 2;
+        if (fl(i + 1, j)) cara(B, C, q[1], hs(j, i + 7));
+        if (fl(i, j + 1)) cara(D, C, q[0], hs(i, j));
+        (FWm.get(i + "," + j) || []).forEach((f) => marco(f));
+        /* techo de teja de barro */
+        po([U(A), U(B), U(C), U(D)], col ? "#c99a32" : low ? "#6fbf73" : "#b9492a");
+        if (!col && !low) {
+          c.strokeStyle = "rgba(58,29,18,.3)";
+          c.lineWidth = 2;
+          const mid = (P, Q) => [(P[0] + Q[0]) / 2, (P[1] + Q[1]) / 2];
+          c.beginPath();
+          c.moveTo(...mid(U(A), U(D)));
+          c.lineTo(...mid(U(B), U(C)));
+          c.moveTo(...mid(U(A), U(B)));
+          c.lineTo(...mid(U(D), U(C)));
+          c.stroke();
+        }
+        c.strokeStyle = low ? "rgba(255,255,255,.5)" : "#ffd9b8";
+        c.lineWidth = 3;
         c.beginPath();
         c.moveTo(...U(D));
         c.lineTo(...U(C));
         c.lineTo(...U(B));
         c.stroke();
-        c.fillStyle = "rgba(58,29,18,.35)";
+        c.fillStyle = "rgba(58,29,18,.3)";
         if (fl(i, j + 1)) {
           c.beginPath();
           c.moveTo(...D);
           c.lineTo(...C);
-          c.lineTo(C[0], C[1] - 10);
-          c.lineTo(D[0], D[1] - 10);
+          c.lineTo(C[0], C[1] - 8);
+          c.lineTo(D[0], D[1] - 8);
           c.fill();
         }
         if (col) {
@@ -2107,7 +2570,7 @@
           : {
               x: EX.x,
               y: EX.y,
-              t: "Visita completa: ve a la salida y escribe en la libreta",
+              t: "Recorrido completo: pulsa 🏁 Finalizar recorrido",
             };
       }
       function guia() {
@@ -2213,7 +2676,7 @@
           } else {
             const f = th.f;
             f.rt = 40;
-            suma(-30);
+            suma(-30, "vig");
             th = null;
             say(
               `El ladrón escapó con «${f.ti}». La policía la devuelve en 40 s.`,
@@ -2230,7 +2693,7 @@
           th = null;
           cap++;
           L("cap", cap);
-          suma(l ? 100 : 60);
+          suma(l ? 100 : 60, "vig");
           puff(X, Y, "#eab04a", 24);
           tono(660, 0.3, 0.2);
           if (cap >= 3)
@@ -2250,32 +2713,65 @@
         "Antes de los volúmenes, Botero ensayó cubismo y dibujo: visita la sala de Inicios.",
         "Su donación en 2000 dio origen al Museo Botero.",
       ];
-      function evento() {
-        const k = ev.n++ % 2 === 0 && !th ? 9 : (rnd() * 8) | 0;
-        if (k === 9) ladron();
-        else if (k === 0) {
-          for (let i = 0; i < 15; i++) {
-            const [a, b] = FL[(rnd() * FL.length) | 0];
-            FR.push({
-              x: (a + 0.2 + rnd() * 0.6) * T,
-              y: (b + 0.2 + rnd() * 0.6) * T,
-              t: 0,
-            });
+      let HD = 0, ron = null;
+      const CAJ = [];
+      [["j",[[34,78],[40,78],[52,78],[58,78],[34,88],[58,88]]],["e",[[24,57],[70,57],[34,50]]],["q",[[22,104],[76,104]]],["f",[[8,17]]],["a",[[8,42]]],["b",[[94,42]]],["p",[[94,90]]],["c",[[34,17]]],["m",[[8,90]]]].forEach(([k, a]) => a.forEach(([i, j]) => M[j][i] === k && CAJ.push({ x: (i + 0.5) * T, y: (j + 0.5) * T })));
+      const RT = [[20,54],[80,54],[80,66],[46,66],[46,84],[46,66],[20,66]];
+      function evRonda() {
+        if (ron || th) return;
+        ron = { t: 36, i: 0, p: [], al: 0, ang: 0, g: { x: 14 * T + T / 2, y: 54 * T + T / 2 } };
+        say("🔦 ¡Ronda del vigilante! Cuando su linterna te apunte, escóndete en una caja (E).", 7500);
+        tono(220, 0.5, 0.2);
+      }
+      function ronTick(dt) {
+        if (!ron) return;
+        const g = ron.g;
+        ron.t -= dt;
+        if (!ron.p.length) { ron.p = ruta([(g.x / T) | 0, (g.y / T) | 0], RT[ron.i++ % RT.length]); }
+        const q = ron.p[0];
+        if (q) { const dx = q.x - g.x, dy = q.y - g.y, d = Math.hypot(dx, dy), s = 105 * dt; ron.ang = Math.atan2(dy, dx); if (d < s) ron.p.shift(); else { g.x += (dx / d) * s; g.y += (dy / d) * s; } }
+        const dx = X - g.x, dy = Y - g.y, d = Math.hypot(dx, dy);
+        let ve = 0;
+        if (!HD && d < 340) { const da = Math.abs(((Math.atan2(dy, dx) - ron.ang + 9.42) % 6.283) - 3.1416); ve = da > 2.6 && da < 3.15 + 0.5 ? 0 : 0; const ad = Math.abs(Math.atan2(Math.sin(Math.atan2(dy, dx) - ron.ang), Math.cos(Math.atan2(dy, dx) - ron.ang))); ve = ad < 0.55; for (let s = 1; s < 9 && ve; s++) if (hit(g.x + (dx * s) / 9, g.y + (dy * s) / 9, 3)) ve = 0; }
+        ron.al = cl(ron.al + (ve ? dt * 1.6 : -dt * 0.8), 0, 1);
+        if (ron.al >= 1) { say("¡Te vieron! El vigilante te lleva a la entrada. -25", 5000); suma(-25, "vig"); X = 46 * T; Y = 54.5 * T; ron = null; HD = 0; sh = 0.4; tono(150, 0.5, 0.3); return; }
+        if (ron.t <= 0) { suma(80, "vig"); sello("sig", "¡Sigilo! Sobreviviste a la ronda sin que te vieran. +80"); say("La ronda terminó: nadie te vio. +80", 5000); ron = null; HD = 0; }
+      }
+      function ronDraw() {
+        if (!ron) return;
+        c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.fillStyle = "rgba(12,6,45,.34)"; c.fillRect(0, 0, cv.width, cv.height); c.restore();
+        const g = ron.g; c.fillStyle = `rgba(255,238,160,${0.26 + ron.al * 0.25})`; c.beginPath(); c.moveTo(...Pt(g.x, g.y));
+        for (let a = -0.55; a <= 0.56; a += 0.11) c.lineTo(...Pt(g.x + Math.cos(ron.ang + a) * 340, g.y + Math.sin(ron.ang + a) * 340));
+        c.closePath(); c.fill();
+      }
+      function caja(p, now) {
+        const s = T * 0.9, A = Pt(p.x - s / 2, p.y - s / 2), B = Pt(p.x + s / 2, p.y - s / 2), C = Pt(p.x + s / 2, p.y + s / 2), D = Pt(p.x - s / 2, p.y + s / 2), hh = 50, U = (q) => [q[0], q[1] - hh];
+        const po = (pts, f) => { c.fillStyle = f; c.beginPath(); pts.forEach(([a, b], n) => (n ? c.lineTo(a, b) : c.moveTo(a, b))); c.closePath(); c.fill(); };
+        c.fillStyle = "rgba(58,29,18,.3)"; c.beginPath(); c.ellipse(...Pt(p.x, p.y), 38, 16, 0, 0, 7); c.fill();
+        po([D, C, U(C), U(D)], "#a8703a"); po([B, C, U(C), U(B)], "#8a5a2a"); po([U(A), U(B), U(C), U(D)], "#c99358");
+        c.strokeStyle = "#5a3a0a"; c.lineWidth = 2; c.beginPath(); c.moveTo(...U(D)); c.lineTo(...U(C)); c.lineTo(...U(B)); c.moveTo(D[0], D[1] - 25); c.lineTo(C[0], C[1] - 25); c.stroke();
+        tx("FRÁGIL", (D[0] + C[0]) / 2, (D[1] + C[1]) / 2 - 20, 9, "#3a1d12");
+        if (HD === p) { const [a, b] = U(Pt(p.x, p.y)); c.fillStyle = "#fff"; c.beginPath(); c.arc(a - 8, b - 4, 4, 0, 7); c.arc(a + 8, b - 4, 4, 0, 7); c.fill(); c.fillStyle = "#222"; c.beginPath(); c.arc(a - 8, b - 4, 2, 0, 7); c.arc(a + 8, b - 4, 2, 0, 7); c.fill(); }
+        else if (ron || MO) { c.strokeStyle = `rgba(255,214,90,${0.5 + 0.4 * Math.sin(now / 200)})`; c.lineWidth = 3; c.strokeRect(U(Pt(p.x, p.y))[0] - 30, U(Pt(p.x, p.y))[1] - 8, 60, 50); }
+      }
+      function fracSala(k) { const t = fr.filter((f) => f.k === k && f.n <= NW && D[f.n]); return t.length ? t.filter((f) => vis.has(f.n)).length / t.length : 0; }
+      function salasVivas(now) {
+        SALAS.concat(OPC).forEach((k) => {
+          const [a, b, c2, d] = RM[k], r = fracSala(k), W_ = (c2 - a + 1) * T, H_ = (d - b + 1) * T;
+          c.fillStyle = `rgba(30,18,60,${0.3 * (1 - r)})`; c.fillRect(a * T, b * T, W_, H_);
+          if (r >= 1) {
+            for (let q = 0; q < 16; q++) { const sn = (Math.sin(now / 400 + q * 1.7) + 1) / 2; c.fillStyle = `rgba(255,226,120,${0.15 + 0.55 * sn})`; c.beginPath(); c.arc(a * T + (((q * 977) % 1000) / 1000) * W_, b * T + (((q * 613) % 1000) / 1000) * H_, 5 + sn * 8, 0, 7); c.fill(); }
+            c.strokeStyle = "rgba(255,210,90,.75)"; c.lineWidth = 10; c.strokeRect(a * T + 5, b * T + 5, W_ - 10, H_ - 10);
           }
-          say("¡Lluvia de frutas! Llegó un bodegón nuevo.", 5000);
-        } else if (k === 1) {
-          ev.ap = 12;
-          say("¡Apagón! Ves poco: camina con calma.", 5000);
-        } else if (k === 2) {
-          ev.rush = 14;
-          say("¡El guardia sale a toda prisa! Aléjate.", 5000);
-        } else if (k === 3) hablar();
-        else if (k > 4) evNuevo(k);
-        else {
-          say("📢 Dato del museo: " + datoGuion(), 7000);
-          suma(10);
-        }
-        tono(330, 0.3, 0.2);
+        });
+      }
+      function cartel(k, now) {
+        const [a, b, c2] = RM[k], [px, py] = Pt(((a + c2 + 1) / 2) * T, b * T), t = fr.filter((f) => f.k === k && f.n <= NW && D[f.n]), n = t.filter((f) => vis.has(f.n)).length, ok = t.length && n === t.length, y = py - WH - 62 + Math.sin(now / 500 + a) * 3, col = (FCOL[k] || FCOL.f)[1];
+        c.fillStyle = "#5a2d17"; c.fillRect(px - 2, y + 20, 4, 40);
+        if (ok) { c.shadowColor = "#ffd23f"; c.shadowBlur = 22; }
+        c.fillStyle = col; c.beginPath(); c.roundRect(px - 62, y - 6, 124, 30, 10); c.fill(); c.shadowBlur = 0;
+        c.fillStyle = "rgba(255,255,255,.3)"; c.fillRect(px - 54, y + 17, 108, 4); c.fillStyle = "#fff6dc"; c.fillRect(px - 54, y + 17, t.length ? (108 * n) / t.length : 0, 4);
+        tx(`${ok ? "★ " : ""}${SN[k]} ${n}/${t.length}`, px, y + 12, 13, "#fff6dc");
       }
       /* Sala de Juegos */
       function trivia() {
@@ -2285,7 +2781,7 @@
         const paso = () => {
           if (i > 4) {
             const p = ok * 20;
-            suma(p);
+            suma(p, "jue");
             if (ok >= 4)
               sello("tri", "¡Ojo de curador! Reconoces la obra de Botero.");
             $("#fc").innerHTML =
@@ -2357,7 +2853,7 @@
                 tono(880, 0.2);
                 if (hit === 6) {
                   const p = Math.max(30, 120 - mo * 6);
-                  suma(p);
+                  suma(p, "jue");
                   sello("mem", "¡Memoria de curador!");
                   $("#mm2").textContent =
                     `¡Listo en ${mo} movimientos! +${p} puntos`;
@@ -2412,8 +2908,33 @@
           e = -cx * k + ox * dpr,
           f = -cy * k + oy * dpr;
         c.setTransform(1, 0, 0, 1, 0, 0);
-        c.fillStyle = "#1d4a3a";
-        c.fillRect(0, 0, cv.width, cv.height);
+        {
+          const sk = c.createLinearGradient(0, 0, 0, cv.height);
+          sk.addColorStop(0, "#74c8f7");
+          sk.addColorStop(0.45, "#ffe7ae");
+          sk.addColorStop(0.46, "#58b36f");
+          sk.addColorStop(1, "#2f8a55");
+          c.fillStyle = sk;
+          c.fillRect(0, 0, cv.width, cv.height);
+          [[0.46, "#7fc08f", 0.05, 70, 0.012], [0.5, "#4a9f68", 0.09, 55, 0.02]].forEach(([yy, col, par, am, fq], li) => {
+            c.fillStyle = col;
+            c.beginPath();
+            c.moveTo(0, cv.height);
+            for (let xx = 0; xx <= cv.width; xx += 24)
+              c.lineTo(xx, cv.height * yy - am * (0.5 + 0.5 * Math.sin((xx / dpr + cx * par) * fq + li * 2)));
+            c.lineTo(cv.width, cv.height);
+            c.fill();
+            for (let q = 0; q < 26; q++) {
+              const hx = ((q * 97 + 13) % 1000) / 1000 * (cv.width + 200) - (cx * par * 2 * dpr) % (cv.width + 200),
+                hxx = ((hx % (cv.width + 200)) + cv.width + 200) % (cv.width + 200) - 100,
+                hy = cv.height * yy - am * (0.5 + 0.5 * Math.sin((hxx / dpr + cx * par) * fq + li * 2)) + 16 + (q % 4) * 12 * dpr;
+              c.fillStyle = BC[(q + li) % BC.length];
+              c.fillRect(hxx, hy, 16 * dpr, 12 * dpr);
+              c.fillStyle = "#c4572b";
+              c.fillRect(hxx - 2 * dpr, hy - 4 * dpr, 20 * dpr, 4 * dpr);
+            }
+          });
+        }
         const co = [
             [cx, cy],
             [cx + vw, cy],
@@ -2465,18 +2986,24 @@
                     ),
                 });
               else {
-                c.fillStyle = (i + j) & 1 ? "#3f8a5a" : "#4a9a64";
+                const hh = hs(i, j);
+                c.fillStyle = (i + j) & 1 ? "#4fa866" : "#59b672";
                 c.fillRect(x, y, T, T);
-                if (hs(i, j) < 9)
+                if (hh < 6)
                   es.push({
                     d: dd + T / 2,
                     f: () => up(x + T / 2, y + T / 2, () => decor(0, ["t", x + T / 2, y + T / 2])),
+                  });
+                else if (hh < 14)
+                  es.push({
+                    d: dd + T / 2,
+                    f: () => up(x + T / 2, y + T / 2, () => casita(x + T / 2, y + T / 2, hh + i + j)),
                   });
               }
               continue;
             }
             c.fillStyle =
-              PAL[t === "n" ? "h" : t === "w" ? "c" : t][(i + j) & 1];
+              PAL[t === "n" ? "r" : t === "w" ? "c" : t][(i + j) & 1];
             c.fillRect(x, y, T, T);
             suelo(t, i, j, x, y);
             if (t === "n") {
@@ -2489,22 +3016,7 @@
           }
         decor((q) => q === "r" || q === "o");
         fuente(now);
-        pista(now);
-        PI.forEach((p) => {
-          c.fillStyle = `rgba(255,246,220,${0.35 + p.g * 0.65})`;
-          c.fillRect(p.x - 26, p.y - 26, 52, 52);
-          c.strokeStyle = "#4a8fa8";
-          c.lineWidth = 4;
-          c.strokeRect(p.x - 26, p.y - 26, 52, 52);
-        });
-        c.fillStyle = "#d9962c";
-        c.beginPath();
-        c.arc(SC.x, SC.y, SC.r, 0, 7);
-        c.fill();
-        c.fillStyle = "#f6c875";
-        c.beginPath();
-        c.arc(SC.x - 14, SC.y - 16, SC.r * 0.55, 0, 7);
-        c.fill();
+        salasVivas(now);
         const E = (x, y, fn, dd = 0) =>
           es.push({ d: x + y + dd, f: () => up(x, y, fn) });
         COL.forEach(([i, j]) =>
@@ -2515,19 +3027,14 @@
         DEC.forEach((d) => {
           if (d[0] !== "r" && d[0] !== "o") E(d[1], d[2], () => decor(0, d));
         });
-        fr.forEach((q) => E(q.x, q.y, () => mark(q), 70));
+        fr.forEach((q) => q.o || E(q.x, q.y, () => mark(q), 70));
         NP.forEach((n) => {
           E(n.x, n.y, () => fig(n.x, n.y, 22, n.c, "#7d2c15", 1));
           if (Math.hypot(n.x - X, n.y - Y) < 110)
             E(n.x, n.y, () => bubble(n.l, n.x, n.y - 70), 600);
         });
         E(G.x, G.y, () => fig(G.x, G.y, 34, "#1f4a3a", "#3a1d12", 1));
-        es.push(
-          { d: TA.x + TA.y, f: () => est(TA, "INFLAR", "#c9512f") },
-          { d: JK.x + JK.y, f: () => est(JK, "ROCKOLA", "#7a5bb0") },
-          { d: TR.x + TR.y, f: () => est(TR, "TRIVIA", "#7a5bb0") },
-          { d: ME.x + ME.y, f: () => est(ME, "MEMORIA", "#3f7d5c") },
-        );
+        es.push({ d: JK.x + JK.y, f: () => est(JK, "ROCKOLA", "#7a5bb0") });
         PU.forEach((p) =>
           E(p.x, p.y, () => {
             c.fillStyle = "#7d2c15";
@@ -2575,18 +3082,16 @@
               c.fill();
             });
         });
+        BAN.forEach(([x1, y1, x2, y2]) => es.push({ d: Math.max(x1 + y1, x2 + y2) + 900, f: () => bandera(x1, y1, x2, y2) }));
         nuevoDraw(E, now);
-        E(SC.x, SC.y + SC.r, () =>
-          tx("obra por restaurar", SC.x, SC.y + SC.r + 22, 13),
-        );
+        nxDraw(E, now);
         E(EX.x, EX.y, () => tx("SALIDA", EX.x, EX.y - 4, 16, "#c9512f"));
         if (th)
           E(th.x, th.y, () => {
             fig(th.x, th.y, 22, "#2b2b3a", "#111", 1);
             tx("!", th.x, th.y - 60 + Math.sin(now / 120) * 4, 30, "#d22");
           });
-        E(X, Y, () =>
-          fig(
+        E(X, Y, () => HD ? 0 : fig(
             X,
             Y,
             rr(),
@@ -2603,9 +3108,13 @@
               joy,
           ),
         );
+        CAJ.forEach((p) => es.push({ d: p.x + p.y + 2, f: () => caja(p, now) }));
+        SALAS.concat(OPC).forEach((k) => { const [a, b, c2] = RM[k]; es.push({ d: (Math.floor((a + c2 + 1) / 2) + b) * T + 3, f: () => cartel(k, now) }); });
+        if (ron) E(ron.g.x, ron.g.y, () => { fig(ron.g.x, ron.g.y, 26, "#1f2a4a", "#111", 1); if (ron.al > 0.15) tx("!", ron.g.x, ron.g.y - 64, 30, "#d22"); });
         es.sort((a, b) => a.d - b.d);
         c.setTransform(k, 0, 0, k, e, f);
         es.forEach((o) => o.f());
+        ronDraw();
         pf.forEach((p) => {
           const [a, b] = Pt(p.x, p.y);
           c.globalAlpha = cl(p.l * 2, 0, 1);
@@ -2664,10 +3173,11 @@
           const w = c.measureText(near.t).width + 28;
           c.fillStyle = "#3a1d12";
           c.beginPath();
-          c.roundRect(VW / 2 - w / 2, VH - 64, w, 32, 16);
+          c.roundRect(VW / 2 - w / 2, VH - 92, w, 32, 16);
           c.fill();
-          tx(near.t, VW / 2, VH - 43, 15, "#fbebc6");
+          tx(near.t, VW / 2, VH - 71, 15, "#fbebc6");
         }
+        nxHud(dpr, VW, VH, now);
         if (joy) {
           c.setTransform(dpr, 0, 0, dpr, 0, 0);
           c.strokeStyle = "rgba(255,246,220,.7)";
@@ -2687,6 +3197,7 @@
           c.fill();
         }
         mapa();
+        nxMini();
         if (th) {
           mm.fillStyle = "#e22";
           mm.fillRect(
@@ -2734,16 +3245,16 @@
       }
       /* ===== MÓDULO NUEVO: canciones, guiones dinámicos, Rockola y eventos ===== */
       const SG = [
-        ["01","Bomba Estéreo","Soy yo","e"],["02","Residente ft. Ibeyi","This Is Not America","h"],
+        ["01","Bomba Estéreo","Soy yo","e"],["02","Residente ft. Ibeyi","This Is Not America","r"],
         ["03","Aterciopelados","Untados","c"],["04","ChocQuibTown ft. Alexis Play","Somos los prietos","b"],
         ["05","La Etnnia","La vida en el ghetto","d"],["06","La Etnnia","Pasaporte sello morgue",""],
         ["07","Alcolirykoz","El salón de la injusticia","g"],["08","Peret ft. Marina","El muerto vivo","p"],
         ["09","Los Prisioneros","El baile de los que sobran","a"],["10","Joe Arroyo","Rebelión","q"],
-        ["11","Molotov","Gimme tha Power","j"],["12","Calle 13","Querido FBI",""],
+        ["11","Molotov","Gimme tha Power","j"],["12","Calle 13","Querido FBI","h"],
         ["14","Charly García","Los dinosaurios","f"],["15","Ana Tijoux","Shock","m"]];
       const ZS = {};
       SG.forEach((s, i) => s[3] && (ZS[s[3]] = i));
-      ZS.n = ZS.w = ZS.h; ZS.k = ZS.d;
+      ZS.n = ZS.r; ZS.w = ZS.h; ZS.k = ZS.d;
       const A = new Audio(), av = () => Math.pow(vol / 100, 1.6);
       let cur = -1, MON = 0, modo = L("modo") || "rot", seg = L("seg") || 90, t0 = 0, zl = "e", fad = 0,
         oyo = new Set(L("oyo") || []), od = 0, dn = L("dn") || 0, dtm = 1;
@@ -2828,11 +3339,84 @@
         const g = GU[n];
         if (!g || e) return `<h2>${d[0]}</h2><p>${d[1]}</p><button class="btn" data-x type="button">Cerrar</button>`;
         const TB = [["h", "Chela cuenta"], ["r", "Mira conmigo"], ["c", "Don Pacho opina"], ["x", "¿Rechazo?"]];
-        return `<img class="ob" src="media/${n}.jpg" alt="${g.t}"><h2>${g.t}</h2><p class="muted">${g.f} · ${h ? "Fuera del museo · obra polémica o censurada" : "Museo Botero · " + SA[f.k]}</p><div class="tbs">${TB.map(([k, t], i) => `<button class="chip" type="button" data-tb="${k}" aria-pressed="${i === 0}">${t}</button>`).join("")}</div><div id="tbx"></div>${h ? `<p class="aviso">Contenido sensible. Se muestra con fines educativos para discutir los límites entre libertad de expresión, censura y apología.</p>` : ""}<div id="rq"></div>${h ? DEB(n) : ""}<button class="btn" data-x type="button">Cerrar</button>`;
+        return `<div class="obw"><img class="ob" data-zoom="${n}" src="media/${n}.jpg" alt="${g.t}"><button class="zoomb" type="button" data-zoom="${n}" aria-label="Ampliar la obra">🔍 Ampliar</button></div><h2>${g.t}</h2><p class="muted">${g.f}</p><p class="bds">${catBadges(f, n)}</p><div class="tbs">${TB.map(([k, t], i) => `<button class="chip" type="button" data-tb="${k}" aria-pressed="${i === 0}">${t}</button>`).join("")}</div><div id="tbx"></div>${h ? `<p class="aviso">Contenido sensible. Se muestra con fines educativos para discutir los límites entre libertad de expresión, censura y apología.</p>` : ""}<div id="rq"></div>${h ? DEB(n) : ""}<button class="btn" data-x type="button">Cerrar</button>`;
       }
+      function catBadges(f, n) {
+        const ct = CAT[f.k] || ["Museo Botero · Bogotá", "#c9512f"], sa = SA[f.k] ? " · " + SA[f.k] : "";
+        return `<span class="tg" style="--c:${ct[1]}">${ct[0]}${sa}</span>` +
+          (RJ[n] ? `<span class="tg" style="--c:#a8324f">⚠ ${RJ[n]}</span>` : "") +
+          (SENS.includes(n) ? `<span class="tg" style="--c:#6b4a3a">Contenido sensible</span>` : "");
+      }
+      /* ===== Zoom de obras ===== */
+      const Z = { s: 1, x: 0, y: 0, min: 1, pts: new Map(), d0: 0, s0: 1, mv: 0 };
+      function zmApply() {
+        const v = $("#zmv"), im = $("#zmi"), w = im.naturalWidth * Z.s, h = im.naturalHeight * Z.s, W = v.clientWidth, H = v.clientHeight;
+        Z.x = w <= W ? (W - w) / 2 : cl(Z.x, W - w, 0);
+        Z.y = h <= H ? (H - h) / 2 : cl(Z.y, H - h, 0);
+        im.style.transform = `translate(${Z.x}px,${Z.y}px) scale(${Z.s})`;
+        $("#zmr").textContent = Math.round((Z.s / Z.min) * 100) + "%";
+      }
+      function zmFit() {
+        const v = $("#zmv"), im = $("#zmi");
+        if (!im.naturalWidth) return;
+        Z.min = Z.s = Math.min(v.clientWidth / im.naturalWidth, v.clientHeight / im.naturalHeight) * 0.94;
+        Z.x = Z.y = 0;
+        zmApply();
+      }
+      function zmAt(f, px, py) {
+        const ns = cl(Z.s * f, Z.min, Z.min * 10), k = ns / Z.s;
+        Z.x = px - (px - Z.x) * k;
+        Z.y = py - (py - Z.y) * k;
+        Z.s = ns;
+        zmApply();
+      }
+      function zoomObra(n, t) {
+        const im = $("#zmi");
+        $("#zmt").textContent = t;
+        im.onload = zmFit;
+        im.src = "media/" + n + ".jpg";
+        im.alt = t;
+        $("#zm").showModal();
+        requestAnimationFrame(zmFit);
+      }
+      (() => {
+        const v = $("#zmv"), pos = (e) => { const r = v.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+        v.addEventListener("wheel", (e) => { e.preventDefault(); zmAt(e.deltaY < 0 ? 1.2 : 1 / 1.2, ...pos(e)); }, { passive: false });
+        v.addEventListener("pointerdown", (e) => {
+          v.setPointerCapture(e.pointerId);
+          Z.pts.set(e.pointerId, pos(e));
+          v.classList.add("mov");
+          if (Z.pts.size === 2) { const [a, b] = [...Z.pts.values()]; Z.d0 = Math.hypot(a[0] - b[0], a[1] - b[1]) || 1; Z.s0 = Z.s; }
+        });
+        v.addEventListener("pointermove", (e) => {
+          if (!Z.pts.has(e.pointerId)) return;
+          const q = pos(e), o = Z.pts.get(e.pointerId);
+          if (Z.pts.size === 1) { Z.x += q[0] - o[0]; Z.y += q[1] - o[1]; Z.pts.set(e.pointerId, q); zmApply(); }
+          else {
+            Z.pts.set(e.pointerId, q);
+            const [a, b] = [...Z.pts.values()], d = Math.hypot(a[0] - b[0], a[1] - b[1]) || 1;
+            zmAt(cl((Z.s0 * d) / Z.d0, Z.min, Z.min * 10) / Z.s, (a[0] + b[0]) / 2, (a[1] + b[1]) / 2);
+          }
+        });
+        const up_ = (e) => { Z.pts.delete(e.pointerId); if (!Z.pts.size) v.classList.remove("mov"); };
+        v.addEventListener("pointerup", up_);
+        v.addEventListener("pointercancel", up_);
+        v.addEventListener("dblclick", (e) => (Z.s > Z.min * 1.05 ? zmFit() : zmAt(2.6, ...pos(e))));
+        $("#zmp").onclick = () => zmAt(1.4, v.clientWidth / 2, v.clientHeight / 2);
+        $("#zmm").onclick = () => zmAt(1 / 1.4, v.clientWidth / 2, v.clientHeight / 2);
+        $("#zmr").onclick = zmFit;
+        addEventListener("resize", () => $("#zm").open && zmFit());
+        document.addEventListener("keydown", (e) => {
+          if (!$("#zm").open) return;
+          if (e.key === "+" || e.key === "=") $("#zmp").click();
+          if (e.key === "-") $("#zmm").click();
+          if (e.key === "0") zmFit();
+        });
+      })();
       function fichaTabs(n) {
         const g = GU[n];
         if (!g || !$("#tbx")) return;
+        document.querySelectorAll("#fc [data-zoom]").forEach((b) => (b.onclick = () => zoomObra(n, g.t)));
         const vistos = new Set(),
           show = (k) => {
             $("#tbx").innerHTML = (g[k] || "").split(/\n+/).filter(Boolean).map((p) => `<p>${p}</p>`).join("") || "<p>Sin texto.</p>";
@@ -2841,7 +3425,7 @@
             if (vistos.size === 4) {
               const l = L("lei") || [];
               if (!l.includes(n)) {
-                l.push(n); L("lei", l); suma(15); tono(784, 0.3, 0.15);
+                l.push(n); L("lei", l); suma(15, "apr"); tono(784, 0.3, 0.15);
                 say("Leíste toda la ficha: +15", 3000);
                 if (l.length >= 8) sello("lec", "¡Lector! 8 fichas leídas completas.");
               }
@@ -2860,7 +3444,7 @@
           b.style.background = ok ? "#5aa67f" : "#c9512f";
           $("#rr").textContent = ok ? (r.includes(n) ? "¡Correcto!" : "¡Correcto! +10 puntos") : "Era " + y + ".";
           tono(ok ? 880 : 200, 0.2);
-          if (ok && !r.includes(n)) { r.push(n); L("ry", r); suma(10); }
+          if (ok && !r.includes(n)) { r.push(n); L("ry", r); suma(10, "apr"); }
         }));
       }
       Object.keys(GU).forEach((n) => D[n] && (D[n][0] = GU[n].t));
@@ -2881,27 +3465,12 @@
         });
       }
       function nuevoTick(dt, r) {
-        if (zon === "q") {
-          dtm -= dt;
-          if (dtm <= 0) { dtm = MON ? 0.9 : 2; const d = DF[(rnd() * DF.length) | 0]; d.l = 2.2; d.k = 0; }
-          DF.forEach((d) => {
-            if (d.l <= 0) return;
-            d.l -= dt;
-            if (!d.k && Math.abs(d.x - X) < 1.7 * T && Math.abs(d.y - Y) < 1.7 * T) {
-              d.k = 1;
-              if (MON) {
-                dn++; L("dn", dn); suma(8); puff(d.x, d.y, "#f6c875", 14); tono(520 + (dn % 7) * 70, 0.2, 0.12);
-                if (dn >= 15) sello("bai", "¡Bailarín! 15 baldosas pisadas a tiempo.");
-              } else say("Pon música (♪ o la Rockola) para sumar al bailar.", 2500);
-            }
-          });
-        }
         NT.forEach((n) => {
-          if (!n.t && Math.hypot(n.x - X, n.y - Y) < r + 24) { n.t = 1; suma(10); puff(n.x, n.y, "#7a5bb0", 8); tono(900, 0.15, 0.12); }
+          if (!n.t && Math.hypot(n.x - X, n.y - Y) < r + 24) { n.t = 1; suma(10, "des"); puff(n.x, n.y, "#7a5bb0", 8); tono(900, 0.15, 0.12); }
         });
         if (ev.con > 0 && (ev.con -= dt) <= 0) { NT.length = 0; say("Terminó el concierto sorpresa."); }
         fr.forEach((f) => {
-          if (f.cr > 0 && (f.cr -= dt) <= 0) { f.cr = 0; suma(-10); say(`«${f.ti}» se descolgó por quedar torcido (-10).`); }
+          if (f.cr > 0 && (f.cr -= dt) <= 0) { f.cr = 0; suma(-10, "obs"); say(`«${f.ti}» se descolgó por quedar torcido (-10).`); }
         });
       }
       function nuevoDraw(E, now) {
@@ -2925,6 +3494,433 @@
       }
       $(".cartela").insertAdjacentHTML("beforeend", `<details><summary><b>Referencias de los guiones</b></summary><div style="font-size:.75rem;max-height:200px;overflow:auto">${REFS.map((r) => `<p style="margin:4px 0">${r.replace(/(https?:\/\/\S+)/g, '<a href="$1" target="_blank" rel="noopener">enlace</a>')}</p>`).join("")}</div></details>`);
       
+
+      /* ===== Introducción, cierre del recorrido y estadísticas ===== */
+      function intro() {
+        const prev = nVis(OBV) > 0 || pts > 0;
+        $("#in-t").textContent = `Bienvenido, ${nombre}`;
+        $("#in-ctx").innerHTML = `El <b>Museo Botero</b>, en el centro histórico de Bogotá, nació en 2000 cuando Fernando Botero (Medellín, 1932 – Mónaco, 2023) donó al país una colección de más de 200 obras, entre las suyas y las de otros artistas que él coleccionó. Casi todos lo conocen por sus figuras de volúmenes enormes, pero este recorrido empieza antes: con sus primeros ensayos cubistas y sus dibujos, pasa por retratos, escenas cotidianas, naturalezas muertas y esculturas, y termina en las obras que generaron debate por mostrar la violencia.`;
+        $("#in-num").innerHTML = [
+          [OBV.length, `obras en ${SALAS.length} casas y plazas`],
+          [OBH.length, "obras fuera del museo o polémicas (opcional)"],
+          [Object.keys(GU).length, "fichas con historia, reflexión y crítica"],
+          [4, "eventos: rondas, sigilo y sorpresas"],
+          [SG.length, "canciones de la banda sonora"],
+          [ST.length, "sellos por conseguir"],
+        ].map(([n, t]) => `<div class="nm"><b>${n}</b><span>${t}</span></div>`).join("");
+        $("#in-salas").innerHTML = SALAS.map((k) => `<div class="is" style="--c:${PAL[k][1]}"><b>${ZN[k]}</b> · ${OBV.filter((f) => f.k === k).length} obras<br>${SD[k]}</div>`).join("");
+        $("#in-how").innerHTML = [
+          `<b>Mira cada obra</b> (+20 puntos). Acércate y pulsa E para abrir su ficha: Chela cuenta la historia, Mira conmigo, Don Pacho opina y ¿Rechazo?.`,
+          `<b>Aprende:</b> leer una ficha completa (+15), acertar el año de la obra (+10) y opinar en los debates (+15) suman puntos de aprendizaje.`,
+          `<b>Completa casas:</b> cada casa terminada da +50 y la barra de arriba te muestra cuánto llevas del recorrido (${OBV.length} obras).`,
+          `<b>Juega y vigila:</b> los juegos, los ladrones y los descubrimientos también suman, pero algunos tienen tope. Lo que más pesa es mirar y aprender.`,
+          `<b>Cuando quieras terminar,</b> pulsa 🏁 Finalizar recorrido: el museo cierra y verás tus estadísticas.`,
+        ].map((t) => `<li>${t}</li>`).join("");
+        $("#in-rk").innerHTML = RK.map(([m, n]) => `<span>${n} · ${m} pts</span>`).join("");
+        const pv = $("#in-prev"), rs = $("#in-reset");
+        pv.hidden = rs.hidden = !prev;
+        if (prev) pv.textContent = `Tienes un recorrido guardado: ${nVis(OBV)} de ${OBV.length} obras y ${pts} puntos. Puedes continuarlo o empezar de cero.`;
+        rs.textContent = "Empezar de cero";
+        rs.onclick = () => {
+          if (rs.dataset.ok) return reiniciar();
+          rs.dataset.ok = 1;
+          rs.textContent = "¿Seguro? Se borra todo. Pulsa otra vez";
+        };
+      }
+      function reiniciar() {
+        try {
+          Object.keys(localStorage).filter((k) => k.startsWith("mb-") && !["mb-vol", "mb-modo", "mb-seg"].includes(k)).forEach((k) => localStorage.removeItem(k));
+        } catch {}
+        location.reload();
+      }
+      function pedirFin() {
+        if (!go) return;
+        const vv = nVis(OBV), tt = OBV.length, f = SALAS.filter((k) => porSala(k)[0] < porSala(k)[1]).length;
+        $("#conf-t").textContent = vv >= tt
+          ? `Viste las ${tt} obras. ¡Recorrido completo! Al finalizar se cierra el museo y verás tus estadísticas.`
+          : `Llevas ${vv} de ${tt} obras (${Math.round((vv / tt) * 100)}%) y te faltan ${f} casas por completar. Al finalizar se cierra el museo y verás tus estadísticas.`;
+        $("#conf").showModal();
+      }
+      $("#bfin").onclick = pedirFin;
+      $("#cfin").onclick = terminar;
+      $("#fin2").onclick = terminar;
+      function terminar() {
+        go = 0;
+        keys.e = 0;
+        document.querySelectorAll("dialog[open]").forEach((d) => d.close());
+        musica(0);
+        L("tms", tms);
+        const vv = nVis(OBV), tt = OBV.length, hv = nVis(OBH), pct = tt ? Math.round((vv / tt) * 100) : 0,
+          i = rango(pts), l = (L("lei") || []).length, ry = (L("ry") || []).length, db = (L("deb") || []).length,
+          rs = (L("rest") || []).length, sal = SALAS.map((k) => ({ k, ...(([a, b]) => ({ a, b }))(porSala(k)) })),
+          falta = sal.filter((x) => x.a < x.b),
+          msg = pct >= 100 ? "Recorriste todas las casas: visita completa." : pct >= 60 ? "Hiciste un recorrido amplio; quedaron algunas obras por ver." : pct >= 25 ? "Un buen comienzo: el museo guarda mucho más." : "Apenas entraste: el museo tiene mucho por mostrar.",
+          kp = (n, t) => `<div class="k"><b>${n}</b><span>${t}</span></div>`,
+          nota = (nt_.value || "").trim();
+        $("#res-in").innerHTML = `
+          <p class="muted"><b>Recorrido finalizado · Museo Botero</b></p>
+          <h2>${nombre}, este fue tu paso por el museo</h2>
+          <p>${msg}</p>
+          <div class="big"><span class="badge">${RK[i][1]}</span><span><b style="font:900 1.6rem var(--t)">${pts}</b> puntos${RK[i + 1] ? ` · te faltaron ${RK[i + 1][0] - pts} para ser «${RK[i + 1][1]}»` : " · rango máximo"}</span></div>
+          <div class="bar" style="height:16px"><i style="width:${pct}%"></i></div>
+          <p class="muted">${vv} de ${tt} obras vistas · ${pct}% del recorrido</p>
+          <div class="kp">
+            ${kp(fmtT(tms), "tiempo de recorrido")}
+            ${kp(`${vv}/${tt}`, "obras vistas")}
+            ${kp(`${hv}/${OBH.length}`, "obras fuera del museo (opcional)")}
+            ${kp(`${l}/${Object.keys(GU).length}`, "fichas leídas completas")}
+            ${kp(`${got.size}/${ST.length}`, "sellos")}
+            ${kp(`${oyo.size}/${SG.length}`, "canciones escuchadas")}
+          </div>
+          <h3>De dónde salieron tus puntos</h3>
+          ${Object.entries(CATS).map(([k, [n, col, d]]) => `<div class="row" title="${d}"><span>${n}</span><div class="bar" style="--c:${col}"><i style="width:${pts ? ((pc[k] || 0) / pts) * 100 : 0}%"></i></div><em>${pc[k] || 0}${CAPS[k] ? ` / ${CAPS[k]}` : ""}</em></div>`).join("")}
+          <p class="muted">Juegos y descubrimientos tienen tope de puntos; el resto depende de cuánto miras y aprendes.</p>
+          <h3>Avance por casa</h3>
+          ${sal.map(({ k, a, b }) => `<div class="row"><span>${ZN[k].split(" · ")[0]}</span><div class="bar" style="--c:${a === b ? "#3f7d5c" : "#c9512f"}"><i style="width:${b ? (a / b) * 100 : 0}%"></i></div><em>${a}/${b}${a === b ? " ✓" : ""}</em></div>`).join("")}
+          ${falta.length ? `<p class="muted">Te faltó ver: ${falta.map((x) => `${ZN[x.k].split(" · ")[0]} (${x.b - x.a})`).join(", ")}.</p>` : ""}
+          <h3>Tu actividad</h3>
+          <div class="kp">
+            ${kp(ry, "años acertados")}
+            ${kp(db, "debates opinados")}
+            ${kp(mok, "encargos cumplidos")}
+            ${kp(cap, "ladrones atrapados")}
+            ${kp(rs, "cuadros restaurados")}
+            ${kp(dn, "baldosas bailadas")}
+          </div>
+          <h3>Sellos</h3>
+          <div>${ST.map(([k, n, col]) => `<span class="tg${got.has(k) ? "" : " no"}" style="--c:${col}">${n}</span>`).join("")}</div>
+          ${nota ? `<h3>Tu libreta</h3><div class="note">${nota.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c])}</div>` : ""}
+          <div class="btns"><button class="btn" id="r-nuevo" type="button">Nuevo recorrido</button><button class="btn s" id="r-print" type="button">Guardar / imprimir resumen</button></div>`;
+        $("#r-nuevo").onclick = reiniciar;
+        $("#r-print").onclick = () => window.print();
+        ["#hud", "#mm", "#ctl"].forEach((q) => ($(q).hidden = true));
+        $("#res").hidden = false;
+        $("#res").scrollTop = 0;
+      }
+      /* ===== MÓDULO NX: monstruos boterianos, apagón, globos, gato fugitivo, temblor y retos del curador ===== */
+      const CHE = { get x() { return X; }, set x(q) { X = q; }, get y() { return Y; }, set y(q) { Y = q; } };
+      const GL = [], LU = [];
+      let MO = null, CT = null, RE = null, GLt = 0, LUt = 0, CTt = 0, REt = 0, nxLast = "", rj = (rnd() * 3) | 0;
+      const MN = {
+        toro: ["🐂", "Toro", "#c98a52", "¡Un Toro boteriano, redondo como un globo! Esquiva sus embestidas y llévalo hacia un cactus 🌵."],
+        gato: ["🐈", "Gato gordo", "#e8a14f", "¡El Gato gordo se escapó de un cuadro! Cuidado con sus saltos: llévalo hacia un cactus 🌵."],
+        paj: ["🐦", "Pájaro de volumen", "#4fa3b8", "¡Un Pájaro de volumen aterrizó! No vuela, solo embiste: llévalo a un cactus 🌵 o escóndete en una caja."],
+      };
+      const yrOf = (n) => { const m = ((GU[n] && GU[n].f) || "").match(/\b(1[89]\d\d|20\d\d)\b/); return m ? +m[1] : 0; };
+      const lejos = (a, b) => {
+        let i, j, d;
+        for (let q = 0; q < 80; q++) { [i, j] = FL[(rnd() * FL.length) | 0]; d = Math.hypot((i + 0.5) * T - X, (j + 0.5) * T - Y); if (d > a && d < b) break; }
+        return { x: (i + 0.5) * T, y: (j + 0.5) * T, i, j };
+      };
+      /* --- Elección de evento (se mezcla con ladrón, ronda y los demás) --- */
+      function nxPick() {
+        if (MO || CT || RE || GL.length || LU.length || th || ron || ev.ap > 0 || ev.con > 0) return 0;
+        const ops = [evGlobos, evApag, evGato, evReto, evReto, evTemblor];
+        if (vis.size >= 2) ops.push(evMon, evMon);
+        const o = ops.filter((f) => f.name !== nxLast), f = o[(rnd() * o.length) | 0];
+        nxLast = f.name; f(); return 1;
+      }
+      function evMon(kk) {
+        const k = kk || ["toro", "gato", "paj"][(rnd() * 3) | 0],
+          s = [TH0, [20, 54], [80, 54], [46, 84]].map(([i, j]) => ({ x: (i + 0.5) * T, y: (j + 0.5) * T })).sort((a, b) => Math.hypot(b.x - X, b.y - Y) - Math.hypot(a.x - X, a.y - Y))[0];
+        MO = { k, x: s.x, y: s.y, p: [], rp: 0, life: 30, st: "chase", stt: 0, cd: 4, hc: 0, hug: 0, lose: 0, sq: 1, ang: 0, vx: 0, vy: 0 };
+        sh = 0.4; tono(110, 0.6, 0.25); say(MN[k][3], 7500);
+      }
+      function monEnd() { MO = null; HD = 0; }
+      function monTick(dt, r) {
+        const m = MO;
+        m.life -= dt; m.stt -= dt; m.hc -= dt; m.cd -= dt;
+        if (m.st === "pop") {
+          m.sq -= dt * 0.8; m.ang += dt * 7;
+          const nx = m.x + Math.cos(m.ang) * 380 * dt, ny = m.y + Math.sin(m.ang) * 380 * dt;
+          if (!hit(nx, ny, 30)) { m.x = nx; m.y = ny; } else m.ang += 2.4;
+          puff(m.x, m.y, "#fff6dc", 1);
+          if (m.sq <= 0.15) monEnd();
+          return;
+        }
+        for (const p of CA) if (Math.hypot(p.x - m.x, p.y - m.y) < 80) {
+          m.st = "pop"; m.sq = 1; m.ang = rnd() * 6.28; suma(120, "jue"); sh = 0.5;
+          puff(m.x, m.y, "#3f7d5c", 30); tono(90, 0.5, 0.25); setTimeout(() => tono(1200, 0.6, 0.12), 150);
+          sello("mon", "¡Domador de monstruos! El cactus desinfló a la bestia.");
+          say("¡PPPFFFFF! El cactus lo pinchó y sale volando desinflado. +120", 6000);
+          return;
+        }
+        if (m.life <= 0) { suma(50, "jue"); say("El monstruo se aburrió y se fue. ¡Sobreviviste! +50", 5000); return monEnd(); }
+        const tg = HD || { x: X, y: Y }, d = Math.hypot(tg.x - m.x, tg.y - m.y);
+        if (HD) {
+          m.lose += dt;
+          if (m.lose > 4) { suma(60, "jue"); say("Perdió tu rastro: ¡las cajas FRÁGIL salvan! +60", 5000); return monEnd(); }
+        } else m.lose = Math.max(0, m.lose - dt);
+        if (m.st === "dizzy") { if (m.stt <= 0) m.st = "chase"; return; }
+        if (m.st === "warn") { if (m.stt <= 0) { m.st = "dash"; m.stt = 0.75; } return; }
+        if (m.st === "dash") {
+          const nx = m.x + m.vx * 440 * dt, ny = m.y + m.vy * 440 * dt;
+          if (hit(nx, ny, 36)) { m.st = "dizzy"; m.stt = 2.4; sh = 0.4; puff(m.x, m.y, "#c9a45a", 18); tono(110, 0.3, 0.25); say("¡PUM! Se estrelló y quedó mareado. ¡Aprovecha!"); return; }
+          m.x = nx; m.y = ny; if (rnd() < 0.5) puff(m.x, m.y, "#c9a45a", 1);
+          if (m.stt <= 0) { m.st = "chase"; m.cd = 6; }
+        } else {
+          m.rp -= dt;
+          if (m.rp <= 0) { m.rp = 0.45; m.p = ruta([(m.x / T) | 0, (m.y / T) | 0], [(tg.x / T) | 0, (tg.y / T) | 0]); }
+          const q = m.p[0];
+          if (q) { const dx = q.x - m.x, dy = q.y - m.y, dd = Math.hypot(dx, dy), s = (HD ? 90 : 150) * dt; if (dd < s) m.p.shift(); else { m.x += (dx / dd) * s; m.y += (dy / dd) * s; } }
+          if (!HD && m.cd <= 0 && d < 520 && d > 140) { m.st = "warn"; m.stt = 0.9; const a = Math.atan2(Y - m.y, X - m.x); m.vx = Math.cos(a); m.vy = Math.sin(a); tono(260, 0.4, 0.15); }
+        }
+        if (!HD && m.hc <= 0 && (m.st === "chase" || m.st === "dash") && Math.hypot(m.x - X, m.y - Y) < r + 62) {
+          m.hc = 2.2; m.hug++; m.st = "chase"; m.cd = 5; v = Math.max(0.8, v - 1.5); sh = 0.35;
+          const a = Math.atan2(Y - m.y, X - m.x);
+          for (let k = 0; k < 10; k++) mv(CHE, Math.cos(a) * 16, Math.sin(a) * 16, r);
+          tono(140, 0.3, 0.2); puff(X, Y, "#fff6dc", 12);
+          if (m.hug >= 3) { say("¡Tres abrazos! El monstruo se va contento. Sin premio, pero sin rencor.", 5000); return monEnd(); }
+          say(`¡Abrazo boteriano! (${m.hug}/3) Te desinfló un poco.`);
+        }
+      }
+      function monDraw(m, now) {
+        const s = m.sq, x = m.x + (m.st === "warn" ? Math.sin(now / 28) * 5 : 0), y = m.y, b = Math.sin(now / 170) * 3 * s, col = MN[m.k][2],
+          o = (px, py, rx, ry, f) => { c.fillStyle = f; c.beginPath(); c.ellipse(px, py, rx, ry, 0, 0, 7); c.fill(); };
+        o(x, y + 8, 80 * s, 20 * s, "rgba(58,29,18,.28)");
+        c.fillStyle = "#3a1d12"; c.fillRect(x - 36 * s, y - 20 * s, 9 * s, 22 * s); c.fillRect(x + 27 * s, y - 20 * s, 9 * s, 22 * s);
+        if (m.k === "gato") { c.strokeStyle = col; c.lineWidth = 11 * s; c.beginPath(); c.arc(x + 78 * s, y - 70 * s + b, 26 * s, 1.6, 4.4); c.stroke(); }
+        if (m.k === "paj") { o(x - 72 * s, y - 70 * s + b, 18 * s, 34 * s, "#3f8aa0"); o(x + 72 * s, y - 70 * s + b, 18 * s, 34 * s, "#3f8aa0"); }
+        o(x, y - 66 * s + b, 76 * s, 64 * s, col);
+        o(x - 26 * s, y - 92 * s + b, 28 * s, 16 * s, "rgba(255,255,255,.25)");
+        const hy = y - 138 * s + b;
+        o(x, hy, 33 * s, 30 * s, col);
+        if (m.k === "gato") { c.fillStyle = col; [-1, 1].forEach((d) => { c.beginPath(); c.moveTo(x + d * 10 * s, hy - 24 * s); c.lineTo(x + d * 32 * s, hy - 50 * s); c.lineTo(x + d * 32 * s, hy - 12 * s); c.fill(); }); }
+        if (m.k === "toro") { c.strokeStyle = "#fff6dc"; c.lineWidth = 6 * s; [-1, 1].forEach((d) => { c.beginPath(); c.moveTo(x + d * 26 * s, hy - 16 * s); c.quadraticCurveTo(x + d * 52 * s, hy - 20 * s, x + d * 44 * s, hy - 48 * s); c.stroke(); }); }
+        if (m.k === "paj") { [-8, 0, 8].forEach((d) => o(x + d * s, hy - 32 * s, 5 * s, 9 * s, "#e0558a")); c.fillStyle = "#f0a030"; c.beginPath(); c.moveTo(x - 9 * s, hy + 4 * s); c.lineTo(x + 9 * s, hy + 4 * s); c.lineTo(x, hy + 22 * s); c.fill(); }
+        c.fillStyle = "#3a1d12"; c.fillRect(x - 14 * s, hy - 8 * s, 5 * s, 5 * s); c.fillRect(x + 9 * s, hy - 8 * s, 5 * s, 5 * s);
+        o(x - 21 * s, hy + 6 * s, 6 * s, 4 * s, "rgba(238,120,120,.7)"); o(x + 21 * s, hy + 6 * s, 6 * s, 4 * s, "rgba(238,120,120,.7)");
+        if (m.k !== "paj") o(x, hy + 14 * s, 7 * s, 4 * s, "#b83a3a");
+        if (m.k === "toro") { c.strokeStyle = "#eab04a"; c.lineWidth = 3; c.beginPath(); c.arc(x, hy + 8 * s, 6 * s, 0, 7); c.stroke(); }
+        if (m.st === "warn") tx("!", x, hy - 70 * s, 44, "#d22");
+        if (m.st === "dizzy") tx("✦ ✦", x + Math.sin(now / 120) * 20, hy - 56 * s, 26, "#eab04a");
+      }
+      /* --- Apagón con luciérnagas, globos, gato, temblor y reto --- */
+      function evApag() {
+        ev.ap = 28; LUt = 28; LU.length = 0;
+        for (let i = 0; i < 6; i++) { const p = lejos(200, 650); LU.push({ x: p.x, y: p.y }); }
+        say("🕯️ ¡Se fue la luz! Sigue el brillo de las luciérnagas ✦ y recógelas todas.", 7000); tono(120, 0.6, 0.2);
+      }
+      function evGlobos() {
+        GLt = 24;
+        for (let i = 0; i < 11; i++) { const p = lejos(80, 700); GL.push({ x: p.x, y: p.y, a: rnd() * 6.28, c: CO[i % 5], g: i % 6 === 5, d: 0 }); }
+        say("🎈 ¡Fiesta de globos! Revéntalos tocándolos: cada uno te infla un poquito.", 6000);
+      }
+      function evGato() {
+        const p = lejos(400, 800); CT = { x: p.x, y: p.y, a: rnd() * 6.28, tm: 0 }; CTt = 32;
+        say("🐈 ¡Se escapó el gato gordo de un cuadro! Atrápalo (si se cuela por una grieta, desinfla con X).", 7000);
+      }
+      function evTemblor() {
+        mez(fr.filter((f) => f.n <= NW && !f.rb && !(f.cr > 0))).slice(0, 3).forEach((f) => (f.cr = 40));
+        sh = 1; tono(90, 0.8, 0.3);
+        say("🌋 ¡Temblor! Se torcieron 3 cuadros: acércate a cada uno y pulsa E para enderezarlos.", 7000);
+      }
+      function evReto() {
+        const p = lejos(300, 900); RE = { x: p.x, y: p.y }; REt = 45;
+        say(`❓ Un curador dejó un reto en ${(ZN[M[p.j][p.i]] || "el museo").split(" · ")[0]}. Búscalo en el mapa y pulsa E.`, 7000);
+      }
+      function nxTick(dt, r) {
+        if (MO) monTick(dt, r);
+        if (GL.length && (GLt -= dt) <= 0) { GL.length = 0; say("Los globos se fueron volando."); }
+        GL.forEach((g) => {
+          g.a += (rnd() - 0.5) * 3 * dt;
+          const nx = g.x + Math.cos(g.a) * 55 * dt, ny = g.y + Math.sin(g.a) * 55 * dt;
+          if (hit(nx, ny, 16)) g.a += 2.2; else { g.x = nx; g.y = ny; }
+          if (!g.d && Math.hypot(g.x - X, g.y - Y) < r + 26) {
+            g.d = 1; puff(g.x, g.y, g.g ? "#f6c93a" : g.c, 12); tono(520 + rnd() * 380, 0.12, 0.1);
+            if (g.g) { suma(25, "des"); say("✨ ¡Globo dorado! +25"); } else { suma(6, "des"); v = Math.min(9.3, v + 0.3); }
+          }
+        });
+        if (GL.some((g) => g.d)) { GL.splice(0, GL.length, ...GL.filter((g) => !g.d)); if (!GL.length) { suma(30, "jue"); say("🎈 ¡Reventaste todos los globos! +30", 4500); } }
+        if (LU.length) {
+          for (let i = LU.length - 1; i >= 0; i--) if (Math.hypot(LU[i].x - X, LU[i].y - Y) < r + 30) {
+            puff(LU[i].x, LU[i].y, "#ffe27a", 10); tono(700 + i * 90, 0.2, 0.1); suma(8, "des"); LU.splice(i, 1);
+            if (!LU.length) { ev.ap = 0; LUt = 0; suma(50, "jue"); say("💡 ¡Volvió la luz! +50", 4500); }
+          }
+          if (LU.length && (LUt -= dt) <= 0) { LU.length = 0; ev.ap = 0; say("Volvió la luz del museo."); }
+        }
+        if (CT) {
+          const d = Math.hypot(CT.x - X, CT.y - Y);
+          if ((CT.tm -= dt) <= 0) { CT.tm = 0.5 + rnd() * 0.9; CT.a = d < 340 ? Math.atan2(CT.y - Y, CT.x - X) + (rnd() - 0.5) * 1.7 : rnd() * 6.28; }
+          const s = (d < 340 ? 290 : 80) * dt, nx = CT.x + Math.cos(CT.a) * s, ny = CT.y + Math.sin(CT.a) * s;
+          if (!hit(nx, CT.y, 14)) CT.x = nx; else { CT.a = Math.PI - CT.a; CT.tm = 0.2; }
+          if (!hit(CT.x, ny, 14)) CT.y = ny; else { CT.a = -CT.a; CT.tm = 0.2; }
+          if (d < r + 26) { CT = null; suma(60, "des"); puff(X, Y, "#e07a05", 20); tono(880, 0.3, 0.15); sello("gat", "¡Gatero! Atrapaste al gato gordo: ronronea feliz."); say("😺 ¡Atrapado! Ronronea como un motor. +60", 5000); }
+          else if ((CTt -= dt) <= 0) { CT = null; say("El gato volvió solo a su cuadro."); }
+        }
+        if (RE) {
+          if ((REt -= dt) <= 0) { RE = null; say("El curador recogió su reto y se fue."); }
+          else if (Math.hypot(RE.x - X, RE.y - Y) < 90) near = { k: "N", t: "E · Aceptar el reto del curador" };
+        }
+      }
+      function nxDraw(E, now) {
+        if (MO) E(MO.x, MO.y, () => monDraw(MO, now), 20);
+        GL.forEach((g) => E(g.x, g.y, () => {
+          const b = Math.sin(now / 300 + g.x) * 5 - 62;
+          c.fillStyle = "rgba(58,29,18,.2)"; c.beginPath(); c.ellipse(g.x, g.y + 6, 14, 5, 0, 0, 7); c.fill();
+          c.strokeStyle = "#6b4a3a"; c.lineWidth = 2; c.beginPath(); c.moveTo(g.x, g.y + b + 26); c.lineTo(g.x + 4, g.y + 4); c.stroke();
+          c.fillStyle = g.g ? "#f6c93a" : g.c; c.beginPath(); c.ellipse(g.x, g.y + b, 22, 26, 0, 0, 7); c.fill();
+          c.fillStyle = "rgba(255,255,255,.45)"; c.beginPath(); c.ellipse(g.x - 8, g.y + b - 9, 6, 9, 0, 0, 7); c.fill();
+          if (g.g) tx("✦", g.x + 14, g.y + b - 20 + Math.sin(now / 150) * 3, 16, "#fff6dc");
+        }));
+        if (CT) E(CT.x, CT.y, () => {
+          const x = CT.x, y = CT.y;
+          c.fillStyle = "rgba(58,29,18,.25)"; c.beginPath(); c.ellipse(x, y + 4, 22, 7, 0, 0, 7); c.fill();
+          c.strokeStyle = "#e07a05"; c.lineWidth = 6; c.beginPath(); c.arc(x + 22, y - 20, 10, 1.4, 4.2); c.stroke();
+          c.fillStyle = "#f0a040"; c.beginPath(); c.ellipse(x, y - 16, 22, 18, 0, 0, 7); c.fill();
+          c.beginPath(); c.arc(x, y - 38, 12, 0, 7); c.fill();
+          [-1, 1].forEach((d) => { c.beginPath(); c.moveTo(x + d * 4, y - 46); c.lineTo(x + d * 12, y - 58); c.lineTo(x + d * 13, y - 42); c.fill(); });
+          c.fillStyle = "#3a1d12"; c.fillRect(x - 6, y - 41, 3, 4); c.fillRect(x + 3, y - 41, 3, 4);
+          c.strokeStyle = "#3a1d12"; c.lineWidth = 1; c.beginPath(); c.moveTo(x - 14, y - 34); c.lineTo(x - 6, y - 35); c.moveTo(x + 14, y - 34); c.lineTo(x + 6, y - 35); c.stroke();
+        });
+        if (RE) E(RE.x, RE.y, () => {
+          const b = Math.sin(now / 250) * 6;
+          c.fillStyle = "rgba(58,29,18,.3)"; c.beginPath(); c.ellipse(RE.x, RE.y + 8, 34, 12, 0, 0, 7); c.fill();
+          c.fillStyle = "#7a5bb0"; c.fillRect(RE.x - 22, RE.y - 34, 44, 42);
+          c.fillStyle = "#fff6dc"; c.beginPath(); c.arc(RE.x, RE.y - 58 + b, 22, 0, 7); c.fill();
+          tx("?", RE.x, RE.y - 49 + b, 34, "#7a5bb0");
+        });
+      }
+      function nxHud(dpr, VW, VH, now) {
+        c.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const z = cl(Math.min(VW / 860, VH / 560), 0.6, 1.25);
+        LU.forEach((l) => {
+          const [a, b] = Pt(l.x, l.y), sx = (a - cx) * z, sy = (b - cy) * z - 20 * z, g = c.createRadialGradient(sx, sy, 1, sx, sy, 38 * z);
+          g.addColorStop(0, "rgba(255,240,150,1)"); g.addColorStop(1, "rgba(255,220,80,0)");
+          c.globalAlpha = 0.6 + 0.4 * Math.sin(now / 200 + l.x); c.fillStyle = g; c.beginPath(); c.arc(sx, sy, 38 * z, 0, 7); c.fill();
+        });
+        c.globalAlpha = 1;
+        const tq = fr.filter((f) => f.cr > 0).length,
+          t = MO ? `${MN[MO.k][0]} ${MN[MO.k][1]} · ${Math.ceil(MO.life)} s · 🌵 lo desinfla · 📦 escóndete (E)`
+            : LU.length ? `🕯️ Luciérnagas: faltan ${LU.length} · ${Math.ceil(LUt)} s`
+            : GL.length ? `🎈 Globos: quedan ${GL.length} · ${Math.ceil(GLt)} s`
+            : CT ? `🐈 Atrapa al gato · ${Math.ceil(CTt)} s`
+            : RE ? `❓ Reto del curador · ${Math.ceil(REt)} s · mira el mapa`
+            : tq ? `🖼️ Cuadros torcidos: ${tq} (E para enderezar)` : "";
+        if (!t) return;
+        c.font = "800 14px Nunito,sans-serif";
+        const w = c.measureText(t).width + 30;
+        c.fillStyle = "rgba(58,29,18,.88)"; c.beginPath(); c.roundRect(VW / 2 - w / 2, VH - 136, w, 30, 15); c.fill();
+        tx(t, VW / 2, VH - 116, 14, "#fbebc6");
+      }
+      function nxMini() {
+        const s = MW / NC, s2 = MH / NR;
+        if (MO) { mm.fillStyle = "#a8324f"; mm.beginPath(); mm.arc((MO.x / T) * s, (MO.y / T) * s2, 5, 0, 7); mm.fill(); }
+        if (RE) { mm.fillStyle = "#7a5bb0"; mm.fillRect((RE.x / T) * s - 3, (RE.y / T) * s2 - 3, 7, 7); }
+        if (CT) { mm.fillStyle = "#e07a05"; mm.fillRect((CT.x / T) * s - 2, (CT.y / T) * s2 - 2, 5, 5); }
+      }
+      /* --- Retos del curador: 3 minijuegos que rotan --- */
+      function nxReto() { RE = null; [mjZoom, mjCrono, mjVF][rj++ % 3](); }
+      function mjZoom() {
+        const n = mez(PM)[0], op = mez([n, ...mez(PM.filter((m) => m !== n)).slice(0, 2)]);
+        $("#fc").innerHTML = `<h2>🔍 Zoom misterioso</h2><p class="muted">¿De qué obra es este pedacito?</p><canvas id="zq" width="300" height="220" style="position:static;inset:auto;width:100%;max-width:340px;height:auto;display:block;margin:0 auto 10px;border:6px solid #c9512f;border-radius:10px"></canvas>${op.map((m) => `<button class="chip" data-m="${m}" type="button" style="display:block;width:100%;margin:6px 0">${D[m][0]}</button>`).join("")}<p class="aviso" id="zr" hidden></p>`;
+        $("#ficha").showModal();
+        const im = new Image();
+        im.onload = () => { const w = im.naturalWidth * 0.3, h = im.naturalHeight * 0.3; $("#zq").getContext("2d").drawImage(im, rnd() * (im.naturalWidth - w), rnd() * (im.naturalHeight - h), w, h, 0, 0, 300, 220); };
+        im.src = "media/" + n + ".jpg";
+        document.querySelectorAll("#fc [data-m]").forEach((b) => (b.onclick = () => {
+          const g = +b.dataset.m === n;
+          document.querySelectorAll("#fc [data-m]").forEach((x) => (x.disabled = 1));
+          b.style.background = g ? "#5aa67f" : "#c9512f";
+          $("#zr").hidden = 0;
+          $("#zr").innerHTML = (g ? "¡Ojo de águila! +40" : "Era «" + D[n][0] + "».") + `<br><button class="btn" data-x type="button" style="margin-top:8px">Seguir</button>`;
+          if (g) suma(40, "jue");
+          tono(g ? 880 : 200, 0.25);
+        }));
+      }
+      function mjCrono() {
+        const a = [];
+        mez(PM.filter(yrOf)).forEach((n) => { if (a.length < 3 && a.every((m) => Math.abs(yrOf(m) - yrOf(n)) >= 2)) a.push(n); });
+        if (a.length < 3) return mjZoom();
+        const ord = [...a].sort((p, q) => yrOf(p) - yrOf(q));
+        let k = 0, mal = 0;
+        $("#fc").innerHTML = `<h2>⏳ Cronología</h2><p class="muted">Toca las tres obras, de la más antigua a la más reciente.</p><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">${mez(a).map((n) => `<button type="button" data-m="${n}" style="border:0;border-radius:10px;padding:4px;background:#f5ecd6;color:#3a1d12"><img src="media/t${n}.jpg" alt="" style="width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:6px"><small style="font-weight:800;display:block">${D[n][0]}</small><b class="yy"></b></button>`).join("")}</div><p class="aviso" id="cr">Empieza por la más antigua.</p>`;
+        $("#ficha").showModal();
+        document.querySelectorAll("#fc [data-m]").forEach((b) => (b.onclick = () => {
+          const n = +b.dataset.m;
+          if (b.disabled) return;
+          if (n === ord[k]) {
+            b.disabled = 1; b.style.background = "#bfe3cc"; b.querySelector(".yy").textContent = yrOf(n); k++; tono(700 + k * 120, 0.2);
+            if (k === 3) { const p = mal ? 20 : 50; suma(p, "jue"); $("#cr").innerHTML = `¡Orden perfecto! +${p} puntos.<br><button class="btn" data-x type="button" style="margin-top:8px">Seguir</button>`; }
+            else $("#cr").textContent = "¡Bien! Ahora la siguiente.";
+          } else { mal++; tono(200, 0.2); $("#cr").textContent = "Esa es más reciente. Prueba con otra."; }
+        }));
+      }
+      function mjVF() {
+        const q = mez(PM.filter(yrOf)).slice(0, 6);
+        let i = 0, ok = 0, tm = 0;
+        const paso = () => {
+          clearInterval(tm);
+          if (i >= q.length) {
+            const p = ok * 10; suma(p, "jue");
+            if (ok >= 5) sello("rel", "¡Relámpago! Datos al vuelo.");
+            $("#fc").innerHTML = `<h2>⚡ Relámpago terminado</h2><p>${ok} de ${q.length} aciertos. +${p} puntos.</p><button class="btn" data-x type="button">Seguir</button>`;
+            return;
+          }
+          const n = q[i], y = yrOf(n), real = rnd() < 0.5, yy = real ? y : y + (rnd() < 0.5 ? -1 : 1) * (2 + ((rnd() * 8) | 0));
+          let t = 7, hecho = 0;
+          $("#fc").innerHTML = `<h2>⚡ ¿Verdadero o falso?</h2><p class="muted">${i + 1} de ${q.length} · 7 segundos por pregunta</p><img class="ob" src="media/${n}.jpg" alt=""><p><b>«${D[n][0]}» es de ${yy}.</b></p><div class="bar" style="height:10px"><i id="vt" style="width:100%"></i></div><p style="display:flex;gap:8px"><button class="btn" id="vv" type="button">Verdadero</button><button class="btn s" id="vf" type="button">Falso</button></p>`;
+          const fin = (r) => { if (hecho) return; hecho = 1; clearInterval(tm); if (r === real) ok++; tono(r === real ? 880 : 200, 0.2); i++; setTimeout(paso, 350); };
+          $("#vv").onclick = () => fin(true);
+          $("#vf").onclick = () => fin(false);
+          tm = setInterval(() => { if (!$("#ficha").open) return clearInterval(tm); t -= 0.1; $("#vt").style.width = (t / 7) * 100 + "%"; if (t <= 0) fin(null); }, 100);
+        };
+        paso();
+        $("#ficha").showModal();
+      }
+      /* ===== Selector de eventos con pesos + menú de pruebas con contraseña ===== */
+      const busy = () => MO || CT || RE || GL.length || LU.length || th || ron || ev.ap > 0 || ev.con > 0;
+      const EVS = [
+        { id: "ladron", n: "🥷 Ladrón", w: 14, ok: () => !busy(), f: () => ladron() },
+        { id: "ronda", n: "🔦 Ronda del vigilante", w: 14, ok: () => !busy(), f: () => evRonda() },
+        { id: "frutas", n: "🍊 Lluvia de frutas", ok: () => 1, f: () => {
+          for (let i = 0; i < 15; i++) { const [a, b] = FL[(rnd() * FL.length) | 0]; FR.push({ x: (a + 0.2 + rnd() * 0.6) * T, y: (b + 0.2 + rnd() * 0.6) * T, t: 0 }); }
+          say("¡Lluvia de frutas! Llegó un bodegón nuevo.", 5000); } },
+        { id: "rush", n: "🏃 Guardia apurado", ok: () => !(ev.rush > 0), f: () => { ev.rush = 14; say("¡El guardia sale a toda prisa! Aléjate.", 5000); } },
+        { id: "encargo", n: "📋 Encargo de un visitante", ok: () => !mis, f: () => hablar() },
+        { id: "dato", n: "📢 Dato del museo", ok: () => 1, f: () => { say("📢 Dato del museo: " + datoGuion(), 7000); suma(10, "des"); } },
+        { id: "concierto", n: "🎶 Concierto sorpresa", ok: () => !busy(), f: () => evNuevo(5) },
+        { id: "torcido", n: "🖼️ Cuadro torcido", ok: () => 1, f: () => evNuevo(6) },
+        { id: "obradia", n: "🌟 Obra del día", ok: () => !od, f: () => evNuevo(7) },
+        { id: "toro", n: "🐂 Monstruo: Toro", ok: (f) => !busy() && (f || vis.size >= 2), f: () => evMon("toro") },
+        { id: "gatom", n: "🐈 Monstruo: Gato gordo", ok: (f) => !busy() && (f || vis.size >= 2), f: () => evMon("gato") },
+        { id: "paj", n: "🐦 Monstruo: Pájaro", ok: (f) => !busy() && (f || vis.size >= 2), f: () => evMon("paj") },
+        { id: "apag", n: "🕯️ Apagón y luciérnagas", ok: () => !busy(), f: evApag },
+        { id: "globos", n: "🎈 Fiesta de globos", ok: () => !busy(), f: evGlobos },
+        { id: "gato", n: "😺 Gato fugitivo", ok: () => !busy(), f: evGato },
+        { id: "temblor", n: "🌋 Temblor", ok: () => 1, f: evTemblor },
+        { id: "reto", n: "❓ Reto del curador", ok: () => !busy(), f: evReto },
+      ];
+      const EW = {};
+      EVS.forEach((e) => (EW[e.id] = e.w || 10));
+      function evHecho(e) { e.f(); EVS.forEach((x) => (EW[x.id] = x === e ? 1 : Math.min(40, EW[x.id] + 3))); tono(330, 0.3, 0.2); }
+      function evento() {
+        ev.n++;
+        const l = EVS.filter((e) => e.ok(0)), tot = l.reduce((a, e) => a + EW[e.id], 0);
+        if (!l.length) return;
+        let q = rnd() * tot, e = l[0];
+        for (const x of l) { q -= EW[x.id]; if (q <= 0) { e = x; break; } }
+        evHecho(e);
+      }
+      $("#evs").innerHTML = EVS.map((e) => `<option value="${e.id}">${e.n}</option>`).join("");
+      $("#evb").onclick = () => {
+        const o = $("#evp").hidden;
+        panel("#evp", "#evb", "#eva", o);
+        if (o) { panel("#prog", "#pgb", "#pga", false); panel("#mup", "#mub", "#mua", false); $("#evpw").focus(); }
+      };
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape") panel("#evp", "#evb", "#eva", false); });
+      $("#evok").onclick = () => {
+        if ($("#evpw").value === "kevin") { $("#evl").hidden = true; $("#evm").hidden = false; $("#evmsg").textContent = "Elige un evento y pulsa Lanzar."; }
+        else { $("#evmsg").textContent = "Contraseña incorrecta."; $("#evpw").value = ""; }
+      };
+      $("#evpw").onkeydown = (e) => { if (e.key === "Enter") $("#evok").click(); };
+      $("#evgo").onclick = () => {
+        if (!go) return;
+        const e = EVS.find((x) => x.id === $("#evs").value);
+        if (!e.ok(1)) { $("#evmsg").textContent = "Ahora no se puede: hay otro evento en marcha."; return; }
+        $("#evmsg").textContent = "Lanzado: " + e.n;
+        evHecho(e);
+      };
       hud();
       requestAnimationFrame(loop);
     </script>
