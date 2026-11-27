@@ -138,3 +138,13 @@ Ya no es un templo griego recoloreado: al atracar ves **la misma isla de cerca**
 - El progreso se guarda (`save.placed`, `save.recovered`).
 
 **Ajustes visuales.** HUD más compacto, carteles de isla con texto más pequeño (no se salen) y barco de llegada más abajo.
+
+## 17. Chamán final y juego de ritmo (revisión)
+
+**Chamán.** Sprite nuevo (el doble de grande): máscara de hueso con astas, abanico de plumas, hombreras de púas, bastón con cráneo, orbe y aura que cambia de color (morado = se teletransporta, rojo = lanza hechizos, dorado = agotado). Piensa que el pirata es un colono español: el diálogo está en `RETOS.salida.dialogo` (antes de pelear) y `RETOS.salida.final` (cuando desaparece).
+
+**Pelea de un solo golpe.** El Chamán lanza 3 hechizos seguidos (cada uno más fuerte; 3 casillas rojas arriba). Solo entonces baja el escudo y queda agotado ~3,4 s: **un único golpe** lo deshace en polvo. Si se agota el tiempo sin golpearlo, vuelve a lanzar hechizos (desde el 2.º). Ajustes: `S.ts = 3.4` (ventana), `S.casts >= 3` (hechizos necesarios) en `gameSalida`.
+
+**Arena.** Nuevo fondo `retoBackground('claro')`: claro de tierra irregular en la selva, piedras ceremoniales con musgo, árboles que cierran el espacio, braseros de piedra, luciérnagas y niebla.
+
+**Ritmo.** Las obras que pasan por el pasillo son las **obras reales removidas** (con su imagen; si aún no hay, usa cualquiera con imagen) y abajo a la derecha se lee el título de la siguiente. La melodía (`MEL`, `BASS` en el código) suena programada exactamente en el compás de cada obra, con bajo y tambor; al pulsar a tiempo suena la misma nota más fuerte. Audio con antelación de 40 ms para que coincida con el toque.
