@@ -14,7 +14,7 @@ window.MUSEO = {
     retoOmitirTrasFallos: 3,
     autoDescubrir: true,
     descripcionAuto: "Descripción pendiente: agrega esta obra en obras.js para ponerle título y texto.",
-    atajos: false
+    atajos: true
   },
 
   musica: {

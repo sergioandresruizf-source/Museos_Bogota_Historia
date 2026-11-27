@@ -847,6 +847,7 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'KeyI' && !e.repeat) toggleSack();
   if (CFG.atajos && e.shiftKey && e.code === 'KeyE') cheatExploreAll();
   if (CFG.atajos && e.shiftKey && e.code === 'KeyC') cheatCine();
+  if (CFG.atajos && e.shiftKey && e.code === 'KeyK') cheatCalavera();
   if (CFG.atajos && e.shiftKey && e.code === 'KeyP' && cur && cur.name === 'reto') reto.skip();
 });
 window.addEventListener('keyup', (e) => { keys[e.code] = false; });
@@ -2771,6 +2772,9 @@ function cheatExploreAll() {
   for (let i = 0; i < N_ISL; i++) { save.entered[i] = true; save.reached[i] = true; islandWorks(i).forEach((_, j) => { save.viewed[i + ':' + j] = true; }); }
   persist(); updateHUD(); toast('[atajo] Todas las islas exploradas', 2000);
 }
+function cheatCalavera() {   // Shift+K: todas las islas exploradas, niebla fuera y barco junto a la Isla Calavera
+  if (ui.title || ui.finale) return; cheatExploreAll(); save.fogLifted = true; persist(); toast('[atajo] Isla Calavera desbloqueada', 2200); go('sea', { from: SKULL_I });
+}
 function cheatCine() { cheatExploreAll(); save.fogLifted = true; go('cine', {}); }
 
 /* ======================================================================
@@ -2805,7 +2809,7 @@ function boot() {
   requestAnimationFrame((t) => { last = t; frame(t); });
 }
 window.__art = { mk, buildArrivalBG, buildHall, drawFrame, drawCheck, drawPirate, WATER, CLOUD, FLAG };
-window.__juego = { flagFor, isRunning, oro, GOAL, ORO_DEF, completarJuego, oroInteract, openDialog, closeDialog, music, MUS, reto, RETOS, lanzarReto, get cur() { return cur; }, scenes, go, save: () => save, setScene, sea, museum, arrival, cine, ui, PLACES, FLAG, cheatExploreAll };
+window.__juego = { flagFor, isRunning, oro, GOAL, ORO_DEF, completarJuego, oroInteract, openDialog, closeDialog, music, MUS, reto, RETOS, lanzarReto, get cur() { return cur; }, scenes, go, save: () => save, setScene, sea, museum, arrival, cine, ui, PLACES, FLAG, cheatExploreAll, cheatCalavera };
 if (SHIP.length && SHIP.every((im) => im.complete)) boot();
 else { let n = 0; SHIP.forEach((im) => { const done = () => { if (++n === SHIP.length) boot(); }; if (im.complete) done(); else { im.onload = done; im.onerror = done; } }); }
 })();

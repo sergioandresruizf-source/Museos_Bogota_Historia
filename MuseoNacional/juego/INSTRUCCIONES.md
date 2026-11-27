@@ -148,3 +148,6 @@ Ya no es un templo griego recoloreado: al atracar ves **la misma isla de cerca**
 **Arena.** Nuevo fondo `retoBackground('claro')`: claro de tierra irregular en la selva, piedras ceremoniales con musgo, árboles que cierran el espacio, braseros de piedra, luciérnagas y niebla.
 
 **Ritmo.** Las obras que pasan por el pasillo son las **obras reales removidas** (con su imagen; si aún no hay, usa cualquiera con imagen) y abajo a la derecha se lee el título de la siguiente. La melodía (`MEL`, `BASS` en el código) suena programada exactamente en el compás de cada obra, con bajo y tambor; al pulsar a tiempo suena la misma nota más fuerte. Audio con antelación de 40 ms para que coincida con el toque.
+
+## 18. Atajo de prueba: ir a la Isla Calavera
+Con `atajos: true` en `obras.js`: **Shift + K** marca todas las islas como exploradas, quita la niebla y deja el barco junto a la Isla Calavera (pulsa A para atracar). Otros atajos: Shift+E (explorar todo), Shift+C (cinemática final), Shift+P (omitir reto). **Antes de publicar, pon `atajos: false`.**
