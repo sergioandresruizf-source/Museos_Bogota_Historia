@@ -160,3 +160,8 @@ Con `atajos: true` en `obras.js`: **Shift + K** marca todas las islas como explo
 5. Tras vencerlo, el barco zarpa con las obras en el saco y comienza la entrega manual (sección 16).
 
 Ajustes en `gameSalida`: `S.casts >= 5` (fases), `S.ts = 3.6` (ventana de golpe), `S.ts = S.casts === 3 ? 1.1 : 1.5` (jadeos).
+
+## 20. Puerta de salida y animación rápida
+- **Puerta al final del pasillo** de la Isla Calavera, junto al cofre (`drawDoor`). Cerrada con barrotes hasta llevarse las obras; después brilla en verde con el rótulo SALIDA. Acercarse y pulsar A: aparece el Chamán (primera vez) o se vuelve al muelle. La puerta del inicio sigue funcionando.
+- **Animación de colocar obras** reducida de ~4 s a ~1,5 s (`updEnt`: abrir 0,3 s, subir 0,3 s, volar 0,4 s, colocar 0,45 s).
+- Tras el juego de ritmo, el fondo del mensaje «todas las obras están a salvo» ya no muestra cuadros.
