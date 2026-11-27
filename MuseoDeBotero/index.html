@@ -479,6 +479,13 @@
       .dk em{font-style:normal;font-size:.62rem}.dk.cur{outline:2px solid var(--ca)}
       .dk.ok{color:#fff;background:var(--c);animation:dkg 1.4s infinite alternate}@keyframes dkg{to{box-shadow:0 0 12px 2px #ffd23f}}
       @media(max-width:700px){#dock{left:auto;right:10px;transform:none;bottom:76px;flex-wrap:wrap;border-radius:16px;justify-content:flex-end}}
+      #hud{left:50%;right:auto;transform:translateX(-50%);width:max-content;max-width:min(980px,calc(100vw - 20px));justify-content:center}
+      #hud .panel{left:50% !important;transform:translateX(-50%)}
+      #hud #obp{width:min(380px,calc(100vw - 20px))}
+      @media (max-width:1100px){#hud{top:max(52px,calc(env(safe-area-inset-top) + 44px))}}
+      #obl{display:grid;gap:6px}
+      #obl .chip{display:block;width:100%;text-align:left;border-radius:14px;line-height:1.25}
+      #obl small{display:block;font-weight:700;color:var(--mu)}
     </style>
   </head>
   <body>
@@ -496,6 +503,8 @@
       <button id="mub" class="chip" type="button" aria-expanded="false" aria-controls="mup" title="Música y sonido">🎵 <small id="mua">▾</small></button>
       <button id="evb" class="chip" type="button" aria-expanded="false" aria-controls="evp" title="Menú de eventos (con contraseña)">🎭 <small id="eva">▾</small></button>
       <div id="evp" class="panel" hidden aria-label="Menú de eventos"><div id="evl"><label class="pill">🔒 <input id="evpw" type="password" placeholder="Contraseña" autocomplete="off" style="border:0;background:transparent;width:120px;font-weight:800"></label> <button id="evok" class="chip" type="button">Entrar</button></div><div id="evm" hidden><select id="evs" aria-label="Evento" style="padding:6px 10px;border-radius:12px;border:2px solid var(--ca);background:var(--c2);color:var(--ca);font-weight:800;max-width:100%"></select> <button id="evgo" class="chip" type="button">▶ Lanzar</button></div><small class="muted" id="evmsg"></small></div>
+      <button id="obb" class="chip" type="button" aria-expanded="false" aria-controls="obp" title="Objetivos pendientes: toca uno y te guío">🎯 <span id="obn">0</span> <small id="oba">▾</small></button>
+      <div id="obp" class="panel" hidden aria-label="Objetivos pendientes"><b>Objetivos pendientes</b><small class="muted">Toca uno y una flecha te guía hasta allá.</small><div id="obl"></div><button id="obx" class="chip" type="button" hidden>✕ Quitar guía</button></div>
       <span class="pill" id="mi" hidden></span><span class="pill" id="meta"></span>
       <div id="prog" class="panel" hidden aria-label="Progreso del recorrido">
         <div id="pr1">
@@ -2542,6 +2551,7 @@
       }
       /* Navegación: objetivo + flecha */
       function meta() {
+        if (OBJC) { const g = OBJC.get(); if (g) return g; OBJC = null; }
         if (th)
           return {
             x: th.x,
@@ -3803,12 +3813,12 @@
         c.fillStyle = "rgba(58,29,18,.88)"; c.beginPath(); c.roundRect(VW / 2 - w / 2, VH - 136, w, 30, 15); c.fill();
         tx(t, VW / 2, VH - 116, 14, "#fbebc6");
       }
-      function nxMini() {
+      var nxMini = function () {
         const s = MW / NC, s2 = MH / NR;
         if (MO) { mm.fillStyle = "#a8324f"; mm.beginPath(); mm.arc((MO.x / T) * s, (MO.y / T) * s2, 5, 0, 7); mm.fill(); }
         if (RE) { mm.fillStyle = "#7a5bb0"; mm.fillRect((RE.x / T) * s - 3, (RE.y / T) * s2 - 3, 7, 7); }
         if (CT) { mm.fillStyle = "#e07a05"; mm.fillRect((CT.x / T) * s - 2, (CT.y / T) * s2 - 2, 5, 5); }
-      }
+      };
       /* --- Retos del curador: 3 minijuegos que rotan --- */
       function nxReto() { RE = null; [mjZoom, mjCrono, mjVF][rj++ % 3](); }
       function mjZoom() {
@@ -3921,6 +3931,50 @@
         $("#evmsg").textContent = "Lanzado: " + e.n;
         evHecho(e);
       };
+      /* ===== Menú de objetivos pendientes con guía ===== */
+      let OBJC = null, objL = [];
+      const cerca = (a) => a.slice().sort((p, q) => Math.hypot(p.x - X, p.y - Y) - Math.hypot(q.x - X, q.y - Y))[0];
+      function objList() {
+        const l = [], sin = (k) => OBV.filter((f) => f.k === k && !vis.has(f.n));
+        if (th) l.push({ t: "🥷 Atrapa al ladrón", s: `va por «${th.f.ti}»`, get: () => th && { x: th.x, y: th.y, t: "Guía: ¡atrapa al ladrón!" } });
+        if (MO) l.push({ t: "🌵 Lleva al monstruo a un cactus", s: "o escóndete en una caja", get: () => { const q = MO && cerca(CA); return q && { x: q.x, y: q.y, t: "Guía: el cactus más cercano" }; } });
+        if (LU.length) l.push({ t: "🕯️ Recoge las luciérnagas", s: `faltan ${LU.length}`, get: () => { const q = LU.length && cerca(LU); return q && { x: q.x, y: q.y, t: "Guía: luciérnaga más cercana" }; } });
+        if (GL.length) l.push({ t: "🎈 Revienta los globos", s: `quedan ${GL.length}`, get: () => { const q = GL.length && cerca(GL); return q && { x: q.x, y: q.y, t: "Guía: globo más cercano" }; } });
+        if (CT) l.push({ t: "😺 Atrapa al gato fugitivo", s: "se cuela por las grietas", get: () => CT && { x: CT.x, y: CT.y, t: "Guía: ¡el gato!" } });
+        if (RE) l.push({ t: "❓ Reto del curador", s: "pulsa E en el podio", get: () => RE && { x: RE.x, y: RE.y, t: "Guía: reto del curador" } });
+        if (mis) l.push({ t: "📋 Encargo del visitante", s: D[mis.n][1], get: () => { const f = mis && fr.find((q) => q.n === mis.n); return f && { x: f.x, y: f.y, t: "Guía: la obra del encargo" }; } });
+        if (od) l.push({ t: "🌟 Obra del día (puntos dobles)", s: D[od][0], get: () => { const f = od && fr.find((q) => q.n === od); return f && { x: f.x, y: f.y, t: "Guía: obra del día" }; } });
+        const tq = fr.filter((f) => f.cr > 0).length;
+        if (tq) l.push({ t: `🖼️ Endereza cuadros torcidos (${tq})`, s: "pulsa E frente a cada uno", get: () => { const q = cerca(fr.filter((f) => f.cr > 0)); return q && { x: q.x, y: q.y, t: "Guía: cuadro torcido" }; } });
+        SALAS.concat(OPC).forEach((k) => {
+          const op = OPC.includes(k), t = op ? OBH.filter((f) => f.k === k && !vis.has(f.n)) : sin(k);
+          if (t.length) l.push({ t: `🏠 Casa ${SN[k]}${op ? " (opcional)" : ""}`, s: `faltan ${t.length} obras`, o: op ? 1 : 0, get: () => { const q = cerca(op ? OBH.filter((f) => f.k === k && !vis.has(f.n)) : sin(k)); return q && { x: q.x, y: q.y, t: `Guía: obra sin ver en la Casa ${SN[k]}` }; } });
+        });
+        if (!OBV.some((f) => !vis.has(f.n))) l.push({ t: "🏁 Finalizar recorrido", s: "ya viste todas las obras", get: () => ({ x: EX.x, y: EX.y, t: "Guía: la salida" }) });
+        return l;
+      }
+      function objPinta() {
+        objL = objList();
+        $("#obn").textContent = objL.length;
+        if ($("#obp").hidden) return;
+        $("#obl").innerHTML = objL.map((o, i) => `<button type="button" class="chip" data-i="${i}">${o.t}<small>${o.s}</small></button>`).join("") || "<small>Nada pendiente por ahora.</small>";
+        $("#obx").hidden = !OBJC;
+      }
+      $("#obb").onclick = () => { const o = $("#obp").hidden; panel("#obp", "#obb", "#oba", o); if (o) objPinta(); };
+      $("#obl").onclick = (e) => {
+        const b = e.target.closest("[data-i]");
+        if (!b) return;
+        OBJC = objL[+b.dataset.i]; tono(660, 0.2, 0.12);
+        say("🎯 Guía activada: sigue la flecha.", 3500);
+        panel("#obp", "#obb", "#oba", false);
+      };
+      $("#obx").onclick = () => { OBJC = null; say("Guía desactivada.", 2500); objPinta(); };
+      const PN = [["#prog", "#pgb", "#pga"], ["#mup", "#mub", "#mua"], ["#evp", "#evb", "#eva"], ["#obp", "#obb", "#oba"]];
+      PN.forEach(([p, b]) => $(b).addEventListener("click", () => { if (!$(p).hidden) PN.forEach(([p2, b2, a2]) => p2 !== p && panel(p2, b2, a2, false)); }));
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape") panel("#obp", "#obb", "#oba", false); });
+      setInterval(() => go && objPinta(), 700);
+      const nxMini0 = nxMini;
+      nxMini = function () { nxMini0(); if (OBJC && MT) { mm.strokeStyle = "#ffd23f"; mm.lineWidth = 2; mm.beginPath(); mm.arc((MT.x / T) * (MW / NC), (MT.y / T) * (MH / NR), 5, 0, 7); mm.stroke(); } };
       hud();
       requestAnimationFrame(loop);
     </script>
