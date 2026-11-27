@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Museo</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="juego">
+    <canvas id="pantalla"></canvas>
+    <div id="mira">+</div>
+    <div id="titulo"></div>
+    <div id="sala"></div>
+    <div id="contador">
+      <h4>Obras vistas</h4>
+      <div class="c-fila"><span>Museo</span><b id="c-total"></b></div>
+      <div class="c-fila"><span id="c-nombre"></span><b id="c-piso"></b></div>
+      <div id="c-barra"><i id="c-relleno"></i><i id="c-marca"></i></div>
+      <div id="c-estado"></div>
+    </div>
+    <div id="mensajes" hidden></div>
+    <div id="jefe-barra" hidden>
+      <div id="jb-nombre"></div>
+      <div id="jb-marco"><i id="jb-relleno"></i></div>
+    </div>
+    <div id="pista"></div>
+    <div id="ayuda"></div>
+    <div id="giro">Gira el dispositivo en horizontal para jugar mejor</div>
+    <div id="tactil" hidden>
+      <div id="joy"><div id="knob"></div></div>
+      <div id="b-top"><button id="b-mapa">Mapa</button><button id="b-son">🔊</button><button id="b-full">⛶</button></div>
+      <button id="b-act">Interactuar</button>
+      <button id="b-rec" hidden>Recargar</button>
+    </div>
+    <div id="mapa-ui" hidden>
+      <button class="cerrar" id="m-cerrar">✕</button>
+      <h2 id="m-titulo"></h2>
+      <canvas id="m-canvas" width="960" height="600"></canvas>
+      <div id="m-tabs"></div>
+      <small>← / → o 1-4 para cambiar de piso · [M] o [Tab] cerrar</small>
+    </div>
+    <div id="panel" hidden>
+      <button class="cerrar" id="p-cerrar">✕</button>
+      <h2 id="p-titulo"></h2>
+      <h3 id="p-sub"></h3>
+      <img id="p-img" alt="">
+      <p id="p-texto"></p>
+      <div id="p-botones"></div>
+      <small>[E] / [Esc] para cerrar</small>
+    </div>
+    <div id="aviso" hidden></div>
+    <div id="fin" hidden>
+      <div id="f-caja">
+        <h1>¡Gracias por visitar el museo!</h1>
+        <p>Venciste al Curador y la colección está a salvo.<br>Esperamos que hayas disfrutado del recorrido por el Museo de Arte Moderno de Bogotá.</p>
+        <div id="f-stats"></div>
+        <div id="f-botones"><button id="f-seguir">Seguir recorriendo</button><button id="f-reiniciar">Volver a empezar</button></div>
+      </div>
+    </div>
+  </div>
+  <script src="js/config.js"></script>
+  <script src="js/obras.js"></script>
+  <script src="js/nivel.js"></script>
+  <script src="js/recursos.js"></script>
+  <script src="js/sonido.js"></script>
+  <script src="js/combate.js"></script>
+  <script src="js/motor.js"></script>
+</body>
+</html>

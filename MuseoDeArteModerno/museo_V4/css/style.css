@@ -1,0 +1,103 @@
+body { margin:0; background:#000; color:#eee; font-family:Georgia,serif; }
+#juego { position:relative; width:min(100vw, 160vh); margin:0 auto; overflow:hidden; }
+canvas { width:100%; display:block; image-rendering:pixelated; image-rendering:crisp-edges; cursor:crosshair; }
+#mira { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); opacity:.55; pointer-events:none; color:#fff;
+        font:bold 18px monospace; text-shadow:0 0 2px #000; }
+#mira[hidden] { display:none; }
+
+/* textos del HUD: letra gruesa con sombra, como en DOOM */
+#titulo, #sala, #ayuda, #pista, #mensajes, #jb-nombre { font-family:"Arial Black","Trebuchet MS",Arial,sans-serif; letter-spacing:.02em; }
+#titulo { position:absolute; top:8px; left:12px; font-size:16px; color:#f2ead8; text-shadow:2px 2px 0 #000; text-transform:uppercase; }
+#sala { position:absolute; top:8px; right:12px; font-size:14px; color:#e0b84f; text-shadow:2px 2px 0 #000; text-transform:uppercase; }
+#ayuda { position:absolute; bottom:6px; left:12px; font-size:11px; opacity:.75; text-shadow:1px 1px 0 #000; font-family:Arial,sans-serif; font-weight:bold; }
+#pista { position:absolute; bottom:16%; width:100%; text-align:center; font-size:20px; color:#fff; text-shadow:2px 2px 0 #000, 0 0 6px #000; pointer-events:none; }
+#mensajes { position:absolute; top:34px; left:12px; font-size:15px; color:#ff4a3a; text-shadow:2px 2px 0 #000; pointer-events:none; }
+#mensajes[hidden] { display:none; }
+
+#panel, #mapa-ui { position:absolute; inset:8% 12%; background:rgba(12,10,9,.95); border:3px solid #6e2a1e; outline:2px solid #b8913b; outline-offset:-7px;
+         padding:18px 26px; overflow:auto; text-align:center; box-shadow:0 0 0 2px #000, 0 10px 40px #000; }
+#panel[hidden], #mapa-ui[hidden] { display:none; }
+#panel h3 { margin:0 0 10px; font-weight:normal; color:#ccc; }
+#panel h2, #mapa-ui h2 { color:#e0b84f; margin:0 0 10px; font-family:"Arial Black",Arial,sans-serif; text-transform:uppercase; letter-spacing:.03em; text-shadow:2px 2px 0 #000; }
+#panel img { max-width:100%; max-height:58%; border:2px solid #b8913b; margin-bottom:10px; }
+#panel p { font-size:18px; line-height:1.5; white-space:pre-line; }
+#m-canvas { max-width:100%; border:2px solid #3a3a3a; background:#000; }
+button { background:#2a2420; color:#eee; border:2px solid #6e685f; border-top-color:#9a948a; border-left-color:#9a948a; padding:6px 12px; margin:6px 4px;
+         font:bold 14px Arial,sans-serif; cursor:pointer; }
+button:hover { background:#3a312a; }
+button.act { background:#b8913b; color:#000; }
+
+/* ===== controles táctiles (se activan solos en teléfono/tablet) ===== */
+canvas { touch-action: none; }
+.cerrar { position:absolute; top:8px; right:8px; width:36px; height:36px; padding:0; margin:0; border-radius:50%; font-size:18px; }
+#tactil[hidden], #giro { display:none; }
+body.tactil { user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; overscroll-behavior:none; }
+#joy { position:fixed; z-index:6; left:max(20px, env(safe-area-inset-left)); bottom:max(20px, env(safe-area-inset-bottom)); width:136px; height:136px;
+       border-radius:50%; background:rgba(255,255,255,.1); border:2px solid rgba(255,255,255,.35); touch-action:none; }
+#knob { position:absolute; left:50%; top:50%; width:58px; height:58px; margin:-29px 0 0 -29px; border-radius:50%; background:rgba(224,184,79,.8); pointer-events:none; }
+#b-act { position:fixed; z-index:6; right:max(24px, env(safe-area-inset-right)); bottom:max(28px, env(safe-area-inset-bottom)); width:96px; height:96px; margin:0; padding:0;
+         border-radius:50%; font-size:14px; background:rgba(40,30,20,.75); color:#fff; border:2px solid rgba(255,255,255,.45); touch-action:none; }
+#b-act.lista { background:#e0b84f; color:#000; border-color:#fff; }
+#b-act.fuego { background:rgba(190,30,20,.85); color:#fff; border-color:#ffb0a0; }
+#b-rec { position:fixed; z-index:6; right:max(132px, calc(env(safe-area-inset-right) + 108px)); bottom:max(40px, env(safe-area-inset-bottom)); width:62px; height:62px;
+         margin:0; padding:0; border-radius:50%; font-size:11px; background:rgba(40,30,20,.8); color:#ffd36a; border:2px solid rgba(255,211,106,.7); touch-action:none; }
+#b-rec[hidden] { display:none; }
+#b-top { position:fixed; z-index:6; top:max(8px, env(safe-area-inset-top)); left:50%; transform:translateX(-50%); display:flex; gap:6px; }
+#b-top button { margin:0; min-width:44px; height:40px; border-radius:20px; background:rgba(40,30,20,.75); }
+body.modal #joy, body.modal #b-rec { visibility:hidden; }
+body.tactil #titulo { font-size:12px; } body.tactil #sala { font-size:11px; } body.tactil #pista { bottom:24%; }
+body.tactil #mensajes { font-size:12px; top:24px; }
+body.armado #ayuda { bottom:calc(32 / 300 * 100% + 4px); }   /* encima de la barra de estado (32 px de 300) */
+body.armado #pista { bottom:calc(32 / 300 * 100% + 28px); }
+@media (orientation: portrait) { body.tactil #giro { display:block; position:fixed; z-index:6; bottom:170px; width:100%; text-align:center; font-size:13px; opacity:.7; } }
+
+/* mapa (M o Tab) estilo automapa de DOOM: ocupa casi toda la pantalla */
+#mapa-ui { inset:3% 4%; padding:12px 18px; }
+#mapa-ui:not([hidden]) { display:flex; flex-direction:column; align-items:center; }
+#mapa-ui h2 { margin:0 0 6px; }
+#m-canvas { flex:1 1 0; min-height:0; width:100%; object-fit:contain; }
+
+/* contador de obras vistas (museo y piso actual) y avisos de desbloqueo */
+#contador { position:absolute; top:34px; left:12px; min-width:190px; max-width:250px; padding:6px 10px 7px; font-size:14px;
+            background:rgba(16,13,11,.7); border:2px solid #4a4540; border-top-color:#7a746b; text-shadow:0 0 3px #000; pointer-events:none; }
+#contador[hidden] { display:none; }
+#contador h4 { margin:0 0 3px; font:bold 11px Arial,sans-serif; letter-spacing:.08em; text-transform:uppercase; color:#d8b25a; }
+.c-fila { display:flex; justify-content:space-between; gap:16px; }
+.c-fila b { color:#ff5a44; font-family:"Arial Black",Arial,sans-serif; font-weight:normal; }
+#c-barra { position:relative; height:6px; margin:5px 0 4px; background:rgba(255,255,255,.18); }
+#c-relleno { position:absolute; left:0; top:0; bottom:0; background:#b8913b; transition:width .4s; }
+#c-marca { position:absolute; top:-3px; bottom:-3px; width:2px; margin-left:-1px; background:#fff; }   /* umbral del piso (65 %) */
+#contador.ok #c-relleno { background:#7cc47f; }
+#c-estado { font-size:12px; color:#ddd; }
+#contador.sube { animation:sube 1.2s ease-out; }
+@keyframes sube { from { background:rgba(224,184,79,.5); box-shadow:0 0 0 3px #e0b84f; } }
+#aviso { position:absolute; z-index:7; top:16%; left:50%; transform:translateX(-50%); width:max-content; max-width:70%; padding:10px 18px;
+         background:rgba(12,10,9,.94); border:2px solid #e0b84f; color:#fff; font-size:18px; line-height:1.4; text-align:center;
+         white-space:pre-line; pointer-events:none; box-shadow:0 0 0 2px #000; }
+#aviso[hidden] { display:none; }
+button.bloq { opacity:.5; cursor:not-allowed; }
+body.tactil #contador { top:24px; min-width:150px; padding:4px 8px; font-size:11px; }
+body.tactil #c-estado { font-size:10px; } body.tactil #aviso { font-size:14px; }
+
+/* barra de vida del jefe (arriba de la pantalla) */
+#jefe-barra { position:absolute; z-index:5; top:7%; left:50%; transform:translateX(-50%); width:min(560px, 56%); text-align:center; pointer-events:none; }
+#jefe-barra[hidden] { display:none; }
+#jb-nombre { font-size:15px; color:#ffcf6a; text-shadow:2px 2px 0 #000; margin-bottom:3px; letter-spacing:.12em; }
+#jb-marco { height:14px; background:#1a0504; border:2px solid #000; outline:2px solid #7a2a1a; box-shadow:0 0 8px rgba(255,60,20,.4); }
+#jb-relleno { display:block; height:100%; width:100%; background:linear-gradient(#ff7a4a, #d41c10 55%, #7a0804); transition:width .15s; }
+body.tactil #jefe-barra { top:58px; } body.tactil #jb-nombre { font-size:12px; }
+
+/* pantalla final */
+#fin { position:absolute; inset:0; z-index:9; display:flex; align-items:center; justify-content:center; background:radial-gradient(#3a0c08, #000 75%);
+       animation:aparece 1.2s ease-out; }
+#fin[hidden] { display:none; }
+@keyframes aparece { from { opacity:0; } }
+#f-caja { max-width:80%; text-align:center; padding:20px 28px; }
+#f-caja h1 { margin:0 0 12px; font:900 clamp(22px, 4.2vw, 46px) "Arial Black",Arial,sans-serif; color:#ffcf6a; text-transform:uppercase;
+             text-shadow:3px 3px 0 #7a1a0c, 6px 6px 0 #000; letter-spacing:.02em; }
+#f-caja p { font-size:clamp(14px, 1.8vw, 19px); line-height:1.5; color:#eee; margin:0 0 16px; }
+#f-stats { display:inline-block; min-width:min(380px, 90%); text-align:left; margin-bottom:14px; }
+.f-fila { display:flex; justify-content:space-between; gap:24px; padding:3px 0; border-bottom:1px solid rgba(255,255,255,.12);
+          font:bold clamp(13px, 1.6vw, 17px) Arial,sans-serif; text-transform:uppercase; color:#d8b25a; }
+.f-fila b { color:#ff5a44; font-family:"Arial Black",Arial,sans-serif; }
+#f-botones button { font-size:16px; padding:10px 18px; }
