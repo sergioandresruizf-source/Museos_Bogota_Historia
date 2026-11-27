@@ -1,0 +1,14 @@
+COMO CAMBIAR UN GUION
+
+1. Abra el archivo de la obra. Se llama igual que su imagen:
+   eje1-obra1.js  ->  Imagenes/eje1-obra1.jpg  (eje 1, primera obra)
+2. Cambie solo el texto debajo de BONITO: y de VISCERAL:
+3. Guarde y recargue la pagina. No hay que tocar index.html.
+
+Cuidado:
+- No borre la linea GUION(`  ni la linea final `);
+- Dentro del texto no use el acento grave ( ` ) ni la combinacion ${
+- Una linea en blanco separa parrafos.
+
+BONITO   = texto de la "placa oficial" (antes de romper la obra).
+VISCERAL = texto que sale al terminar de romper la obra.
