@@ -40,5 +40,5 @@ Carpeta `Videos/Transiciones/` en la RAÍZ del repo (ver también `Videos/LEEME.
 - **Bitácora final**: al terminar Minecraft (transición al tesoro) aparece la escena "La selva se abre" y después la bitácora con, por museo: tiempo, entradas, veces que quiso salir y las estadísticas que el museo envía. También al juntar las 8 medallas del recorrido libre. Se puede imprimir.
 - **Estadísticas de cada museo**: el aviso de fin acepta `stats` opcional:
       parent.postMessage({tipo:'museo-completo', museo:'<id>', stats:[['Obras vistas','30 / 30'], ['Tiempo','12:04']]}, '*')
-  Nacional, Oro, Independencia, Casa de Moneda, Botero y MAMBO ya las envían (leen su propia pantalla final). Antimuseo y Minecraft solo registran tiempo y entradas.
+  Nacional, Oro, Independencia, Casa de Moneda, Botero y MAMBO ya las envían (leen su propia pantalla final). Antimuseo y Minecraft solo registran tiempo y entradas
 - Guardado: `museos.bitacora` (además de `museos.avance`, `museos.logros`, `museos.modo`, `museos.sonido`).
