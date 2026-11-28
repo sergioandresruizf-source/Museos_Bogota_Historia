@@ -350,8 +350,16 @@
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
             <h3 class="font-teko text-3xl font-bold">MUSEO SIN <span class="line-through decoration-[#f1254e] decoration-4">CENSURA</span></h3>
             <p class="font-mono text-sm opacity-70">Proyecto Fragmentos: Minecraft Edition</p>
+            <button id="ruta-fin" type="button" class="btn-brutalist px-8 py-4 font-mono font-bold" style="display:none">Finalizar la ruta ✓</button>
         </div>
     </footer>
+    <script>
+    /* CONEXIÓN CON LA RUTA: último museo; el botón solo aparece dentro del mapa y cierra el recorrido */
+    if (window.parent !== window) {
+        const b = document.getElementById('ruta-fin'); b.style.display = 'inline-block';
+        b.onclick = () => { try { window.parent.postMessage({ tipo: 'museo-completo', museo: 'minecraft' }, '*'); } catch (e) {} };
+    }
+    </script>
 
 </body>
 </html>

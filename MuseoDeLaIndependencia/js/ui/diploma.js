@@ -39,9 +39,12 @@ export function openDiploma(app) {
     <div class="btn-row">
       <button type="button" class="btn btn-ghost" data-act="report">${ICONS.book}<span>Ver bitácora</span></button>
       <button type="button" class="btn btn-ghost" data-act="print">${ICONS.print}<span>Imprimir diploma</span></button>
-      <button type="button" class="btn btn-primary" data-act="close">Seguir explorando</button>
+      ${window.parent !== window ? '<button type="button" class="btn btn-primary" data-act="ruta">Finalizar y continuar →</button>' : ""}
+      <button type="button" class="btn btn-ghost" data-act="close">Seguir explorando</button>
     </div>`;
   m.body.querySelector('[data-act="close"]').addEventListener("click", () => m.close());
+  /* CONEXIÓN CON LA RUTA: avisa al mapa que este museo terminó */
+  m.body.querySelector('[data-act="ruta"]')?.addEventListener("click", () => { try { window.parent.postMessage({ tipo: "museo-completo", museo: "florero" }, "*"); } catch (e) {} });
   m.body.querySelector('[data-act="report"]').addEventListener("click", () => { m.close(); app.actions.openReport(); });
   m.body.querySelector('[data-act="print"]').addEventListener("click", () => printElement(m.body.querySelector("#diploma-sheet"), "diploma"));
   return m;

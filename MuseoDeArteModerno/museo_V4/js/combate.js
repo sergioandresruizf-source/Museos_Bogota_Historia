@@ -244,6 +244,9 @@ const COMBATE = api => {
   }
   $('f-seguir').addEventListener('click', () => { $('fin').hidden = true; api.seguir(); api.forzarMusica(null); });
   $('f-reiniciar').addEventListener('click', () => api.reiniciar());
+  /* CONEXIÓN CON LA RUTA: avisa al mapa que este museo terminó (el botón solo aparece dentro del mapa) */
+  if (window.parent !== window) $('f-ruta').hidden = false;
+  $('f-ruta').addEventListener('click', () => { try { window.parent.postMessage({ tipo: 'museo-completo', museo: 'mambo' }, '*'); } catch (e) {} });
 
   // ---------- interfaz pública para el motor ----------
   const armado = () => st.tieneArma && st.enSecreto && !st.muerto && !st.final;

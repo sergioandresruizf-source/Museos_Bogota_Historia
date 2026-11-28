@@ -3600,9 +3600,12 @@
           <h3>Sellos</h3>
           <div>${ST.map(([k, n, col]) => `<span class="tg${got.has(k) ? "" : " no"}" style="--c:${col}">${n}</span>`).join("")}</div>
           ${nota ? `<h3>Tu libreta</h3><div class="note">${nota.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c])}</div>` : ""}
-          <div class="btns"><button class="btn" id="r-nuevo" type="button">Nuevo recorrido</button><button class="btn s" id="r-print" type="button">Guardar / imprimir resumen</button></div>`;
+          <div class="btns"><button class="btn" id="r-nuevo" type="button">Nuevo recorrido</button><button class="btn s" id="r-print" type="button">Guardar / imprimir resumen</button>${window.parent !== window ? '<button class="btn" id="r-ruta" type="button">Continuar la ruta →</button>' : ""}</div>`;
         $("#r-nuevo").onclick = reiniciar;
         $("#r-print").onclick = () => window.print();
+        /* CONEXIÓN CON LA RUTA: avisa al mapa que este museo terminó */
+        const rRuta = $("#r-ruta");
+        if (rRuta) rRuta.onclick = () => { try { window.parent.postMessage({ tipo: "museo-completo", museo: "botero" }, "*"); } catch (e) {} };
         ["#hud", "#mm", "#ctl"].forEach((q) => ($(q).hidden = true));
         $("#res").hidden = false;
         $("#res").scrollTop = 0;
