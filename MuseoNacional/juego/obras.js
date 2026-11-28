@@ -5,8 +5,8 @@ window.MUSEO = {
 
   config: {
     exigirPasarUltimaObra: true,
-    velocidadBarco: 105,
-    velocidadCorrer: 1.8,
+    velocidadBarco: 150,
+    velocidadCorrer: 2,
     museoId: "nacional",
     urlSiguienteMuseo: "",
     huecoMuestraDescripcion: false,
