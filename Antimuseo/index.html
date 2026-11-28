@@ -1179,7 +1179,12 @@ const SIGUIENTE = { url: "https://sergioandresruizf-source.github.io/Museos_Bogo
     el.addEventListener("pointerup", suelta); el.addEventListener("pointercancel", suelta);
     /* el enlace se activa cuando el glitch ya termino */
     document.addEventListener("antimuseo:colapso-terminado", () => { if (SIGUIENTE.url) vit.classList.add("enlace"); });
-    marco.addEventListener("click", () => { if (vit.classList.contains("enlace")) location.href = SIGUIENTE.url; });
+    marco.addEventListener("click", () => {
+      if (!vit.classList.contains("enlace")) return;
+      /* CONEXIÓN CON LA RUTA: dentro del mapa avisa que terminó; si se abre suelto, usa el enlace de siempre */
+      if (window.parent !== window) { try { window.parent.postMessage({ tipo: "museo-completo", museo: "antimuseo" }, "*"); } catch (e) {} }
+      else location.href = SIGUIENTE.url;
+    });
   })();
 
   const RESTOS = ["REGLA N°3 · NO TOQUE", "RETIRADO", "ARCHÍVESE", "Prohibido el flash", "EXP. 0001-B", "Silencio, por favor", "APROBACIÓN DENEGADA", "CIRCULE", "PLACA OFICIAL: ", "NO APTO", "Sea siempre educado", "¿QUIÉN AUTORIZÓ ESTO?"];

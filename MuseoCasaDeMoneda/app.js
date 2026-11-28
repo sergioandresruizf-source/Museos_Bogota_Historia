@@ -1103,8 +1103,11 @@ function close() {
   $("#modal").classList.remove("on");
   $("#screen").innerHTML =
     done.size === ITEMS.length
-      ? '<div class="msg">🏆 ¡Completaste la colección!</div>'
+      ? '<div class="msg">🏆 ¡Completaste la colección!' + (window.parent !== window ? '<br><button class="btn" id="ruta">Finalizar y continuar →</button>' : '') + '</div>'
       : '<div class="msg">Elige otra pieza para jugar 👇</div>';
+  /* CONEXIÓN CON LA RUTA: avisa al mapa que este museo terminó */
+  const rutaBtn = $("#ruta");
+  if (rutaBtn) rutaBtn.onclick = () => { try { window.parent.postMessage({ tipo: "museo-completo", museo: "moneda" }, "*"); } catch (e) {} };
   $("#t").textContent = "--";
   $("#s").textContent = 0;
 }

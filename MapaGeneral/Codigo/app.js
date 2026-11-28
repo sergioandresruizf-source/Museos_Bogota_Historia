@@ -74,13 +74,11 @@ const fr=ov.querySelector('iframe'),sig=ov.querySelector('#mvs'),atras=ov.queryS
 /* en la ruta lineal no se vuelve al mapa hasta terminarla (o si se entró desde el panel de pruebas) */
 const puedeVolver=()=>modo==='libre'||desdePanel||avance>=N;
 function botones(i){
- if(modo==='libre'){
-  atras.textContent='← Volver a los museos';atras.hidden=false;
-  sig.hidden=logros.has(M[i].id);sig.textContent='Terminé este museo ✓';
- }else{
-  atras.textContent='← Volver al mapa';atras.hidden=!puedeVolver();
-  const j=prox(i);sig.hidden=false;sig.textContent=j<N?'Siguiente: '+M[j].s+' →':'Terminar recorrido ✓';
- }
+ if(modo==='libre'){atras.textContent='← Volver a los museos';atras.hidden=false}
+ else{atras.textContent='← Volver al mapa';atras.hidden=!puedeVolver()}
+ /* YA NO HAY botón "Siguiente museo" / "Terminé este museo": un museo solo se da por terminado cuando él mismo avisa (museo-completo).
+    Para probar la cadena sin jugar cada museo: con PRUEBA=true, escribe  simularFin()  en la consola del navegador. */
+ sig.hidden=true;
 }
 function abrir(i,panel){
  act=i;cumplido=false;desdePanel=!!panel;const m=M[i];
@@ -110,7 +108,8 @@ function siguiente(){
  aviso=saltados.length?saltados.join(', ')+': su grupo aún no ha agregado el enlace, la ruta sigue.':'';
  if(j>=N){
   aviso=avance>=N?'¡Llegaste al tesoro! Recorrido completo.':'Fin de la ruta (modo prueba: tu avance no cambió).';
-  cerrar();return;
+  transicion(act,N,cerrar);   // última animación: del último museo al tesoro (Transiciones/<último>-tesoro.webm)
+  return;
  }
  transicion(act,j,()=>abrir(j,desdePanel));   // animación entre museos (solo ruta lineal)
 }
@@ -121,6 +120,7 @@ function completar(){
  cerrar();
 }
 const hecho=()=>modo==='libre'?completar():siguiente();
+if(PRUEBA)window.simularFin=()=>{if(act>=0)hecho()};   // solo pruebas: simula que el museo abierto avisó 'museo-completo'
 atras.onclick=()=>{if(puedeVolver())cerrar()};
 sig.onclick=hecho;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ov.className&&puedeVolver())cerrar()});
@@ -142,9 +142,9 @@ document.body.appendChild(tr);
 const trV=tr.querySelector('video'),trT=tr.querySelector('.tr-t'),trS=tr.querySelector('.tr-s');
 let trEnCurso=null;
 function transicion(i,j,cargar){
- if(!TRANSICION.activa||rm||j>=N){cargar();return}
+ if(!TRANSICION.activa||rm||j>N){cargar();return}
  if(trEnCurso)trEnCurso.cerrar(true);
- const a=M[i],b=M[j],base=TRANSICION.dir+a.id+'-'+b.id;
+ const a=M[i],b=j<N?M[j]:{id:'tesoro',s:'el tesoro',c:'#ffd24a'},base=TRANSICION.dir+a.id+'-'+b.id;
  let animListo=false,cargado=false,fin=false,raf=0;const tms=[];
  const T=(f,ms)=>{const t=setTimeout(f,ms);tms.push(t);return t};
  const cerrar=forzar=>{
