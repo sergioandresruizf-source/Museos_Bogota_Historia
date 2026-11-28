@@ -35,6 +35,55 @@
             z-index: 0;
         }
 
+
+        /* ===== Imagen de fondo del HERO (solo afecta a #hero) ===== */
+        #hero .hero-bg-image {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            /* 👇 CAMBIA AQUÍ el nombre/ruta de tu imagen */
+            background-image: url('image_background.png');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+        /* Capa oscura para que el texto blanco se siga leyendo bien.
+           Sube/baja el 0.65 para oscurecer más o menos la imagen. */
+        #hero .hero-bg-image::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(17, 17, 17, 0.65);
+        }
+        /* Viñeta más suave en el hero para que la imagen se vea hasta los bordes */
+        #hero::after {
+            background: radial-gradient(circle at center, transparent 40%, rgba(17,17,17,0.85) 100%);
+        }
+
+
+        /* ===== Galería de 3 imágenes (sección El Proyecto) ===== */
+        .gallery-item {
+            position: relative;
+            border: 4px solid #111;
+            background-color: #d1d5db;            /* color mientras no hay imagen */
+            background-size: cover;
+            background-position: center;
+            box-shadow: 8px 8px 0 0 #f1254e;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .gallery-item:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0 0 #111;
+        }
+        .gallery-item figcaption {
+            position: absolute;
+            left: 0; bottom: 0;
+            background: #111; color: #fff;
+            font-size: 0.7rem; font-weight: 700;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            padding: 4px 10px;
+        }
+
         /* Vertical Text Styling */
         .vertical-text {
             writing-mode: vertical-rl;
@@ -82,7 +131,7 @@
             left: 0;
         }
 
-        /* Isometric CSS Voxel Art representing "Fragmentos"*/
+        /* Isometric CSS Voxel Art representing "Fragmentos" */
         .isometric-scene {
             position: relative;
             width: 200px;
@@ -144,6 +193,32 @@
             background-image: radial-gradient(#d1d5db 1px, transparent 1px);
             background-size: 20px 20px;
         }
+
+        /* Estilos mínimos para herramientas interactivas */
+        body.tool-active, body.tool-active * {
+            cursor: none !important;
+            user-select: none;
+        }
+        #mc-canvas {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9998;
+        }
+        #mc-cursor {
+            position: fixed;
+            width: 48px;
+            height: 48px;
+            pointer-events: none;
+            z-index: 9999;
+            display: none;
+            transform-origin: 85% 85%;
+            transition: transform 0.08s cubic-bezier(0.2, 0.9, 0.3, 1.3);
+            image-rendering: pixelated;
+        }
+        body.tool-active #mc-cursor {
+            display: block;
+        }
     </style>
 </head>
 <body class="font-mono text-[#111] antialiased overflow-x-hidden selection:bg-[#f1254e] selection:text-white">
@@ -161,7 +236,7 @@
                 <a href="#hero" class="hover:text-[#f1254e] transition-colors mr-6">01 INICIO</a>
                 <a href="#about" class="hover:text-[#f1254e] transition-colors mr-6">02 EL PROYECTO</a>
                 <a href="#demo" class="hover:text-[#f1254e] transition-colors mr-6">03 DEMOSTRACIÓN</a>
-                <a href="#download" class="hover:text-[#f1254e] transition-colors">04 DESCARGA</a>
+                <a href="#connect" class="hover:text-[#f1254e] transition-colors">04 CONECTARSE</a>
             </span>
         </div>
         
@@ -170,18 +245,37 @@
             MUSEO SIN <span class="text-[#f1254e] line-through decoration-2">CENSURA</span>
         </div>
 
-        <!-- Share Icon -->
-        <button aria-label="Compartir">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" class="hover:stroke-[#f1254e] transition-colors">
-                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
-                <polyline points="16 6 12 2 8 6"></polyline>
-                <line x1="12" y1="2" x2="12" y2="15"></line>
-            </svg>
-        </button>
+        <!-- Botones derechos (Pico + Grafitear + TNT + Reparar + Share) -->
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+            <button id="tool-pickaxe" type="button" class="border-2 border-white px-2.5 py-1 text-xs font-bold tracking-widest uppercase hover:bg-white hover:text-black transition-colors">
+                ⛏️ Pico
+            </button>
+            <button id="tool-spray" type="button" class="border-2 border-white px-2.5 py-1 text-xs font-bold tracking-widest uppercase hover:bg-white hover:text-black transition-colors">
+                🎨 Grafitear
+            </button>
+            <button id="tool-tnt" type="button" class="border-2 border-white px-2.5 py-1 text-xs font-bold tracking-widest uppercase hover:bg-white hover:text-black transition-colors">
+                🧨 TNT
+            </button>
+            <button id="reset-world" type="button" class="hidden border-2 border-[#f1254e] bg-[#f1254e] text-white px-2.5 py-1 text-xs font-bold tracking-widest uppercase hover:bg-white hover:text-black transition-colors">
+                Reparar
+            </button>
+
+            <!-- Share Icon -->
+            <button aria-label="Compartir">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" class="hover:stroke-[#f1254e] transition-colors">
+                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                    <polyline points="16 6 12 2 8 6"></polyline>
+                    <line x1="12" y1="2" x2="12" y2="15"></line>
+                </svg>
+            </button>
+        </div>
     </nav>
 
     <!-- SECTION 1: HERO -->
     <header class="bg-grid-pattern min-h-screen relative flex items-center justify-center text-white overflow-hidden" id="hero">
+
+        <!-- Imagen de fondo -->
+        <div class="hero-bg-image" aria-hidden="true"></div>
         
         <!-- Vertical Text Indicator -->
         <div class="absolute left-4 md:left-8 top-1/2 transform -translate-y-1/2 z-20">
@@ -251,7 +345,9 @@
             </div>
 
             <!-- Voxel Art Graphic (Minecraft Style) -->
-            <div class="order-1 lg:order-2 flex justify-center items-center h-[300px] md:h-[500px]">
+            <div class="order-1 lg:order-2 flex flex-col gap-12">
+              <!-- Voxel (más compacto para dejar espacio a las imágenes) -->
+              <div class="flex justify-center items-center h-[240px] md:h-[400px]">
                 <div class="isometric-scene group transform scale-125 md:scale-150">
                     <!-- Base layer (simulating the floor tiles of weapons) -->
                     <div class="voxel" style="bottom: 0; left: 0; transform: translateZ(0px); background-color: #4b5563;"></div>
@@ -271,6 +367,20 @@
                     <!-- Highlight Red Block representing resistance/memory -->
                     <div class="voxel bg-[#f1254e]" style="bottom: 40px; left: 40px; transform: translateZ(80px); background-color: #f1254e;"></div>
                 </div>
+              </div>
+
+              <!-- Galería: 3 imágenes (cambia las rutas en url('...')) -->
+              <div class="grid grid-cols-2 gap-8 px-2">
+                  <figure class="gallery-item col-span-2 aspect-video" style="background-image: url('image1.png');">
+                      <figcaption>Fragmentos</figcaption>
+                  </figure>
+                  <figure class="gallery-item aspect-square" style="background-image: url('image2.png');">
+                      <figcaption>Goya</figcaption>
+                  </figure>
+                  <figure class="gallery-item aspect-square" style="background-image: url('image3.png');">
+                      <figcaption>Memoria</figcaption>
+                  </figure>
+              </div>
             </div>
         </div>
     </section>
@@ -311,37 +421,36 @@
         </div>
     </section>
 
-    <!-- SECTION 4: DESCARGA -->
-    <section id="download" class="bg-grid-pattern py-32 px-6 md:px-16 flex flex-col items-center justify-center relative border-t-8 border-black overflow-hidden">
+    <!-- SECTION 4: CONECTARSE AL SERVIDOR -->
+    <section id="connect" class="bg-grid-pattern py-32 px-6 md:px-16 flex flex-col items-center justify-center relative border-t-8 border-black overflow-hidden">
         
         <!-- Large Background Typography -->
         <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5">
             <h2 class="font-teko text-[15rem] leading-none uppercase font-bold text-white whitespace-nowrap">
-                Descarga Descarga
+                Servidor Servidor
             </h2>
         </div>
 
         <div class="z-10 w-full max-w-5xl flex flex-col items-center text-center gap-8">
-            <h2 class="font-teko text-5xl md:text-7xl font-bold uppercase text-white leading-none">04 Acceso al Mundo</h2>
+            <h2 class="font-teko text-5xl md:text-7xl font-bold uppercase text-white leading-none">04 Conectar al Servidor</h2>
             
-            <p class="font-mono text-lg md:text-xl text-white mb-8 max-w-2xl">
-                Descarga los archivos del mapa y experimenta la exposición completa interactiva directamente en tu cliente de Minecraft.
+            <p class="font-mono text-lg md:text-xl text-white mb-4 max-w-2xl">
+                Ingresa directamente desde tu cliente de Minecraft (Java Edition 1.21.1) utilizando la dirección IP del servidor: 
             </p>
             
-            <!-- Massive Brutalist Button -->
-            <a href="#" class="group relative inline-flex flex-col md:flex-row items-center justify-center gap-6 border-8 border-white bg-[#f1254e] p-8 md:p-12 hover:bg-white hover:border-[#f1254e] transition-colors duration-300 shadow-[16px_16px_0px_0px_#ffffff] hover:shadow-[16px_16px_0px_0px_#111] max-w-full">
-                <span class="font-teko text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold uppercase text-white group-hover:text-black transition-colors duration-300 leading-none text-left">
-                    Descargar<br>Mundo de<br>Minecraft
-                </span>
-                
-                <!-- Arrow Icon -->
-                <div class="p-4 border-4 border-white group-hover:border-black rounded-full bg-transparent group-hover:bg-black group-hover:text-white transition-all duration-300">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <polyline points="19 12 12 19 5 12"></polyline>
-                    </svg>
+            <!-- Brutalist Server IP Box -->
+            <div class="w-full max-w-3xl border-8 border-white bg-[#111111] p-6 md:p-10 shadow-[16px_16px_0px_0px_#f1254e] flex flex-col sm:flex-row items-center justify-between gap-6">
+                <div class="text-left w-full overflow-x-auto">
+                    <span class="block text-xs uppercase tracking-widest text-[#f1254e] font-bold mb-2">IP DEL SERVIDOR</span>
+                    <code id="server-ip" class="font-mono text-2xl sm:text-3xl md:text-4xl font-bold text-white select-all">
+                        museosincensura.mcsh.gg
+                    </code>
                 </div>
-            </a>
+
+                <button id="copy-ip-btn" type="button" class="shrink-0 border-4 border-white bg-[#f1254e] text-white hover:bg-white hover:text-black font-teko text-3xl uppercase font-bold px-8 py-3 transition-colors duration-200">
+                    Copiar IP
+                </button>
+            </div>
         </div>
     </section>
 
@@ -353,12 +462,602 @@
             <button id="ruta-fin" type="button" class="btn-brutalist px-8 py-4 font-mono font-bold" style="display:none">Finalizar la ruta ✓</button>
         </div>
     </footer>
+
+    <!-- Canvas y Cursor Procedural -->
+    <canvas id="mc-canvas"></canvas>
+    <div id="mc-cursor"></div>
+
     <script>
     /* CONEXIÓN CON LA RUTA: último museo; el botón solo aparece dentro del mapa y cierra el recorrido */
     if (window.parent !== window) {
         const b = document.getElementById('ruta-fin'); b.style.display = 'inline-block';
         b.onclick = () => { try { window.parent.postMessage({ tipo: 'museo-completo', museo: 'minecraft' }, '*'); } catch (e) {} };
     }
+
+    /* COPIAR IP DEL SERVIDOR */
+    (() => {
+        const copyBtn = document.getElementById('copy-ip-btn');
+        const ipEl = document.getElementById('server-ip');
+        if (!copyBtn || !ipEl) return;
+
+        copyBtn.addEventListener('click', async () => {
+            const ip = ipEl.textContent.trim();
+            try {
+                await navigator.clipboard.writeText(ip);
+            } catch (e) {
+                const range = document.createRange();
+                range.selectNodeContents(ipEl);
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+                document.execCommand('copy');
+                sel.removeAllRanges();
+            }
+            const original = copyBtn.textContent;
+            copyBtn.textContent = '¡Copiada!';
+            copyBtn.classList.add('bg-white', 'text-black');
+            copyBtn.classList.remove('bg-[#f1254e]', 'text-white');
+            setTimeout(() => {
+                copyBtn.textContent = original;
+                copyBtn.classList.remove('bg-white', 'text-black');
+                copyBtn.classList.add('bg-[#f1254e]', 'text-white');
+            }, 1600);
+        });
+    })();
+
+    /* MOTOR PROCEDURAL: PICO MINECRAFT + GRAFITI + TNT */
+    (() => {
+        const btnPickaxe = document.getElementById('tool-pickaxe');
+        const btnSpray = document.getElementById('tool-spray');
+        const btnTnt = document.getElementById('tool-tnt');
+        const btnReset = document.getElementById('reset-world');
+        const cursor = document.getElementById('mc-cursor');
+        const canvas = document.getElementById('mc-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // SVGs de cursores pixelados
+        const CURSORS = {
+            pickaxe: `<svg viewBox="0 0 16 16" width="48" height="48" shape-rendering="crispEdges">
+                <rect x="3" y="1" width="6" height="1" fill="#184e4a"/><rect x="2" y="2" width="1" height="1" fill="#184e4a"/>
+                <rect x="3" y="2" width="6" height="1" fill="#4ee2d2"/><rect x="9" y="2" width="2" height="1" fill="#184e4a"/>
+                <rect x="1" y="3" width="1" height="2" fill="#184e4a"/><rect x="2" y="3" width="2" height="1" fill="#8df9ed"/>
+                <rect x="4" y="3" width="5" height="1" fill="#2bc4b3"/><rect x="9" y="3" width="2" height="1" fill="#4ee2d2"/>
+                <rect x="11" y="3" width="1" height="1" fill="#184e4a"/><rect x="2" y="4" width="1" height="1" fill="#4ee2d2"/>
+                <rect x="3" y="4" width="2" height="1" fill="#184e4a"/><rect x="8" y="4" width="2" height="1" fill="#2bc4b3"/>
+                <rect x="10" y="4" width="2" height="1" fill="#4ee2d2"/><rect x="12" y="4" width="1" height="2" fill="#184e4a"/>
+                <rect x="1" y="5" width="2" height="1" fill="#184e4a"/><rect x="10" y="5" width="2" height="2" fill="#2bc4b3"/>
+                <rect x="13" y="6" width="1" height="6" fill="#184e4a"/><rect x="11" y="7" width="2" height="4" fill="#4ee2d2"/>
+                <rect x="10" y="7" width="1" height="4" fill="#184e4a"/><rect x="11" y="11" width="2" height="2" fill="#2bc4b3"/>
+                <rect x="10" y="12" width="1" height="2" fill="#184e4a"/><rect x="11" y="13" width="2" height="1" fill="#184e4a"/>
+                <rect x="8" y="5" width="2" height="2" fill="#6b4423"/><rect x="7" y="6" width="1" height="1" fill="#492d16"/>
+                <rect x="7" y="7" width="2" height="2" fill="#8f5d32"/><rect x="6" y="8" width="1" height="1" fill="#492d16"/>
+                <rect x="6" y="9" width="2" height="2" fill="#6b4423"/><rect x="5" y="10" width="1" height="1" fill="#492d16"/>
+                <rect x="5" y="11" width="2" height="2" fill="#8f5d32"/><rect x="4" y="12" width="1" height="1" fill="#492d16"/>
+                <rect x="3" y="13" width="2" height="2" fill="#6b4423"/><rect x="2" y="14" width="1" height="2" fill="#492d16"/>
+                <rect x="3" y="15" width="2" height="1" fill="#492d16"/>
+            </svg>`,
+            spray: `<svg viewBox="0 0 16 16" width="48" height="48" shape-rendering="crispEdges">
+                <rect x="2" y="3" width="1" height="1" fill="#f1254e"/><rect x="1" y="2" width="1" height="1" fill="#f1254e"/>
+                <rect x="1" y="4" width="1" height="1" fill="#f1254e"/><rect x="3" y="2" width="1" height="1" fill="#f1254e"/>
+                <rect x="6" y="1" width="4" height="2" fill="#e5e7eb"/><rect x="7" y="3" width="2" height="2" fill="#9ca3af"/>
+                <rect x="5" y="5" width="6" height="10" fill="#f1254e"/><rect x="5" y="8" width="6" height="4" fill="#111111"/>
+                <rect x="6" y="9" width="4" height="2" fill="#ffffff"/>
+            </svg>`,
+            tnt: `<svg viewBox="0 0 16 16" width="48" height="48" shape-rendering="crispEdges">
+                <rect x="1" y="1" width="14" height="14" fill="#991b1b"/>
+                <rect x="1" y="5" width="14" height="6" fill="#f3f4f6"/>
+                <rect x="3" y="6" width="2" height="4" fill="#111111"/><rect x="2" y="6" width="4" height="1" fill="#111111"/>
+                <rect x="7" y="6" width="1" height="4" fill="#111111"/><rect x="9" y="6" width="1" height="4" fill="#111111"/>
+                <rect x="8" y="7" width="1" height="2" fill="#111111"/><rect x="11" y="6" width="3" height="1" fill="#111111"/>
+                <rect x="12" y="7" width="1" height="3" fill="#111111"/>
+            </svg>`
+        };
+
+        const BLOCK_SIZE = 48;
+        const SPRAY_PALETTE = ['#f1254e', '#00f5d4', '#fee440', '#ffffff', '#111111'];
+        let currentTool = null; // 'pickaxe' | 'spray' | 'tnt' | null
+        let isPointerDown = false;
+        let mouseX = 0, mouseY = 0;
+        let lastSprayPos = null;
+        let actionTimer = null;
+        let audioCtx = null;
+
+        const blocks = new Map();     // "col,row" -> { damage, broken, color, seed }
+        const graffiti = [];     // { x1, y1, x2, y2, color, width, drips: [] }
+        const tntList = [];      // { x, y, timer, maxTimer }
+        const particles = [];    // { x, y, vx, vy, size, color, life, gravity }
+        let flashAlpha = 0;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function showReset() {
+            btnReset.classList.remove('hidden');
+        }
+
+        function playSound(type) {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const now = audioCtx.currentTime;
+
+                if (type === 'hit') {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(220 + Math.random() * 80, now);
+                    osc.frequency.exponentialRampToValueAtTime(90, now + 0.06);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+                    osc.connect(gain).connect(audioCtx.destination);
+                    osc.start(now); osc.stop(now + 0.08);
+                } else if (type === 'break') {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(160, now);
+                    osc.frequency.exponentialRampToValueAtTime(45, now + 0.14);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+                    osc.connect(gain).connect(audioCtx.destination);
+                    osc.start(now); osc.stop(now + 0.16);
+                } else if (type === 'spray') {
+                    const bufferSize = audioCtx.sampleRate * 0.05;
+                    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                    const data = buffer.getChannelData(0);
+                    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+                    const noise = audioCtx.createBufferSource();
+                    const filter = audioCtx.createBiquadFilter();
+                    const gain = audioCtx.createGain();
+                    noise.buffer = buffer;
+                    filter.type = 'bandpass';
+                    filter.frequency.value = 3200;
+                    gain.gain.setValueAtTime(0.04, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                    noise.connect(filter).connect(gain).connect(audioCtx.destination);
+                    noise.start(now);
+                } else if (type === 'fuse') {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(880, now);
+                    gain.gain.setValueAtTime(0.06, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                    osc.connect(gain).connect(audioCtx.destination);
+                    osc.start(now); osc.stop(now + 0.05);
+                } else if (type === 'explode') {
+                    const bufferSize = audioCtx.sampleRate * 0.55;
+                    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                    const data = buffer.getChannelData(0);
+                    for (let i = 0; i < bufferSize; i++) {
+                        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 1.5);
+                    }
+                    const noise = audioCtx.createBufferSource();
+                    const filter = audioCtx.createBiquadFilter();
+                    const gain = audioCtx.createGain();
+                    noise.buffer = buffer;
+                    filter.type = 'lowpass';
+                    filter.frequency.setValueAtTime(650, now);
+                    filter.frequency.exponentialRampToValueAtTime(65, now + 0.5);
+                    gain.gain.setValueAtTime(0.35, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+                    noise.connect(filter).connect(gain).connect(audioCtx.destination);
+                    noise.start(now);
+                }
+            } catch (e) {}
+        }
+
+        function samplePageColor(clientX, clientY) {
+            const el = document.elementFromPoint(clientX, clientY);
+            if (!el) return '#4b5563';
+            const section = el.closest('header, section, footer');
+            if (section) {
+                if (section.id === 'hero' || section.id === 'connect' || section.tagName === 'FOOTER') {
+                    return Math.random() > 0.25 ? '#1c1c1c' : '#f1254e';
+                }
+                if (section.id === 'about') {
+                    return Math.random() > 0.2 ? '#e5e7eb' : '#f1254e';
+                }
+            }
+            return Math.random() > 0.2 ? '#ffffff' : '#f1254e';
+        }
+
+        function spawnParticles(worldX, worldY, color, count, speed = 7, gravity = 0.45) {
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: worldX,
+                    y: worldY,
+                    vx: (Math.random() - 0.5) * speed * 2,
+                    vy: -Math.random() * speed - 1.5,
+                    size: 4 + Math.floor(Math.random() * 7),
+                    color: Math.random() > 0.25 ? color : '#f1254e',
+                    life: 1.0,
+                    gravity
+                });
+            }
+        }
+
+        function drawCrackStage(x, y, size, stage, seed) {
+            ctx.save();
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.78)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+
+            let s = seed;
+            const rand = () => {
+                s = (s * 16807) % 2147483647;
+                return (s - 1) / 2147483646;
+            };
+
+            const cx = x + size / 2;
+            const cy = y + size / 2;
+            const branches = 3 + stage * 2;
+
+            for (let i = 0; i < branches; i++) {
+                let px = cx + (rand() - 0.5) * 8;
+                let py = cy + (rand() - 0.5) * 8;
+                ctx.moveTo(px, py);
+                const steps = 1 + Math.floor(stage * 1.4);
+                const angle = (i / branches) * Math.PI * 2 + rand() * 0.8;
+
+                for (let j = 0; j < steps; j++) {
+                    const stepLen = (size / 6) * (0.6 + rand() * 0.6);
+                    px += Math.cos(angle + (rand() - 0.5) * 1.1) * stepLen;
+                    py += Math.sin(angle + (rand() - 0.5) * 1.1) * stepLen;
+                    px = Math.max(x + 2, Math.min(x + size - 2, px));
+                    py = Math.max(y + 2, Math.min(y + size - 2, py));
+                    ctx.lineTo(px, py);
+                }
+            }
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        function swingCursor() {
+            cursor.style.transform = 'translate(-12px, -12px) rotate(-45deg) scale(1.12)';
+            setTimeout(() => {
+                if (currentTool) cursor.style.transform = 'translate(-12px, -12px) rotate(0deg) scale(1)';
+            }, 90);
+        }
+
+        function breakOrDamageBlock(col, row, instantBreak = false, clientX = null, clientY = null) {
+            const key = `${col},${row}`;
+            let block = blocks.get(key);
+            if (block && block.broken) return;
+
+            if (!block) {
+                const sx = clientX !== null ? clientX : (col * BLOCK_SIZE - window.scrollX + BLOCK_SIZE / 2);
+                const sy = clientY !== null ? clientY : (row * BLOCK_SIZE - window.scrollY + BLOCK_SIZE / 2);
+                block = {
+                    damage: 0,
+                    broken: false,
+                    color: samplePageColor(sx, sy),
+                    seed: Math.abs(col * 73856093 ^ row * 19349663) || 12345
+                };
+                blocks.set(key, block);
+            }
+
+            block.damage = instantBreak ? 4 : block.damage + 1;
+            const bx = col * BLOCK_SIZE;
+            const by = row * BLOCK_SIZE;
+
+            if (block.damage >= 4) {
+                block.broken = true;
+                spawnParticles(bx + BLOCK_SIZE / 2, by + BLOCK_SIZE / 2, block.color, instantBreak ? 10 : 18);
+                showReset();
+                return true;
+            } else {
+                spawnParticles(bx + BLOCK_SIZE / 2, by + BLOCK_SIZE / 2, block.color, 5);
+                return false;
+            }
+        }
+
+        function handlePickaxe(clientX, clientY) {
+            swingCursor();
+            const worldX = clientX + window.scrollX;
+            const worldY = clientY + window.scrollY;
+            const col = Math.floor(worldX / BLOCK_SIZE);
+            const row = Math.floor(worldY / BLOCK_SIZE);
+            const key = `${col},${row}`;
+            if (blocks.get(key)?.broken) return;
+
+            const broke = breakOrDamageBlock(col, row, false, clientX, clientY);
+            playSound(broke ? 'break' : 'hit');
+        }
+
+        function handleSpray(clientX, clientY) {
+            const worldX = clientX + window.scrollX;
+            const worldY = clientY + window.scrollY;
+            const color = SPRAY_PALETTE[Math.floor(Math.random() * SPRAY_PALETTE.length)];
+
+            // Salpicadura urbana alrededor del spray
+            for (let i = 0; i < 9; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const dist = Math.random() * 20;
+                particles.push({
+                    x: worldX + Math.cos(angle) * dist,
+                    y: worldY + Math.sin(angle) * dist,
+                    vx: Math.cos(angle) * 1.4,
+                    vy: Math.sin(angle) * 1.4,
+                    size: 2 + Math.random() * 3.5,
+                    color,
+                    life: 0.75,
+                    gravity: 0.02
+                });
+            }
+
+            const drips = [];
+            if (Math.random() > 0.82) {
+                drips.push({
+                    x: worldX + (Math.random() - 0.5) * 12,
+                    y: worldY,
+                    len: 6 + Math.random() * 22,
+                    color
+                });
+            }
+
+            if (lastSprayPos) {
+                graffiti.push({
+                    x1: lastSprayPos.x,
+                    y1: lastSprayPos.y,
+                    x2: worldX,
+                    y2: worldY,
+                    color,
+                    width: 12 + Math.random() * 6,
+                    drips
+                });
+            } else {
+                graffiti.push({
+                    x1: worldX,
+                    y1: worldY,
+                    x2: worldX + 0.5,
+                    y2: worldY + 0.5,
+                    color,
+                    width: 14,
+                    drips
+                });
+            }
+
+            lastSprayPos = { x: worldX, y: worldY };
+            playSound('spray');
+            showReset();
+        }
+
+        function placeTnt(clientX, clientY) {
+            swingCursor();
+            const worldX = clientX + window.scrollX;
+            const worldY = clientY + window.scrollY;
+            const col = Math.floor(worldX / BLOCK_SIZE);
+            const row = Math.floor(worldY / BLOCK_SIZE);
+
+            tntList.push({
+                x: col * BLOCK_SIZE,
+                y: row * BLOCK_SIZE,
+                col,
+                row,
+                timer: 90,
+                maxTimer: 90
+            });
+            playSound('fuse');
+            showReset();
+        }
+
+        function detonateTnt(tnt) {
+            const cx = tnt.x + BLOCK_SIZE / 2;
+            const cy = tnt.y + BLOCK_SIZE / 2;
+            const radius = 3.2;
+
+            playSound('explode');
+            flashAlpha = 0.65;
+
+            for (let dc = -4; dc <= 4; dc++) {
+                for (let dr = -4; dr <= 4; dr++) {
+                    if (Math.hypot(dc, dr) <= radius) {
+                        breakOrDamageBlock(tnt.col + dc, tnt.row + dr, true);
+                    }
+                }
+            }
+
+            const blastPx = radius * BLOCK_SIZE;
+            for (let i = graffiti.length - 1; i >= 0; i--) {
+                const g = graffiti[i];
+                if (Math.hypot(g.x2 - cx, g.y2 - cy) < blastPx) {
+                    graffiti.splice(i, 1);
+                }
+            }
+
+            spawnParticles(cx, cy, '#f97316', 36, 12, 0.35);
+            spawnParticles(cx, cy, '#111111', 24, 10, 0.45);
+            showReset();
+        }
+
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const scrollX = window.scrollX;
+            const scrollY = window.scrollY;
+
+            // 1. Grafitis
+            for (let i = 0; i < graffiti.length; i++) {
+                const g = graffiti[i];
+                ctx.save();
+                ctx.strokeStyle = g.color;
+                ctx.lineWidth = g.width;
+                ctx.lineCap = 'round';
+                ctx.globalAlpha = 0.82;
+                ctx.beginPath();
+                ctx.moveTo(g.x1 - scrollX, g.y1 - scrollY);
+                ctx.lineTo(g.x2 - scrollX, g.y2 - scrollY);
+                ctx.stroke();
+
+                for (const d of g.drips) {
+                    ctx.fillStyle = d.color;
+                    ctx.fillRect(d.x - scrollX - 1.5, d.y - scrollY, 3, d.len);
+                }
+                ctx.restore();
+            }
+
+            // 2. Bloques agrietados y agujeros hacia el vacío
+            blocks.forEach((block, key) => {
+                const [col, row] = key.split(',').map(Number);
+                const screenX = col * BLOCK_SIZE - scrollX;
+                const screenY = row * BLOCK_SIZE - scrollY;
+
+                if (screenX + BLOCK_SIZE < 0 || screenX > canvas.width ||
+                    screenY + BLOCK_SIZE < 0 || screenY > canvas.height) return;
+
+                if (block.broken) {
+                    ctx.fillStyle = '#09090b';
+                    ctx.fillRect(screenX, screenY, BLOCK_SIZE, BLOCK_SIZE);
+                    ctx.strokeStyle = '#18181b';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(screenX + 1, screenY + 1, BLOCK_SIZE - 2, BLOCK_SIZE - 2);
+                } else if (block.damage > 0) {
+                    drawCrackStage(screenX, screenY, BLOCK_SIZE, block.damage, block.seed);
+                }
+            });
+
+            // 3. Bloques de TNT activos
+            for (let i = tntList.length - 1; i >= 0; i--) {
+                const t = tntList[i];
+                t.timer -= 1;
+
+                const sx = t.x - scrollX;
+                const sy = t.y - scrollY;
+                const blinkWhite = Math.floor(t.timer / 6) % 2 === 0;
+
+                ctx.save();
+                ctx.fillStyle = blinkWhite ? '#ffffff' : '#dc2626';
+                ctx.fillRect(sx, sy, BLOCK_SIZE, BLOCK_SIZE);
+
+                ctx.fillStyle = blinkWhite ? '#dc2626' : '#f3f4f6';
+                ctx.fillRect(sx, sy + BLOCK_SIZE * 0.32, BLOCK_SIZE, BLOCK_SIZE * 0.36);
+
+                ctx.fillStyle = '#111111';
+                ctx.font = 'bold 13px "Space Mono", monospace';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('TNT', sx + BLOCK_SIZE / 2, sy + BLOCK_SIZE / 2 + 1);
+
+                ctx.strokeStyle = '#111111';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(sx, sy, BLOCK_SIZE, BLOCK_SIZE);
+                ctx.restore();
+
+                if (t.timer <= 0) {
+                    tntList.splice(i, 1);
+                    detonateTnt(t);
+                }
+            }
+
+            // 4. Partículas
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += p.gravity;
+                p.life -= 0.025;
+
+                if (p.life <= 0) {
+                    particles.splice(i, 1);
+                    continue;
+                }
+
+                ctx.globalAlpha = Math.max(0, p.life);
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x - scrollX, p.y - scrollY, p.size, p.size);
+                ctx.globalAlpha = 1;
+            }
+
+            // 5. Destello de explosión
+            if (flashAlpha > 0) {
+                ctx.fillStyle = `rgba(255, 255, 255, ${flashAlpha})`;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                flashAlpha = Math.max(0, flashAlpha - 0.06);
+            }
+
+            requestAnimationFrame(render);
+        }
+        requestAnimationFrame(render);
+
+        function setTool(tool) {
+            currentTool = currentTool === tool ? null : tool;
+            document.body.classList.toggle('tool-active', Boolean(currentTool));
+
+            [
+                [btnPickaxe, 'pickaxe'],
+                [btnSpray, 'spray'],
+                [btnTnt, 'tnt']
+            ].forEach(([btn, name]) => {
+                const active = currentTool === name;
+                btn.classList.toggle('bg-[#f1254e]', active);
+                btn.classList.toggle('border-[#f1254e]', active);
+            });
+
+            if (currentTool) {
+                cursor.innerHTML = CURSORS[currentTool];
+            } else {
+                isPointerDown = false;
+                lastSprayPos = null;
+                clearInterval(actionTimer);
+            }
+        }
+
+        btnPickaxe.addEventListener('click', () => setTool('pickaxe'));
+        btnSpray.addEventListener('click', () => setTool('spray'));
+        btnTnt.addEventListener('click', () => setTool('tnt'));
+
+        btnReset.addEventListener('click', () => {
+            blocks.clear();
+            graffiti.length = 0;
+            tntList.length = 0;
+            particles.length = 0;
+            btnReset.classList.add('hidden');
+            playSound('hit');
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursor.style.left = `${mouseX}px`;
+            cursor.style.top = `${mouseY}px`;
+
+            if (currentTool === 'spray' && isPointerDown) {
+                handleSpray(mouseX, mouseY);
+            }
+        });
+
+        window.addEventListener('mousedown', (e) => {
+            if (!currentTool || e.button !== 0) return;
+            const target = document.elementFromPoint(e.clientX, e.clientY);
+            if (target && target.closest('nav')) return;
+
+            isPointerDown = true;
+            lastSprayPos = null;
+
+            if (currentTool === 'pickaxe') {
+                handlePickaxe(e.clientX, e.clientY);
+                clearInterval(actionTimer);
+                actionTimer = setInterval(() => {
+                    if (isPointerDown && currentTool === 'pickaxe') handlePickaxe(mouseX, mouseY);
+                }, 170);
+            } else if (currentTool === 'spray') {
+                handleSpray(e.clientX, e.clientY);
+            } else if (currentTool === 'tnt') {
+                placeTnt(e.clientX, e.clientY);
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            isPointerDown = false;
+            lastSprayPos = null;
+            clearInterval(actionTimer);
+        });
+    })();
     </script>
 
 </body>
