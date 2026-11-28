@@ -3605,7 +3605,7 @@
         $("#r-print").onclick = () => window.print();
         /* CONEXIÓN CON LA RUTA: avisa al mapa que este museo terminó */
         const rRuta = $("#r-ruta");
-        if (rRuta) rRuta.onclick = () => { try { window.parent.postMessage({ tipo: "museo-completo", museo: "botero" }, "*"); } catch (e) {} };
+        if (rRuta) rRuta.onclick = () => { try { window.parent.postMessage({ tipo: "museo-completo", museo: "botero", stats: Array.from(document.querySelectorAll('#res .k')).slice(0, 6).map((d) => [((d.querySelector('span') || {}).textContent || '').trim(), ((d.querySelector('b') || {}).textContent || '').trim()]) }, "*"); } catch (e) {} };
         ["#hud", "#mm", "#ctl"].forEach((q) => ($(q).hidden = true));
         $("#res").hidden = false;
         $("#res").scrollTop = 0;

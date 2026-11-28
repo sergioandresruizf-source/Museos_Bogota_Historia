@@ -7,9 +7,56 @@
    · El orden de la ruta lineal es el orden del arreglo M. Cada museo trae: id, n (nombre completo), s (nombre corto), x/y (posición en el mapa de 600×1100),
      a (dirección), c (color), t (frase del recuadro) y, opcional, logo: 'ruta/al/logo.png' para usar su propio logo en la medalla (si no, se dibuja un emblema).
    · Guardado en localStorage: 'museos.avance' (ruta lineal, 0…8), 'museos.logros' (medallas del recorrido libre) y 'museos.modo'.
-   · Un museo avisa que ya terminó con:  parent.postMessage({tipo:'museo-completo',museo:'<id>'},'*')
-       en la ruta lineal pasa solo al siguiente; en el recorrido libre otorga su medalla y vuelve a la galería. */
+   · Un museo avisa que ya terminó con:  parent.postMessage({tipo:'museo-completo',museo:'<id>',stats:[['Etiqueta','valor'],…]},'*')
+       en la ruta lineal pasa solo al siguiente; en el recorrido libre otorga su medalla y vuelve a la galería.
+       stats es OPCIONAL (máx. 8 filas): aparece en la bitácora final junto al tiempo que el visitante pasó en el museo.
+   · Bitácora (localStorage 'museos.bitacora'): por museo guarda tiempo, entradas, salidas, veces que eligió quedarse y las stats.
+     Al terminar la ruta lineal (Minecraft → tesoro) o las 8 medallas del libre se muestra la pantalla final con todo.
+   · Salir de un museo SIEMPRE pasa por una advertencia ("¿Usted prefiere permanecer en la ignorancia de su historia?").
+     Salir no salta nada: en la ruta lineal la parada sigue abierta hasta terminar ese museo.
+   · Videos opcionales en la carpeta Videos/ de la raíz (ver Videos/LEEME.md): Intro/intro.webm, Final/final.webm y Transiciones/<desde>-<hasta>.webm. */
 const PRUEBA=true;
+
+/* ---------- sonido de selva (sintetizado: no descarga ningún archivo) ----------
+   Viento lejano, dron grave de misterio, grillos, ranas y aves al azar. Arranca con el primer toque del visitante
+   (los navegadores no dejan sonar audio antes), baja a cero mientras hay un museo abierto (cada museo trae su música)
+   y se puede silenciar con el botón 🔊 de abajo a la derecha (se recuerda en 'museos.sonido'). */
+const SON=(()=>{
+ let ac=null,master=null,on=true,activo=false;try{on=localStorage.getItem('museos.sonido')!=='0'}catch(e){}
+ const azar=(a,b)=>a+Math.random()*(b-a);
+ function ruido(){const n=ac.sampleRate*2,b=ac.createBuffer(1,n,ac.sampleRate),d=b.getChannelData(0);let l=0;for(let i=0;i<n;i++){l=(l+.02*(Math.random()*2-1))/1.02;d[i]=l*3.5}const s=ac.createBufferSource();s.buffer=b;s.loop=true;return s}
+ function iniciar(){
+  if(ac)return true;const C=window.AudioContext||window.webkitAudioContext;if(!C)return false;
+  try{ac=new C()}catch(e){return false}
+  master=ac.createGain();master.gain.value=0;master.connect(ac.destination);
+  const r=ruido(),f=ac.createBiquadFilter(),g=ac.createGain();f.type='lowpass';f.frequency.value=520;g.gain.value=.2;r.connect(f).connect(g).connect(master);r.start();
+  const lfo=ac.createOscillator(),lg=ac.createGain();lfo.frequency.value=.07;lg.gain.value=180;lfo.connect(lg).connect(f.frequency);lfo.start();
+  [[55,.05],[82.4,.032],[110.6,.016]].forEach(([fr,v])=>{const o=ac.createOscillator(),og=ac.createGain();o.frequency.value=fr;og.gain.value=v;o.connect(og).connect(master);o.start()});
+  const lazo=(fn,a,b)=>{const p=()=>setTimeout(()=>{if(activo&&ac.state==='running')try{fn()}catch(e){}p()},azar(a,b));p()};
+  lazo(grillo,500,1800);lazo(rana,3000,9000);lazo(ave,6000,16000);
+  return true;
+ }
+ function grillo(){const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain(),n=3+(Math.random()*4|0);o.frequency.value=azar(3900,4600);g.gain.value=0;o.connect(g).connect(master);
+  for(let k=0;k<n;k++){const s=t+k*.07;g.gain.setValueAtTime(0,s);g.gain.linearRampToValueAtTime(.022,s+.012);g.gain.linearRampToValueAtTime(0,s+.045)}o.start(t);o.stop(t+n*.07+.05)}
+ function rana(){const t=ac.currentTime,o=ac.createOscillator(),bp=ac.createBiquadFilter(),g=ac.createGain();o.type='sawtooth';o.frequency.value=azar(110,170);bp.type='bandpass';bp.frequency.value=azar(500,800);bp.Q.value=6;g.gain.value=0;o.connect(bp).connect(g).connect(master);
+  [0,.16].forEach(d=>{g.gain.setValueAtTime(0,t+d);g.gain.linearRampToValueAtTime(.12,t+d+.02);g.gain.exponentialRampToValueAtTime(.001,t+d+.12)});o.start(t);o.stop(t+.35)}
+ function ave(){const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain(),f0=azar(1500,2200);o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f0*1.6,t+.18);o.frequency.exponentialRampToValueAtTime(f0*.9,t+.4);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.035,t+.05);g.gain.exponentialRampToValueAtTime(.001,t+.45);o.connect(g).connect(master);o.start(t);o.stop(t+.5)}
+ function fundir(v,s){if(!ac)return;const t=ac.currentTime;master.gain.cancelScheduledValues(t);master.gain.setValueAtTime(master.gain.value,t);master.gain.linearRampToValueAtTime(v,t+s)}
+ /* sonido suelto que no depende del volumen de la selva (suena aunque haya un museo abierto) */
+ function suelto(fn){if(!on||!iniciar())return;if(ac.resume)ac.resume();const g=ac.createGain();g.connect(ac.destination);fn(ac.currentTime,g)}
+ const S={
+  get on(){return on},
+  activar(){if(!on||!iniciar())return;if(ac.resume)ac.resume();activo=true;fundir(.55,1.5)},
+  pausar(){activo=false;fundir(0,.6)},
+  alternar(){on=!on;try{localStorage.setItem('museos.sonido',on?'1':'0')}catch(e){}if(on)S.activar();else S.pausar();return on},
+  /* acorde que se abre: final de la ruta */
+  revelar(){suelto((t0,out)=>[261.6,329.6,392,523.3,659.3].forEach((fr,k)=>{const t=t0+k*.2,o=ac.createOscillator(),g=ac.createGain();o.type='triangle';o.frequency.value=fr;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.08,t+.06);g.gain.exponentialRampToValueAtTime(.001,t+2.6);o.connect(g).connect(out);o.start(t);o.stop(t+2.7)}))},
+  /* golpe grave y disonante: advertencia de salida */
+  aviso(){suelto((t,out)=>[[73.4,'sawtooth'],[77.8,'sine'],[146.8,'triangle']].forEach(([fr,ty])=>{const o=ac.createOscillator(),g=ac.createGain(),lp=ac.createBiquadFilter();o.type=ty;o.frequency.setValueAtTime(fr,t);o.frequency.exponentialRampToValueAtTime(fr*.82,t+1.4);lp.type='lowpass';lp.frequency.value=600;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.14,t+.04);g.gain.exponentialRampToValueAtTime(.001,t+1.6);o.connect(lp).connect(g).connect(out);o.start(t);o.stop(t+1.7)}))}
+ };
+ return S;
+})();
 
 const M=[
 {id:'nacional',n:'Museo Nacional de Colombia',s:'Museo Nacional',x:130,y:100,a:'Cra. 7 #28-66',c:'#7fb3d5',t:'Capítulo 1 · Colombia: su territorio, su historia y su cultura.'},
@@ -40,7 +87,7 @@ const logros=new Set();try{JSON.parse(localStorage.getItem('museos.logros')||'[]
 const guardarLogros=()=>{try{localStorage.setItem('museos.logros',JSON.stringify([...logros]))}catch(e){}};
 const guardarModo=()=>{try{localStorage.setItem('museos.modo',modo)}catch(e){}};
 const rm=matchMedia('(prefers-reduced-motion:reduce)').matches;
-const st=t=>{const e=document.getElementById('st');if(e)e.textContent=t};
+let stT=0;const st=t=>{const e=document.getElementById('st');if(!e)return;e.textContent=t;clearTimeout(stT);if(t)stT=setTimeout(()=>{e.textContent=''},5200)};
 const idx=h=>M.findIndex(m=>m.id===h.slice(1));
 const prox=i=>{let j=i+1;while(j<N&&!L[M[j].id])j++;return j};   // siguiente museo que ya tiene enlace
 const estado=i=>i<avance?'hecho':i===avance?'actual':'bloq';
@@ -68,29 +115,64 @@ const rnd=s=>()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.i
 
 /* ---------- visor: abre el museo dentro de la página ---------- */
 const ov=document.createElement('div');ov.id='mv';
-ov.innerHTML='<button id="mvx" type="button">← Volver</button><button id="mvs" type="button"></button><iframe title="Museo" allow="autoplay; fullscreen"></iframe>';
+ov.innerHTML='<button id="mvx" type="button" title="Salir del museo">✕ Salir del museo</button><button id="mvs" type="button"></button><iframe title="Museo" allow="autoplay; fullscreen"></iframe>'
+ +'<div id="salida" role="alertdialog" aria-modal="true" aria-labelledby="sal-t" aria-describedby="sal-d" hidden><div class="sal-c">'
+ +'<div class="sal-ojo" aria-hidden="true"><i></i></div><p class="sal-k">Advertencia</p><h2 id="sal-t">¿Usted prefiere permanecer en la ignorancia de su historia?</h2>'
+ +'<p id="sal-d"></p><p class="sal-n"></p><div class="sal-b"><button type="button" class="sal-q">Quedarme y conocer la verdad</button><button type="button" class="sal-x">Prefiero no saber · salir</button></div></div></div>';
 document.body.appendChild(ov);
 const fr=ov.querySelector('iframe'),sig=ov.querySelector('#mvs'),atras=ov.querySelector('#mvx');
-/* en la ruta lineal no se vuelve al mapa hasta terminarla (o si se entró desde el panel de pruebas) */
-const puedeVolver=()=>modo==='libre'||desdePanel||avance>=N;
+const salida=ov.querySelector('#salida'),salQ=salida.querySelector('.sal-q'),salX=salida.querySelector('.sal-x');
 function botones(i){
- if(modo==='libre'){atras.textContent='← Volver a los museos';atras.hidden=false}
- else{atras.textContent='← Volver al mapa';atras.hidden=!puedeVolver()}
- /* YA NO HAY botón "Siguiente museo" / "Terminé este museo": un museo solo se da por terminado cuando él mismo avisa (museo-completo).
+ /* el botón de salir está en los dos recorridos, pero siempre pasa por la advertencia (pedirSalida).
+    NO hay botón "Siguiente museo": un museo solo se da por terminado cuando él mismo avisa (museo-completo).
     Para probar la cadena sin jugar cada museo: con PRUEBA=true, escribe  simularFin()  en la consola del navegador. */
+ atras.hidden=false;atras.title=modo==='lineal'?'Salir al mapa (la parada no cuenta hasta terminar el museo)':'Salir a la galería (la medalla solo se gana al terminar)';
  sig.hidden=true;
 }
+/* ---------- bitácora: lo que hizo el visitante en cada museo ---------- */
+let bit={lineal:{},libre:{}};try{const b=JSON.parse(localStorage.getItem('museos.bitacora')||'{}');if(b&&typeof b==='object')bit={lineal:b.lineal||{},libre:b.libre||{}}}catch(e){}
+const guardarBit=()=>{try{localStorage.setItem('museos.bitacora',JSON.stringify(bit))}catch(e){}};
+const reg=(id,md)=>{const B=bit[md||modo]||(bit[md||modo]={});return B[id]||(B[id]={ms:0,entradas:0,salidas:0,resistio:0,completo:0,stats:null})};
+let tEntrada=0;
+function acumular(){if(act>=0&&tEntrada&&modo){const ahora=Date.now();reg(M[act].id).ms+=ahora-tEntrada;tEntrada=ahora;guardarBit()}}
+document.addEventListener('visibilitychange',()=>{if(document.hidden){acumular();tEntrada=0}else if(act>=0)tEntrada=Date.now()});
+const limpiarStats=a=>Array.isArray(a)?a.slice(0,8).map(x=>Array.isArray(x)&&x.length>1?[String(x[0]).trim().slice(0,60),String(x[1]).trim().slice(0,40)]:null).filter(x=>x&&x[0]&&x[1]):null;
+/* ---------- advertencia al salir de un museo ---------- */
+const FRASES=['Salir ahora es mirar hacia otro lado, como tantas veces lo ha hecho el país con su propia historia.',
+ 'Las obras que retiraron de los museos también fueron calladas por quienes prefirieron no verlas.',
+ 'Cerrar este museo no borra lo que pasó: solo lo vuelve a esconder.',
+ 'Un pueblo que olvida su historia queda a merced de quien se la quiera contar.',
+ 'La realidad del país no desaparece porque dejemos de mirarla.'];
+let fraseN=Math.floor(Math.random()*FRASES.length);
+function pedirSalida(){
+ if(act<0||!ov.className)return;
+ if(!salida.hidden){salQ.focus();return}
+ const m=M[act];fraseN=(fraseN+1)%FRASES.length;
+ salida.querySelector('#sal-d').textContent=FRASES[fraseN];
+ salida.querySelector('.sal-n').textContent=modo==='lineal'
+  ?'Tu avance se queda en la parada '+(act+1)+': para seguir la ruta tendrás que terminar '+m.s+'.'
+  :'Si sales antes de terminar, no ganarás la medalla de '+m.s+'.';
+ salida.hidden=false;salida.classList.remove('sal-on');void salida.offsetWidth;salida.classList.add('sal-on');
+ SON.aviso();setTimeout(()=>salQ.focus(),30);
+}
+function quedarse(){if(salida.hidden)return;salida.hidden=true;if(act>=0){reg(M[act].id).resistio++;guardarBit()}try{fr.focus()}catch(e){}}
+function salirDeVerdad(){salida.hidden=true;if(act>=0){reg(M[act].id).salidas++;guardarBit()}cerrar()}
+salQ.onclick=quedarse;salX.onclick=salirDeVerdad;
+salida.addEventListener('keydown',e=>{if(e.key==='Tab'){e.preventDefault();(document.activeElement===salQ?salX:salQ).focus()}});
+salida.addEventListener('click',e=>{if(e.target===salida)quedarse()});
 function abrir(i,panel){
+ acumular();
  act=i;cumplido=false;desdePanel=!!panel;const m=M[i];
+ const r=reg(m.id);r.entradas++;tEntrada=Date.now();guardarBit();salida.hidden=true;SON.pausar();
  ov.className='';void ov.offsetWidth;ov.className='on';   // reinicia la animación de entrada
  fr.src=L[m.id];document.body.style.overflow='hidden';botones(i);
  if(location.hash!=='#'+m.id)history.pushState(null,'','#'+m.id);
 }
 function refrescar(){if(modo==='lineal')render();else if(modo==='libre')galeria()}
 function cerrar(){
- /* al llegar desde la página de Minecraft (última parada) se completa la ruta y todos los museos quedan abiertos */
- if(modo==='lineal'&&act===N-1&&avance>=N-1&&avance<N){avance=N;cofre=true;guardar();aviso='¡Recorrido completo! Todos los museos están abiertos.'}
- ov.className='';fr.src='about:blank';document.body.style.overflow='';act=-1;desdePanel=false;
+ /* (ya no se completa la ruta solo por cerrar Minecraft: ahora Minecraft avisa con su botón "Finalizar la ruta") */
+ acumular();tEntrada=0;salida.hidden=true;
+ ov.className='';fr.src='about:blank';document.body.style.overflow='';act=-1;desdePanel=false;SON.activar();
  if(location.hash)history.pushState(null,'',location.pathname+location.search);
  refrescar();if(aviso){st(aviso);aviso=''}
  setTimeout(enfocar,60);
@@ -107,31 +189,34 @@ function siguiente(){
  }
  aviso=saltados.length?saltados.join(', ')+': su grupo aún no ha agregado el enlace, la ruta sigue.':'';
  if(j>=N){
-  aviso=avance>=N?'¡Llegaste al tesoro! Recorrido completo.':'Fin de la ruta (modo prueba: tu avance no cambió).';
-  transicion(act,N,cerrar);   // última animación: del último museo al tesoro (Transiciones/<último>-tesoro.webm)
+  const completa=avance>=N;
+  aviso=completa?'¡Llegaste al tesoro! Recorrido completo.':'Fin de la ruta (modo prueba: tu avance no cambió).';
+  transicion(act,N,cerrar,completa?()=>finalRuta('lineal'):null);   // última animación: del último museo al tesoro (Videos/Transiciones/<último>-tesoro.webm) y luego la bitácora
   return;
  }
  transicion(act,j,()=>abrir(j,desdePanel));   // animación entre museos (solo ruta lineal)
 }
 /* recorrido libre: terminar el museo otorga su medalla y devuelve a la galería */
 function completar(){
- if(act<0||modo!=='libre')return;const m=M[act];
- if(!logros.has(m.id)){logros.add(m.id);guardarLogros();nueva=m.id;aviso=logros.size>=N?'¡Colección completa! Ganaste las 8 medallas.':'Medalla conseguida: '+m.s+'.'}
- cerrar();
+ if(act<0||modo!=='libre')return;const m=M[act];let llena=false;
+ if(!logros.has(m.id)){logros.add(m.id);guardarLogros();nueva=m.id;llena=logros.size>=N;aviso=llena?'¡Colección completa! Ganaste las 8 medallas.':'Medalla conseguida: '+m.s+'.'}
+ cerrar();if(llena)finalRuta('libre');
 }
-const hecho=()=>modo==='libre'?completar():siguiente();
+const hecho=()=>{if(act>=0){const r=reg(M[act].id);r.completo=1;acumular();guardarBit()}modo==='libre'?completar():siguiente()};
 if(PRUEBA)window.simularFin=()=>{if(act>=0)hecho()};   // solo pruebas: simula que el museo abierto avisó 'museo-completo'
-atras.onclick=()=>{if(puedeVolver())cerrar()};
+atras.onclick=pedirSalida;
 sig.onclick=hecho;
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ov.className&&puedeVolver())cerrar()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ov.className){e.preventDefault();salida.hidden?pedirSalida():quedarse()}});
+/* cerrar la pestaña o recargar con un museo abierto: el navegador muestra su propio aviso de "¿salir del sitio?" */
+addEventListener('beforeunload',e=>{if(act>=0){acumular();e.preventDefault();e.returnValue=''}});
 /* ---------- transición entre museos (SOLO en la ruta lineal) ----------
    Cuando un museo avisa 'museo-completo', el mapa tapa el visor con una animación, carga el siguiente museo POR DEBAJO
    y destapa cuando la animación termina y el museo ya cargó. Los museos NO participan: todo ocurre aquí.
-   · El animador solo entrega archivos con este nombre (carpeta Transiciones/ en la raíz del repositorio):
-        Transiciones/<desde>-<hasta>.webm      p. ej.  Transiciones/nacional-oro.webm     (opcional: .mp4 con el mismo nombre)
+   · El animador solo entrega archivos con este nombre (carpeta Videos/Transiciones/ en la raíz del repositorio):
+        Videos/Transiciones/<desde>-<hasta>.webm      p. ej.  Videos/Transiciones/nacional-oro.webm     (opcional: .mp4 con el mismo nombre)
    · Si el archivo no existe, se usa la animación por defecto: el mapa del tesoro dibuja el tramo y un barco lo recorre.
    · TRANSICION.activa=false la desactiva (se vuelve al paso directo de antes). En el recorrido libre nunca se usa. */
-const TRANSICION={activa:true,dir:'../../Transiciones/',ms:3400,maxMs:12000};
+const TRANSICION={activa:true,dir:'../../Videos/Transiciones/',ms:3400,maxMs:12000};
 const tr=document.createElement('div');tr.id='mtr';
 tr.innerHTML='<video muted playsinline preload="auto"></video>'
  +'<svg viewBox="0 0 600 1100" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><path class="tr-r0"/><path class="tr-r"/>'
@@ -141,8 +226,8 @@ tr.innerHTML='<video muted playsinline preload="auto"></video>'
 document.body.appendChild(tr);
 const trV=tr.querySelector('video'),trT=tr.querySelector('.tr-t'),trS=tr.querySelector('.tr-s');
 let trEnCurso=null;
-function transicion(i,j,cargar){
- if(!TRANSICION.activa||rm||j>N){cargar();return}
+function transicion(i,j,cargar,alTerminar){   // alTerminar (opcional): se llama cuando la animación ya se quitó de la pantalla
+ if(!TRANSICION.activa||rm||j>N){cargar();if(alTerminar)alTerminar();return}
  if(trEnCurso)trEnCurso.cerrar(true);
  const a=M[i],b=j<N?M[j]:{id:'tesoro',s:'el tesoro',c:'#ffd24a'},base=TRANSICION.dir+a.id+'-'+b.id;
  let animListo=false,cargado=false,fin=false,raf=0;const tms=[];
@@ -152,6 +237,7 @@ function transicion(i,j,cargar){
   fr.removeEventListener('load',alCargar);
   if(forzar){tr.className='';return}
   tr.classList.remove('on');tr.classList.add('fuera');setTimeout(()=>{if(!trEnCurso)tr.className=''},480);
+  if(alTerminar)setTimeout(alTerminar,300);
  };
  const revisar=()=>{if(animListo&&cargado)cerrar()};
  const alCargar=()=>{cargado=true;revisar()};
@@ -187,7 +273,7 @@ function transicion(i,j,cargar){
  else trV.src=base+'.webm';
 }
 /* un museo puede traer su propio enlace "Volver al mapa" (mapa.html): lo conectamos con el visor, respetando las reglas del modo */
-fr.onload=()=>{try{fr.contentDocument.querySelectorAll('a[href$="mapa.html"]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();if(puedeVolver())cerrar()}))}catch(e){}};
+fr.onload=()=>{try{fr.contentDocument.querySelectorAll('a[href$="mapa.html"]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();pedirSalida()}))}catch(e){}};
 /* aviso de "museo terminado" enviado por el propio museo:  parent.postMessage({tipo:'museo-completo',museo:'<id>'},'*')
    · ruta lineal → pasa al siguiente museo · recorrido libre → otorga la medalla y vuelve a la galería
    · se ignora si viene de otro museo (id distinto al abierto) o si se repite dentro del mismo museo */
@@ -195,12 +281,14 @@ addEventListener('message',e=>{
  if(e.source!==fr.contentWindow||act<0)return;
  const d=e.data;if(!d||(d!=='museo-completo'&&d.tipo!=='museo-completo'))return;
  if(d.museo&&d.museo!==M[act].id)return;
- if(cumplido)return;cumplido=true;hecho();
+ if(cumplido)return;cumplido=true;
+ const st2=limpiarStats(d.stats);if(st2&&st2.length){reg(M[act].id).stats=st2;guardarBit()}
+ hecho();
 });
 const permitido=k=>k>=0&&L[M[k].id]&&(modo==='libre'||PRUEBA||k<=avance);
 addEventListener('popstate',()=>{
- if(ov.className&&!puedeVolver()){history.pushState(null,'','#'+M[act].id);return}   // en la ruta lineal el botón "atrás" del navegador no saca del museo
- const k=idx(location.hash);permitido(k)?abrir(k,desdePanel):cerrar();
+ if(ov.className&&act>=0){history.pushState(null,'','#'+M[act].id);pedirSalida();return}   // el botón "atrás" del navegador también pasa por la advertencia
+ const k=idx(location.hash);if(permitido(k))abrir(k,desdePanel);
 });
 
 /* ---------- interacción con el mapa ---------- */
@@ -418,6 +506,18 @@ function render(){
  dyn.innerHTML=s;ajustar();
  const pg=document.getElementById('prog');
  if(pg)pg.textContent=avance>=N?'Recorrido completo: tesoro encontrado':`Parada ${avance+1} de ${N}: ${M[avance].s}`;
+ pintarPasos();
+}
+/* barra de progreso (8 paradas + cofre) y botón principal del encabezado */
+function pintarPasos(){
+ const ol=document.getElementById('pasos');
+ if(ol)ol.innerHTML=M.map((m,i)=>{const e=estado(i);return `<li><button type="button" class="paso ${e}" data-p="${i}" style="--c:${m.c}" aria-label="Parada ${i+1}: ${m.s}, ${e==='hecho'?'terminada':e==='actual'?'la que sigue':'bloqueada'}" title="${i+1}. ${m.s}">${e==='hecho'?'✓':i+1}</button></li>`}).join('')
+  +`<li><span class="paso cofre-p${avance>=N?' hecho':''}" title="El tesoro" aria-label="El tesoro${avance>=N?': encontrado':''}">★</span></li>`;
+ const b=document.getElementById('cta');
+ if(b){
+  if(avance>=N){b.innerHTML='📜 Ver la bitácora de la expedición';b.onclick=()=>bitacora('lineal')}
+  else{const m=M[avance];b.innerHTML=`▶ ${avance===0&&!reg(m.id,'lineal').entradas?'Empezar':'Continuar'}: <b>${m.s}</b>`;b.onclick=()=>entrar(avance)}
+ }
 }
 function ajustar(){   // el rótulo se ajusta al ancho real del texto
  try{svg.querySelectorAll('.pl').forEach(g=>{const b=g.querySelector('text').getBBox(),r=g.querySelector('rect');r.setAttribute('x',(b.x-14).toFixed(1));r.setAttribute('width',(b.width+28).toFixed(1));const mx=M[+g.parentNode.dataset.i].x,h=(b.width+28)/2,dx=Math.max(22-(mx-h),0)||Math.min(578-(mx+h),0);g.setAttribute('transform','translate('+dx.toFixed(1)+' 56)')})}catch(e){}
@@ -446,25 +546,31 @@ const iconoMedalla='<svg class="ico" viewBox="0 0 80 80" aria-hidden="true"><pat
 
 /* ----- pantalla de inicio: elegir cómo recorrer ----- */
 function inicio(){
- modo=null;svg=dyn=null;window.scrollTo(0,0);
+ modo=null;svg=dyn=null;window.scrollTo(0,0);document.body.classList.remove('fin');
  const pl=avance>=N?'Ruta completada':avance>0?`Vas en la parada ${avance+1} de ${N}`:'Sin empezar';
  app.innerHTML=`<header class="cartel"><h1>Ruta de los museos</h1><p>Ocho museos por recorrer. ¿Cómo quieres hacerlo?</p></header>
  <main class="opciones">
   <button type="button" class="opcion" data-m="lineal">${iconoRuta}<span class="kick">Línea de tiempo</span><span class="t">Seguir la historia</span><span class="ds">Ocho paradas en un orden fijo sobre el mapa del tesoro. Cada museo abre el siguiente y no puedes volver al mapa hasta llegar al cofre.</span><span class="chip">${pl}</span></button>
   <button type="button" class="opcion" data-m="libre">${iconoMedalla}<span class="kick">A tu ritmo</span><span class="t">Recorrido libre</span><span class="ds">Entra a cualquier museo, en el orden que quieras, y vuelve cuando quieras. Al terminar un museo ganas su medalla; si sales antes, no cuenta.</span><span class="chip">${logros.size} de ${N} medallas</span></button>
- </main>`;
+ </main>
+ <p class="re-intro"><button type="button" id="verIntro">▶ Ver de nuevo la introducción</button></p>`;
+ document.getElementById('verIntro').onclick=()=>escena(ESC_INTRO);
  app.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>b.dataset.m==='lineal'?(guardarModo(modo='lineal'),lineal()):(guardarModo(modo='libre'),libre()));
 }
 
 /* ----- recorrido libre: galería de medallas ----- */
 function libre(){
- modo='libre';svg=dyn=null;window.scrollTo(0,0);
- app.innerHTML=`<header class="cartel"><h1>Recorrido libre</h1><p>Entra al museo que quieras y vuelve cuando quieras. La medalla solo se gana al terminar el museo.</p><p id="prog" class="prog"></p><p id="st" role="status"></p><button type="button" class="cambiar" id="cambiar">← Elegir otro recorrido</button></header>
+ modo='libre';svg=dyn=null;window.scrollTo(0,0);document.body.classList.remove('fin');
+ app.innerHTML=`<header class="cartel"><h1>Recorrido libre</h1><p>Entra al museo que quieras y vuelve cuando quieras. La medalla solo se gana al terminar el museo.</p><p id="prog" class="prog"></p>
+ <div class="cta-row"><button type="button" class="cta" id="verbit" hidden>📜 Ver la bitácora</button></div><p id="st" role="status"></p>
+ <div class="mini"><button type="button" class="cambiar" id="cambiar">← Elegir otro recorrido</button><button type="button" class="cambiar" id="ayuda">? Cómo funciona</button></div></header>
  <main class="tablero"><ul class="galeria" id="gal"></ul></main>
  ${PRUEBA?`<details class="prueba" open><summary>Modo de prueba</summary><p>Herramientas para probar. Este panel se quita cuando termine la fase de pruebas.</p><div class="ctl"><button type="button" id="rsm">Reiniciar medallas</button></div></details>`:''}`;
  galeria();
  document.getElementById('cambiar').onclick=inicio;
- if(PRUEBA)document.getElementById('rsm').onclick=()=>{logros.clear();guardarLogros();galeria();st('Medallas reiniciadas.')};
+ document.getElementById('ayuda').onclick=()=>ayuda('libre');
+ document.getElementById('verbit').onclick=()=>bitacora('libre');
+ if(PRUEBA)document.getElementById('rsm').onclick=()=>{logros.clear();guardarLogros();bit.libre={};guardarBit();galeria();st('Medallas y bitácora del recorrido libre reiniciadas.')};
 }
 function galeria(){
  const g=document.getElementById('gal');if(!g)return;
@@ -474,13 +580,17 @@ function galeria(){
  g.querySelectorAll('.slot').forEach(b=>b.onclick=()=>entrar(+b.dataset.i));
  const pg=document.getElementById('prog');
  if(pg)pg.textContent=logros.size>=N?'¡Colección completa!':`Medallas: ${logros.size} de ${N}`;
+ const vb=document.getElementById('verbit');if(vb)vb.hidden=logros.size<N;
  if(nv){const e=g.querySelector('.nueva');if(e)e.scrollIntoView({block:'center',behavior:rm?'auto':'smooth'})}
 }
 
 /* ----- ruta lineal: mapa del tesoro ----- */
 function lineal(){
- modo='lineal';window.scrollTo(0,0);
- app.innerHTML=`<header class="cartel"><h1>Ruta de los museos</h1><p>Ocho paradas, un solo recorrido. Cada candado se abre al terminar el museo anterior.</p><p id="prog" class="prog"></p><p id="st" role="status"></p><button type="button" class="cambiar" id="cambiar">← Elegir otro recorrido</button></header>
+ modo='lineal';window.scrollTo(0,0);document.body.classList.remove('fin');
+ app.innerHTML=`<header class="cartel"><h1>Ruta de los museos</h1><p>Ocho paradas, un solo camino. Cada candado se abre al terminar el museo anterior.</p>
+ <ol class="pasos" id="pasos" aria-label="Progreso de la ruta"></ol><p id="prog" class="prog"></p>
+ <div class="cta-row"><button type="button" class="cta" id="cta"></button></div><p id="st" role="status"></p>
+ <div class="mini"><button type="button" class="cambiar" id="cambiar">← Elegir otro recorrido</button><button type="button" class="cambiar" id="ayuda">? Cómo funciona</button></div></header>
  <main class="mapw"><svg id="m" viewBox="0 0 600 1100" role="group" aria-label="Mapa del tesoro con la ruta de los ocho museos">
  <defs>
   <filter id="rough" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".02 .018" numOctaves="4" seed="5" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="26" result="d1"/><feTurbulence type="fractalNoise" baseFrequency=".12" numOctaves="2" seed="2" result="n2"/><feDisplacementMap in="d1" in2="n2" scale="9"/></filter>
@@ -522,9 +632,13 @@ function lineal(){
  svg.addEventListener('focusout',()=>tip.style.display='none');
  if(PRUEBA){
   document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>entrar(+b.dataset.f,true));
-  document.getElementById('rs').onclick=()=>{avance=0;guardar();render();st('Recorrido reiniciado: solo el Museo Nacional está abierto.');enfocar()};
+  document.getElementById('rs').onclick=()=>{avance=0;guardar();bit.lineal={};guardarBit();render();st('Recorrido reiniciado: solo el Museo Nacional está abierto.');enfocar()};
  }
  document.getElementById('cambiar').onclick=inicio;
+ document.getElementById('ayuda').onclick=()=>ayuda('lineal');
+ /* tocar un paso de la barra lleva a esa parada del mapa y muestra su recuadro */
+ document.getElementById('pasos').addEventListener('click',e=>{const b=e.target.closest('[data-p]');if(!b)return;const g=svg.querySelector('.mk[data-i="'+b.dataset.p+'"]');if(g){g.scrollIntoView({block:'center',behavior:rm?'auto':'smooth'});setTimeout(()=>g.focus({preventScroll:true}),rm?0:450)}});
+ W0.addEventListener('pointerdown',e=>{if(!e.target.closest('.mk'))tip.style.display='none'});
  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(ajustar);
  if(avance>0&&avance<N)setTimeout(enfocar,350);
 }
@@ -575,9 +689,131 @@ function selva(){
 }
 let tmr;addEventListener('resize',()=>{clearTimeout(tmr);tmr=setTimeout(()=>{if(Math.abs(innerWidth-dim[0])>60||Math.abs(innerHeight-dim[1])>160)selva()},250)});
 
+/* ---------- escenas de ambientación: misterio selvático al inicio y al final de la ruta ----------
+   Capa a pantalla completa con niebla, ojos que parpadean entre la maleza y un texto que aparece frase por frase.
+   Si existe el video (Videos/Intro/intro.webm o Videos/Final/final.webm) se usa de fondo; si no, se ve la escena dibujada. */
+const esc=t=>String(t==null?'':t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+const ESC_INTRO={
+ clase:'intro',video:'../../Videos/Intro/intro.webm',toque:true,
+ kicker:'Bogotá · ocho museos · una verdad incómoda',titulo:'Ruta de los museos',
+ lineas:['Dicen que en lo profundo de la selva hay un mapa que nadie se atrevió a terminar.',
+  'Ocho museos guardan lo que la historia oficial prefirió esconder: obras retiradas, oro saqueado, voces calladas.',
+  'El camino solo se abre a quien se atreve a mirar.'],
+ boton:'Adentrarse en la selva'
+};
+function escena(o,despues){
+ const vieja=document.getElementById('escena');if(vieja)vieja.remove();
+ const d=document.createElement('div');d.id='escena';d.className='esc-'+(o.clase||'intro');d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');d.setAttribute('aria-label',o.titulo);
+ const R=rnd(o.clase==='final'?23:5);let ojos='';
+ for(let k=0;k<9;k++){const x=R()<.5?4+R()*24:72+R()*24,y=12+R()*76,s=.6+R()*.9;
+  ojos+=`<span class="ojo" style="left:${x.toFixed(1)}%;top:${y.toFixed(1)}%;--s:${s.toFixed(2)};--d:${(R()*7).toFixed(1)}s;--t:${(5+R()*6).toFixed(1)}s"><i></i><i></i></span>`}
+ d.innerHTML=`<video class="esc-v" muted loop playsinline preload="none" aria-hidden="true"></video>
+ <div class="esc-fondo" aria-hidden="true"></div><svg class="esc-selva" aria-hidden="true" viewBox="0 0 ${dim[0]||innerWidth} ${dim[1]||innerHeight}" preserveAspectRatio="none">${(document.getElementById('selva')||{}).innerHTML||''}${(document.getElementById('primer')||{}).innerHTML||''}</svg><div class="niebla n1" aria-hidden="true"></div><div class="niebla n2" aria-hidden="true"></div><div class="ojos" aria-hidden="true">${ojos}</div>
+ <div class="esc-c"><p class="esc-k">${esc(o.kicker)}</p><h1>${esc(o.titulo)}</h1><div class="esc-l" aria-live="polite"></div>
+ <button type="button" class="esc-go">${o.toque?'Toca para despertar la selva':esc(o.boton)}</button></div>
+ <button type="button" class="esc-s">Saltar ▶▶</button>`;
+ document.body.appendChild(d);document.body.style.overflow='hidden';
+ const v=d.querySelector('.esc-v'),go=d.querySelector('.esc-go'),L2=d.querySelector('.esc-l'),tms=[];
+ if(o.video&&!rm){v.onloadeddata=()=>{d.classList.add('con-video');const p=v.play();if(p&&p.catch)p.catch(()=>d.classList.remove('con-video'))};v.onerror=()=>d.classList.remove('con-video');v.src=o.video}
+ let fase=o.toque?0:1,listo=false;
+ const terminar=()=>{if(listo)return;listo=true;tms.forEach(clearTimeout);SON.activar();d.classList.add('sale');
+  setTimeout(()=>{d.remove();if(!ov.className)document.body.style.overflow='';if(despues)despues()},rm?0:700)};
+ const narrar=()=>{
+  fase=1;go.hidden=true;SON.activar();d.classList.add('despierta');
+  const paso=rm?400:2700;
+  o.lineas.forEach((t,k)=>tms.push(setTimeout(()=>{const p=document.createElement('p');p.textContent=t;L2.appendChild(p)},300+k*paso)));
+  tms.push(setTimeout(()=>{fase=2;go.textContent=o.boton;go.hidden=false;go.classList.add('listo');go.focus()},300+o.lineas.length*paso));
+ };
+ go.onclick=()=>fase===0?narrar():fase===2?terminar():null;
+ d.querySelector('.esc-s').onclick=terminar;
+ d.addEventListener('keydown',e=>{if(e.key==='Escape')terminar()});
+ if(!o.toque)narrar();
+ setTimeout(()=>go.focus(),50);
+}
+function finalRuta(md){
+ SON.revelar();
+ escena({clase:'final',video:'../../Videos/Final/final.webm',kicker:md==='lineal'?'Fin de la ruta':'Colección completa',titulo:'La selva se abre',
+  lineas:['Recorriste los ocho museos. El cofre ya no guarda oro: guarda memoria.',
+   'Lo que viste —lo retirado, lo saqueado, lo censurado— también es la historia del país.',
+   'Ahora que lo sabes, ya no se puede des-saber.'],
+  boton:'Abrir la bitácora de la expedición'},()=>bitacora(md));
+}
+
+/* ---------- ayuda: cómo funciona cada recorrido ---------- */
+function ayuda(md){
+ const lin=md==='lineal';
+ const pasos=lin?['Toca la parada que brilla en el mapa, o el botón <b>Empezar / Continuar</b> de arriba.',
+  'Recorre el museo hasta su final: cada uno tiene su cierre (diploma, reporte o botón <b>Finalizar y continuar</b>).',
+  'Al terminarlo, la ruta te lleva sola al siguiente museo y se abre su candado. No hay forma de saltarse uno.',
+  'Puedes salir con <b>✕ Salir del museo</b>, pero esa parada no cuenta hasta que la termines.',
+  'En el cofre del final verás la <b>bitácora</b> con tu tiempo y tus resultados en los ocho museos.']
+ :['Toca cualquier medalla para entrar a ese museo, en el orden que quieras.',
+  'Termina el museo (su diploma, reporte o botón <b>Finalizar y continuar</b>) para ganar la medalla.',
+  'Puedes salir cuando quieras con <b>✕ Salir del museo</b>; si sales antes de terminar, la medalla no cuenta.',
+  'Con las ocho medallas se abre la <b>bitácora</b> con tus resultados en todos los museos.'];
+ const d=document.createElement('div');d.id='ayudaDlg';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');d.setAttribute('aria-labelledby','ay-t');
+ d.innerHTML=`<div class="ay-c"><h2 id="ay-t">${lin?'Cómo seguir la historia':'Cómo funciona el recorrido libre'}</h2><ol>${pasos.map(p=>`<li>${p}</li>`).join('')}</ol>
+ <p class="ay-n">El sonido de la selva se apaga con el botón 🔊 de abajo a la derecha.</p><button type="button" class="cta">Entendido</button></div>`;
+ document.body.appendChild(d);
+ const cerrarA=()=>{d.remove();const b=document.getElementById('ayuda');if(b)b.focus()};
+ d.querySelector('button').onclick=cerrarA;d.addEventListener('click',e=>{if(e.target===d)cerrarA()});
+ d.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='Tab'){e.preventDefault();if(e.key==='Escape')cerrarA()}});
+ d.querySelector('button').focus();
+}
+
+/* ---------- bitácora final: estadísticas de todos los museos ---------- */
+const fmtT=ms=>{const s=Math.round((ms||0)/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return h?`${h} h ${m} min`:m?`${m} min ${String(x).padStart(2,'0')} s`:`${x} s`};
+function bitacora(md){
+ md=md||modo||'lineal';modo=md;svg=dyn=null;window.scrollTo(0,0);document.body.classList.add('fin');
+ const B=bit[md]||{},g=id=>B[id]||{},sum=k=>M.reduce((a,m)=>a+(g(m.id)[k]||0),0);
+ const comp=M.filter(m=>g(m.id).completo).length,res=sum('resistio'),sal=sum('salidas');
+ const mas=M.slice().sort((a,b)=>(g(b.id).ms||0)-(g(a.id).ms||0))[0];
+ const veredicto=sal===0&&res===0?'No intentaste huir ni una vez: miraste la historia de frente.'
+  :sal===0?`Quisiste salir ${res} ${res===1?'vez':'veces'}, pero elegiste quedarte y conocer la verdad.`
+  :`Saliste ${sal} ${sal===1?'vez':'veces'} antes de terminar un museo${res?` y ${res} ${res===1?'vez':'veces'} decidiste quedarte`:''}. Volviste, y eso también cuenta.`;
+ app.innerHTML=`<header class="cartel fin-c"><p class="fin-k">Bitácora de la expedición · ${md==='lineal'?'Seguir la historia':'Recorrido libre'}</p><h1>La selva se abrió</h1>
+ <p>${esc(veredicto)}</p><p id="st" role="status"></p></header>
+ <section class="kpis" aria-label="Resumen">
+  <div><b>${comp}/${N}</b><span>museos terminados</span></div>
+  <div><b>${fmtT(sum('ms'))}</b><span>tiempo total</span></div>
+  <div><b>${sum('entradas')}</b><span>entradas a museos</span></div>
+  <div><b>${res}</b><span>veces que elegiste quedarte</span></div>
+  <div><b>${sal}</b><span>veces que saliste antes</span></div>
+  <div><b>${esc(mas&&g(mas.id).ms?mas.s:'—')}</b><span>donde más te quedaste</span></div>
+ </section>
+ <main class="bita">${M.map((m,i)=>{const r=g(m.id),stt=Array.isArray(r.stats)?r.stats:[];
+  return `<article class="bc f-${m.id}${r.completo?' ok':''}" style="--c:${m.c}"><div class="bc-h">${medalla(m)}<div><p class="bc-n">${md==='lineal'?'Parada '+(i+1)+' · ':''}${r.completo?'✓ Terminado':'Sin terminar'}</p><h2>${esc(m.s)}</h2><p class="bc-t">${esc(m.t)}</p></div></div>
+  <dl class="bc-d"><div><dt>Tiempo</dt><dd>${fmtT(r.ms)}</dd></div><div><dt>Entradas</dt><dd>${r.entradas||0}</dd></div>${(r.salidas||r.resistio)?`<div><dt>Quiso salir</dt><dd>${(r.salidas||0)+(r.resistio||0)}</dd></div>`:''}
+  ${stt.map(([k,v])=>`<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+  ${stt.length?'':`<p class="bc-x">${r.completo?'Este museo no envía estadísticas propias.':'Aún no lo terminas.'}</p>`}</article>`}).join('')}</main>
+ <blockquote class="cita">“Un país que no conoce su historia está condenado a que se la cuenten otros.”<span>La memoria también es una forma de resistencia.</span></blockquote>
+ <div class="acciones"><button type="button" class="cta" id="b-vol">${md==='lineal'?'🗺 Ver el mapa del tesoro':'🏅 Ver mis medallas'}</button><button type="button" class="cambiar" id="b-imp">🖨 Imprimir bitácora</button><button type="button" class="cambiar" id="b-ini">← Elegir otro recorrido</button><button type="button" class="cambiar" id="b-new">↺ Empezar de nuevo</button></div>`;
+ document.getElementById('b-vol').onclick=()=>md==='lineal'?lineal():libre();
+ document.getElementById('b-imp').onclick=()=>window.print();
+ document.getElementById('b-ini').onclick=inicio;
+ document.getElementById('b-new').onclick=()=>{
+  if(!confirm(md==='lineal'?'¿Empezar la ruta desde el Museo Nacional? Se borran el avance y la bitácora de esta ruta.':'¿Empezar de nuevo? Se borran las medallas y la bitácora del recorrido libre.'))return;
+  if(md==='lineal'){avance=0;guardar();bit.lineal={};guardarBit();lineal()}else{logros.clear();guardarLogros();bit.libre={};guardarBit();libre()}
+ };
+}
+
+/* ---------- botón de sonido ---------- */
+{const b=document.createElement('button');b.id='son';b.type='button';
+ const pinta=()=>{b.textContent=SON.on?'🔊':'🔇';b.setAttribute('aria-label',SON.on?'Silenciar la selva':'Activar el sonido de la selva');b.title=b.getAttribute('aria-label')};
+ b.onclick=()=>{SON.alternar();pinta()};pinta();document.body.appendChild(b);
+ /* el primer toque en cualquier parte despierta el sonido (si no está silenciado) */
+ const primer=()=>{if(!ov.className)SON.activar();removeEventListener('pointerdown',primer);removeEventListener('keydown',primer)};
+ addEventListener('pointerdown',primer);addEventListener('keydown',primer);
+}
+
 selva();
 {
  const k=idx(location.hash);let guardado=null;try{guardado=localStorage.getItem('museos.modo')}catch(e){}
  if(k>=0&&L[M[k].id]){modo=guardado==='lineal'?'lineal':'libre';modo==='lineal'?lineal():libre();if(permitido(k))abrir(k)}
- else inicio();
+ else{
+  inicio();
+  /* la introducción de misterio sale una vez por sesión del navegador (se puede volver a ver desde la pantalla de inicio) */
+  let vista=false;try{vista=sessionStorage.getItem('museos.intro')==='1';sessionStorage.setItem('museos.intro','1')}catch(e){}
+  if(!vista)escena(ESC_INTRO);
+ }
 }

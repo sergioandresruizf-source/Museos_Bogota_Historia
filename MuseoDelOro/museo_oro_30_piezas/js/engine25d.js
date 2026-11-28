@@ -314,7 +314,7 @@ const Engine25D = (() => {
     window.continuarRuta = () => {
         if (!finalEnviado) {
             finalEnviado = true;
-            try { if (window.parent && window.parent !== window) window.parent.postMessage({ tipo: 'museo-completo', museo: window.ORO_CONFIG.museoId }, '*'); } catch (e) { }
+            try { if (window.parent && window.parent !== window) window.parent.postMessage({ tipo: 'museo-completo', museo: window.ORO_CONFIG.museoId, stats: Array.from(document.querySelectorAll('#final-stats > div')).slice(0, 6).map((d) => [((d.querySelector('span') || {}).textContent || '').trim(), ((d.querySelector('b') || {}).textContent || '').trim()]) }, '*'); } catch (e) { }
         }
         const b = document.getElementById('btn-continuar'); b.textContent = window.parent !== window ? '✔ Ruta continuada' : '✔ (Aviso enviado al mapa)'; b.disabled = true;
     };
