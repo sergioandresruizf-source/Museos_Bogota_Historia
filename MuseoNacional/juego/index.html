@@ -1445,7 +1445,7 @@ const music = { els: {}, cur: null, want: null };
 function musicEl(src) {
   if (music.els[src]) return music.els[src];
   let a = null;
-  try { a = new Audio(); a.src = src; a.loop = true; a.preload = 'auto'; a.volume = 0; } catch (e) { a = { volume: 0, paused: true, _dead: true, pause() {}, play() {} }; }
+  try { a = new Audio(); a.src = src; a.loop = true; a.preload = 'none'; a.volume = 0; } catch (e) { a = { volume: 0, paused: true, _dead: true, pause() {}, play() {} }; }
   a._dead = a._dead || false; if (a.addEventListener) a.addEventListener('error', () => { a._dead = true; });
   music.els[src] = a; return a;
 }
@@ -2029,7 +2029,10 @@ function drawOroObjects(g, cam, t) {
 }
 function completarJuego() {
   const id = CFG.museoId || 'nacional';
-  try { if (window.parent !== window) window.parent.postMessage({ tipo: 'museo-completo', museo: id }, '*'); } catch (e) { /* sin página contenedora */ }
+  /* estadísticas para la bitácora final del mapa (opcional: el mapa funciona igual sin ellas) */
+  let stats = [];
+  try { const r = reportStats(); stats = [['Obras miradas', r.seen + ' / ' + r.total], ['Obras devueltas', r.back + ' / ' + r.taken], ['Muertes en minijuegos', r.d1 + r.d2 + r.d3], ['Islas exploradas', exploredCount() + ' / ' + N_ISL]]; } catch (e) { /* */ }
+  try { if (window.parent !== window) window.parent.postMessage({ tipo: 'museo-completo', museo: id, stats }, '*'); } catch (e) { /* sin página contenedora */ }
   try { window.dispatchEvent(new CustomEvent('museo-completo', { detail: { museo: id } })); } catch (e) { /* */ }
   if (CFG.urlSiguienteMuseo && window.parent === window) { try { window.location.href = CFG.urlSiguienteMuseo; } catch (e) { /* */ } }
 }
@@ -2764,7 +2767,7 @@ $('btnSkip').addEventListener('click', () => { audioInit(); if (cur && cur.skip)
 function probe(src) {
   return new Promise((res) => {
     const im = new Image(); let done = false; const fin = (v) => { if (!done) { done = true; res(v); } };
-    im.onload = () => fin(true); im.onerror = () => fin(false); setTimeout(() => fin(false), 6000); im.src = src;
+    im.onload = () => fin(true); im.onerror = () => fin(false); setTimeout(() => fin(false), 2500); im.src = src;
   });
 }
 async function discoverIsland(i) {
@@ -2841,6 +2844,14 @@ function resize() {
   if (touch && !(land && window.innerHeight <= 520)) padH = Math.round(Math.min(window.innerHeight * 0.30, 210));
   document.documentElement.style.setProperty('--padH', padH + 'px');
   const w = stage.clientWidth || VW; stage.style.setProperty('--u', (w / VW) + 'px');
+  /* resolución real: el lienzo interno se multiplica (k) según el tamaño en pantalla y el zoom/retina,
+     y todo se sigue dibujando en coordenadas 400x300 (setTransform), así que se ve nítido. */
+  const k = Math.max(1, Math.min(4, Math.ceil(w * (window.devicePixelRatio || 1) / VW - 0.05)));
+  if (canvas.width !== VW * k) {
+    canvas.width = VW * k; canvas.height = VH * k;
+    ctx.setTransform(k, 0, 0, k, 0, 0); ctx.imageSmoothingEnabled = false;
+    canvas.style.imageRendering = k > 1 ? 'auto' : 'pixelated';
+  }
 }
 window.addEventListener('resize', resize); window.addEventListener('orientationchange', () => setTimeout(resize, 120));
 

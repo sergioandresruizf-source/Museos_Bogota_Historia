@@ -195,3 +195,158 @@ button{font-family:inherit}
 #mtr.vid .tr-t{color:#fff;text-shadow:0 2px 8px #000}
 #mtr .tr-s{position:absolute;right:12px;top:calc(10px + env(safe-area-inset-top,0px));border:0;border-radius:999px;padding:7px 14px;background:#000b;color:#fff;font:700 14px "Alegreya Sans",system-ui,sans-serif;cursor:pointer}
 @media (prefers-reduced-motion:reduce){#mtr.on,#mtr.fuera{animation:none}}
+
+/* =====================================================================
+   MEJORAS DE INTERACCIÓN · intro/final de misterio · advertencia de salida · bitácora
+   ===================================================================== */
+/* avisos: flotan abajo y se borran solos, así se ven aunque el mapa esté desplazado */
+#st{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;margin:0;min-height:0;
+ max-width:min(92vw,520px);padding:.6rem 1.1rem;border-radius:12px;background:#1d1208f2;border:2px solid var(--oro);color:#ffe3a0;
+ font-weight:700;text-align:center;box-shadow:0 10px 28px #000c;animation:toast .3s ease-out}
+#st:empty{display:none}
+@keyframes toast{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+
+/* encabezado: barra de progreso, botón principal y botones pequeños */
+.cartel{margin-top:3.2rem}
+.pasos{display:flex;flex-wrap:wrap;justify-content:center;gap:.35rem;margin:.9rem auto .2rem;padding:0;list-style:none}
+.paso{display:grid;place-items:center;width:2.15rem;height:2.15rem;border-radius:50%;border:2.5px solid var(--m3);font:700 .95rem/1 "Alegreya Sans",sans-serif;cursor:pointer;
+ background:#cfc8b0;color:#5e5844;transition:transform .15s}
+.paso:hover{transform:translateY(-2px) scale(1.08)}
+.paso.hecho{background:var(--c,#3f8a3f);color:#1d1208;border-color:#2a1a0a}
+.paso.actual{background:#fff3cf;color:var(--berme);border-color:var(--oro);box-shadow:0 0 0 3px #e3a82b66;animation:latido 1.6s ease-in-out infinite}
+.paso.bloq{opacity:.75}
+.paso.cofre-p{cursor:default;background:#3b2a14;color:#8f7a50}.paso.cofre-p.hecho{background:var(--oro);color:#3b2a14}
+@keyframes latido{50%{box-shadow:0 0 0 7px #e3a82b22}}
+.cta-row{margin-top:.8rem}
+.cta{display:inline-flex;align-items:center;gap:.4rem;padding:.7rem 1.4rem;border:3px solid var(--m3);border-radius:12px;cursor:pointer;
+ background:linear-gradient(180deg,#ffd77a,#e3a82b);color:#2b1a0a;font:700 1.08rem/1.2 "Alegreya Sans",sans-serif;box-shadow:0 5px 0 #7a5200,0 10px 20px #0008;transition:transform .12s,box-shadow .12s}
+.cta:hover{transform:translateY(-2px);box-shadow:0 7px 0 #7a5200,0 14px 24px #0009}
+.cta:active{transform:translateY(3px);box-shadow:0 2px 0 #7a5200,0 6px 12px #0008}
+.cta b{font-weight:700}
+.mini{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin-top:.7rem}
+.mini .cambiar{margin:0}
+.re-intro{text-align:center;margin:-1.6rem 0 3rem;position:relative;z-index:2}
+.re-intro button{border:0;background:none;color:#cfe8c0;font:700 .95rem "Alegreya Sans",sans-serif;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+
+/* botón de salir del visor: visible pero discreto */
+#mvx{background:#1d1208e6;border:1.5px solid #c9945a;color:#f6dd9a;padding:6px 13px;font-size:13px}
+#mvx:hover{background:#5d1d10f0;border-color:#ff8a6a}
+
+/* ----- advertencia al salir de un museo ----- */
+#salida{position:absolute;inset:0;z-index:5;display:grid;place-items:center;padding:1rem;background:radial-gradient(ellipse at 50% 45%,#1a0a04cc,#000000f2 75%)}
+#salida[hidden]{display:none}
+#salida.sal-on{animation:mvf .3s ease-out}
+.sal-c{position:relative;width:min(100%,520px);padding:1.6rem 1.4rem 1.4rem;text-align:center;color:#f1e8c9;border-radius:14px;
+ background:linear-gradient(180deg,#2a1708,#150b04);border:2px solid #a8321c;box-shadow:0 0 0 6px #a8321c22,0 24px 60px #000}
+#salida.sal-on .sal-c{animation:temblor .5s ease-out}
+@keyframes temblor{0%{transform:scale(.92);opacity:0}40%{transform:scale(1.02) translateX(-4px);opacity:1}60%{transform:translateX(4px)}100%{transform:none}}
+.sal-ojo{position:relative;width:74px;height:40px;margin:0 auto .4rem;border-radius:50%;background:#f6ead0;border:3px solid #a8321c;overflow:hidden;animation:parpadeo 4s infinite}
+.sal-ojo i{position:absolute;left:50%;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:radial-gradient(circle,#000 35%,#5a2a10 40%,#a8321c 100%);animation:mira 3s ease-in-out infinite}
+@keyframes parpadeo{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.08)}}
+@keyframes mira{0%,100%{transform:translateX(-10px)}50%{transform:translateX(10px)}}
+.sal-k{margin:0;font:700 .78rem/1 "Alegreya Sans",sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#ff8a6a}
+#sal-t{margin:.5rem 0 .6rem;font:400 clamp(1.6rem,5vw,2.2rem)/1.1 "Pirata One",Georgia,serif;color:#ffd77a}
+#sal-d{margin:0 auto .6rem;max-width:42ch;color:#e8dcc0}
+.sal-n{margin:0 auto 1.1rem;max-width:44ch;font-size:.9rem;color:#c9b48a}
+.sal-b{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center}
+.sal-q{padding:.7rem 1.2rem;border:2px solid #2a1a0a;border-radius:10px;cursor:pointer;background:linear-gradient(180deg,#ffd77a,#e3a82b);color:#2b1a0a;font:700 1rem "Alegreya Sans",sans-serif;box-shadow:0 4px 0 #7a5200}
+.sal-x{padding:.7rem 1.1rem;border:1.5px solid #7a5a3a;border-radius:10px;cursor:pointer;background:transparent;color:#bfa98a;font:700 .95rem "Alegreya Sans",sans-serif}
+.sal-x:hover{color:#ff8a6a;border-color:#ff8a6a}
+
+/* ----- escenas de misterio (inicio y final) ----- */
+#escena{position:fixed;inset:0;z-index:20000;display:grid;place-items:center;overflow:hidden;color:#e8f2d8;background:#020a05}
+#escena.sale{animation:esc-sale .7s ease-in forwards}
+@keyframes esc-sale{to{opacity:0;transform:scale(1.04)}}
+.esc-v{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s}
+#escena.con-video .esc-v{opacity:.55}
+.esc-fondo{position:absolute;inset:-5%;
+ background:radial-gradient(ellipse 40% 30% at 50% 42%,#1d5a3333,#0000 70%),
+  radial-gradient(ellipse 120% 60% at 50% 110%,#0b2a16,#0000 70%),
+  repeating-linear-gradient(100deg,#0000 0 38px,#06180c55 38px 44px,#0000 44px 90px),
+  linear-gradient(180deg,#010604,#04140a 60%,#020a05)}
+.esc-selva{position:absolute;inset:0;width:100%;height:100%;filter:brightness(.2) saturate(.6);pointer-events:none}
+.niebla{position:absolute;left:-50%;width:200%;height:46%;pointer-events:none;filter:blur(28px);opacity:.5;
+ background:radial-gradient(ellipse 18% 40% at 20% 50%,#9fc7a855,#0000),radial-gradient(ellipse 22% 50% at 55% 60%,#b9d8c044,#0000),radial-gradient(ellipse 16% 40% at 85% 40%,#9fc7a855,#0000)}
+.niebla.n1{bottom:0;animation:niebla 38s linear infinite}
+.niebla.n2{bottom:22%;opacity:.3;animation:niebla 60s linear infinite reverse}
+@keyframes niebla{from{transform:translateX(0)}to{transform:translateX(25%)}}
+.ojos{position:absolute;inset:0;pointer-events:none}
+.ojo{position:absolute;display:flex;gap:calc(14px*var(--s));transform:scale(var(--s));opacity:0;animation:ojos var(--t) ease-in-out var(--d) infinite}
+.ojo i{width:12px;height:7px;border-radius:50%;background:radial-gradient(circle at 50% 50%,#fffbe0 0 18%,#d8ff5a 30%,#7dbb1a 70%);box-shadow:0 0 10px 3px #c8ff3a88;animation:pestaneo var(--t) linear var(--d) infinite}
+@keyframes ojos{0%,100%{opacity:0}20%,70%{opacity:.95}}
+@keyframes pestaneo{0%,48%,52%,100%{transform:scaleY(1)}50%{transform:scaleY(.1)}}
+.esc-c{position:relative;z-index:2;width:min(92vw,660px);text-align:center;padding:1rem}
+.esc-k{margin:0;font:700 .8rem/1.3 "Alegreya Sans",sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#9fcf7a;opacity:.85}
+#escena h1{margin:.4rem 0 1rem;font:400 clamp(2.8rem,10vw,5rem)/1 "Pirata One",Georgia,serif;color:#e9d48e;text-shadow:0 0 24px #c8ff3a33,0 4px 0 #000;animation:resplandor 5s ease-in-out infinite}
+@keyframes resplandor{50%{text-shadow:0 0 40px #c8ff3a66,0 4px 0 #000}}
+.esc-l{min-height:7.5em}
+.esc-l p{margin:.2rem auto .7rem;max-width:46ch;font-size:clamp(1.02rem,2.6vw,1.22rem);line-height:1.5;color:#dfe9cf;animation:susurro 1.6s ease-out both}
+@keyframes susurro{from{opacity:0;filter:blur(6px);transform:translateY(8px)}to{opacity:1;filter:none;transform:none}}
+.esc-go{margin-top:.6rem;padding:.8rem 1.6rem;border:2px solid #9fcf7a;border-radius:999px;cursor:pointer;background:#0b2a16cc;color:#e8f2d8;font:700 1.05rem "Alegreya Sans",sans-serif;animation:llamada 2.2s ease-in-out infinite}
+.esc-go.listo{background:linear-gradient(180deg,#ffd77a,#e3a82b);color:#2b1a0a;border-color:#2a1a0a;animation:susurro 1s ease-out both}
+@keyframes llamada{50%{box-shadow:0 0 0 10px #9fcf7a22;border-color:#e6ff8a}}
+.esc-s{position:absolute;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:3;border:0;border-radius:999px;padding:7px 14px;background:#ffffff14;color:#cfe8c0;font:700 13px "Alegreya Sans",sans-serif;cursor:pointer}
+/* escena final: la selva se abre y entra luz dorada */
+#escena.esc-final{background:#071a0c}
+.esc-final .esc-fondo{background:radial-gradient(ellipse 35% 45% at 50% 38%,#ffe58a55,#0000 70%),conic-gradient(from 160deg at 50% -10%,#0000 0 3%,#ffe58a22 4% 6%,#0000 7% 9%,#ffe58a1a 10% 12%,#0000 13% 100%),linear-gradient(180deg,#0b2a16,#04140a)}
+.esc-final .esc-selva{filter:brightness(.45) saturate(.8);animation:abre 6s ease-out both}
+@keyframes abre{from{transform:scale(1)}to{transform:scale(1.45);opacity:.55}}
+.esc-final .ojo{display:none}
+.esc-final h1{color:#ffe58a}
+
+/* ----- ayuda ----- */
+#ayudaDlg{position:fixed;inset:0;z-index:15000;display:grid;place-items:center;padding:1rem;background:#000b;animation:mvf .25s ease-out}
+.ay-c{width:min(100%,520px);max-height:90vh;overflow:auto;padding:1.4rem 1.4rem 1.2rem;border-radius:12px;color:var(--tinta2);background:radial-gradient(ellipse at 50% 20%,#f6ead0,#e8d5a0);border:3px solid var(--tinta);box-shadow:0 20px 50px #000}
+.ay-c h2{margin:0 0 .6rem;font:400 2rem/1.1 "Pirata One",Georgia,serif}
+.ay-c ol{margin:0;padding-left:1.3rem}.ay-c li{margin:.35rem 0}
+.ay-n{font-size:.88rem;color:#6b5434}
+.ay-c .cta{margin-top:.4rem}
+
+/* botón de sonido */
+#son{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:50;width:46px;height:46px;border-radius:50%;border:2px solid var(--m3);background:#2b1a0acc;font-size:1.2rem;cursor:pointer;box-shadow:0 6px 16px #0009}
+#son:hover{background:#3b2410}
+
+/* ----- bitácora final ----- */
+body.fin #rayos{background:conic-gradient(from 150deg at 50% -12%,#0000 0 2%,#ffe58a3a 3% 5%,#0000 6% 8%,#ffe58a30 9% 10.5%,#0000 11.5% 13.5%,#ffe58a33 14% 15.5%,#0000 16.5% 100%)}
+.fin-k{margin:0 0 .3rem!important;font:700 .78rem/1.3 "Alegreya Sans",sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#ffd77a!important}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;width:min(calc(100% - 2.4rem),880px);margin:1.6rem auto 0}
+@media (min-width:760px){.kpis{grid-template-columns:repeat(6,1fr)}}
+.kpis div{display:grid;gap:.15rem;padding:.75rem .5rem;text-align:center;border-radius:10px;background:#f6ead0;color:var(--tinta2);border:2px solid var(--tinta);box-shadow:0 8px 18px #0008}
+.kpis b{font:400 1.45rem/1.1 "Pirata One",Georgia,serif;color:var(--berme);overflow-wrap:anywhere}
+.kpis span{font-size:.82rem;line-height:1.2}
+.bita{display:grid;grid-template-columns:1fr;gap:1rem;width:min(calc(100% - 1.6rem),900px);margin:1.6rem auto}
+@media (min-width:700px){.bita{grid-template-columns:1fr 1fr}}
+.bc{padding:1rem 1rem .9rem;border-radius:12px;color:var(--tinta2);background:radial-gradient(ellipse at 50% 0%,#f6ead0,#e3cd96);border:3px solid var(--tinta);border-top:8px solid var(--c);box-shadow:0 12px 24px #0009}
+.bc:not(.ok){filter:saturate(.55);opacity:.85}
+.bc-h{display:flex;gap:.8rem;align-items:center}
+.bc .med{flex:none;width:70px;height:70px}
+.bc .mr{fill:#e3a82b;stroke:#7a5200}.bc .md{fill:#f6ead0;stroke:#7a5200}
+.bc:not(.ok) .mr{fill:#8b8776;stroke:#3d3a30}
+.bc h2{margin:0;font:400 1.6rem/1.05 "Pirata One",Georgia,serif}
+.bc.f-minecraft h2{font:400 .95rem/1.4 "Press Start 2P","Courier New",monospace}
+.bc-n{margin:0;font:700 .78rem/1.2 "Alegreya Sans",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--berme)}
+.bc-t{margin:.2rem 0 0;font-size:.86rem;line-height:1.3;color:#6b5434}
+.bc-d{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.4rem;margin:.8rem 0 0}
+.bc-d div{padding:.4rem .55rem;border-radius:7px;background:#4a341814;border:1px solid #4a341833}
+.bc-d dt{font-size:.75rem;line-height:1.2;color:#6b5434}
+.bc-d dd{margin:0;font-weight:700;font-size:1rem}
+.bc-x{margin:.6rem 0 0;font-size:.85rem;font-style:italic;color:#6b5434}
+.cita{width:min(calc(100% - 2.4rem),640px);margin:1rem auto;text-align:center;font:400 clamp(1.4rem,4vw,1.9rem)/1.2 "Pirata One",Georgia,serif;color:#f6dd9a;text-shadow:0 2px 6px #000}
+.cita span{display:block;margin-top:.4rem;font:400 1rem "Alegreya Sans",sans-serif;color:#cfe8c0}
+.acciones{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem;width:min(calc(100% - 2.4rem),760px);margin:1rem auto 5rem}
+.acciones .cambiar{padding:.45rem 1rem;border:1.5px solid #c9945a;border-radius:999px;background:#2b1a0acc;color:var(--perg);font:700 .95rem "Alegreya Sans",sans-serif;cursor:pointer}
+
+@media (max-width:520px){
+ .cartel{margin-top:2.6rem;padding:.9rem 1rem 1rem}
+ .pasos{gap:.22rem}
+ .paso{width:1.72rem;height:1.72rem;font-size:.8rem;border-width:2px}
+ #son{width:40px;height:40px;font-size:1rem}
+ .cta{font-size:1rem;padding:.65rem 1.1rem}
+}
+@media print{
+ #selva,#primer,#rayos,#lu,#son,#st,.acciones,.prueba{display:none!important}
+ body{background:#fff!important;color:#000}
+ .cartel,.kpis div,.bc{box-shadow:none!important}
+ .bc{break-inside:avoid}
+}
+@media (prefers-reduced-motion:reduce){.ojo{opacity:.7}.niebla{animation:none}}

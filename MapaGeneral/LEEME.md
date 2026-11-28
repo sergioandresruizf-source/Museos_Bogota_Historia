@@ -13,7 +13,7 @@ Reemplaza `MapaGeneral/Codigo/app.js` por el de esta entrega. Estilos y HTML no 
 - Para PROBAR la cadena sin jugar cada museo (solo con `PRUEBA=true`): abre la consola del navegador (F12) y escribe `simularFin()`.
 
 ## Animaciones entre museos (SOLO ruta lineal)
-Carpeta `Transiciones/` en la RAÍZ del repo. El animador entrega un video `.webm` (opcional `.mp4` con el mismo nombre) por tramo, con este nombre exacto:
+Carpeta `Videos/Transiciones/` en la RAÍZ del repo (ver también `Videos/LEEME.md`). El animador entrega un video `.webm` (opcional `.mp4` con el mismo nombre) por tramo, con este nombre exacto:
 
 | Tramo | Archivo |
 |---|---|
@@ -31,3 +31,14 @@ Carpeta `Transiciones/` en la RAÍZ del repo. El animador entrega un video `.web
 - Desactivar todas: `TRANSICION.activa=false` en `app.js`. Duración de la animación por defecto: `TRANSICION.ms`.
 - Recomendado: videos cortos (3–6 s), sin audio, 16:9 o vertical, `.webm` (VP9) pesando < 5 MB cada uno.
 - En el recorrido libre nunca hay transición. Los museos no participan: todo ocurre en el mapa.
+
+## Experiencia del mapa (intro, salida y bitácora)
+- **Intro de misterio selvático**: niebla, ojos entre la maleza, sonido de selva sintetizado y texto que aparece frase por frase. Sale una vez por sesión; se vuelve a ver con "Ver de nuevo la introducción". Video de fondo opcional: `Videos/Intro/intro.webm`.
+- **Sonido**: botón 🔊 abajo a la derecha (se recuerda). Se apaga solo mientras hay un museo abierto.
+- **Encabezado de la ruta**: barra con las 8 paradas (toca una para ir a ella en el mapa), botón grande **Empezar / Continuar** y **? Cómo funciona**.
+- **Salir de un museo** (botón ✕, tecla Esc, botón Atrás del navegador o el enlace `mapa.html` del museo) SIEMPRE muestra: *"¿Usted prefiere permanecer en la ignorancia de su historia?"* con "Quedarme y conocer la verdad" / "Prefiero no saber · salir". En la ruta lineal salir NO salta el museo: la parada sigue abierta hasta terminarlo. Cerrar la pestaña con un museo abierto muestra el aviso del navegador.
+- **Bitácora final**: al terminar Minecraft (transición al tesoro) aparece la escena "La selva se abre" y después la bitácora con, por museo: tiempo, entradas, veces que quiso salir y las estadísticas que el museo envía. También al juntar las 8 medallas del recorrido libre. Se puede imprimir.
+- **Estadísticas de cada museo**: el aviso de fin acepta `stats` opcional:
+      parent.postMessage({tipo:'museo-completo', museo:'<id>', stats:[['Obras vistas','30 / 30'], ['Tiempo','12:04']]}, '*')
+  Nacional, Oro, Independencia, Casa de Moneda, Botero y MAMBO ya las envían (leen su propia pantalla final). Antimuseo y Minecraft solo registran tiempo y entradas.
+- Guardado: `museos.bitacora` (además de `museos.avance`, `museos.logros`, `museos.modo`, `museos.sonido`).

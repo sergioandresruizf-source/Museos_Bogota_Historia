@@ -44,7 +44,7 @@ export function openDiploma(app) {
     </div>`;
   m.body.querySelector('[data-act="close"]').addEventListener("click", () => m.close());
   /* CONEXIÓN CON LA RUTA: avisa al mapa que este museo terminó */
-  m.body.querySelector('[data-act="ruta"]')?.addEventListener("click", () => { try { window.parent.postMessage({ tipo: "museo-completo", museo: "florero" }, "*"); } catch (e) {} });
+  m.body.querySelector('[data-act="ruta"]')?.addEventListener("click", () => { try { window.parent.postMessage({ tipo: "museo-completo", museo: "florero", stats: Array.from(document.querySelectorAll('.diploma-stats li')).slice(0, 6).map((d) => [((d.querySelector('span') || {}).textContent || '').trim(), ((d.querySelector('strong') || {}).textContent || '').trim()]) }, "*"); } catch (e) {} });
   m.body.querySelector('[data-act="report"]').addEventListener("click", () => { m.close(); app.actions.openReport(); });
   m.body.querySelector('[data-act="print"]').addEventListener("click", () => printElement(m.body.querySelector("#diploma-sheet"), "diploma"));
   return m;

@@ -1107,7 +1107,7 @@ function close() {
       : '<div class="msg">Elige otra pieza para jugar 👇</div>';
   /* CONEXIÓN CON LA RUTA: avisa al mapa que este museo terminó */
   const rutaBtn = $("#ruta");
-  if (rutaBtn) rutaBtn.onclick = () => { try { window.parent.postMessage({ tipo: "museo-completo", museo: "moneda" }, "*"); } catch (e) {} };
+  if (rutaBtn) rutaBtn.onclick = () => { try { window.parent.postMessage({ tipo: "museo-completo", museo: "moneda", stats: [["Piezas completadas", done.size + " / " + ITEMS.length]] }, "*"); } catch (e) {} };
   $("#t").textContent = "--";
   $("#s").textContent = 0;
 }
