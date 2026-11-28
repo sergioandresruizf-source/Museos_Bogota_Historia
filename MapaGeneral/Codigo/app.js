@@ -2,8 +2,8 @@
    · Pantalla de inicio: el visitante elige entre
        "Seguir la historia" (lineal): mapa del tesoro con candados; cada museo abre el siguiente y NO se puede volver al mapa hasta terminar la ruta.
        "Recorrido libre": cualquier museo, en cualquier orden; se puede volver cuando se quiera, pero la medalla solo se gana al TERMINAR el museo.
-   · PRUEBA = true muestra abajo el panel de pruebas (en la ruta lineal permite entrar a cualquier museo ignorando los candados y volver al mapa).
-     Pon false al terminar las pruebas: se oculta el panel y los enlaces directos (#museo) también respetan los candados.
+   · Ya no hay modo de prueba: los candados se respetan siempre (también en enlaces directos #museo).
+     Cada recorrido tiene un botón "↺ Reiniciar" en su encabezado (pide confirmación) que borra su avance y su bitácora.
    · El orden de la ruta lineal es el orden del arreglo M. Cada museo trae: id, n (nombre completo), s (nombre corto), x/y (posición en el mapa de 600×1100),
      a (dirección), c (color), t (frase del recuadro) y, opcional, logo: 'ruta/al/logo.png' para usar su propio logo en la medalla (si no, se dibuja un emblema).
    · Guardado en localStorage: 'museos.avance' (ruta lineal, 0…8), 'museos.logros' (medallas del recorrido libre) y 'museos.modo'.
@@ -15,7 +15,6 @@
    · Salir de un museo SIEMPRE pasa por una advertencia ("¿Usted prefiere permanecer en la ignorancia de su historia?").
      Salir no salta nada: en la ruta lineal la parada sigue abierta hasta terminar ese museo.
    · Videos opcionales en la carpeta Videos/ de la raíz (ver Videos/LEEME.md): Intro/intro.webm, Final/final.webm y Transiciones/<desde>-<hasta>.webm. */
-const PRUEBA=true;
 
 /* ---------- sonido de selva (sintetizado: no descarga ningún archivo) ----------
    Viento lejano, dron grave de misterio, grillos, ranas y aves al azar. Arranca con el primer toque del visitante
@@ -124,8 +123,7 @@ const fr=ov.querySelector('iframe'),sig=ov.querySelector('#mvs'),atras=ov.queryS
 const salida=ov.querySelector('#salida'),salQ=salida.querySelector('.sal-q'),salX=salida.querySelector('.sal-x');
 function botones(i){
  /* el botón de salir está en los dos recorridos, pero siempre pasa por la advertencia (pedirSalida).
-    NO hay botón "Siguiente museo": un museo solo se da por terminado cuando él mismo avisa (museo-completo).
-    Para probar la cadena sin jugar cada museo: con PRUEBA=true, escribe  simularFin()  en la consola del navegador. */
+    NO hay botón "Siguiente museo": un museo solo se da por terminado cuando él mismo avisa (museo-completo). */
  atras.hidden=false;atras.title=modo==='lineal'?'Salir al mapa (la parada no cuenta hasta terminar el museo)':'Salir a la galería (la medalla solo se gana al terminar)';
  sig.hidden=true;
 }
@@ -203,7 +201,6 @@ function completar(){
  cerrar();if(llena)finalRuta('libre');
 }
 const hecho=()=>{if(act>=0){const r=reg(M[act].id);r.completo=1;acumular();guardarBit()}modo==='libre'?completar():siguiente()};
-if(PRUEBA)window.simularFin=()=>{if(act>=0)hecho()};   // solo pruebas: simula que el museo abierto avisó 'museo-completo'
 atras.onclick=pedirSalida;
 sig.onclick=hecho;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ov.className){e.preventDefault();salida.hidden?pedirSalida():quedarse()}});
@@ -285,7 +282,7 @@ addEventListener('message',e=>{
  const st2=limpiarStats(d.stats);if(st2&&st2.length){reg(M[act].id).stats=st2;guardarBit()}
  hecho();
 });
-const permitido=k=>k>=0&&L[M[k].id]&&(modo==='libre'||PRUEBA||k<=avance);
+const permitido=k=>k>=0&&L[M[k].id]&&(modo==='libre'||k<=avance);
 addEventListener('popstate',()=>{
  if(ov.className&&act>=0){history.pushState(null,'','#'+M[act].id);pedirSalida();return}   // el botón "atrás" del navegador también pasa por la advertencia
  const k=idx(location.hash);if(permitido(k))abrir(k,desdePanel);
@@ -563,14 +560,13 @@ function libre(){
  modo='libre';svg=dyn=null;window.scrollTo(0,0);document.body.classList.remove('fin');
  app.innerHTML=`<header class="cartel"><h1>Recorrido libre</h1><p>Entra al museo que quieras y vuelve cuando quieras. La medalla solo se gana al terminar el museo.</p><p id="prog" class="prog"></p>
  <div class="cta-row"><button type="button" class="cta" id="verbit" hidden>📜 Ver la bitácora</button></div><p id="st" role="status"></p>
- <div class="mini"><button type="button" class="cambiar" id="cambiar">← Elegir otro recorrido</button><button type="button" class="cambiar" id="ayuda">? Cómo funciona</button></div></header>
- <main class="tablero"><ul class="galeria" id="gal"></ul></main>
- ${PRUEBA?`<details class="prueba" open><summary>Modo de prueba</summary><p>Herramientas para probar. Este panel se quita cuando termine la fase de pruebas.</p><div class="ctl"><button type="button" id="rsm">Reiniciar medallas</button></div></details>`:''}`;
+ <div class="mini"><button type="button" class="cambiar" id="cambiar">← Elegir otro recorrido</button><button type="button" class="cambiar" id="ayuda">? Cómo funciona</button><button type="button" class="cambiar" id="reini">↺ Reiniciar</button></div></header>
+ <main class="tablero"><ul class="galeria" id="gal"></ul></main>`;
  galeria();
  document.getElementById('cambiar').onclick=inicio;
  document.getElementById('ayuda').onclick=()=>ayuda('libre');
  document.getElementById('verbit').onclick=()=>bitacora('libre');
- if(PRUEBA)document.getElementById('rsm').onclick=()=>{logros.clear();guardarLogros();bit.libre={};guardarBit();galeria();st('Medallas y bitácora del recorrido libre reiniciadas.')};
+ document.getElementById('reini').onclick=()=>{if(!confirm('¿Reiniciar el recorrido libre? Se borran tus medallas y la bitácora de este recorrido.'))return;logros.clear();guardarLogros();bit.libre={};guardarBit();galeria();st('Recorrido libre reiniciado: medallas en cero.')};
 }
 function galeria(){
  const g=document.getElementById('gal');if(!g)return;
@@ -590,7 +586,7 @@ function lineal(){
  app.innerHTML=`<header class="cartel"><h1>Ruta de los museos</h1><p>Ocho paradas, un solo camino. Cada candado se abre al terminar el museo anterior.</p>
  <ol class="pasos" id="pasos" aria-label="Progreso de la ruta"></ol><p id="prog" class="prog"></p>
  <div class="cta-row"><button type="button" class="cta" id="cta"></button></div><p id="st" role="status"></p>
- <div class="mini"><button type="button" class="cambiar" id="cambiar">← Elegir otro recorrido</button><button type="button" class="cambiar" id="ayuda">? Cómo funciona</button></div></header>
+ <div class="mini"><button type="button" class="cambiar" id="cambiar">← Elegir otro recorrido</button><button type="button" class="cambiar" id="ayuda">? Cómo funciona</button><button type="button" class="cambiar" id="reini">↺ Reiniciar</button></div></header>
  <main class="mapw"><svg id="m" viewBox="0 0 600 1100" role="group" aria-label="Mapa del tesoro con la ruta de los ocho museos">
  <defs>
   <filter id="rough" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".02 .018" numOctaves="4" seed="5" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="26" result="d1"/><feTurbulence type="fractalNoise" baseFrequency=".12" numOctaves="2" seed="2" result="n2"/><feDisplacementMap in="d1" in2="n2" scale="9"/></filter>
@@ -609,10 +605,7 @@ function lineal(){
   <ellipse cx="478" cy="560" rx="64" ry="42" fill="#9a6a2a" opacity=".13" filter="url(#suave)"/><circle cx="92" cy="262" r="34" fill="none" stroke="#7a4a18" stroke-width="3.2" opacity=".2" filter="url(#suave)"/><ellipse cx="190" cy="905" rx="52" ry="30" fill="#8a5a22" opacity=".12" filter="url(#suave)"/>
   <rect x="296" y="16" width="9" height="1068" fill="url(#plv)"/><rect x="16" y="366" width="568" height="9" fill="url(#plh)"/><rect x="16" y="732" width="568" height="9" fill="url(#plh)"/>
   <rect x="42" y="42" width="516" height="1016" fill="none" stroke="#2f1704" stroke-width="52" opacity=".5" filter="url(#suave)"/><rect x="42" y="42" width="516" height="1016" fill="none" stroke="#8a4a14" stroke-width="22" opacity=".4" filter="url(#suave)"/><rect x="42" y="42" width="516" height="1016" fill="none" stroke="#5b3a14" stroke-width="20" opacity=".5" filter="url(#suave)"/></g>
- <g id="ter"></g><g id="dyn"></g></svg><div id="tip" role="tooltip"></div></main>
- ${PRUEBA?`<details class="prueba" open><summary>Modo de prueba</summary><p>Entra a cualquier museo sin respetar los candados. Este panel se quita cuando termine la fase de pruebas.</p>
- <ul class="at">${M.map((m,i)=>`<li><button type="button" data-f="${i}"><b>${i+1}</b><span>${m.s}${L[m.id]?'':'<small>enlace pendiente</small>'}</span></button></li>`).join('')}</ul>
- <div class="ctl"><button type="button" id="rs">Reiniciar recorrido</button></div></details>`:''}`;
+ <g id="ter"></g><g id="dyn"></g></svg><div id="tip" role="tooltip"></div></main>`;
  svg=document.getElementById('m');dyn=document.getElementById('dyn');
  document.getElementById('ter').innerHTML=terreno();
  render();
@@ -630,10 +623,7 @@ function lineal(){
  svg.addEventListener('pointerout',e=>{if(e.target.closest('.mk'))tip.style.display='none'});
  svg.addEventListener('focusin',e=>{const g=e.target.closest('.mk');if(g)showTip(g)});
  svg.addEventListener('focusout',()=>tip.style.display='none');
- if(PRUEBA){
-  document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>entrar(+b.dataset.f,true));
-  document.getElementById('rs').onclick=()=>{avance=0;guardar();bit.lineal={};guardarBit();render();st('Recorrido reiniciado: solo el Museo Nacional está abierto.');enfocar()};
- }
+ document.getElementById('reini').onclick=()=>{if(!confirm('¿Reiniciar la ruta desde el Museo Nacional? Se borran tu avance y la bitácora de esta ruta.'))return;avance=0;guardar();bit.lineal={};guardarBit();render();st('Ruta reiniciada: solo el Museo Nacional está abierto.');enfocar()};
  document.getElementById('cambiar').onclick=inicio;
  document.getElementById('ayuda').onclick=()=>ayuda('lineal');
  /* tocar un paso de la barra lleva a esa parada del mapa y muestra su recuadro */

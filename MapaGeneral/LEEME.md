@@ -10,7 +10,7 @@ Reemplaza `MapaGeneral/Codigo/app.js` por el de esta entrega. Estilos y HTML no 
   - Ruta lineal → el mapa pasa al siguiente museo (con la transición) y desbloquea la parada.
   - Recorrido libre → el mapa otorga la medalla y vuelve a la galería.
 - ids de museo: `nacional`, `oro`, `florero` (Independencia), `moneda`, `botero`, `mambo`, `antimuseo`, `minecraft`.
-- Para PROBAR la cadena sin jugar cada museo (solo con `PRUEBA=true`): abre la consola del navegador (F12) y escribe `simularFin()`.
+- Ya no hay modo de prueba: los candados se respetan siempre. Cada recorrido tiene un botón **↺ Reiniciar** (con confirmación) que borra su avance y su bitácora.
 
 ## Animaciones entre museos (SOLO ruta lineal)
 Carpeta `Videos/Transiciones/` en la RAÍZ del repo (ver también `Videos/LEEME.md`). El animador entrega un video `.webm` (opcional `.mp4` con el mismo nombre) por tramo, con este nombre exacto:
