@@ -5,7 +5,7 @@ window.MUSEO = {
 
   config: {
     exigirPasarUltimaObra: true,
-    velocidadBarco: 200,
+    velocidadBarco: 105,
     velocidadCorrer: 1.8,
     museoId: "nacional",
     urlSiguienteMuseo: "",
@@ -14,7 +14,7 @@ window.MUSEO = {
     retoOmitirTrasFallos: 3,
     autoDescubrir: true,
     descripcionAuto: "Descripción pendiente: agrega esta obra en obras.js para ponerle título y texto.",
-    atajos: true
+    atajos: false
   },
 
   musica: {
